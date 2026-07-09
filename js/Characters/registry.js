@@ -275,7 +275,7 @@ export const characterRegistry = [
         name: "Scott Banyan",
         romanizedName: "Kogure Yuya",
         japaneseName: "木暮 夕弥",
-        thumb: "img/Characters/scottBanyanInazumaJapan.png",
+        thumb: "img/Characters/ScottBanyanInazumaJapan.png",
         element: "img/Element/Icon_Element_Forest.png",
         position: "img/Position/Icon_Position_DF.png",
         stars: 2,
