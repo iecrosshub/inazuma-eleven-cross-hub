@@ -1,11 +1,28 @@
-// js/gallery.js
 import { characterRegistry } from './Characters/registry.js';
 
-function renderGallery() {
+// Funzione helper per estrarre l'elemento dal percorso immagine
+function getElement(path) {
+    if (path.includes('Forest')) return 'Forest';
+    if (path.includes('Fire')) return 'Fire';
+    if (path.includes('Mountain')) return 'Mountain';
+    if (path.includes('Wind')) return 'Wind';
+    return '';
+}
+
+// Funzione helper per estrarre la posizione dal percorso immagine
+function getPosition(path) {
+    if (path.includes('GK')) return 'GK';
+    if (path.includes('DF')) return 'DF';
+    if (path.includes('MF')) return 'MF';
+    if (path.includes('FW')) return 'FW';
+    return '';
+}
+
+function renderGallery(filteredList = characterRegistry) {
     const grid = document.getElementById('character-grid');
     if (!grid) return;
 
-    grid.innerHTML = characterRegistry.map(char => {
+    grid.innerHTML = filteredList.map(char => {
         const starsHTML = Array(char.stars).fill(
             `<img src="img/Frm_GachaIcon/Icon_GradeStar.png" class="star-icon">`
         ).join('');
@@ -33,4 +50,32 @@ function renderGallery() {
     }).join('');
 }
 
-document.addEventListener('DOMContentLoaded', renderGallery);
+function filterCharacters() {
+    const nameSearch = document.getElementById('search-name').value.toLowerCase();
+    const elementVal = document.getElementById('filter-element').value;
+    const posVal = document.getElementById('filter-position').value;
+    const rarityVal = document.getElementById('filter-rarity').value;
+
+    const filtered = characterRegistry.filter(char => {
+        // Estraiamo le categorie al volo dai path
+        const charElement = getElement(char.element);
+        const charPosition = getPosition(char.position);
+
+        const matchesName = char.name.toLowerCase().includes(nameSearch);
+        const matchesElement = elementVal === 'All' || charElement === elementVal;
+        const matchesPos = posVal === 'All' || charPosition === posVal;
+        const matchesRarity = rarityVal === 'All' || char.stars == rarityVal;
+
+        return matchesName && matchesElement && matchesPos && matchesRarity;
+    });
+
+    renderGallery(filtered);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderGallery();
+    document.getElementById('search-name').addEventListener('input', filterCharacters);
+    document.getElementById('filter-element').addEventListener('change', filterCharacters);
+    document.getElementById('filter-position').addEventListener('change', filterCharacters);
+    document.getElementById('filter-rarity').addEventListener('change', filterCharacters);
+});

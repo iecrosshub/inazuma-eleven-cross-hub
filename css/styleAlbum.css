@@ -137,3 +137,16 @@
 .rank-a { background: #9be335; color: #0b326e; }
 .rank-b { background: #21bc73; color: #0b326e; }
 .rank-empty { background: rgba(0, 0, 0, 0.05); color: transparent; }
+
+.filter-panel {
+    border: 2px solid #2482df;
+    color: white;
+}
+.filter-panel select, .filter-panel input {
+    background-color: #1b75d0 !important;
+    color: white !important;
+    border: 1px solid #2482df !important;
+}
+.filter-panel select option {
+    background-color: #0b1a42;
+}
