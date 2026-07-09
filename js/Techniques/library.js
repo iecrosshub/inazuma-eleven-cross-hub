@@ -1073,4 +1073,18 @@ export const techniquesLibrary = {
             { label: "Bonus Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] }
         ]
     },
+
+    "アースクェイク": {
+        name: "Terremoto (アースクェイク)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
+        elementIcon: "img/Element/Icon_Element_Mountain.png",
+        details: [
+            { label: "Potenza", values: [92, 97, 102, 107, 112, 117, 122, 127, 132, 137] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %"] },
+            { label: "% Critico", values: ["14 %", "14 %", "14 %", "14 %", "17 %", "17 %", "17 %", "17 %", "17 %", "20 %"] },
+            { label: "Bonus Critico", values: ["16 %", "16 %", "16 %", "16 %", "19 %", "19 %", "19 %", "19 %", "19 %", "22 %"] }
+        ]
+    }
 };

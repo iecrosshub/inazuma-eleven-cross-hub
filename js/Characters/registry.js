@@ -212,11 +212,11 @@ export const characterRegistry = [
 
 
     {
-        id: "josephKingRoyaleAcademy",
+        id: "josephKingRoyalAcademy",
         name: "Joseph King",
         romanizedName: "Genda Kōjirō",
         japaneseName: "源田 幸次郎",
-        thumb: "img/Characters/JosephKingRoyaleAcademy.png",
+        thumb: "img/Characters/JosephKingRoyalAcademy.png",
         element: "img/Element/Icon_Element_Fire.png",
         position: "img/Position/Icon_Position_GK.png",
         stars: 2,
@@ -312,6 +312,57 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
 
+    {
+        id: "axelBlazeRaimon",
+        name: "Axel Blaze",
+        romanizedName: "Gōenji Shūya",
+        japaneseName: "豪炎寺 修也",
+        thumb: "img/Characters/AxelBlazeRaimon.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "markEvansRaimon",
+        name: "Mark Evans",
+        romanizedName: "Endō Mamoru",
+        japaneseName: "円堂 守",
+        thumb: "img/Characters/MarkEvansRaimon.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_GK.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "shadowFeldtRaimon",
+        name: "Shadow Feldt",
+        romanizedName: "Yamino Kageto",
+        japaneseName: "闇野 カゲト",
+        thumb: "img/Characters/ShadowFeldtRaimon.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "kevinDragonflyRaimon",
+        name: "Kevin Dragonfly",
+        romanizedName: "Someoka Ryūgo",
+        japaneseName: "染岡 竜吾",
+        thumb: "img/Characters/KevinDragonflyRaimon.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
 
 
     {
@@ -343,20 +394,6 @@ export const characterRegistry = [
     },
 
     {
-        id: "judeSharpRoyaleAcademy",
-        name: "Jude Sharp",
-        romanizedName: "Kidō Yūto",
-        japaneseName: "鬼道 有人",
-        thumb: "img/Characters/JudeSharpRoyaleAcademy.png",
-        element: "img/Element/Icon_Element_Wind.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-
-
-    {
         id: "erikEagleRaimon",
         name: "Erik Eagle",
         romanizedName: "Ichinose Kazuya",
@@ -368,6 +405,33 @@ export const characterRegistry = [
         background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
+
+    {
+        id: "judeSharpRoyalAcademy",
+        name: "Jude Sharp",
+        romanizedName: "Kidō Yūto",
+        japaneseName: "鬼道 有人",
+        thumb: "img/Characters/JudeSharpRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "davidSamfordRoyalAcademy",
+        name: "David Samford",
+        romanizedName: "Sakuma Jirō",
+        japaneseName: "佐久間 次郎",
+        thumb: "img/Characters/DavidSamfordRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
 
 
     {
@@ -409,57 +473,8 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
 
-    {
-        id: "shadowFeldtRaimon",
-        name: "Shadow Feldt",
-        romanizedName: "Yamino Kageto",
-        japaneseName: "闇野 カゲト",
-        thumb: "img/Characters/ShadowFeldtRaimon.png",
-        element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_FW.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
 
-    {
-        id: "kevinDragonflyRaimon",
-        name: "Kevin Dragonfly",
-        romanizedName: "Someoka Ryūgo",
-        japaneseName: "染岡 竜吾",
-        thumb: "img/Characters/KevinDragonflyRaimon.png",
-        element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_FW.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
 
-    {
-        id: "davidSamfordRoyaleAcademy",
-        name: "David Samford",
-        romanizedName: "Sakuma Jirō",
-        japaneseName: "佐久間 次郎",
-        thumb: "img/Characters/DavidSamfordRoyaleAcademy.png",
-        element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_FW.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-
-    {
-        id: "axelBlazeRaimon",
-        name: "Axel Blaze",
-        romanizedName: "Gōenji Shūya",
-        japaneseName: "豪炎寺 修也",
-        thumb: "img/Characters/AxelBlazeRaimon.png",
-        element: "img/Element/Icon_Element_Fire.png",
-        position: "img/Position/Icon_Position_FW.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
 
     {
         id: "sailBlueseaShuriken",
@@ -513,18 +528,6 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
 
-    {
-        id: "markEvansRaimon",
-        name: "Mark Evans",
-        romanizedName: "Endō Mamoru",
-        japaneseName: "円堂 守",
-        thumb: "img/Characters/MarkEvansRaimon.png",
-        element: "img/Element/Icon_Element_Mountain.png",
-        position: "img/Position/Icon_Position_GK.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
 
     {
         id: "jackWallsideRaimon",
@@ -533,6 +536,20 @@ export const characterRegistry = [
         japaneseName: "壁山 塀吾郎",
         thumb: "img/Characters/JackWallsideRaimon.png",
         element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+
+    {
+        id: "milesRyanRaimon",
+        name: "Miles Ryan",
+        romanizedName: "Miyasaka Ryou",
+        japaneseName: "宮坂 了",
+        thumb: "img/Characters/MilesRyanRaimon.png",
+        element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_DF.png",
         stars: 1,
         background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
@@ -579,6 +596,20 @@ export const characterRegistry = [
     },
 
     {
+        id: "maxwellCarsonRaimon",
+        name: "Maxwell Carson",
+        romanizedName: "Matsuno Kusuke",
+        japaneseName: "松野 空介",
+        thumb: "img/Characters/MaxwellCarsonRaimon.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+
+    {
         id: "timmySaundersRaimon",
         name: "Timmy Saunders",
         romanizedName: "Shourinji Ayumu",
@@ -617,18 +648,125 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
+
     {
-        id: "milesRyanRaimon",
-        name: "Miles Ryan",
-        romanizedName: "Miyasaka Ryou",
-        japaneseName: "宮坂 了",
-        thumb: "img/Characters/MilesRyanRaimon.png",
+        id: "hermanWaldonRoyalAcademy",
+        name: "Herman Waldon",
+        romanizedName: "Henmi Wataru",
+        japaneseName: "辺見 渡",
+        thumb: "img/Characters/HermanWaldonRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "peterDrentRoyalAcademy",
+        name: "Peter Drent",
+        romanizedName: "Oono Densuke",
+        japaneseName: "大野 伝助",
+        thumb: "img/Characters/PeterDrentRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "danielHatchRoyalAcademy",
+        name: "Daniel Hatch",
+        romanizedName: "Terakado Daiki",
+        japaneseName: "寺門 大貴",
+        thumb: "img/Characters/DanielHatchRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "derekSwingRoyalAcademy",
+        name: "Derek Swing",
+        romanizedName: "Hōmen Shūichirō",
+        japaneseName: "洞面 秀一郎",
+        thumb: "img/Characters/DerekSwingRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+
+    {
+        id: "alanMasterRoyalAcademy",
+        name: "Alan Master",
+        romanizedName: "Narukami Kenya",
+        japaneseName: "成神 健也",
+        thumb: "img/Characters/AlanMasterRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "gusMartinRoyalAcademy",
+        name: "Gus Martin",
+        romanizedName: "Gojou Takeyuki",
+        japaneseName: "五条 勝",
+        thumb: "img/Characters/GusMartinRoyalAcademy.png",
         element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_DF.png",
         stars: 1,
         background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
+
+    {
+        id: "benSimmonsRoyalAcademy",
+        name: "Ben Simmons",
+        romanizedName: "Banjou Kazumichi",
+        japaneseName: "万丈 一道",
+        thumb: "img/Characters/BenSimmonsRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "johnBloomRoyalAcademy",
+        name: "John Bloom",
+        romanizedName: "Sakiyama Shuuji",
+        japaneseName: "咲山 修二",
+        thumb: "img/Characters/JohnBloomRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "markGamblingOtaku",
+        name: "Mark Gambling",
+        romanizedName: "Manga Moe",
+        japaneseName: "漫画 萌",
+        thumb: "img/Characters/MarkGamblingOtaku.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
 
     {
         id: "maddieMoonlightInazumaKidsFC",
@@ -669,42 +807,5 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
-    {
-        id: "markGamblingOtaku",
-        name: "Mark Gambling",
-        romanizedName: "Manga Moe",
-        japaneseName: "漫画 萌",
-        thumb: "img/Characters/MarkGamblingOtaku.png",
-        element: "img/Element/Icon_Element_Wind.png",
-        position: "img/Position/Icon_Position_FW.png",
-        stars: 1,
-        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
-    },
 
-    {
-        id: "danielHatchRoyaleAcademy",
-        name: "Daniel Hatch",
-        romanizedName: "Terakado Daiki",
-        japaneseName: "寺門 大貴",
-        thumb: "img/Characters/DanielHatchRoyaleAcademy.png",
-        element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_FW.png",
-        stars: 1,
-        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
-    },
-
-    {
-        id: "derekSwingRoyaleAcademy",
-        name: "Derek Swing",
-        romanizedName: "Hōmen Shūichirō",
-        japaneseName: "洞面 秀一郎",
-        thumb: "img/Characters/DerekSwingRoyaleAcademy.png",
-        element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_FW.png",
-        stars: 1,
-        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
-    }
 ];

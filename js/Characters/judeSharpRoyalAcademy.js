@@ -1,6 +1,6 @@
 import { characterRegistry } from './registry.js';
 
-const baseInfo = characterRegistry.find(char => char.id === "judeSharpRoyaleAcademy");
+const baseInfo = characterRegistry.find(char => char.id === "judeSharpRoyalAcademy");
 
 export const charData = {
     ...baseInfo,
@@ -9,7 +9,7 @@ export const charData = {
     japaneseName: "鬼道 有人",
 
     tags: [
-        "img/TagTitle/Icon_Tag_Team_RoyaleAcademy.png",
+        "img/TagTitle/Icon_Tag_Team_RoyalAcademy.png",
         "img/TagTitle/Icon_Tag_Ability_Playmaker.png",
         "img/TagTitle/Icon_Tag_Title_InaEle1.png"
     ],

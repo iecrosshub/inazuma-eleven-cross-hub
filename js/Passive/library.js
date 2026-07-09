@@ -2656,23 +2656,21 @@ export const passivesLibrary = [
         ]
     },
     {
-        title: "[Impeto] Potenza Tiro FW + (【破竹/累】ＦＷシュートパワー＋)",
+        title: "Potenza Tiro Foresta + (シュートパワー＋〈林〉)",
         id: "101025003",
-        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la Potenza della Tecnica di Tiro degli FW alleati di {VAL}. Condizione reset: Gol segnato.",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro Foresta di {VAL}.",
         levels: [
-            { val: 2, req: "Si sblocca con personaggio Lv. 41" },
-            { val: 3, req: "Si sblocca con personaggio Lv. 61" },
-            { val: 4, req: "Si sblocca con personaggio Lv. 91" },
-            { val: 5, req: "Si sblocca con personaggio Lv. 121" },
-            { val: 6, req: "Si sblocca con personaggio Lv. 151" },
-            { val: 7, req: "Si sblocca con personaggio Lv. 181" },
-            { val: 8, req: "Si sblocca con personaggio Lv. 211" },
-            { val: 9, req: "Si sblocca con personaggio Lv. 241" },
-            { val: 11, req: "Si sblocca con personaggio Lv. 271" }
+            { val: 9, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 14, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 23, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 28, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 32, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 42, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 47, req: "Si sblocca con personaggio Lv. 271" }
         ],
-        actions: [
-            { target: "team_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "dribble_success" }
-        ]
+        actions: [{ target: "self", stat: "Potenza_Tiro_Foresta", type: "move_power", amount: "{VAL}", condition: "always" }]
     },
     {
         title: "Potenza Tiro dai Cento Calci + (百烈ショットパワー＋)",
@@ -2699,6 +2697,293 @@ export const passivesLibrary = [
         ],
         actions: [
             { target: "team_MF", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "always" }
+        ]
+    },
+
+    {
+        title: "[Impeto] Potenza Tiro FW Foresta + (【破竹/累】ＦＷシュートパワー＋〈林〉)",
+        id: "101024003",
+        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la Potenza della Tecnica di Tiro degli FW alleati di elemento Foresta di {VAL}. <br>Condizione reset: Gol segnato.",
+        levels: [
+            { val: 1, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 2, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 3, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 4, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 5, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 7, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [{ target: "team_FW_Forest", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "dribble_success" }]
+    },
+
+    {
+        title: "Tecnica MF Vento + (風ＭＦテクニック＋)",
+        id: "101022001",
+        template: "All'inizio della partita, aumenta la Tecnica degli MF alleati di elemento Vento di {VAL}.",
+        levels: [
+            { val: 33, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 100, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 336, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [{ target: "team_MF_Wind", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "always" }]
+    },
+    {
+        title: "Potenza Calcio Stordente + (ジャッジスルーパワー＋改)",
+        id: "101022004",
+        template: "All'inizio della partita, aumenta la potenza di Calcio Stordente di {VAL} e riduce il tasso di fallo di {VAL2}.",
+        levels: [
+            { val: 6, val2: 300, req: "Si sblocca a: Advanced Player +" },
+            { val: 8, val2: 400, req: "Si sblocca a: Top Player +" },
+            { val: 11, val2: 600, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "ジャッジスルー", type: "specific_move_power", amount: "{VAL}", condition: "always" },
+            { target: "self", stat: "Fallo", type: "foul_reduction", amount: "{VAL2}", condition: "always" }
+        ]
+    },
+
+    {
+        title: "[Impeto] Potenza Tiro FW (Foresta) + (【破竹/累】ＦＷシュートパワー＋〈林〉)",
+        id: "101022003",
+        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la Potenza delle tecniche di tiro di elemento Foresta degli FW alleati di {VAL}. <br>Condizione di reset: Gol segnato.",
+        levels: [
+            { val: 3, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 4, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 14, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_FW_Forest", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "dribble_success" }
+        ]
+    },
+
+    {
+        title: "[Legame] Tecnica RoyalAcademy + (帝国テクニック＋)",
+        id: "101020001",
+        template: "All'inizio della partita, aumenta la Tecnica degli alleati con tag RoyalAcademy di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "team_teikoku", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Legame] Blocco MF/DF + (【結束】ＭＦ・ＤＦブロック＋)",
+        id: "101020003",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Teikoku (Royal Academy), aumenta il Blocco degli MF e DF alleati di {VAL}.",
+        levels: [
+            { val: 56, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 84, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 112, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 140, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 168, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 196, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 252, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_MF_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "3_allies_teikoku" }
+        ]
+    },
+    {
+        title: "Potenza Dribbling + (ドリブルパワー＋)",
+        id: "101020004",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Dribbling di {VAL}.",
+        levels: [
+            { val: 31, req: "Si sblocca a: Advanced Player +" },
+            { val: 41, req: "Si sblocca a: Top Player +" },
+            { val: 52, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "always" }
+        ]
+    },
+
+
+    {
+        title: "Blocco DF + (ＤＦブロック＋)",
+        id: "101019001",
+        template: "All'inizio della partita, aumenta il Blocco dei DF alleati di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "team_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Sinergia] Tecnica + (【連動】テクニック＋)",
+        id: "101019003",
+        template: "Ogni volta che una tecnica di Dribbling o Blocco di un DF alleato ha successo, aumenta la propria Tecnica di {VAL}. Condizione di reset: un alleato segna un gol.",
+        levels: [
+            { val: 358, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 716, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 896, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 1075, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 1254, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 1433, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 1612, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 1792, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "self", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "ally_DF_dribble_block_success" }
+        ]
+    },
+    {
+        title: "[Accumulo] Tiro FW + (【破竹/累】ＦＷキック＋)",
+        id: "101019004",
+        template: "Ogni volta che una propria tecnica di dribbling ha successo, aumenta il Tiro degli FW alleati di {VAL}. <br>Condizione di reset: un alleato segna un gol.",
+        levels: [
+            { val: 337, req: "Si sblocca a: Advanced Player +" },
+            { val: 449, req: "Si sblocca a: Top Player +" },
+            { val: 562, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "team_FW", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "dribble_success" }
+        ]
+    },
+
+    {
+        title: "Blocco DF + (ＤＦブロック＋)",
+        id: "101023001",
+        template: "All'inizio della partita, aumenta il Blocco dei DF alleati di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "team_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Legame] Tecnica MF Vento + (【結束】風ＭＦテクニック＋)",
+        id: "101023003",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Royal Academy, aumenta la Tecnica degli MF alleati di elemento Vento di {VAL}.",
+        levels: [
+            { val: 168, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 252, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 336, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 420, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 504, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 588, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 756, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 840, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_MF_Wind", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "3_allies_teikoku" }
+        ]
+    },
+    {
+        title: "Tasso Fallo DF Avversario + / Tecnica + (敵ＤＦファウル率増／テクニック＋)",
+        id: "101023004",
+        template: "All'inizio della partita, aumenta il tasso di fallo dei DF avversari di {FOUL}% e aumenta la propria Tecnica di {TECH}.",
+        levels: [
+            { foul: 100, tech: 189, req: "Si sblocca a: Advanced Player +" },
+            { foul: 200, tech: 252, req: "Si sblocca a: Top Player +" },
+            { foul: 300, tech: 316, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "enemy_DF", stat: "Fallo", type: "foul_rate", amount: "{FOUL}", condition: "always" },
+            { target: "self", stat: "Tecnica", type: "base_stat", amount: "{TECH}", condition: "always" }
+        ]
+    },
+
+    {
+        title: "Tecnica & Blocco DF + (ＤＦテクニック＆ブロック＋)",
+        id: "101018001",
+        template: "All'inizio della partita, aumenta la Tecnica e il Blocco dei DF alleati di {VAL}.",
+        levels: [
+            { val: 12, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 49, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 74, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 99, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 124, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 149, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 199, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 249, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "team_DF", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "always" },
+            { target: "team_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Sinergia] Potenza Dribbling MF + (【破竹/累】ＭＦドリブルパワー＋)",
+        id: "101018003",
+        template: "Ogni volta che una tecnica di blocco o dribbling di un DF alleato ha successo, aumenta la potenza delle tecniche di Dribbling degli MF alleati di {VAL}. Condizione di reset: un alleato segna un gol.",
+        levels: [
+            { val: 3, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 4, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 14, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_MF", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "ally_DF_dribble_block_success" }
+        ]
+    },
+    {
+        title: "Tasso Fallo - / Potenza Blocco + (ファウル率減少＆ブロックパワー＋)",
+        id: "101018004",
+        template: "All'inizio della partita, riduce il proprio tasso di fallo di {FOUL}% e aumenta la potenza delle proprie tecniche di Blocco di {BLOCK}.",
+        levels: [
+            { foul: 300, block: 9, req: "Si sblocca a: Advanced Player +" },
+            { foul: 400, block: 12, req: "Si sblocca a: Top Player +" },
+            { foul: 500, block: 16, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "Fallo", type: "foul_reduction", amount: "{FOUL}", condition: "always" },
+            { target: "self", stat: "Potenza_Blocco", type: "move_power", amount: "{BLOCK}", condition: "always" }
         ]
     }
 

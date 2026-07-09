@@ -8,14 +8,14 @@ export const coachData = {
     artwork: "img/Coaches/RayDark.png",
     level: 10,
     teamBonusScore: 19200,
-    formationName: "Royale Academy",
+    formationName: "Royal Academy",
     formationConditions: [
-        { slotCode: 2, icon: "img/TagTitle/Icon_Tag_Team_RoyaleAcademy.png" },
-        { slotCode: 5, icon: "img/TagTitle/Icon_Tag_Team_RoyaleAcademy.png" },
-        { slotCode: 7, icon: "img/TagTitle/Icon_Tag_Team_RoyaleAcademy.png" }
+        { slotCode: 2, icon: "img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" },
+        { slotCode: 5, icon: "img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" },
+        { slotCode: 7, icon: "img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" }
     ],
     formationPassive: {
-        title: "Attiva F-Royale Academy (アクティブ・F-デスゾーン)",
+        title: "Attiva F-Royal Academy (アクティブ・F-デスゾーン)",
         icons: ["img/Coaches/PassiveEffectIcon_AddKick.png", "img/Coaches/PassiveEffectIcon_AddBlock.png"],
         text: "All'inizio della partita:<br><strong>Alleati FW consigliati:</strong> statistica di Tiro +600<br><strong>Alleati DF consigliati:</strong> statistica di Blocco +600",
         actions: [
