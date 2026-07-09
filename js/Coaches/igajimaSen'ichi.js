@@ -50,12 +50,12 @@ export const coachData = {
         { number: 1, position: "FW", x: 75, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 25, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         // MF (3, 4, 5, 6)
-        { number: 3, position: "MF", x: 75, y: 30, baseAsset: "img/Position/Img_MFBase.png" },
-        { number: 4, position: "MF", x: 25, y: 30, baseAsset: "img/Position/Img_MFBase.png" },
-        { number: 5, position: "MF", x: 75, y: 45, baseAsset: "img/Position/Img_MFBase.png" },
-        { number: 6, position: "MF", x: 25, y: 45, baseAsset: "img/Position/Img_MFBase.png" },
+        { number: 3, position: "MF", x: 75, y: 35, baseAsset: "img/Position/Img_MFBase.png" },
+        { number: 4, position: "MF", x: 25, y: 35, baseAsset: "img/Position/Img_MFBase.png" },
+        { number: 5, position: "MF", x: 75, y: 55, baseAsset: "img/Position/Img_MFBase.png" },
+        { number: 6, position: "MF", x: 25, y: 55, baseAsset: "img/Position/Img_MFBase.png" },
         // DF (7, 8, 9, 10)
-        { number: 9, position: "DF", x: 50, y: 45, baseAsset: "img/Position/Img_DFBase.png" },
+        { number: 9, position: "DF", x: 50, y: 55, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 7, position: "DF", x: 15, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 10, position: "DF", x: 50, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 8, position: "DF", x: 85, y: 75, baseAsset: "img/Position/Img_DFBase.png" },

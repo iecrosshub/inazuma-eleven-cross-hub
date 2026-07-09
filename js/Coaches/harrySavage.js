@@ -46,9 +46,9 @@ export const coachData = {
     },
     slots: [
         // Attaccanti (FW) - Linea alta
-        { number: 3, position: "FW", x: 20, y: 20, baseAsset: "img/Position/Img_FWBase.png" },
-        { number: 1, position: "FW", x: 50, y: 20, baseAsset: "img/Position/Img_FWBase.png" },
-        { number: 2, position: "FW", x: 80, y: 20, baseAsset: "img/Position/Img_FWBase.png" },
+        { number: 3, position: "FW", x: 20, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
+        { number: 1, position: "FW", x: 50, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
+        { number: 2, position: "FW", x: 80, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
 
         // Centrocampisti (MF)
         { number: 6, position: "MF", x: 10, y: 50, baseAsset: "img/Position/Img_MFBase.png" },
@@ -57,9 +57,9 @@ export const coachData = {
         { number: 7, position: "MF", x: 90, y: 50, baseAsset: "img/Position/Img_MFBase.png" },
 
         // Difensori (DF)
-        { number: 9, position: "DF", x: 25, y: 70, baseAsset: "img/Position/Img_DFBase.png" },
-        { number: 8, position: "DF", x: 50, y: 65, baseAsset: "img/Position/Img_DFBase.png" },
-        { number: 10, position: "DF", x: 75, y: 70, baseAsset: "img/Position/Img_DFBase.png" },
+        { number: 9, position: "DF", x: 25, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
+        { number: 8, position: "DF", x: 50, y: 70, baseAsset: "img/Position/Img_DFBase.png" },
+        { number: 10, position: "DF", x: 75, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
 
         // Portiere (GK)
         { number: 11, position: "GK", x: 50, y: 90, baseAsset: "img/Position/Img_GKBase.png" }
