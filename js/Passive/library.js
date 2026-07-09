@@ -2633,6 +2633,73 @@ export const passivesLibrary = [
         actions: [
             { target: "enemy_GK", stat: "Parata", type: "base_stat", amount: "-{VAL}", condition: "dribble_success" }
         ]
+    },
+
+    {
+        title: "Tecnica FW + (ＦＷテクニック＋)",
+        id: "101025001",
+        template: "All'inizio della partita, aumenta la Tecnica degli FW alleati di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "team_FW", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Impeto] Potenza Tiro FW + (【破竹/累】ＦＷシュートパワー＋)",
+        id: "101025003",
+        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la Potenza della Tecnica di Tiro degli FW alleati di {VAL}. Condizione reset: Gol segnato.",
+        levels: [
+            { val: 2, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 3, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 4, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 5, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 7, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "dribble_success" }
+        ]
+    },
+    {
+        title: "Potenza Tiro dai Cento Calci + (百烈ショットパワー＋)",
+        id: "101025004",
+        template: "All'inizio della partita, aumenta la potenza di Tiro dai Cento Calci di {VAL}.",
+        levels: [
+            { val: 42, req: "Si sblocca a: Advanced Player +" },
+            { val: 56, req: "Si sblocca a: Top Player +" },
+            { val: 71, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "百烈ショット", type: "specific_move_power", amount: "{VAL}", condition: "always" }
+        ]
+    },
+
+    {
+        title: "Potenza Dribbling MF + (ＭＦドリブルパワー＋)",
+        id: "101024004",
+        template: "All'inizio della partita, aumenta la potenza del Dribbling degli MF alleati di {VAL}.",
+        levels: [
+            { val: 10, req: "Si sblocca a: Advanced Player +" },
+            { val: 13, req: "Si sblocca a: Top Player +" },
+            { val: 17, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "team_MF", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "always" }
+        ]
     }
 
 

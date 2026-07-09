@@ -678,7 +678,33 @@ export const characterRegistry = [
         element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_FW.png",
         stars: 1,
-        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)", // Gradiente 1 stella
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png" // Assicurati di usare il frame giusto se ce l'hai!
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
+
+    {
+        id: "danielHatchRoyaleAcademy",
+        name: "Daniel Hatch",
+        romanizedName: "Terakado Daiki",
+        japaneseName: "寺門 大貴",
+        thumb: "img/Characters/DanielHatchRoyaleAcademy.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "derekSwingRoyaleAcademy",
+        name: "Derek Swing",
+        romanizedName: "Hōmen Shūichirō",
+        japaneseName: "洞面 秀一郎",
+        thumb: "img/Characters/DerekSwingRoyaleAcademy.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    }
 ];

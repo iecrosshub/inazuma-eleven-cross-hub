@@ -1044,5 +1044,33 @@ export const techniquesLibrary = {
             { label: "% Critico", values: ["9 %", "9 %", "9 %", "9 %", "12 %", "12 %", "12 %", "12 %", "12 %", "15 %"] },
             { label: "Bonus Critico", values: ["21 %", "21 %", "21 %", "21 %", "24 %", "24 %", "24 %", "24 %", "24 %", "27 %"] }
         ]
-    }
+    },
+
+    "百烈ショット": {
+        name: "Tiro dai Cento Calci (百烈ショット)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        details: [
+            { label: "Potenza", values: [63, 68, 73, 78, 83, 88, 93, 98, 103, 108] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] },
+            { label: "% Bonus Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] }
+        ]
+    },
+
+    "デスゾーン": {
+        name: "Zona Micidiale (デスゾーン)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        details: [
+            { label: "Potenza", values: [113, 118, 123, 128, 133, 138, 143, 148, 153, 158] },
+            { label: "Costo TP", values: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["4 %", "4 %", "4 %", "4 %", "7 %", "7 %", "7 %", "7 %", "7 %", "10 %"] },
+            { label: "Bonus Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] }
+        ]
+    },
 };
