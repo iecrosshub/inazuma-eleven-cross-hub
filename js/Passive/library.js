@@ -1806,7 +1806,7 @@ export const passivesLibrary = [
         ]
     },
     {
-        title: "[Legame] Potenza Dribbling + (【共鳴】ドリブルパワー＋)",
+        title: "[Risonanza] Potenza Dribbling + (【共鳴】ドリブルパワー＋)",
         id: "101143003",
         template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Fuoco, aumenta la potenza delle proprie tecniche di Dribbling di {VAL}.",
         levels: [
@@ -2364,6 +2364,274 @@ export const passivesLibrary = [
         actions: [
             { target: "self", stat: "メガネクラッシュ", type: "specific_move_power", amount: "{POWER}", condition: "3_allies_raimon" },
             { target: "self", stat: "Critico", type: "crit_rate", amount: "{CRT}", condition: "3_allies_raimon" }
+        ]
+    },
+
+
+    {
+        title: "[Legame] Tecnica DF + (【結束】ＤＦテクニック＋)",
+        id: "101041001",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la Tecnica dei compagni DF di {VAL}.",
+        levels: [
+            { val: 23, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 70, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 93, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 140, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 186, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 233, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 373, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 467, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "team_DF", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "3_allies_raimon" }
+        ]
+    },
+    {
+        title: "Potenza Dribbling DF (Vento) + (ＤＦドリブルパワー＋〈風〉)",
+        id: "101041003",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di Dribbling di elemento Vento dei compagni DF di {VAL}.",
+        levels: [
+            { val: 3, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 4, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 7, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 10, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_DF", stat: "Potenza_Dribbling_Vento", type: "move_power", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "Potenza DF (Vento) + (ＤＦパワー＋〈風〉)",
+        id: "101041004",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di elemento Vento dei compagni DF di {VAL}.",
+        levels: [
+            { val: 10, req: "Si sblocca a: Advanced Player +" },
+            { val: 14, req: "Si sblocca a: Top Player +" },
+            { val: 18, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "team_DF", stat: "Potenza_Vento", type: "move_power", amount: "{VAL}", condition: "always" }
+        ]
+    },
+
+    {
+        title: "[Legame] Tiro + (【結束】キック＋)",
+        id: "101077001",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon o Inazuma Kids FC, aumenta il proprio Tiro di {VAL}.",
+        levels: [
+            { val: 68, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 137, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 205, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 274, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 411, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 548, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 685, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 822, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 1096, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 1371, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "self", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "3_allies_raimon_or_inazumakidsfc" }
+        ]
+    },
+    {
+        title: "Tiro FW + (ＦＷキック＋)",
+        id: "101077003",
+        template: "All'inizio della partita, aumenta il Tiro degli FW alleati di {VAL}.",
+        levels: [
+            { val: 107, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 161, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 215, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 269, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 322, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 376, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 430, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 484, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 538, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_FW", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "Potenza Tiro Cometa + (彗星シュートパワー＋改)",
+        id: "101077004",
+        template: "All'inizio della partita, aumenta la potenza di Tiro Cometa di {POWER} e il suo tasso critico di {CRT}%.",
+        levels: [
+            { power: 15, crt: 500, req: "Si sblocca a: Advanced Player +" },
+            { power: 20, crt: 800, req: "Si sblocca a: Top Player +" },
+            { power: 26, crt: 1000, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "彗星シュート", type: "specific_move_power", amount: "{POWER}", condition: "always" },
+            { target: "self", stat: "Critico", type: "crit_rate", amount: "{CRT}", condition: "always" }
+        ]
+    },
+
+    {
+        title: "[Risonanza] Potenza + (Foresta) (【共鳴】パワー＋〈林〉)",
+        id: "101078001",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Foresta, aumenta la potenza delle proprie tecniche di elemento Foresta di {VAL}.",
+        levels: [
+            { val: 1, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 3, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 5, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 10, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 27, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 34, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "self", stat: "Potenza_Foresta", type: "move_power", amount: "{VAL}", condition: "3_allies_forest" }
+        ]
+    },
+    {
+        title: "Tiro FW (Foresta) + (林ＦＷキック＋)",
+        id: "101078003",
+        template: "All'inizio della partita, aumenta il Tiro degli FW alleati di elemento Foresta di {VAL}.",
+        levels: [
+            { val: 161, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 241, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 322, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 483, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 564, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 644, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 725, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_FW_Forest", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "Potenza Vortice Magnetico + (ゆがむ空間パワー＋)",
+        id: "101078004",
+        template: "All'inizio della partita, aumenta la potenza di Vortice Magnetico di {POWER}.",
+        levels: [
+            { power: 42, req: "Si sblocca a: Advanced Player +" },
+            { power: 56, req: "Si sblocca a: Top Player +" },
+            { power: 71, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "ゆがむ空間", type: "specific_move_power", amount: "{POWER}", condition: "always" }
+        ]
+    },
+
+    {
+        title: "Tecnica FW + (ＦＷテクニック＋)",
+        id: "101099001",
+        template: "All'inizio della partita, aumenta la Tecnica degli FW alleati di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "team_FW", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Slancio] Potenza Tiro FW + (【破竹/累】ＦＷシュートパワー＋)",
+        id: "101099003",
+        template: "Ogni volta che il proprio dribbling ha successo, aumenta la potenza delle tecniche di tiro degli FW alleati di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        levels: [
+            { val: 2, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 3, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 4, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 5, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 7, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "dribble_success" }
+        ]
+    },
+    {
+        title: "Potenza Scimmia Volante + (ターザンキックパワー＋改)",
+        id: "101099004",
+        template: "All'inizio della partita, aumenta la potenza di Scimmia Volante di {POWER} e il suo tasso critico di {CRT}%.",
+        levels: [
+            { power: 22, crt: 300, req: "Si sblocca a: Advanced Player +" },
+            { power: 30, crt: 400, req: "Si sblocca a: Top Player +" },
+            { power: 38, crt: 500, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "ターザンキック", type: "specific_move_power", amount: "{POWER}", condition: "always" },
+            { target: "self", stat: "Critico", type: "crit_rate", amount: "{CRT}", condition: "always" }
+        ]
+    },
+
+    {
+        title: "Blocco DF Avversario - (敵ＤＦブロック－)",
+        id: "101120001",
+        template: "All'inizio della partita, riduce il Blocco dei DF avversari di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "enemy_DF", stat: "Blocco", type: "base_stat", amount: "-{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Slancio] Potenza Blocco DF Avversario - (【破竹/累】敵ＤＦブロックパワー－)",
+        id: "101120003",
+        template: "Ogni volta che una propria tecnica di dribbling ha successo, riduce la potenza delle tecniche di blocco dei DF avversari di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        levels: [
+            { val: 2, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 3, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 4, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 5, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 7, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 10, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "enemy_DF", stat: "Potenza_Blocco", type: "move_power", amount: "-{VAL}", condition: "dribble_success" }
+        ]
+    },
+    {
+        title: "[Slancio] Parata GK Avversario - (【破竹】敵ＧＫキャッチ－)",
+        id: "101120004",
+        template: "Ogni volta che una propria tecnica di dribbling ha successo, riduce la Parata del GK avversario di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        levels: [
+            { val: 1012, req: "Si sblocca a: Advanced Player +" },
+            { val: 1349, req: "Si sblocca a: Top Player +" },
+            { val: 1687, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "enemy_GK", stat: "Parata", type: "base_stat", amount: "-{VAL}", condition: "dribble_success" }
         ]
     }
 

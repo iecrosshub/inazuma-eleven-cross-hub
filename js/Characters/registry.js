@@ -535,8 +535,8 @@ export const characterRegistry = [
         element: "img/Element/Icon_Element_Mountain.png",
         position: "img/Position/Icon_Position_DF.png",
         stars: 1,
-        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
     {
@@ -548,8 +548,8 @@ export const characterRegistry = [
         element: "img/Element/Icon_Element_Forest.png",
         position: "img/Position/Icon_Position_DF.png",
         stars: 1,
-        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
     {
@@ -561,8 +561,8 @@ export const characterRegistry = [
         element: "img/Element/Icon_Element_Fire.png",
         position: "img/Position/Icon_Position_DF.png",
         stars: 1,
-        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
     {
@@ -574,8 +574,8 @@ export const characterRegistry = [
         element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 1,
-        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
     {
@@ -587,8 +587,8 @@ export const characterRegistry = [
         element: "img/Element/Icon_Element_Forest.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 1,
-        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
     {
@@ -600,8 +600,8 @@ export const characterRegistry = [
         element: "img/Element/Icon_Element_Fire.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 1,
-        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
     {
@@ -613,7 +613,72 @@ export const characterRegistry = [
         element: "img/Element/Icon_Element_Forest.png",
         position: "img/Position/Icon_Position_FW.png",
         stars: 1,
-        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "milesRyanRaimon",
+        name: "Miles Ryan",
+        romanizedName: "Miyasaka Ryou",
+        japaneseName: "宮坂 了",
+        thumb: "img/Characters/MilesRyanRaimon.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "maddieMoonlightInazumaKidsFC",
+        name: "Maddie Moonlight",
+        romanizedName: "Kisaragi Mako",
+        japaneseName: "如月 まこ",
+        thumb: "img/Characters/MaddieMoonlightInazumaKidsFC.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "burtWolfOccult",
+        name: "Burt Wolf",
+        romanizedName: "Nata Juzou",
+        japaneseName: "鉈 十三",
+        thumb: "img/Characters/BurtWolfOccult.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_GK.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "adrianSpeedWild",
+        name: "Adrian Speed",
+        romanizedName: "Suizenji Chiita",
+        japaneseName: "水前寺 馳威太",
+        thumb: "img/Characters/AdrianSpeedWild.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "markGamblingOtaku",
+        name: "Mark Gambling",
+        romanizedName: "Manga Moe",
+        japaneseName: "漫画 萌",
+        thumb: "img/Characters/MarkGamblingOtaku.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)", // Gradiente 1 stella
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png" // Assicurati di usare il frame giusto se ce l'hai!
     },
 ];

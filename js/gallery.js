@@ -27,11 +27,17 @@ function renderGallery(filteredList = characterRegistry) {
             `<img src="img/Frm_GachaIcon/Icon_GradeStar.png" class="star-icon">`
         ).join('');
 
+        // --- LA MODIFICA È QUI ---
+        // Controlliamo se il background è un gradiente CSS o un link a un'immagine
+        const bgStyle = char.background.includes('linear-gradient')
+            ? `background: ${char.background};`
+            : `background-image: url('${char.background}');`;
+
         return `
         <div class="col-6 col-md-3 col-lg-2 mb-4 d-flex flex-column align-items-center">
             <a href="./character.html?id=${char.id}" onclick="localStorage.setItem('selectedChar', '${char.id}')" style="text-decoration: none; color: inherit;">                
                 <div class="gacha-icon-wrapper">
-                    <div class="rarity-bg-layer" style="background-image: url('${char.background}');">
+                    <div class="rarity-bg-layer" style="${bgStyle}">
                         <img src="${char.thumb}" class="personaje-imagen" alt="char">
                     </div>
                     <img src="${char.frame}" class="frame-overlay">

@@ -987,5 +987,62 @@ export const techniquesLibrary = {
             { label: "% Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] },
             { label: "Bonus Critico", values: ["10 %", "10 %", "10 %", "10 %", "13 %", "13 %", "13 %", "13 %", "13 %", "16 %"] }
         ]
+    },
+
+    "キラーブレード": {
+        name: "Mannaia Micidiale (キラーブレード)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Catch.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        details: [
+            { label: "Potenza", values: [58, 63, 68, 73, 78, 83, 88, 93, 98, 103] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Blocco Tiri", values: ["Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì"] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["4 %", "4 %", "4 %", "4 %", "7 %", "7 %", "7 %", "7 %", "7 %", "10 %"] },
+            { label: "Bonus Critico", values: ["11 %", "11 %", "11 %", "11 %", "14 %", "14 %", "14 %", "14 %", "14 %", "17 %"] }
+        ]
+    },
+    "ゆがむ空間": {
+        name: "Vortice Magnetico (ゆがむ空間)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Catch.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        details: [
+            { label: "Potenza", values: [73, 78, 83, 88, 93, 98, 103, 108, 113, 118] },
+            { label: "Costo TP", values: [35, 35, 35, 35, 35, 35, 35, 35, 35, 35] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Blocco Tiri", values: ["Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì"] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["3 %", "3 %", "3 %", "3 %", "6 %", "6 %", "6 %", "6 %", "6 %", "9 %"] },
+            { label: "Bonus Critico", values: ["14 %", "14 %", "14 %", "14 %", "17 %", "17 %", "17 %", "17 %", "17 %", "20 %"] }
+        ]
+    },
+
+    "ターザンキック": {
+        name: "Calcio di Tarzan (ターザンキック)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Mountain.png",
+        details: [
+            { label: "Potenza", values: [63, 68, 73, 78, 83, 88, 93, 98, 103, 108] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["4 %", "4 %", "4 %", "4 %", "7 %", "7 %", "7 %", "7 %", "7 %", "10 %"] },
+            { label: "Bonus Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] }
+        ]
+    },
+
+    "五里霧中": {
+        name: "Tempesta di Polvere (五里霧中)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Dribble.png",
+        elementIcon: "img/Element/Icon_Element_Mountain.png",
+        details: [
+            { label: "Potenza", values: [98, 103, 108, 113, 118, 123, 128, 133, 138, 143] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %"] },
+            { label: "% Critico", values: ["9 %", "9 %", "9 %", "9 %", "12 %", "12 %", "12 %", "12 %", "12 %", "15 %"] },
+            { label: "Bonus Critico", values: ["21 %", "21 %", "21 %", "21 %", "24 %", "24 %", "24 %", "24 %", "24 %", "27 %"] }
+        ]
     }
 };
