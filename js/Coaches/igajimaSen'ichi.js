@@ -17,10 +17,10 @@ export const coachData = {
     formationPassive: {
         title: "Attiva F-Shuriken (アクティブ・F-センゴクイガジマ)",
         icons: ["img/Coaches/PassiveEffectIcon_AddTechnic.png", "img/Coaches/PassiveEffectIcon_AddKick.png"],
-        text: "Ogni volta che una tecnica di dribbling o blocco di un alleato riesce:<br><strong>Tutti gli alleati:</strong> statistica di Tecnica +250<br><strong>Tutti gli alleati:</strong> statistica di Frappe +250<br>Condizione di reset: quando un alleato segna un gol",
+        text: "Ogni volta che una tecnica di dribbling o blocco di un alleato riesce:<br><strong>Tutti gli alleati:</strong> statistica di Tecnica +250<br><strong>Tutti gli alleati:</strong> statistica di Tiro +250<br>Condizione di reset: quando un alleato segna un gol",
         actions: [
             { target: "team", stat: "Tecnica", type: "base_stat", amount: 250, condition: "dribble_or_block_success" },
-            { target: "team", stat: "Frappe", type: "base_stat", amount: 250, condition: "dribble_or_block_success" }
+            { target: "team", stat: "Tiro", type: "base_stat", amount: 250, condition: "dribble_or_block_success" }
         ]
     },
     coachPassive: {
