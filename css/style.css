@@ -1,0 +1,21 @@
+/* =========================================
+   TEMA GLOBALE: INAZUMA LIGHT BLUE (GENERICO)
+   ========================================= */
+body {
+    background: repeating-linear-gradient(90deg, #1b75d0, #1b75d0 40px, #2482df 40px, #2482df 80px) !important;
+    color: #102247 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+/* --- NAVIGAZIONE A PILLOLA (Globale) --- */
+.inazuma-nav-container { display: flex; justify-content: center; padding: 25px 0; }
+.inazuma-nav { background-color: #e4edf8; border-radius: 50px; display: inline-flex; padding: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
+.inazuma-nav-item { color: #003a8c; font-weight: 900; text-decoration: none; padding: 8px 24px; border-radius: 50px; font-size: 16px; transition: all 0.2s; }
+.inazuma-nav-item.active { background: linear-gradient(180deg, #2eb3ff, #0a65ff); color: #ffffff; border: 2px solid #000000; padding: 6px 22px; box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4); }
+
+/* --- BOTTONI GLOBALI --- */
+.btn-outline-info { color: #1269e8 !important; border-color: #1269e8 !important; background-color: #ffffff !important; }
+.btn-outline-info:hover, .btn-outline-info.active { background-color: #1269e8 !important; color: #ffffff !important; }
+.btn-info { background-color: #1269e8 !important; color: #ffffff !important; border: none !important; }
+.btn-secondary { background-color: #0b1a42 !important; color: #ffffff !important; border: 1px solid #0b1a42 !important; }

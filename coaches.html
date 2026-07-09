@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allenatori | Inazuma Eleven Cross</title>
+    <link rel="stylesheet" href="css/styleCoaches.css" />
+</head>
+<body class="coaches-page">
+
+<!-- NAVIGAZIONE A PILLOLA -->
+<div class="inazuma-nav-container">
+    <div class="inazuma-nav">
+        <a href="index.html" class="inazuma-nav-item">Album</a>
+        <a href="coaches.html" class="inazuma-nav-item active">Allenatori</a>
+        <a href="simulator.html" class="inazuma-nav-item">Simulatore</a>
+    </div>
+</div>
+
+<main class="app-container">
+    <div class="coaches-workspace">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Allenatori Disponibili:</h2>
+            </div>
+            <!-- Lista generata dinamicamente in una colonna -->
+            <div id="coach-list" class="coach-grid"></div>
+        </aside>
+
+        <!-- AREA PRINCIPALE DESTRA -->
+        <article class="main-detail">
+
+            <div class="detail-header">
+                <!-- Immagine a sinistra -->
+                <img id="coach-portrait" src="" class="coach-portrait" alt="" onerror="this.style.display='none'">
+
+                <!-- Testo a destra -->
+                <div class="detail-title">
+                    <div class="label">ALLENATORE</div>
+                    <h2 id="coach-name">-</h2>
+                    <!-- Tendina Livelli -->
+                    <select id="coach-level-select" class="level-select" title="Seleziona il livello"></select>
+                </div>
+            </div>
+
+            <div class="info-card">
+
+                <!-- TITOLO FORMAZIONE (Immagine blu, senza testo a destra) -->
+                <div id="formation-name" class="header-text-window">-</div>
+
+                <div class="pitch-and-conditions">
+                    <div id="pitch-container" class="pitch"></div>
+                    <div class="conditions">
+                        <div class="conditions-title">Condizioni</div>
+                        <div id="conditions-container"></div>
+                    </div>
+                </div>
+
+                <div class="passive-block">
+                    <!-- Aggiunto l'ID qui -->
+                    <div id="formation-passive-title" class="header-text-window">Attiva - Formazione</div>
+                    <div class="passive-body">
+                        <div id="formation-icons" class="passive-icons"></div>
+                        <p id="formation-text" class="passive-text"></p>
+                    </div>
+                </div>
+
+                <div class="passive-block">
+                    <!-- Aggiunto l'ID qui -->
+                    <div id="coach-passive-title" class="header-text-window">Passiva Allenatore</div>
+                    <div class="passive-body">
+                        <div id="coach-icons" class="passive-icons"></div>
+                        <p id="coach-text" class="passive-text"></p>
+                    </div>
+                </div>
+
+            </div>
+        </article>
+
+    </div>
+</main>
+
+<script type="module" src="js/coachesApp.js"></script>
+</body>
+</html>
