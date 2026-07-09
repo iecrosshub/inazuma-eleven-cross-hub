@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Builder | Inazuma Eleven Cross</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styleTeamBuilder.css" />
+</head>
+<body class="teambuilder-page">
+
+<div class="inazuma-nav-container">
+    <div class="inazuma-nav">
+        <a href="index.html" class="inazuma-nav-item">Giocatori</a>
+        <a href="coaches.html" class="inazuma-nav-item">Allenatori</a>
+        <a href="teamBuilder.html" class="inazuma-nav-item active">Team Builder</a>
+        <a href="simulator.html" class="inazuma-nav-item">Simulatore</a>
+    </div>
+</div>
+
+<main class="app-container">
+    <div class="tb-workspace">
+
+        <aside class="sidebar sidebar-left">
+            <div class="sidebar-header">
+                <h2>Formazione:</h2>
+            </div>
+            <div id="coach-list" class="coach-grid"></div>
+        </aside>
+
+        <article class="main-detail">
+            <div class="detail-header">
+                <img id="coach-portrait" src="" alt="Coach" class="coach-portrait" style="display:none;">
+                <div class="detail-title">
+                    <div class="label">TEAM BUILDER</div>
+                    <h2 id="coach-name">Seleziona Allenatore</h2>
+                    <select id="coach-level-select" class="level-select" style="display:none;"></select>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div id="team-name-header" class="header-text-window" style="display:none;"></div>
+
+                <div class="pitch-container-wrapper">
+                    <div id="pitch-container" class="pitch"></div>
+                </div>
+            </div>
+
+            <div class="pitch-actions">
+                <button id="btn-remove-player" class="tb-btn-remove" style="display: none;">
+                    <i class="fas fa-trash"></i> Rimuovi dal campo
+                </button>
+            </div>
+        </article>
+
+        <aside class="sidebar sidebar-right">
+            <div class="sidebar-header">
+                <h2>Giocatori:</h2>
+            </div>
+
+            <div class="filters-container">
+                <div class="filter-group" style="flex: 1 1 100%;">
+                    <label>Nome Giocatore</label>
+                    <input type="text" id="filter-name" placeholder="Cerca...">
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Ruolo</label>
+                        <div class="custom-select" id="custom-role" data-value="">
+                            <div class="select-selected"><span>Tutti i Ruoli</span> <i class="fas fa-chevron-down"></i></div>
+                            <div class="select-items select-hide">
+                                <div data-value="">Tutti i Ruoli</div>
+                                <div data-value="FW"><img src="img/Position/Icon_Position_FW.png" alt=""> Attaccanti (FW)</div>
+                                <div data-value="MF"><img src="img/Position/Icon_Position_MF.png" alt=""> Centrocampisti (MF)</div>
+                                <div data-value="DF"><img src="img/Position/Icon_Position_DF.png" alt=""> Difensori (DF)</div>
+                                <div data-value="GK"><img src="img/Position/Icon_Position_GK.png" alt=""> Portieri (GK)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Elemento</label>
+                        <div class="custom-select" id="custom-element" data-value="">
+                            <div class="select-selected"><span>Tutti gli Elementi</span> <i class="fas fa-chevron-down"></i></div>
+                            <div class="select-items select-hide">
+                                <div data-value="">Tutti gli Elementi</div>
+                                <div data-value="Fire"><img src="img/Element/Icon_Element_Fire.png" alt=""> Fuoco</div>
+                                <div data-value="Wind"><img src="img/Element/Icon_Element_Wind.png" alt=""> Vento</div>
+                                <div data-value="Forest"><img src="img/Element/Icon_Element_Forest.png" alt=""> Foresta</div>
+                                <div data-value="Mountain"><img src="img/Element/Icon_Element_Mountain.png" alt=""> Montagna</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Stile Abilità</label>
+                        <div class="custom-select" id="custom-style" data-value="">
+                            <div class="select-selected"><span>Tutti gli Stili</span> <i class="fas fa-chevron-down"></i></div>
+                            <div class="select-items select-hide">
+                                <div data-value="">Tutti gli Stili</div>
+                                <div data-value="Striker"><img src="img/TagTitle/Icon_Tag_Ability_Striker.png" alt=""> Striker</div>
+                                <div data-value="Playmaker"><img src="img/TagTitle/Icon_Tag_Ability_Playmaker.png" alt=""> Playmaker</div>
+                                <div data-value="Stopper"><img src="img/TagTitle/Icon_Tag_Ability_Stopper.png" alt=""> Stopper</div>
+                                <div data-value="Keeper"><img src="img/TagTitle/Icon_Tag_Ability_Keeper.png" alt=""> Keeper</div>
+                                <div data-value="Buffer"><img src="img/TagTitle/Icon_Tag_Ability_Buffer.png" alt=""> Buffer</div>
+                                <div data-value="Defensivehalf"><img src="img/TagTitle/Icon_Tag_Ability_Defensivehalf.png" alt=""> Defensive Half</div>
+                                <div data-value="Longshooter"><img src="img/TagTitle/Icon_Tag_Ability_Longshooter.png" alt=""> Long Shooter</div>
+                                <div data-value="SecondTop"><img src="img/TagTitle/Icon_Tag_Ability_SecondTop.png" alt=""> Second Top</div>
+                                <div data-value="Shootblocker"><img src="img/TagTitle/Icon_Tag_Ability_Shootblocker.png" alt=""> Shoot Blocker</div>
+                                <div data-value="SideBack"><img src="img/TagTitle/Icon_Tag_Ability_SideBack.png" alt=""> Side Back</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Squadra</label>
+                        <div class="custom-select" id="custom-team" data-value="">
+                            <div class="select-selected"><span>Tutte le Squadre</span> <i class="fas fa-chevron-down"></i></div>
+                            <div class="select-items select-hide">
+                                <div data-value="">Tutte le Squadre</div>
+                                <div data-value="Raimon"><img src="img/TagTitle/Icon_Tag_Team_Raimon.png" alt=""> Raimon</div>
+                                <div data-value="RoyalAcademy"><img src="img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" alt=""> Royal Academy</div>
+                                <div data-value="Zeus"><img src="img/TagTitle/Icon_Tag_Team_Zeus.png" alt=""> Zeus</div>
+                                <div data-value="Brainwashing"><img src="img/TagTitle/Icon_Tag_Team_Brainwashing.png" alt=""> Brainwashing</div>
+                                <div data-value="Kirkwood"><img src="img/TagTitle/Icon_Tag_Team_Kirkwood.png" alt=""> Kirkwood</div>
+                                <div data-value="Occult"><img src="img/TagTitle/Icon_Tag_Team_Occult.png" alt=""> Occult</div>
+                                <div data-value="Otaku"><img src="img/TagTitle/Icon_Tag_Team_Otaku.png" alt=""> Otaku</div>
+                                <div data-value="Shuriken"><img src="img/TagTitle/Icon_Tag_Team_Shuriken.png" alt=""> Shuriken</div>
+                                <div data-value="Wild"><img src="img/TagTitle/Icon_Tag_Team_Wild.png" alt=""> Wild</div>
+                                <div data-value="InazumaJapan"><img src="img/TagTitle/Icon_Tag_Team_InazumaJapan.png" alt=""> Inazuma Japan</div>
+                                <div data-value="InazumaKidsFC"><img src="img/TagTitle/Icon_Tag_Team_InazumaKidsFC.png" alt=""> Inazuma Kids FC</div>
+                                <div data-value="JapanNationalTeam2026"><img src="img/TagTitle/Icon_Tag_Team_JapanNationalTeam2026.png" alt=""> Japan 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-group" style="flex: 1 1 100%;">
+                        <label>Stagione</label>
+                        <div class="custom-select" id="custom-season" data-value="">
+                            <div class="select-selected"><span>Tutte le Stagioni</span> <i class="fas fa-chevron-down"></i></div>
+                            <div class="select-items select-hide">
+                                <div data-value="">Tutte le Stagioni</div>
+                                <div data-value="InaEle1"><img src="img/TagTitle/Icon_Tag_Title_InaEle1.png" alt=""> Inazuma Eleven 1</div>
+                                <div data-value="InaEle2"><img src="img/TagTitle/Icon_Tag_Title_InaEle2.png" alt=""> Inazuma Eleven 2</div>
+                                <div data-value="InaEle3"><img src="img/TagTitle/Icon_Tag_Title_InaEle3.png" alt=""> Inazuma Eleven 3</div>
+                                <div data-value="Cross"><img src="img/TagTitle/Icon_Tag_Title_Cross.png" alt=""> Cross</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btn-reset-filters" class="tb-btn-reset">Resetta Filtri</button>
+            </div>
+
+            <div id="player-grid-container" class="tb-player-grid"></div>
+        </aside>
+
+    </div>
+</main>
+
+<script type="module" src="js/teamBuilder.js"></script>
+</body>
+</html>
