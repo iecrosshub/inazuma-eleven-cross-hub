@@ -24,9 +24,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 2, rank: 'S' }, // 4 = Centrocampo Sinistra
-        { code: 3, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 6, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 2, rank: 'S' }, 
+        { code: 3, rank: 'A' }, 
+        { code: 6, rank: 'B' }  
     ],
 
     myTechniques: ["流星ブレード", "天空落とし"],

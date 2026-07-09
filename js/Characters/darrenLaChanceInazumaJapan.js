@@ -24,9 +24,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 11, rank: 'S' }, // 4 = Centrocampo Sinistra
-        { code: 9, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 8, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 11, rank: 'S' }, 
+        { code: 9, rank: 'A' }, 
+        { code: 8, rank: 'B' }  
     ],
 
     myTechniques: ["ゴッドハンド2", "ムゲン・ザ・ハンド"],

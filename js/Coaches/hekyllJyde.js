@@ -27,7 +27,7 @@ export const coachData = {
         id: "coach_passive_jyde",
         icons: ["img/Coaches/PassiveEffectIcon_SubCatch.png"],
         title: "Rottura GK (GKブレイク)",
-        template: "Ogni volta che una tecnica di dribbling di un alleato MF ha successo:<br><strong>GK Avversario:</strong> statistica di Parata -{VAL}<br><span style='color: #1760bd; font-weight: bold;'>Condizione di reset: quando un alleato segna un gol</span>",
+        template: "Ogni volta che una tecnica di dribbling di un alleato MF ha successo:<br><strong>GK Avversario:</strong> statistica di Parata -{VAL}<br><strong>Condizione di reset:</strong> quando un alleato segna un gol",
         levels: [
             { val: 60, req: "Niv.1" },
             { val: 120, req: "Niv.2" },

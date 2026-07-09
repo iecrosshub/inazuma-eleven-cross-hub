@@ -26,9 +26,9 @@ export const charData = {
     myTechniques: ["アストロブレイク", "ライトニングアクセル"],
 
     zones: [
-        { code: 4, rank: 'A' }, // 4 = Centrocampo Sinistra
-        { code: 6, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 3, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 4, rank: 'A' }, 
+        { code: 6, rank: 'A' }, 
+        { code: 3, rank: 'B' }  
     ],
 
     myBasicPassivesIds: ["100000201", "103013001", "103013003"],

@@ -26,9 +26,9 @@ export const charData = {
     myTechniques: ["ザ・ウォール", "ザ・マウンテン"],
 
     zones: [
-        { code: 9, rank: 'S' }, // 4 = Centrocampo Sinistra
-        { code: 7, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 10, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 9, rank: 'S' }, 
+        { code: 7, rank: 'A' }, 
+        { code: 10, rank: 'B' }  
     ],
 
     myBasicPassivesIds: ["100000301", "103003001", "103003003"],

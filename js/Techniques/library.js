@@ -878,4 +878,114 @@ export const techniquesLibrary = {
             { label: "Bonus Critico", values: ["18 %", "18 %", "18 %", "18 %", "21 %", "21 %", "21 %", "21 %", "21 %", "24 %"] }
         ]
     },
+
+    "コイルターン": {
+        name: "Difesa a Spirale (コイルターン)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        details: [
+            { label: "Potenza", values: [82, 87, 92, 97, 102, 107, 112, 117, 122, 127] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %"] },
+            { label: "% Critico", values: ["7 %", "7 %", "7 %", "7 %", "10 %", "10 %", "10 %", "10 %", "10 %", "13 %"] },
+            { label: "Bonus Critico", values: ["11 %", "11 %", "11 %", "11 %", "14 %", "14 %", "14 %", "14 %", "14 %", "17 %"] }
+        ]
+    },
+
+    "ダッシュアクセル": {
+        name: "Scatto Bruciante (ダッシュアクセル)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Dribble.png",
+        elementIcon: "img/Element/Icon_Element_Mountain.png",
+        details: [
+            { label: "Potenza", values: [78, 83, 88, 93, 98, 103, 108, 113, 118, 123] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %"] },
+            { label: "% Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] },
+            { label: "Bonus Critico", values: ["11 %", "11 %", "11 %", "11 %", "14 %", "14 %", "14 %", "14 %", "14 %", "17 %"] }
+        ]
+    },
+    "彗星シュート": {
+        name: "Tiro Cometa (彗星シュート)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        details: [
+            { label: "Potenza", values: [41, 46, 51, 56, 61, 66, 71, 76, 81, 86] },
+            { label: "Costo TP", values: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["4 %", "4 %", "4 %", "4 %", "7 %", "7 %", "7 %", "7 %", "7 %", "10 %"] },
+            { label: "Bonus Critico", values: ["16 %", "16 %", "16 %", "16 %", "19 %", "19 %", "19 %", "19 %", "19 %", "22 %"] }
+        ]
+    },
+    "サイクロン": {
+        name: "Ciclone (サイクロン)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        details: [
+            { label: "Potenza", values: [123, 128, 133, 138, 143, 148, 153, 158, 163, 168] },
+            { label: "Costo TP", values: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %"] },
+            { label: "% Critico", values: ["12 %", "12 %", "12 %", "12 %", "15 %", "15 %", "15 %", "15 %", "15 %", "18 %"] },
+            { label: "Bonus Critico", values: ["20 %", "20 %", "20 %", "20 %", "23 %", "23 %", "23 %", "23 %", "23 %", "26 %"] }
+        ]
+    },
+
+    "分身フェイント": {
+        name: "Illusione Ottica (分身フェイント)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Dribble.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        details: [
+            { label: "Potenza", values: [78, 83, 88, 93, 98, 103, 108, 113, 118, 123] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %"] },
+            { label: "% Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] },
+            { label: "Bonus Critico", values: ["11 %", "11 %", "11 %", "11 %", "14 %", "14 %", "14 %", "14 %", "14 %", "17 %"] }
+        ]
+    },
+
+    "グレネードショット": {
+        name: "Tiro Fulminante (グレネードショット)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        details: [
+            { label: "Potenza", values: [62, 67, 72, 77, 82, 87, 92, 97, 102, 107] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["4 %", "4 %", "4 %", "4 %", "7 %", "7 %", "7 %", "7 %", "7 %", "10 %"] },
+            { label: "Bonus Critico", values: ["8 %", "8 %", "8 %", "8 %", "11 %", "11 %", "11 %", "11 %", "11 %", "14 %"] }
+        ]
+    },
+
+    "クロスドライブ": {
+        name: "Tiro Incrociato (クロスドライブ)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        details: [
+            { label: "Potenza", values: [67, 72, 77, 82, 87, 92, 97, 102, 107, 112] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["3 %", "3 %", "3 %", "3 %", "6 %", "6 %", "6 %", "6 %", "6 %", "9 %"] },
+            { label: "Bonus Critico", values: ["15 %", "15 %", "15 %", "15 %", "18 %", "18 %", "18 %", "18 %", "18 %", "21 %"] }
+        ]
+    },
+
+    "メガネクラッシュ": {
+        name: "Schianto del Viso (メガネクラッシュ)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Mountain.png",
+        details: [
+            { label: "Potenza", values: [57, 62, 67, 72, 77, 82, 87, 92, 97, 102] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] },
+            { label: "Bonus Critico", values: ["10 %", "10 %", "10 %", "10 %", "13 %", "13 %", "13 %", "13 %", "13 %", "16 %"] }
+        ]
+    }
 };

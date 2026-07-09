@@ -15,7 +15,7 @@ export const charData = {
     ],
 
     stats: {
-        "TP": { lv1: 100, lv300: 100, icon: "img/Status/Icon_Status_TP.png" },
+        "TP": { lv1: 100, lv300: 100, icon: "img/TagTitle//Icon_Status_TP.png" },
         "Tiro": { lv1: 49, lv300: 3760, icon: "img/Status/Icon_Status_Kick.png" },
         "Tecnica": { lv1: 41, lv300: 3108, icon: "img/Status/Icon_Status_Technic.png" },
         "Blocco": { lv1: 31, lv300: 2128, icon: "img/Status/Icon_Status_Block.png" },

@@ -24,9 +24,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 8, rank: 'S' }, // 4 = Centrocampo Sinistra
-        { code: 4, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 10, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 8, rank: 'S' }, 
+        { code: 4, rank: 'A' }, 
+        { code: 10, rank: 'B' }  
     ],
 
     myTechniques: ["疾風ダッシュ", "風神の舞"],

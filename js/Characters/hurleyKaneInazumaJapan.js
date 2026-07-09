@@ -24,9 +24,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 8, rank: 'A' }, // 4 = Centrocampo Sinistra
-        { code: 4, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 7, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 8, rank: 'A' }, 
+        { code: 4, rank: 'A' }, 
+        { code: 7, rank: 'B' }  
     ],
 
     myTechniques: ["ツナミブースト", "スピニングカット"],

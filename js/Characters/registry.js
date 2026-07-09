@@ -525,4 +525,95 @@ export const characterRegistry = [
         background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
+
+    {
+        id: "jackWallsideRaimon",
+        name: "Jack Wallside",
+        romanizedName: "Kabeyama Heigorō",
+        japaneseName: "壁山 塀吾郎",
+        thumb: "img/Characters/JackWallsideRaimon.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "jimWraithRaimon",
+        name: "Jim Wraith",
+        romanizedName: "Kageno Jin",
+        japaneseName: "影野 仁",
+        thumb: "img/Characters/JimWraithRaimon.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "todIronsideRaimon",
+        name: "Tod Ironside",
+        romanizedName: "Kurimatsu Teppei",
+        japaneseName: "栗松 鉄平",
+        thumb: "img/Characters/TodIronsideRaimon.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "steveGrimRaimon",
+        name: "Steve Grim",
+        romanizedName: "Handa Shinichi",
+        japaneseName: "半田 真一",
+        thumb: "img/Characters/SteveGrimRaimon.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "timmySaundersRaimon",
+        name: "Timmy Saunders",
+        romanizedName: "Shourinji Ayumu",
+        japaneseName: "少林寺 歩",
+        thumb: "img/Characters/TimmySaundersRaimon.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "samKincaidRaimon",
+        name: "Sam Kincaid",
+        romanizedName: "Shishido Sakichi",
+        japaneseName: "宍戸 佐吉",
+        thumb: "img/Characters/SamKincaidRaimon.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "williamGlassRaimon",
+        name: "William Glass",
+        romanizedName: "Megane Kakeru",
+        japaneseName: "目金 欠流",
+        thumb: "img/Characters/WilliamGlassRaimon.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
 ];

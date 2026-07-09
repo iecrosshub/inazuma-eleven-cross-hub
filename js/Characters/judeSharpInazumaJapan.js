@@ -20,9 +20,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 5, rank: 'S' }, // 4 = Centrocampo Sinistra
-        { code: 7, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 2, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 5, rank: 'S' }, 
+        { code: 7, rank: 'A' }, 
+        { code: 2, rank: 'B' }  
     ],
 
     myTechniques: ["イリュージョンボール", "皇帝ペンギン2号"],

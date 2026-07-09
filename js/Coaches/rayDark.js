@@ -27,7 +27,7 @@ export const coachData = {
         id: "coach_passive_dark",
         title: "Power Boost Playmaker / Regista (プレイメーカーパワーブースト)",
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
-        template: "All'inizio della partita:<br>Per gli alleati con tag <strong>Regista (Playmaker)</strong>:<br>potenza delle tecniche di tiro +{VAL}<br>potenza delle tecniche di dribbling +{VAL2}",
+        template: "All'inizio della partita:<br>Per gli alleati con tag <strong>Regista (Playmaker)</strong>:<br>Potenza delle tecniche di tiro +{VAL}<br>Potenza delle tecniche di dribbling +{VAL2}",
         levels: [
             { val: 5, val2: 5, req: "Niv.1" },
             { val: 11, val2: 11, req: "Niv.2" },

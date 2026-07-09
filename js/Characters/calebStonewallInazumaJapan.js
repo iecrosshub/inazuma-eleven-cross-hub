@@ -19,9 +19,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 4, rank: 'S' }, // 4 = Centrocampo Sinistra
-        { code: 6, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 5, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 4, rank: 'S' }, 
+        { code: 6, rank: 'A' }, 
+        { code: 5, rank: 'B' }  
     ],
 
     myTechniques: ["ジャッジスルー2", "キラーフィールズ"],

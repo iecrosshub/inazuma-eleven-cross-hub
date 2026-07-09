@@ -6,6 +6,7 @@ import { getStatKeyByIcon } from './utils.js';
 export function calculateAllDamage(currentDb, techKey, techLvlIndex, lvl, roleMult, stab, adv, passiveSelections) {
     const tech = techniquesLibrary[techKey];
     const statKey = getStatKeyByIcon(tech.icon);
+    // Otteniamo l'elemento della tecnica (es: "fire", "wind", "forest", "mountain")
     const techElement = tech.elementIcon.split('/').pop().replace('Icon_Element_', '').replace('.png', '').toLowerCase();
 
     const baseStat = currentDb.stats[statKey] ? currentDb.stats[statKey][lvl] : 0;
@@ -13,7 +14,7 @@ export function calculateAllDamage(currentDb, techKey, techLvlIndex, lvl, roleMu
 
     let passiveStatBuff = 0;
     let passivePowerBuff = 0;
-    let passiveData = []; // Per restituire anche le icone 🟢/⚪
+    let passiveData = [];
 
     passiveSelections.forEach(sel => {
         const p = passivesLibrary.find(x => x.id === sel.id);
@@ -25,18 +26,29 @@ export function calculateAllDamage(currentDb, techKey, techLvlIndex, lvl, roleMu
         if (p.actions) {
             p.actions.forEach(action => {
                 let amount = 0;
+                // Gestione dinamica dei valori
                 if (action.amount === "{VAL}") amount = parseInt(currentLvData.val) || 0;
                 else if (action.amount === "{POWER}") amount = parseInt(currentLvData.power) || 0;
                 else if (action.amount === "{VAL2}") amount = parseInt(currentLvData.val2) || 0;
 
+                // 1. Buff alle statistiche base
                 if (action.type === "base_stat" && (action.stat === statKey || action.stat === "Tutte_le_Statistiche")) {
                     passiveStatBuff += amount;
                     isAffecting = true;
-                } else if (action.type === "move_power") {
-                    // Logica di match per i buff potenza
+                }
+                // 2. Buff generici alla potenza della mossa (es. "Schoot Power +")
+                else if (action.type === "move_power") {
                     if ((action.stat === "Potenza_Tiro" && statKey === "Tiro") ||
                         (action.stat === "Potenza_Dribbling" && statKey === "Tecnica") ||
                         (action.stat === `Potenza_${techElement.charAt(0).toUpperCase() + techElement.slice(1)}`)) {
+                        passivePowerBuff += amount;
+                        isAffecting = true;
+                    }
+                }
+                // 3. NUOVO: Buff specifici per una mossa particolare (es. "Glass Crash")
+                else if (action.type === "specific_move_power") {
+                    // Confrontiamo l'ID della tecnica o il nome originale
+                    if (action.stat === techKey || action.stat === tech.name) {
                         passivePowerBuff += amount;
                         isAffecting = true;
                     }

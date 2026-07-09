@@ -15,9 +15,9 @@ export const charData = {
     ],
 
     zones: [
-        { code: 4, rank: 'S' }, // 4 = Centrocampo Sinistra
-        { code: 5, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 7, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 4, rank: 'S' }, 
+        { code: 5, rank: 'A' }, 
+        { code: 7, rank: 'B' }  
     ],
 
     stats: {

@@ -19,9 +19,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 1, rank: 'S' }, // 4 = Centrocampo Sinistra
-        { code: 2, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 3, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 1, rank: 'S' }, 
+        { code: 2, rank: 'A' }, 
+        { code: 3, rank: 'B' }  
     ],
 
     myTechniques: ["ドラゴンクラッシュ", "ドラゴンスレイヤー"],

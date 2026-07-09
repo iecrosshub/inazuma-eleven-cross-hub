@@ -239,7 +239,7 @@ export const passivesLibrary = [
             { power: 43, tp: 30, req: "Si sblocca a: Legendary Player +" }
         ],
         actions: [
-            { target: "self", stat: "Salto Temporale (ヘブンズタイム)", type: "specific_move_power", amount: "{POWER}", condition: "always" },
+            { target: "self", stat: "ヘブンズタイム", type: "specific_move_power", amount: "{POWER}", condition: "always" },
             { target: "self", stat: "TP", type: "tp_reduction", amount: "{TP}", condition: "always" }
         ]
     },
@@ -2051,5 +2051,321 @@ export const passivesLibrary = [
         actions: [
             { target: "team_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
+    },
+
+    {
+        title: "Blocco DF + (ＤＦブロック＋)",
+        id: "101003001",
+        template: "All'inizio della partita, aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [{ target: "team_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "always" }]
+    },
+    {
+        title: "[Legame] Tecnica Team + (【結束】チームテクニック＋)",
+        id: "101003003",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la Tecnica di tutti gli alleati di {VAL}.",
+        levels: [
+            { val: 42, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 63, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 84, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 105, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 126, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 147, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 168, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 189, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 210, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [{ target: "team", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+
+    {
+        title: "[Slancio] Potenza Dribbling DF + (【破竹】ＤＦドリブルパワー＋)",
+        id: "101003004",
+        template: "Quando effettua una tecnica di blocco con successo, aumenta la potenza del dribbling degli alleati DF di {VAL}. <br>Condizione di reset: Gol segnato.",
+        levels: [
+            { val: 12, req: "Si sblocca a: Advanced Player +" },
+            { val: 16, req: "Si sblocca a: Top Player +" },
+            { val: 21, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [{ target: "team_DF", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "block_success" }]
+    },
+
+    {
+        title: "[Legame] Blocco DF + (【結束】ＤＦブロック＋)",
+        id: "101004001",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 23, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 70, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 93, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 140, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 186, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 233, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 373, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 467, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [{ target: "team_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+    {
+        title: "[Slancio/Cumulativa] Tecnica FW/MF Avversari - (【破竹/累】敵ＦＷ・ＭＦテクニック－)",
+        id: "101004003",
+        template: "Ogni volta che la propria tecnica di dribbling ha successo, riduce la Tecnica degli FW e MF avversari di {VAL}. Condizione di reset: Gol segnato.",
+        levels: [
+            { val: 42, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 63, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 84, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 105, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 126, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 147, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 168, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 189, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 211, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [{ target: "enemy_FW_MF", stat: "Tecnica", type: "base_stat", amount: "-{VAL}", condition: "dribble_success" }]
+    },
+    {
+        title: "Potenza DF/GK + (Foresta) (ＤＦ・ＧＫパワー＋〈林〉)",
+        id: "101004004",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di elemento Foresta degli alleati DF e GK di {VAL}.",
+        levels: [
+            { val: 10, req: "Si sblocca a: Advanced Player +" },
+            { val: 14, req: "Si sblocca a: Top Player +" },
+            { val: 18, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [{ target: "team_Forest_DF_GK", stat: "Potenza_Foresta", type: "move_power", amount: "{VAL}", condition: "always" }]
+    },
+
+    {
+        title: "[Legame] Blocco DF + (【結束】ＤＦブロック＋)",
+        id: "101005001",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 23, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 70, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 93, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 140, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 186, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 233, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 373, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 467, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [{ target: "team_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+    {
+        title: "[Legame] Potenza Dribbling + (【結束】ドリブルパワー＋)",
+        id: "101005003",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la potenza della propria tecnica di Dribbling di {VAL}.",
+        levels: [
+            { val: 8, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 28, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 32, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 36, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 41, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [{ target: "self", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+    {
+        title: "Potenza DF/GK + (Foresta) (ＤＦ・ＧＫパワー＋〈林〉)",
+        id: "101005004",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di elemento Foresta degli alleati DF e GK di {VAL}.",
+        levels: [
+            { val: 10, req: "Si sblocca a: Advanced Player +" },
+            { val: 14, req: "Si sblocca a: Top Player +" },
+            { val: 18, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [{ target: "team_Forest_DF_GK", stat: "Potenza_Foresta", type: "move_power", amount: "{VAL}", condition: "always" }]
+    },
+    {
+        title: "Tiro Team + (チームキック＋)",
+        id: "101006001",
+        template: "All'inizio della partita, aumenta il Tiro di tutti gli alleati di {VAL}.",
+        levels: [
+            { val: 8, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 25, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 33, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 84, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 100, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 168, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [{ target: "team", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "always" }]
+    },
+    {
+        title: "[Legame] Blocco DF + (【結束】ＤＦブロック＋)",
+        id: "101006003",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 112, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 168, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 336, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 392, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 504, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 560, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [{ target: "team_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+    {
+        title: "[Legame] Potenza Tiro FW Foresta + (【結束】林ＦＷシュートパワー＋)",
+        id: "101006004",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la potenza delle tecniche di tiro degli FW alleati di attributo Foresta di {VAL}.",
+        levels: [
+            { val: 16, req: "Si sblocca a: Advanced Player +" },
+            { val: 21, req: "Si sblocca a: Top Player +" },
+            { val: 27, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [{ target: "team_FW_Forest", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+
+    {
+        title: "[Legame] Tecnica MF + (【結束】ＭＦテクニック＋)",
+        id: "101007003",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la Tecnica degli alleati MF di {VAL}.",
+        levels: [
+            { val: 149, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 298, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 373, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 522, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 597, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 747, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [{ target: "team_MF", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+    {
+        title: "Potenza Dribbling + (ドリブルパワー＋)",
+        id: "101007004",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Dribbling di {VAL}.",
+        levels: [
+            { val: 31, req: "Si sblocca a: Advanced Player +" },
+            { val: 41, req: "Si sblocca a: Top Player +" },
+            { val: 52, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [{ target: "self", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "always" }]
+    },
+
+    {
+        title: "Tiro Team + (チームキック＋)",
+        id: "101008001",
+        template: "All'inizio della partita, aumenta il Tiro degli alleati di {VAL}.",
+        levels: [
+            { val: 8, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 25, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 33, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 84, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 100, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 168, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [{ target: "team", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "always" }]
+    },
+    {
+        title: "[Legame] Tiro Personale + (【結束】キック＋)",
+        id: "101008003",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta il proprio Tiro di {VAL}.",
+        levels: [
+            { val: 336, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 504, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 840, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 1008, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 1176, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 1512, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 1680, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [{ target: "self", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+    {
+        title: "[Legame] Potenza Fuoco + (【結束】パワー＋〈火〉)",
+        id: "101008004",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la propria potenza delle tecniche Fuoco di {VAL}.",
+        levels: [
+            { val: 33, req: "Si sblocca a: Advanced Player +" },
+            { val: 44, req: "Si sblocca a: Top Player +" },
+            { val: 55, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [{ target: "self", stat: "Potenza_Fuoco", type: "move_power", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+
+    {
+        title: "[Legame] Potenza Tiro + (【結束】シュートパワー＋)",
+        id: "101012001",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la propria potenza di Tiro di {VAL}.",
+        levels: [
+            { val: 1, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 3, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 5, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 10, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 27, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 34, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [{ target: "self", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "3_allies_raimon" }]
+    },
+    {
+        title: "[Risonanza] Potenza Tiro + (【共鳴】シュートパワー＋)",
+        id: "101012003",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Foresta, aumenta la propria potenza di Tiro di {VAL}.",
+        levels: [
+            { val: 8, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 28, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 32, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 36, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 41, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [{ target: "self", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "3_allies_forest" }]
+    },
+    {
+        title: "[Legame] Schianto del Viso + (【結束】メガネクラッシュパワー＋改)",
+        id: "101012004",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la potenza di Schianto del Viso di {POWER} e il suo tasso critico di {CRT}%.",
+        levels: [
+            { power: 39, crt: 600, req: "Si sblocca a: Advanced Player +" },
+            { power: 52, crt: 800, req: "Si sblocca a: Top Player +" },
+            { power: 66, crt: 1000, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "メガネクラッシュ", type: "specific_move_power", amount: "{POWER}", condition: "3_allies_raimon" },
+            { target: "self", stat: "Critico", type: "crit_rate", amount: "{CRT}", condition: "3_allies_raimon" }
+        ]
     }
+
+
 ];

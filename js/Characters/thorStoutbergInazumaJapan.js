@@ -24,9 +24,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 7, rank: 'A' }, // 4 = Centrocampo Sinistra
-        { code: 6, rank: 'A' }, // 5 = Trequartista (Centro-alto)
-        { code: 4, rank: 'B' }  // 7 = Mediano (Centro-basso)
+        { code: 7, rank: 'A' }, 
+        { code: 6, rank: 'A' }, 
+        { code: 4, rank: 'B' }  
     ],
 
     myTechniques: ["スーパー四股踏み", "ブレードアタック"],
