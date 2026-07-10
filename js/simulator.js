@@ -11,20 +11,15 @@ async function init() {
     const charSelect = document.getElementById('sim-char');
     if (!charSelect) return;
 
-    // Popola le opzioni della tendina
     charSelect.innerHTML = characterRegistry.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-    // Cerca il parametro nell'URL
     const urlParams = new URLSearchParams(window.location.search);
     let charParam = urlParams.get('char');
 
-    // IL TRUCCO INFALLIBILE: Se l'URL non ha il parametro (perso a causa del server),
-    // leggiamo l'ultimo PG visitato dal localStorage!
     if (!charParam) {
         charParam = localStorage.getItem('selectedChar');
     }
 
-    // Se troviamo un ID valido (da URL o Memoria), lo impostiamo come valore di default
     if (charParam && charSelect.querySelector(`option[value="${charParam}"]`)) {
         charSelect.value = charParam;
     }
@@ -45,7 +40,6 @@ async function init() {
 async function loadCharacter() {
     const id = document.getElementById('sim-char').value;
     try {
-        // Percorso assoluto corretto
         const module = await import(`./Characters/${id}.js`);
         currentDb = module.charData;
 
@@ -56,7 +50,6 @@ async function loadCharacter() {
                 .map(tKey => `<option value="${tKey}">${techniquesLibrary[tKey].name}</option>`).join('');
         }
 
-        // Aggiorna interfaccia passive
         const container = document.getElementById('dynamic-passives-container');
         if (container) {
             container.innerHTML = [...(currentDb.myBasicPassivesIds || []), ...(currentDb.myRarityPassivesIds || [])].map(pId => {
@@ -64,7 +57,31 @@ async function loadCharacter() {
                 if (!p) return '';
                 let opts = '<option value="disabled" selected>Disattivata</option>';
                 p.levels.forEach((_, idx) => opts += `<option value="${idx}">Lv. ${idx + 1}</option>`);
-                return `<div class="row g-2 mb-2"><div class="col-7 small">${p.title}</div><div class="col-5"><select class="form-select form-select-sm sim-passive-lvl-select" data-passive-id="${p.id}">${opts}</select></div></div>`;
+
+                // Rileva se è una passiva cumulativa per mostrare il Contatore!
+                const isCumulative = p.title.includes('累') || p.template.includes('Ogni volta che');
+
+                let stackHtml = '';
+                if (isCumulative) {
+                    stackHtml = `
+                    <div class="col-3">
+                        <div class="input-group input-group-sm" title="Quante volte si è attivata?">
+                            <span class="input-group-text fw-bold">x</span>
+                            <input type="number" class="form-control sim-passive-stacks" data-passive-id="${p.id}" value="1" min="1" max="50">
+                        </div>
+                    </div>`;
+                }
+
+                return `
+                <div class="row g-2 mb-2 align-items-center">
+                    <div class="col-${isCumulative ? '5' : '7'} small fw-bold text-secondary" title="${p.template}">
+                        ${p.title}
+                    </div>
+                    <div class="col-${isCumulative ? '4' : '5'}">
+                        <select class="form-select form-select-sm sim-passive-lvl-select" data-passive-id="${p.id}">${opts}</select>
+                    </div>
+                    ${stackHtml}
+                </div>`;
             }).join('');
         }
         calculateDamage();
@@ -74,10 +91,16 @@ async function loadCharacter() {
 function calculateDamage() {
     if (!currentDb) return;
 
-    // Raccoglie gli input
+    // Raccoglie gli input, INCLUSO il numero di Stacks (Volte)
     const selections = Array.from(document.querySelectorAll('.sim-passive-lvl-select'))
         .filter(s => s.value !== 'disabled')
-        .map(s => ({ id: s.dataset.passiveId, lvIndex: parseInt(s.value) }));
+        .map(s => {
+            const id = s.dataset.passiveId;
+            const stackInput = document.querySelector(`.sim-passive-stacks[data-passive-id="${id}"]`);
+            const stacks = stackInput ? parseInt(stackInput.value) || 1 : 1;
+
+            return { id, lvIndex: parseInt(s.value), stacks };
+        });
 
     const data = calculateAllDamage(
         currentDb,
@@ -90,10 +113,8 @@ function calculateDamage() {
         selections
     );
 
-    // Formatta la formula
-// Formatta la formula (Senza il risultato finale ridondante)
     const formulaStr = `<span class="text-info fw-bold">Equazione:</span><br>[(${data.baseStat} + ${data.passiveStatBuff}) &times; ${data.roleMult.toFixed(2)}] &times; (${data.techPower + data.passivePowerBuff}/100) &times; ${data.stab} &times; ${data.adv}`;
-    // Aggiorna UI
+
     updateSimulatorUI(data, formulaStr);
     updatePassiveDescriptions(data.passiveData);
 }

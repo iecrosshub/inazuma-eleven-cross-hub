@@ -7,10 +7,7 @@ export function calculateAllDamage(currentDb, techKey, techLvlIndex, lvl, roleMu
     const tech = techniquesLibrary[techKey];
     const statKey = getStatKeyByIcon(tech.icon);
 
-    // 1. Otteniamo l'elemento della tecnica in inglese ("fire", "wind", ecc.)
     const techElementEn = tech.elementIcon.split('/').pop().replace('Icon_Element_', '').replace('.png', '').toLowerCase();
-
-    // 2. Mappiamo l'elemento in Italiano perché le passive usano parole come "Fuoco", "Vento"
     const elMap = { 'fire': 'Fuoco', 'wind': 'Vento', 'forest': 'Foresta', 'mountain': 'Montagna', 'void': 'Vuoto' };
     const techElementIt = elMap[techElementEn];
 
@@ -28,48 +25,50 @@ export function calculateAllDamage(currentDb, techKey, techLvlIndex, lvl, roleMu
         const currentLvData = p.levels[sel.lvIndex];
         let isAffecting = false;
 
+        // RECUPERA IL NUMERO DI VOLTE (Se non c'è, vale 1)
+        const stacks = sel.stacks || 1;
+
         if (p.actions) {
             p.actions.forEach(action => {
                 let amount = 0;
-                // Gestione dinamica dei valori
+
                 if (action.amount === "{VAL}") amount = parseInt(currentLvData.val) || 0;
                 else if (action.amount === "{POWER}") amount = parseInt(currentLvData.power) || 0;
                 else if (action.amount === "{VAL2}") amount = parseInt(currentLvData.val2) || 0;
 
-                // 1. Buff alle statistiche base
+                // MOLTIPLICA L'EFFETTO DELLA PASSIVA PER LE VOLTE CHE SI È ATTIVATA
+                amount = amount * stacks;
+
+                // 1. Buff Statistica Base
                 if (action.type === "base_stat" && (action.stat === statKey || action.stat === "Tutte_le_Statistiche")) {
                     passiveStatBuff += amount;
                     isAffecting = true;
                 }
 
-                // 2. Buff alla potenza della mossa
+                // 2. Buff Potenza Mossa
                 else if (action.type === "move_power") {
                     let isMatch = false;
 
-                    // CASO A: Buff generico (es. "Potenza_Tiro")
                     if (action.stat === "Potenza_Tiro" && statKey === "Tiro") isMatch = true;
                     if (action.stat === "Potenza_Dribbling" && statKey === "Tecnica") isMatch = true;
                     if (action.stat === "Potenza_Blocco" && statKey === "Blocco") isMatch = true;
                     if (action.stat === "Potenza_Parata" && statKey === "Parata") isMatch = true;
 
-                    // CASO B: Buff per solo Elemento (es. "Potenza_Wind" o "Potenza_Fuoco")
                     if (action.stat.toLowerCase() === `potenza_${techElementEn}`) isMatch = true;
                     if (action.stat === `Potenza_${techElementIt}`) isMatch = true;
 
-                    // CASO C: Buff Combinato Azione+Elemento (es. "Potenza_Tiro_Fuoco")
                     if (action.stat === `Potenza_Tiro_${techElementIt}` && statKey === "Tiro") isMatch = true;
                     if (action.stat === `Potenza_Dribbling_${techElementIt}` && statKey === "Tecnica") isMatch = true;
                     if (action.stat === `Potenza_Blocco_${techElementIt}` && statKey === "Blocco") isMatch = true;
                     if (action.stat === `Potenza_Parata_${techElementIt}` && statKey === "Parata") isMatch = true;
 
-                    // Se una qualsiasi di queste condizioni è vera, sommiamo la potenza
                     if (isMatch) {
                         passivePowerBuff += amount;
                         isAffecting = true;
                     }
                 }
 
-                // 3. Buff specifici per una mossa particolare (es. "Mano di Luce")
+                // 3. Buff Mossa Specifica
                 else if (action.type === "specific_move_power") {
                     if (action.stat === techKey || action.stat === tech.name) {
                         passivePowerBuff += amount;
@@ -78,7 +77,10 @@ export function calculateAllDamage(currentDb, techKey, techLvlIndex, lvl, roleMu
                 }
             });
         }
-        passiveData.push({ title: p.title, level: sel.lvIndex + 1, active: isAffecting, desc: p.template });
+
+        // Aggiunge un feedback visivo se l'abilità è stata accumulata più volte
+        const descSuffix = stacks > 1 ? `<br><span class="text-primary fw-bold">(Attivata ${stacks} volte)</span>` : '';
+        passiveData.push({ title: p.title, level: sel.lvIndex + 1, active: isAffecting, desc: p.template + descSuffix });
     });
 
     const statFinale = Math.floor((baseStat + passiveStatBuff) * roleMult);
