@@ -4,6 +4,9 @@ const baseInfo = characterRegistry.find(char => char.id === "victorBladeRaimonGO
 
 export const charData = {
     ...baseInfo,
+    name: "Victor Blade",
+    romanizedName: "Tsurugi Kyousuke",
+    japaneseName: "剣城 京介",
     tags: [
         "img/TagTitle/Icon_Tag_Team_RaimonGO.png",
         "img/TagTitle/Icon_Tag_Ability_Striker.png",
