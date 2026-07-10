@@ -2985,7 +2985,135 @@ export const passivesLibrary = [
             { target: "self", stat: "Fallo", type: "foul_reduction", amount: "{FOUL}", condition: "always" },
             { target: "self", stat: "Potenza_Blocco", type: "move_power", amount: "{BLOCK}", condition: "always" }
         ]
-    }
+    },
 
+    {
+        title: "Potenza + (Vento) / Tecnica + (パワー＋〈風〉／テクニック＋)",
+        id: "103030001",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di elemento Vento di {POWER} e la propria Tecnica di {VAL}.",
+        levels: [
+            { power: 98, val: 350, req: "Si sblocca a: Advanced Player +" },
+            { power: 119, val: 425, req: "Si sblocca a: Top Player +" },
+            { power: 140, val: 500, req: "Si sblocca a: Legendary Player +" },
+
+        ],
+        actions: [
+            { target: "self", stat: "Potenza_Vento", type: "move_power", amount: "{POWER}", condition: "always" },
+            { target: "self", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "Potenza Dribbling + (ドリブルパワー＋)",
+        id: "103030003",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Dribbling di {VAL}.",
+        levels: [
+            { val: 8, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 25, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 30, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 35, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 40, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 45, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 55, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "self", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Cumulativa] Potenza Tiro FW + (【破竹/累】ＦＷシュートパワー＋)",
+        id: "103030004",
+        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la potenza delle tecniche di tiro degli FW alleati di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        levels: [
+            { val: 9, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 19, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 21, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 27, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 31, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "dribble_success" }
+        ]
+    },
+
+    {
+        title: "Tiro + (キック＋)",
+        id: "101200001",
+        template: "All'inizio della partita, aumenta il proprio Tiro di {VAL}.",
+        levels: [
+            { val: 134, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 940, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 1075, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 1209, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "self", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
+    {
+        title: "[Slancio] Potenza Tiro + (【連動/累】シュートパワー＋)",
+        id: "101200002",
+        template: "Ogni volta che il dribbling di un alleato MF ha successo, aumenta la potenza delle proprie tecniche di Tiro di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        levels: [
+            { val: 6, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 21, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 25, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 29, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 33, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 41, req: "Si sblocca con personaggio Lv. 281" }
+        ],
+        actions: [
+            { target: "self", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "ally_MF_dribble_success" }
+        ]
+    },
+    {
+        title: "[Cumulativa] Potenza Tiro FW (Fuoco) + (【自得点/累】ＦＷシュートパワー＋〈火〉)",
+        id: "101200003",
+        template: "Ogni volta che segna un gol, aumenta la potenza delle tecniche di Tiro di elemento Fuoco degli FW alleati di {VAL}.",
+        levels: [
+            { val: 9, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 21, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 27, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 30, req: "Si sblocca con personaggio Lv. 271" }
+        ],
+        actions: [
+            { target: "team_FW_Fire", stat: "Potenza_Tiro_Fuoco", type: "move_power", amount: "{VAL}", condition: "scored_goal" }
+        ]
+    },
+    {
+        title: "Potenza Tiro (Fuoco) + / Tiro + (シュートパワー＋〈火〉／キック＋)",
+        id: "101200004",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro di elemento Fuoco di {POWER} e il proprio Tiro di {VAL}.",
+        levels: [
+            { power: 87, val: 405, req: "Si sblocca a: Advanced Player +" },
+            { power: 100, val: 463, req: "Si sblocca a: Top Player +" },
+            { power: 125, val: 579, req: "Si sblocca a: Legendary Player +" }
+        ],
+        actions: [
+            { target: "self", stat: "Potenza_Tiro_Fuoco", type: "move_power", amount: "{POWER}", condition: "always" },
+            { target: "self", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "always" }
+        ]
+    },
 
 ];

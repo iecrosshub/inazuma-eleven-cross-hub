@@ -155,7 +155,7 @@ export const techniquesLibrary = {
         details: [
             { label: "Potenza", values: [123, 128, 133, 138, 143, 148, 153, 158, 163, 168] },
             { label: "Costo TP", values: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40] },
-            { label: "Portata", values: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2] },
+            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %"] },
             { label: "% Critico", values: ["12 %", "12 %", "12 %", "12 %", "15 %", "15 %", "15 %", "15 %", "15 %", "18 %"] },
             { label: "% Bonus Critico", values: ["20 %", "20 %", "20 %", "20 %", "23 %", "23 %", "23 %", "23 %", "23 %", "26 %"] }
@@ -382,7 +382,6 @@ export const techniquesLibrary = {
             { label: "Potenza", values: [110, 115, 120, 125, 130, 135, 140, 145, 150, 155] },
             { label: "Costo TP", values: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40] },
             { label: "Portata", values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
-            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
             { label: "% Critico", values: ["15 %", "15 %", "15 %", "15 %", "18 %", "18 %", "18 %", "18 %", "18 %", "21 %"] },
             { label: "% Bonus Critico", values: ["33 %", "33 %", "33 %", "33 %", "36 %", "36 %", "36 %", "36 %", "36 %", "39 %"] }
@@ -396,7 +395,6 @@ export const techniquesLibrary = {
             { label: "Potenza", values: [144, 149, 154, 159, 164, 169, 174, 179, 184, 189] },
             { label: "Costo TP", values: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50] },
             { label: "Portata", values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
-            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
             { label: "% Critico", values: ["19 %", "19 %", "19 %", "19 %", "22 %", "22 %", "22 %", "22 %", "22 %", "25 %"] },
             { label: "% Bonus Critico", values: ["20 %", "20 %", "20 %", "20 %", "23 %", "23 %", "23 %", "23 %", "23 %", "26 %"] }
@@ -609,7 +607,7 @@ export const techniquesLibrary = {
             { label: "Potenza", values: [78, 83, 88, 93, 98, 103, 108, 113, 118, 123] },
             { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
             { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
-            { label: "Portata", values: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5] },
+            { label: "Blocco Tiri", values: ["Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì"] },
             { label: "% Fallo", values: ["15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %"] },
             { label: "% Critico", values: ["13 %", "13 %", "13 %", "13 %", "16 %", "16 %", "16 %", "16 %", "16 %", "19 %"] },
             { label: "Bonus Critico", values: ["14 %", "14 %", "14 %", "14 %", "17 %", "17 %", "17 %", "17 %", "17 %", "20 %"] }
@@ -641,7 +639,7 @@ export const techniquesLibrary = {
         details: [
             { label: "Potenza", values: [123, 128, 133, 138, 143, 148, 153, 158, 163, 168] },
             { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
-            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["30 %", "30 %", "30 %", "30 %", "30 %", "30 %", "30 %", "30 %", "30 %", "30 %"] },
             { label: "% Critico", values: ["20 %", "20 %", "20 %", "20 %", "23 %", "23 %", "23 %", "23 %", "23 %", "26 %"] },
             { label: "Bonus Critico", values: ["28 %", "28 %", "28 %", "28 %", "31 %", "31 %", "31 %", "31 %", "31 %", "34 %"] }
@@ -656,7 +654,7 @@ export const techniquesLibrary = {
         details: [
             { label: "Potenza", values: [82, 87, 92, 97, 102, 107, 112, 117, 122, 127] },
             { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
-            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %"] },
             { label: "% Critico", values: ["7 %", "7 %", "7 %", "7 %", "10 %", "10 %", "10 %", "10 %", "10 %", "13 %"] },
             { label: "Bonus Critico", values: ["11 %", "11 %", "11 %", "11 %", "14 %", "14 %", "14 %", "14 %", "14 %", "17 %"] }
@@ -829,7 +827,7 @@ export const techniquesLibrary = {
         details: [
             { label: "Potenza", values: [98, 103, 108, 113, 118, 123, 128, 133, 138, 143] },
             { label: "Costo TP", values: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40] },
-            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %"] },
             { label: "% Critico", values: ["9 %", "9 %", "9 %", "9 %", "12 %", "12 %", "12 %", "12 %", "12 %", "15 %"] },
             { label: "Bonus Critico", values: ["13 %", "13 %", "13 %", "13 %", "16 %", "16 %", "16 %", "16 %", "16 %", "19 %"] }
@@ -886,7 +884,7 @@ export const techniquesLibrary = {
         details: [
             { label: "Potenza", values: [82, 87, 92, 97, 102, 107, 112, 117, 122, 127] },
             { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
-            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %"] },
             { label: "% Critico", values: ["7 %", "7 %", "7 %", "7 %", "10 %", "10 %", "10 %", "10 %", "10 %", "13 %"] },
             { label: "Bonus Critico", values: ["11 %", "11 %", "11 %", "11 %", "14 %", "14 %", "14 %", "14 %", "14 %", "17 %"] }
@@ -926,7 +924,7 @@ export const techniquesLibrary = {
         details: [
             { label: "Potenza", values: [123, 128, 133, 138, 143, 148, 153, 158, 163, 168] },
             { label: "Costo TP", values: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40] },
-            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %"] },
             { label: "% Critico", values: ["12 %", "12 %", "12 %", "12 %", "15 %", "15 %", "15 %", "15 %", "15 %", "18 %"] },
             { label: "Bonus Critico", values: ["20 %", "20 %", "20 %", "20 %", "23 %", "23 %", "23 %", "23 %", "23 %", "26 %"] }
@@ -1081,10 +1079,70 @@ export const techniquesLibrary = {
         details: [
             { label: "Potenza", values: [92, 97, 102, 107, 112, 117, 122, 127, 132, 137] },
             { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
-            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Blocco Tiri", values: ["No", "No", "No", "No", "No", "No", "No", "No", "No", "No"] },
             { label: "% Fallo", values: ["15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %", "15 %"] },
             { label: "% Critico", values: ["14 %", "14 %", "14 %", "14 %", "17 %", "17 %", "17 %", "17 %", "17 %", "20 %"] },
             { label: "Bonus Critico", values: ["16 %", "16 %", "16 %", "16 %", "19 %", "19 %", "19 %", "19 %", "19 %", "22 %"] }
         ]
-    }
+    },
+
+    "そよかぜステップ": {
+        name: "Giro di Vento (そよかぜステップ)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Dribble.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        details: [
+            { label: "Potenza", values: [94, 99, 104, 109, 114, 119, 124, 129, 134, 139] },
+            { label: "Costo TP", values: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Portata", values: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2] },
+            { label: "% Fallo", values: ["5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %", "5 %"] },
+            { label: "% Critico", values: ["7 %", "7 %", "7 %", "7 %", "10 %", "10 %", "10 %", "10 %", "10 %", "13 %"] },
+            { label: "Bonus Critico", values: ["11 %", "11 %", "11 %", "11 %", "14 %", "14 %", "14 %", "14 %", "14 %", "17 %"] }
+        ]
+    },
+    "マッハウインド": {
+        name: "Furia del Vento (マッハウインド)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        details: [
+            { label: "Potenza", values: [82, 87, 92, 97, 102, 107, 112, 117, 122, 127] },
+            { label: "Costo TP", values: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30] },
+            { label: "Cool Down", values: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] },
+            { label: "Portata", values: [29, 29, 29, 29, 29, 29, 29, 29, 29, 29] },
+            { label: "Shoot Chain", values: ["Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì"] },
+            { label: "% Fallo", values: ["—", "—", "—", "—", "—", "—", "—", "—", "—", "—"] },
+            { label: "% Critico", values: ["2 %", "2 %", "2 %", "2 %", "5 %", "5 %", "5 %", "5 %", "5 %", "8 %"] },
+            { label: "Bonus Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] }
+        ]
+    },
+
+
+    "デスソード": {
+        name: "Stoccata Micidiale (デスソード)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        details: [
+            { label: "Potenza", values: [92, 97, 102, 107, 112, 117, 122, 127, 132, 137] },
+            { label: "Costo TP", values: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40] },
+            { label: "Portata", values: [19, 19, 19, 19, 19, 19, 19, 19, 19, 19] },
+            { label: "Shoot Chain", values: ["Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì"] },
+            { label: "% Critico", values: ["2 %", "2 %", "2 %", "2 %", "5 %", "5 %", "5 %", "5 %", "5 %", "11 %"] },
+            { label: "Bonus Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] }
+        ]
+    },
+    "デスドロップ": {
+        name: "Rovesciata Micidiale (デスドロップ)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        details: [
+            { label: "Potenza", values: [121, 126, 131, 136, 141, 146, 151, 156, 161, 166] },
+            { label: "Costo TP", values: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50] },
+            { label: "Portata", values: [19, 19, 19, 19, 19, 19, 19, 19, 19, 19] },
+            { label: "Shoot Chain", values: ["Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì", "Sì"] },
+            { label: "% Critico", values: ["2 %", "2 %", "2 %", "2 %", "5 %", "5 %", "5 %", "5 %", "5 %", "11 %"] },
+            { label: "Bonus Critico", values: ["5 %", "5 %", "5 %", "5 %", "8 %", "8 %", "8 %", "8 %", "8 %", "11 %"] }
+        ]
+    },
+
+
 };

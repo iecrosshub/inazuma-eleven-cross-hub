@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prova 5vs1 | Inazuma Eleven Cross</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styleModalita5vs1.css" />
+</head>
+<body class="trial-page">
+
+<div class="inazuma-nav-container">
+    <div class="inazuma-nav">
+        <a href="index.html" class="inazuma-nav-item">Giocatori</a>
+        <a href="coaches.html" class="inazuma-nav-item">Allenatori</a>
+        <a href="teamBuilder.html" class="inazuma-nav-item">Team Builder</a>
+        <a href="mode5vs1.html" class="inazuma-nav-item active">Prova 5vs1</a>
+    </div>
+</div>
+
+<main class="app-container">
+    <div class="trial-header-card">
+        <div class="trial-settings">
+            <div class="setting-group">
+                <label>Tipo di Prova</label>
+                <select id="trial-type">
+                    <option value="attack">Prova di Attacco (Moltiplicatore x3.6)</option>
+                    <option value="defense">Prova di Difesa (Moltiplicatore x1.5)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>Elemento Avversario</label>
+                <select id="trial-opponent">
+                    <option value="Wind">Vento (Wind)</option>
+                    <option value="Forest">Foresta (Forest)</option>
+                    <option value="Fire">Fuoco (Fire)</option>
+                    <option value="Mountain">Montagna (Mountain)</option>
+                </select>
+            </div>
+
+            <div class="setting-group" style="justify-content: flex-end; padding-bottom: 2px;">
+                <button id="btn-optimize" style="background: linear-gradient(180deg, #2eb3ff, #0a65ff); color: #ffffff; border: 2px solid #003a8c; border-radius: 6px; padding: 10px 20px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4), 0 4px 6px rgba(0,0,0,0.2); transition: all 0.2s; white-space: nowrap;">
+                    ✨ Ottimizzazione Automatica
+                </button>
+            </div>
+
+        </div>
+        <div class="trial-score-display">
+            <div class="score-label">PUNTEGGIO TOTALE</div>
+            <div class="score-value" id="final-score">0</div>
+        </div>
+    </div>
+
+    <div class="slots-container" id="slots-container"></div>
+
+    <div class="formula-guide">
+        <div class="formula-guide-title"><i class="fas fa-info-circle"></i> Come funziona il Calcolo del Punteggio?</div>
+        <div class="formula-guide-content">
+            <p><b>1. Moltiplicatore Elementale:</b> Parte da 1.0. Si confronta l'<b>Elemento della Mossa</b> con l'Avversario (+0.1 Vantaggio / -0.1 Svantaggio). Se l'elemento del Giocatore coincide con quello della Mossa, ottiene il bonus <b>STAB (+0.2)</b>.</p>
+            <p><b>2. Stage Buff:</b> Se la tua Mossa è in vantaggio elementale contro l'avversario, guadagna un bonus occulto alla Potenza di <b>+10 (Attacco)</b> o <b>+20 (Difesa)</b>.</p>
+            <p><b>3. Danno Slot:</b> <code>Tronca_Per_Difetto( Parametro Totale × Potenza Mossa Finale × 0.01 × Moltiplicatore Elementale )</code></p>
+            <p><b>4. Chain (Catena):</b> Se lo slot corrente usa una mossa dello <b>stesso elemento</b> dello slot precedente, il risultato viene moltiplicato per <b>1.1</b> e troncato di nuovo per difetto.</p>
+            <p>Il punteggio finale è la somma dei 5 slot, moltiplicato per 3.6 (Attacco) o 1.5 (Difesa), con un ultimo troncamento.</p>
+        </div>
+    </div>
+</main>
+
+<script type="module" src="js/mode5vs1.js"></script>
+</body>
+</html>

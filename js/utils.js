@@ -1,4 +1,10 @@
-// 1. Funzione universale per tradurre il testo delle passive
+// ==========================================
+// FUNZIONI DI UTILITÀ GLOBALI (js/utils.js)
+// ==========================================
+
+/**
+ * Traduce il testo delle passive sostituendo i placeholder con i valori del livello.
+ */
 export function parsePassiveText(template, lvData) {
     let text = template || "";
     if (lvData.val !== undefined) text = text.replace('{VAL}', lvData.val);
@@ -10,8 +16,11 @@ export function parsePassiveText(template, lvData) {
     return text;
 }
 
-// 2. Funzione universale per estrarre la Statistica dall'icona della mossa
+/**
+ * Estrae il nome della Statistica (Tiro, Parata, Blocco, Tecnica) dall'URL dell'icona della mossa.
+ */
 export function getStatKeyByIcon(iconUrl) {
+    if (!iconUrl) return 'Tiro';
     const icon = iconUrl.toLowerCase();
     if (icon.includes('shoot')) return 'Tiro';
     if (icon.includes('catch') || icon.includes('save')) return 'Parata';
@@ -20,9 +29,25 @@ export function getStatKeyByIcon(iconUrl) {
     return 'Tiro'; // Default
 }
 
-// 3. Funzione universale per calcolare lo STAB
+/**
+ * Estrae l'Elemento (Wind, Forest, Fire, Mountain) dall'URL dell'icona dell'elemento.
+ */
+export function extractElement(elementUrl) {
+    if (!elementUrl) return 'Void';
+    const el = elementUrl.toLowerCase();
+    if (el.includes('wind')) return 'Wind';
+    if (el.includes('forest')) return 'Forest';
+    if (el.includes('fire')) return 'Fire';
+    if (el.includes('mountain')) return 'Mountain';
+    return 'Void';
+}
+
+/**
+ * Verifica lo STAB (Same Type Attack Bonus) confrontando elemento giocatore e mossa.
+ */
 export function checkStab(charElementUrl, techElementUrl) {
-    const charEl = charElementUrl.split('/').pop().replace('Icon_Element_', '').replace('.png', '').toLowerCase();
-    const techEl = techElementUrl.split('/').pop().replace('Icon_Element_', '').replace('.png', '').toLowerCase();
-    return charEl === techEl;
+    if (!charElementUrl || !techElementUrl) return false;
+    const charEl = extractElement(charElementUrl);
+    const techEl = extractElement(techElementUrl);
+    return charEl === techEl && charEl !== 'Void';
 }

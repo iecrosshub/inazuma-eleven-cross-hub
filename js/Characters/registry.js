@@ -1,5 +1,30 @@
 export const characterRegistry = [
 
+    {
+        id: "arionSherwindRaimonGO",
+        name: "Arion Sherwind",
+        romanizedName: "Matsukaze Tenma",
+        japaneseName: "松風 天馬",
+        thumb: "img/Characters/ArionSherwindRaimonGO.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "victorBladeRaimonGO",
+        name: "Victor Blade",
+        romanizedName: "Tsurugi Kyousuke",
+        japaneseName: "剣城 京介",
+        thumb: "img/Characters/VictorBladeRaimonGO.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
 
 
     {
