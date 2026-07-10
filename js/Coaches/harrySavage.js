@@ -41,7 +41,7 @@ export const coachData = {
             { val: 40, req: "Niv.10" }
         ],
         actions: [
-            { target: "team", stat: "Potenza_Vento", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "team", stat: "Potenza_Wind", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
     slots: [

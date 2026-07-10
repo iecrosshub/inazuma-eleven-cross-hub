@@ -43,10 +43,10 @@ function getPlayerBuffsForMove(playerData, techId, statNeeded) {
                 if (action.stat === 'Potenza_Blocco' && statNeeded === 'Blocco') powerBuff += amountToSum;
                 if (action.stat === 'Potenza_Parata' && statNeeded === 'Parata') powerBuff += amountToSum;
 
-                if (action.stat === 'Potenza_Vento' && techElement === 'Wind') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Foresta' && techElement === 'Forest') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Fuoco' && techElement === 'Fire') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Montagna' && techElement === 'Mountain') powerBuff += amountToSum;
+                if (action.stat === 'Potenza_Wind' && techElement === 'Wind') powerBuff += amountToSum;
+                if (action.stat === 'Potenza_Forest' && techElement === 'Forest') powerBuff += amountToSum;
+                if (action.stat === 'Potenza_Fire' && techElement === 'Fire') powerBuff += amountToSum;
+                if (action.stat === 'Potenza_Mountain' && techElement === 'Mountain') powerBuff += amountToSum;
             }
 
             if (action.type === 'specific_move_power' && tech && tech.name.includes(action.stat)) {

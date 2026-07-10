@@ -172,7 +172,7 @@ export const passivesLibrary = [
             { power: 36, crt: 1000, req: "Si sblocca con personaggio Lv. 271" }
         ],
         actions: [
-            { target: "self", stat: "Potenza_Vento", type: "move_power", amount: "{POWER}", condition: "always" },
+            { target: "self", stat: "Potenza_Wind", type: "move_power", amount: "{POWER}", condition: "always" },
             { target: "self", stat: "Critico", type: "crit_rate", amount: "{CRT}", condition: "always" }
         ]
     },
@@ -365,7 +365,7 @@ export const passivesLibrary = [
             { val: 52, req: "Si sblocca con personaggio Lv. 281" }
         ],
         actions: [
-            { target: "self", stat: "Potenza_Vento", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "self", stat: "Potenza_Wind", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
     {
@@ -397,7 +397,7 @@ export const passivesLibrary = [
             { val: 44, req: "Si sblocca a: Legendary Player +" }
         ],
         actions: [
-            { target: "team_MF", stat: "Potenza_Vento", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "team_MF", stat: "Potenza_Wind", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
     {
@@ -682,7 +682,7 @@ export const passivesLibrary = [
             { val: 65, req: "Si sblocca a: Legendary Player +" }
         ],
         actions: [
-            { target: "self", stat: "Potenza_Vento", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "self", stat: "Potenza_Wind", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
     {
@@ -741,7 +741,7 @@ export const passivesLibrary = [
             { val: 89, req: "Si sblocca con personaggio Lv. 271" }
         ],
         actions: [
-            { target: "self", stat: "Potenza_Foresta", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "self", stat: "Potenza_Forest", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
     {
@@ -1673,7 +1673,7 @@ export const passivesLibrary = [
             { val: 66, req: "Si sblocca a: Legendary Player +" }
         ],
         actions: [
-            { target: "self", stat: "Potenza_Foresta", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "self", stat: "Potenza_Forest", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
 
@@ -1768,7 +1768,7 @@ export const passivesLibrary = [
             { val: 49, req: "Si sblocca con personaggio Lv. 271" }
         ],
         actions: [
-            { target: "self", stat: "Potenza_Fuoco", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "self", stat: "Potenza_Fire", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
     {
@@ -1874,7 +1874,7 @@ export const passivesLibrary = [
             { val: 17, req: "Si sblocca con personaggio Lv. 271" }
         ],
         actions: [
-            { target: "team_FW", stat: "Potenza_Fuoco", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "team_FW", stat: "Potenza_fire", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
     {
@@ -2145,7 +2145,7 @@ export const passivesLibrary = [
             { val: 14, req: "Si sblocca a: Top Player +" },
             { val: 18, req: "Si sblocca a: Legendary Player +" }
         ],
-        actions: [{ target: "team_Forest_DF_GK", stat: "Potenza_Foresta", type: "move_power", amount: "{VAL}", condition: "always" }]
+        actions: [{ target: "team_Forest_DF_GK", stat: "Potenza_Forest", type: "move_power", amount: "{VAL}", condition: "always" }]
     },
 
     {
@@ -2192,7 +2192,7 @@ export const passivesLibrary = [
             { val: 14, req: "Si sblocca a: Top Player +" },
             { val: 18, req: "Si sblocca a: Legendary Player +" }
         ],
-        actions: [{ target: "team_Forest_DF_GK", stat: "Potenza_Foresta", type: "move_power", amount: "{VAL}", condition: "always" }]
+        actions: [{ target: "team_Forest_DF_GK", stat: "Potenza_Forest", type: "move_power", amount: "{VAL}", condition: "always" }]
     },
     {
         title: "Tiro Team + (チームキック＋)",
@@ -2314,7 +2314,7 @@ export const passivesLibrary = [
             { val: 44, req: "Si sblocca a: Top Player +" },
             { val: 55, req: "Si sblocca a: Legendary Player +" }
         ],
-        actions: [{ target: "self", stat: "Potenza_Fuoco", type: "move_power", amount: "{VAL}", condition: "3_allies_raimon" }]
+        actions: [{ target: "self", stat: "Potenza_fire", type: "move_power", amount: "{VAL}", condition: "3_allies_raimon" }]
     },
 
     {
@@ -2417,7 +2417,7 @@ export const passivesLibrary = [
             { val: 18, req: "Si sblocca a: Legendary Player +" }
         ],
         actions: [
-            { target: "team_DF", stat: "Potenza_Vento", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "team_DF", stat: "Potenza_Wind", type: "move_power", amount: "{VAL}", condition: "always" }
         ]
     },
 
@@ -2492,7 +2492,7 @@ export const passivesLibrary = [
             { val: 34, req: "Si sblocca con personaggio Lv. 281" }
         ],
         actions: [
-            { target: "self", stat: "Potenza_Foresta", type: "move_power", amount: "{VAL}", condition: "3_allies_forest" }
+            { target: "self", stat: "Potenza_Forest", type: "move_power", amount: "{VAL}", condition: "3_allies_forest" }
         ]
     },
     {
@@ -2998,7 +2998,7 @@ export const passivesLibrary = [
 
         ],
         actions: [
-            { target: "self", stat: "Potenza_Vento", type: "move_power", amount: "{POWER}", condition: "always" },
+            { target: "self", stat: "Potenza_Wind", type: "move_power", amount: "{POWER}", condition: "always" },
             { target: "self", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "always" }
         ]
     },
@@ -3111,7 +3111,7 @@ export const passivesLibrary = [
             { power: 125, val: 579, req: "Si sblocca a: Legendary Player +" }
         ],
         actions: [
-            { target: "self", stat: "Potenza_Tiro_Fuoco", type: "move_power", amount: "{POWER}", condition: "always" },
+            { target: "self", stat: "Potenza_Tiro_Fire", type: "move_power", amount: "{POWER}", condition: "always" },
             { target: "self", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "always" }
         ]
     },
