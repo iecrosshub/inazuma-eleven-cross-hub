@@ -259,7 +259,7 @@ class AppController {
             </div>
         `;
 
-        const statSourceStr = mode === 'max' ? 'Statistica MAX' : 'Statistica Nuda (Collezione)';
+        const statSourceStr = mode === 'max' ? 'Statistica MAX' : 'Statistica Base + Passiva Reroll';
         let statHtml = `<li><span class="passive-source">${statSourceStr}</span> <span class="val-badge">+${calc.base.naked.toLocaleString('it-IT')}</span></li>`;
         slotData.details.stats.forEach(detail => {
             statHtml += `<li><div><span class="passive-source">[${detail.source}]</span> ${detail.passiveName} ${detail.isSelf ? "(Self)" : "(Alleato)"}</div> <span class="val-badge">+${detail.value.toLocaleString('it-IT')}</span></li>`;

@@ -188,7 +188,7 @@ function runSimulation() {
 
     document.getElementById('stats-display').innerHTML = `
         <li class="border-bottom border-secondary py-1 d-flex justify-content-between"><strong>Cat. Tecnica:</strong> <span class="text-info fw-bold">${data.statKey}</span></li>
-        <li class="border-bottom border-secondary py-1 d-flex justify-content-between"><strong>Stat Base Nuda:</strong> <span class="text-info fw-bold">${data.baseStat.toLocaleString('it-IT')}</span></li>
+        <li class="border-bottom border-secondary py-1 d-flex justify-content-between"><strong>Stat Base:</strong> <span class="text-info fw-bold">${data.baseStat.toLocaleString('it-IT')}</span></li>
         <li class="border-bottom border-secondary py-1 d-flex justify-content-between"><strong>Buff Stat:</strong> <span class="text-info fw-bold">+${data.passiveStatBuff}</span></li>
         <li class="border-bottom border-secondary py-1 d-flex justify-content-between"><strong>Moltiplicatore Ruolo:</strong> <span class="text-info fw-bold">x${data.roleMult.toFixed(2)}</span></li>
         <li class="border-bottom border-secondary py-1 d-flex justify-content-between"><strong>Potenza Base Mossa:</strong> <span class="text-info fw-bold">${data.techPower}</span></li>
