@@ -13,7 +13,6 @@ export class TrialOptimizer {
         const customTechPower = {};
         const passiveLevels = {};
 
-        // Uniamo le mosse native del personaggio con quella eventuale salvata in Collezione (il manuale equipaggiato)
         const collData = this.app.collectionData[charData.id] || {};
         let allValidMoves = [...charData.myTechniques];
         if (collData.equippedManual && !allValidMoves.includes(collData.equippedManual)) {
@@ -88,12 +87,20 @@ export class TrialOptimizer {
 
         const mode = document.querySelector('input[name="dataSource"]:checked').value;
         const allowManuals = document.getElementById('allowManualsToggle').checked;
+
+        // FIX: Lettura sicura da custom-select
+        const stageElementNode = document.getElementById('stageElement');
+        const opponentElementNode = document.getElementById('opponentElement');
+        const simModeNode = document.getElementById('simMode');
+        const stageBonusDisplay = document.getElementById('stageBonusDisplay');
+
         const stageConfig = {
-            element: document.getElementById('stageElement').value,
-            bonus: parseInt(document.getElementById('stageBonus').value) || 0,
-            opponent: document.getElementById('opponentElement').value,
-            mode: document.getElementById('simMode').value
+            element: stageElementNode ? stageElementNode.dataset.value : '',
+            bonus: parseInt(stageBonusDisplay ? stageBonusDisplay.textContent : '0') || 0,
+            opponent: opponentElementNode ? opponentElementNode.dataset.value : 'None',
+            mode: simModeNode ? simModeNode.dataset.value : 'defense'
         };
+
         const isDefense = stageConfig.mode === 'defense';
 
         const availableChars = [];
@@ -118,7 +125,6 @@ export class TrialOptimizer {
             if (allowManuals) {
                 movesToTest.push(...universalManualsKeys);
             } else if (mode === 'collection') {
-                // Se i manuali completi non sono ammessi, testa solo quello effettivamente equipaggiato
                 const dbEntry = this.app.collectionData[char.id];
                 if (dbEntry && dbEntry.equippedManual && !movesToTest.includes(dbEntry.equippedManual)) {
                     movesToTest.push(dbEntry.equippedManual);
@@ -232,8 +238,12 @@ export class TrialOptimizer {
                 const bestTeam = top5[idx].team;
                 for (let i = 0; i < 5; i++) {
                     this.app.activeTeam[i] = bestTeam[i].char;
-                    const slotSelect = document.querySelector(`.slot-card[data-slot="${i}"] .sim-char-select`);
-                    slotSelect.value = bestTeam[i].char.id;
+                    const slotCharSelect = document.querySelector(`.slot-card[data-slot="${i}"] .sim-char-select`);
+                    const slotSelectSelected = slotCharSelect.querySelector('.select-selected span');
+
+                    slotCharSelect.dataset.value = bestTeam[i].char.id;
+                    slotSelectSelected.innerHTML = `<img src="${bestTeam[i].char.thumb}" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; vertical-align: middle;"> ${bestTeam[i].char.name}`;
+
                     this.app.renderTechDropdown(i);
                     document.querySelector(`.slot-card[data-slot="${i}"] .sim-tech-select`).value = bestTeam[i].bestMove;
                 }

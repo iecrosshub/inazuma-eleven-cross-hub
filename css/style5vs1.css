@@ -37,13 +37,6 @@
     margin-bottom: 15px;
 }
 
-.stage-config-header h3 {
-    color: #21bc73;
-    font-weight: 900;
-    font-size: 1.4rem;
-    margin: 0;
-}
-
 .stage-filters {
     display: flex;
     align-items: center;
@@ -91,6 +84,7 @@
 .slot-name { color: #0b1a42; font-size: 1rem; font-weight: 900; width: 60px; flex-shrink: 0; }
 
 .slot-dropdowns { display: flex; gap: 15px; flex: 1; }
+
 .slot-dropdowns select {
     background: #f8fbff; color: #102247; border: 1px solid #d4e1f1;
     padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; flex: 1;
@@ -124,3 +118,59 @@
 .passive-list li { background: #ffffff; margin-bottom: 8px; padding: 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #d4e1f1; border-left: 5px solid #1269e8; font-size: 0.95rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
 .passive-source { color: #506482; }
 .val-badge { background: #e4edf8; padding: 4px 10px; border-radius: 4px; font-family: monospace; font-weight: 900; color: #1269e8;}
+
+/* Custom Selects Integration for mode5vs1 */
+.custom-select {
+    position: relative;
+    background: #f8fbff;
+    border: 1px solid #d4e1f1;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #102247;
+}
+
+.select-selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+}
+
+/* FIX: Mantiene stabili le dimensioni interne della flex-box a 50/50 senza rompere il layout sui nomi lunghi */
+.select-selected span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    padding-right: 10px;
+}
+
+.select-items {
+    position: absolute;
+    background-color: #ffffff;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    border: 1px solid #d4e1f1;
+    border-radius: 6px;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.select-items div {
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.select-items div:hover {
+    background-color: #e4edf8;
+}
+
+.select-hide {
+    display: none;
+}

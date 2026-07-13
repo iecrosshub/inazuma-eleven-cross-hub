@@ -23,6 +23,39 @@ class AppController {
         document.getElementById('btn-logout').addEventListener('click', () => this.auth.logout());
         document.getElementById('btn-optimize').addEventListener('click', () => this.optimizer.runOptimization());
         this.auth.setAuthStateListener((user) => this.handleAuthState(user));
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.select-items').forEach(el => el.classList.add('select-hide'));
+        });
+    }
+
+    initCustomSelect(customSelectEl, onChangeCallback) {
+        const selectedDiv = customSelectEl.querySelector('.select-selected');
+        const itemsDiv = customSelectEl.querySelector('.select-items');
+
+        const newSelected = selectedDiv.cloneNode(true);
+        selectedDiv.parentNode.replaceChild(newSelected, selectedDiv);
+
+        newSelected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.select-items').forEach(el => {
+                if (el !== itemsDiv) el.classList.add('select-hide');
+            });
+            itemsDiv.classList.toggle('select-hide');
+        });
+
+        itemsDiv.querySelectorAll('div').forEach(option => {
+            option.addEventListener('click', () => {
+                const oldVal = customSelectEl.dataset.value;
+                const newVal = option.dataset.value;
+                customSelectEl.dataset.value = newVal;
+                newSelected.querySelector('span').innerHTML = option.innerHTML;
+                itemsDiv.classList.add('select-hide');
+                if (oldVal !== newVal && onChangeCallback) {
+                    onChangeCallback(newVal);
+                }
+            });
+        });
     }
 
     handleAuthState(user) {
@@ -55,9 +88,10 @@ class AppController {
     renderSimSlots() {
         const grid = document.getElementById('teamGrid');
         grid.innerHTML = '';
-        let charOptions = `<option value="">-- Seleziona Giocatore --</option>`;
+
+        let charOptionsHtml = `<div data-value="">-- Seleziona Giocatore --</div>`;
         characterRegistry.forEach(char => {
-            charOptions += `<option value="${char.id}">${char.name} (${char.romanizedName})</option>`;
+            charOptionsHtml += `<div data-value="${char.id}"><img src="${char.thumb}" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; vertical-align: middle;"> ${char.name}</div>`;
         });
 
         for (let i = 0; i < this.slotsCount; i++) {
@@ -65,11 +99,17 @@ class AppController {
             slotCard.className = 'slot-card';
             slotCard.setAttribute('data-slot', i);
 
+            // FIX: flex: 1 e width: 0 garantiscono che i due campi siano IDENTICI per lunghezza.
             slotCard.innerHTML = `
                 <div class="slot-name">Slot ${i + 1}</div>
-                <div class="slot-dropdowns">
-                    <select class="sim-char-select">${charOptions}</select>
-                    <select class="sim-tech-select" disabled><option value="">-- Seleziona Tecnica --</option></select>
+                <div class="slot-dropdowns" style="display:flex; gap: 15px; flex:1;">
+                    <div class="custom-select sim-char-select" data-value="" style="flex: 1; width: 0;">
+                        <div class="select-selected"><span>-- Seleziona Giocatore --</span> <i class="fas fa-chevron-down"></i></div>
+                        <div class="select-items select-hide">
+                            ${charOptionsHtml}
+                        </div>
+                    </div>
+                    <select class="sim-tech-select text-truncate" disabled style="flex: 1; width: 0; padding: 8px 12px; border: 1px solid #d4e1f1; border-radius: 6px; font-weight: bold; color: #102247;"><option value="">-- Seleziona Tecnica --</option></select>
                 </div>
                 <div class="slot-result">
                     Slot <span class="slot-damage">0</span>
@@ -78,11 +118,10 @@ class AppController {
             `;
             grid.appendChild(slotCard);
 
-            const charSelect = slotCard.querySelector('.sim-char-select');
-            const techSelect = slotCard.querySelector('.sim-tech-select');
+            const charCustomSelect = slotCard.querySelector('.sim-char-select');
 
-            charSelect.addEventListener('change', async (e) => {
-                const charId = e.target.value;
+            this.initCustomSelect(charCustomSelect, async (charId) => {
+                const techSelect = slotCard.querySelector('.sim-tech-select');
                 if (!charId) {
                     this.activeTeam[i] = null;
                     techSelect.innerHTML = '<option value="">-- Seleziona Tecnica --</option>';
@@ -92,10 +131,12 @@ class AppController {
                         const module = await import(`./Characters/${charId}.js`);
                         this.activeTeam[i] = module.charData;
                         this.renderTechDropdown(i);
-                    } catch (err) { }
+                    } catch (err) {}
                 }
                 this.updateSimulation();
             });
+
+            const techSelect = slotCard.querySelector('.sim-tech-select');
             techSelect.addEventListener('change', () => this.updateSimulation());
             slotCard.querySelector('.details-btn-icon').addEventListener('click', () => this.openDetailsModal(i));
         }
@@ -106,7 +147,7 @@ class AppController {
         const slotCard = document.querySelector(`.slot-card[data-slot="${slotIndex}"]`);
         const techSelect = slotCard.querySelector('.sim-tech-select');
         const mode = document.querySelector('input[name="dataSource"]:checked').value;
-        const simMode = document.getElementById('simMode').value;
+        const simMode = document.getElementById('simMode').dataset.value;
         const allowManuals = document.getElementById('allowManualsToggle').checked;
 
         if (!charData) return;
@@ -116,8 +157,6 @@ class AppController {
 
         let allMoves = [...charData.myTechniques];
 
-        // AGGIUNTA IMPORTANTE: Se non sto forzando i manuali universali, ma il giocatore
-        // ha equipaggiato un manuale nella collezione, glielo faccio vedere!
         if (collData.equippedManual && !allMoves.includes(collData.equippedManual)) {
             allMoves.push(collData.equippedManual);
         }
@@ -148,7 +187,6 @@ class AppController {
             const isTaughtMove = !charData.myTechniques.includes(techKey);
             let lv = isTaughtMove ? 1 : (mode === 'max' ? 10 : (collData.techLevels && collData.techLevels[techKey] !== undefined ? (collData.techLevels[techKey] + 1) : 10));
 
-            // Evidenzio se la mossa proviene da un manuale
             const manualTag = isTaughtMove ? " 📕" : "";
             techOptions += `<option value="${techKey}">${techDef.name} (Lv ${lv})${manualTag}</option>`;
         });
@@ -168,12 +206,42 @@ class AppController {
     }
 
     setupGlobalListeners() {
+        const simModeSelect = document.getElementById('simMode');
+        const stageElSelect = document.getElementById('stageElement');
+        const opponentElSelect = document.getElementById('opponentElement');
+
+        // LOGICA AUTOMATICA BONUS
+        this.initCustomSelect(simModeSelect, (val) => {
+            const bonus = val === 'defense' ? 20 : 10;
+            document.getElementById('stageBonusDisplay').textContent = bonus;
+            this.updateTechDropdowns();
+            this.updateSimulation();
+        });
+
+        // INVERSA: TU SCEGLI L'AVVERSARIO E LUI METTE IL BONUS GIUSTO (Debolezza)
+        this.initCustomSelect(opponentElSelect, (val) => {
+            const mapStage = {
+                'None': { val: '', text: 'Nessuno', img: '' },
+                'Wind': { val: 'Forest', text: 'Foresta', img: 'img/Element/Icon_Element_Forest.png' },
+                'Mountain': { val: 'Wind', text: 'Vento', img: 'img/Element/Icon_Element_Wind.png' },
+                'Fire': { val: 'Mountain', text: 'Montagna', img: 'img/Element/Icon_Element_Mountain.png' },
+                'Forest': { val: 'Fire', text: 'Fuoco', img: 'img/Element/Icon_Element_Fire.png' }
+            };
+            const stage = mapStage[val] || mapStage['None'];
+            stageElSelect.dataset.value = stage.val;
+
+            const stageSpan = stageElSelect.querySelector('.select-selected span');
+            if(stage.img) {
+                stageSpan.innerHTML = `<img src="${stage.img}" style="width:20px; vertical-align:middle; margin-right:5px;"> ${stage.text}`;
+            } else {
+                stageSpan.innerHTML = stage.text;
+            }
+
+            this.updateSimulation();
+        });
+
         document.querySelectorAll('input[name="dataSource"]').forEach(radio => radio.addEventListener('change', () => { this.updateTechDropdowns(); this.updateSimulation(); }));
-        document.getElementById('simMode').addEventListener('change', () => { this.updateTechDropdowns(); this.updateSimulation(); });
         document.getElementById('allowManualsToggle').addEventListener('change', () => { this.updateTechDropdowns(); this.updateSimulation(); });
-        document.getElementById('stageElement').addEventListener('change', () => this.updateSimulation());
-        document.getElementById('stageBonus').addEventListener('input', () => this.updateSimulation());
-        document.getElementById('opponentElement').addEventListener('change', () => this.updateSimulation());
     }
 
     updateSimulation() {
@@ -181,10 +249,10 @@ class AppController {
         const slotCards = document.querySelectorAll('.slot-card');
         const mode = document.querySelector('input[name="dataSource"]:checked').value;
         const stageConfig = {
-            element: document.getElementById('stageElement').value,
-            bonus: parseInt(document.getElementById('stageBonus').value) || 0,
-            opponent: document.getElementById('opponentElement').value,
-            mode: document.getElementById('simMode').value
+            element: document.getElementById('stageElement').dataset.value,
+            bonus: parseInt(document.getElementById('stageBonusDisplay').textContent) || 0,
+            opponent: document.getElementById('opponentElement').dataset.value,
+            mode: document.getElementById('simMode').dataset.value
         };
 
         for (let i = 0; i < this.slotsCount; i++) {
@@ -267,7 +335,8 @@ class AppController {
         document.getElementById('modalStatList').innerHTML = statHtml;
 
         let powerHtml = `<li><span class="passive-source">Potenza Base Mossa</span> <span class="val-badge">+${calc.power.naked}</span></li>`;
-        if (calc.power.stageBonus > 0) powerHtml += `<li><span class="passive-source">Bonus Giornaliero (${document.getElementById('stageElement').value})</span> <span class="val-badge">+${calc.power.stageBonus}</span></li>`;
+
+        if (calc.power.stageBonus > 0) powerHtml += `<li><span class="passive-source">Bonus Giornaliero (${document.getElementById('stageElement').dataset.value})</span> <span class="val-badge">+${calc.power.stageBonus}</span></li>`;
 
         if (slotData._hasAdvantageBonus > 0) {
             powerHtml += `<li><span class="passive-source text-danger fw-bold"><i class="fas fa-fire-alt"></i> Vantaggio vs Avversario</span> <span class="val-badge bg-warning text-dark">+${slotData._hasAdvantageBonus}</span></li>`;

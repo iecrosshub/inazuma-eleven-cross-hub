@@ -46,7 +46,7 @@
             <div class="bg-white p-2 rounded border border-light d-flex gap-3">
                 <div class="form-check m-0">
                     <input class="form-check-input" type="radio" name="dataSource" id="radioCollection" value="collection" checked>
-                    <label class="form-check-label text-primary fw-bold" for="radioCollection">La Mia Collezione</label>
+                    <label class="form-check-label fw-bold" style="color:#0b1a42;" for="radioCollection">La Mia Collezione</label>
                 </div>
                 <div class="form-check m-0">
                     <input class="form-check-input" type="radio" name="dataSource" id="radioMax" value="max">
@@ -62,44 +62,51 @@
 
     <!-- CONFIGURAZIONE STAGE -->
     <div class="stage-config position-relative">
-        <div class="stage-config-header w-100">
-            <h3>Configurazione Simulazione</h3>
-            <div class="stage-config-controls">
+        <div class="stage-config-header w-100" style="border-bottom: 1px solid #eef2f7; padding-bottom: 15px;">
+            <h3 style="color: #1269e8; font-weight: 900; margin: 0; font-size: 1.6rem;">Configurazione Simulazione</h3>
+            <div class="stage-config-controls d-flex align-items-center gap-3">
                 <div class="form-check form-switch m-0 d-flex align-items-center">
-                    <input class="form-check-input mt-0 me-2" type="checkbox" id="allowManualsToggle" style="cursor:pointer;">
-                    <label class="form-check-label fw-bold text-primary" for="allowManualsToggle" style="cursor:pointer;">Insegna Manuali</label>
-                    <i class="fas fa-info-circle ms-2 text-info fs-5" title="Se attivo, l'Auto-Ottimizzatore calcolerà le sinergie forzando TUTTE le mosse (native e manuali) a Livello 1 per scoprire qual è matematicamente la più forte a parità di livello!" style="cursor:help;"></i>
+                    <input class="form-check-input mt-0 me-2" type="checkbox" id="allowManualsToggle" style="cursor:pointer; width: 40px; height: 20px;">
+                    <label class="form-check-label fw-bold" style="color: #1269e8; font-size: 1.1rem; cursor:pointer;" for="allowManualsToggle">Insegna Tecniche</label>
+                    <i class="fas fa-info-circle ms-2 fs-5" style="color: #00bcd4; cursor:help;" title="Se attivo, l'Auto-Ottimizzatore valuterà anche le mosse Shop per scoprire qual è la combinazione più forte!"></i>
                 </div>
-                <button id="btn-optimize" class="btn btn-warning fw-bold text-dark px-4 shadow-sm" style="border: 2px solid #e0b022;"><i class="fas fa-magic me-2"></i> Auto-Ottimizza</button>
+                <button id="btn-optimize" class="btn fw-bold text-dark px-4 shadow-sm" style="background-color: #ffc107; border-radius: 6px;"><i class="fas fa-pen me-2"></i> Auto-Ottimizza</button>
             </div>
         </div>
 
-        <div class="stage-filters w-100">
-            <label>Modalità:
-                <select id="simMode">
-                    <option value="defense" selected>🛡️ Difesa</option>
-                    <option value="attack">⚔️ Attacco</option>
-                </select>
-            </label>
-            <label>Elemento Stage:
-                <select id="stageElement">
-                    <option value="">Nessuno</option>
-                    <option value="Wind">Vento</option>
-                    <option value="Forest">Foresta</option>
-                    <option value="Fire">Fuoco</option>
-                    <option value="Mountain">Montagna</option>
-                </select>
-            </label>
-            <label>Bonus Stage: <input type="number" id="stageBonus" value="20" style="width: 80px;"></label>
-            <label>Avversario:
-                <select id="opponentElement">
-                    <option value="None">Nessuno / Neutro</option>
-                    <option value="Wind">Vento</option>
-                    <option value="Forest">Foresta</option>
-                    <option value="Fire">Fuoco</option>
-                    <option value="Mountain" selected>Montagna</option>
-                </select>
-            </label>
+        <div class="stage-filters w-100 mt-4 d-flex flex-wrap gap-4 align-items-end">
+            <div class="filter-group" style="flex: 1;">
+                <label class="fw-bold mb-1 d-block" style="color: #1269e8; font-size: 0.9rem;">Modalità</label>
+                <div class="custom-select shadow-sm" id="simMode" data-value="defense" style="border-radius: 6px;">
+                    <div class="select-selected"><span><img src="img/Status/Icon_Status_Block.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Difesa</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="select-items select-hide">
+                        <div data-value="defense"><img src="img/Status/Icon_Status_Block.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Difesa</div>
+                        <div data-value="attack"><img src="img/Status/Icon_Status_Kick.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Attacco</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group" style="flex: 1;">
+                <label class="fw-bold mb-1 d-block" style="color: #1269e8; font-size: 0.9rem;">Avversario (Seleziona)</label>
+                <div class="custom-select shadow-sm" id="opponentElement" data-value="None" style="border-radius: 6px;">
+                    <div class="select-selected"><span>Nessuno / Neutro</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="select-items select-hide">
+                        <div data-value="None">Nessuno / Neutro</div>
+                        <div data-value="Fire"><img src="img/Element/Icon_Element_Fire.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Fuoco</div>
+                        <div data-value="Wind"><img src="img/Element/Icon_Element_Wind.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Vento</div>
+                        <div data-value="Forest"><img src="img/Element/Icon_Element_Forest.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Foresta</div>
+                        <div data-value="Mountain"><img src="img/Element/Icon_Element_Mountain.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Montagna</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group" style="flex: 1;">
+                <label class="fw-bold mb-1 d-block" style="color: #506482; font-size: 0.9rem;">Elemento Stage (Bonus +<span id="stageBonusDisplay">20</span>%)</label>
+                <div class="custom-select shadow-sm" id="stageElement" data-value="" style="pointer-events: none; background:#f4f7fb; border-radius: 6px;">
+                    <div class="select-selected"><span>Nessuno</span> <i class="fas fa-chevron-down" style="display:none;"></i></div>
+                    <div class="select-items select-hide"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -107,7 +114,7 @@
     <div id="teamGrid" class="team-grid"></div>
 
     <!-- RISULTATO GLOBALE -->
-    <div class="global-results">
+    <div class="global-results mt-4">
         <span id="defenseClearCheck" style="font-weight: bold; display: block; margin-bottom: 5px; font-size: 1.2rem;"></span>
         <h2>Score Totale: <span id="totalScore">0</span></h2>
         <p class="text-white mt-2 mb-0" style="opacity: 0.9; font-size:1.1rem;">
