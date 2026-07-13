@@ -2,7 +2,7 @@
 
 import { characterRegistry, passivesLibrary, techniquesLibrary, calculateTeamDamage, extractPosition, universalManualsKeys } from './utils.js';
 import { AuthManager } from './auth.js';
-import { TrialOptimizer } from './trialoptimizer.js';
+import { TrialOptimizer } from './trialOptimizer.js';
 
 class AppController {
     constructor() {

@@ -225,7 +225,7 @@ export const characterRegistry = [
         name: "Poseidon",
         romanizedName: "Posei Donichi",
         japaneseName: "歩星 呑一",
-        thumb: "img/Characters/poseidonZeus.png", // Puoi aggiornare il nome dell'immagine con quello che usi tu
+        thumb: "img/Characters/PoseidonZeus.png", // Puoi aggiornare il nome dell'immagine con quello che usi tu
         element: "img/Element/Icon_Element_Mountain.png",
         position: "img/Position/Icon_Position_GK.png",
         stars: 2, // Considerando le statistiche, probabile SR
