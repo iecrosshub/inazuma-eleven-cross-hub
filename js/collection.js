@@ -4,7 +4,9 @@ import {
     techniquesLibrary,
     passivesLibrary,
     filterCharacters,
-    universalManualsKeys // Importiamo l'array da utils!
+    universalManualsKeys,
+    getRarityTier,
+    getLevelTier
 } from './utils.js';
 import { AuthManager } from './auth.js';
 
@@ -23,6 +25,42 @@ class CollectionApp {
 
         this.setupCustomSelects();
         document.getElementById('search-name').addEventListener('input', () => this.triggerFilter());
+
+        // LOGICA APPLICA LIVELLO GLOBALE (Aggiorna SOLO le passive legate al livello)
+        const btnLevel = document.getElementById('btn-apply-level');
+        if (btnLevel) {
+            btnLevel.addEventListener('click', () => {
+                const globalLevel = parseInt(document.getElementById('global-level-input').value) || 1;
+
+                document.querySelectorAll('.pass-lvl').forEach(sel => {
+                    const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
+                    if (pDef) {
+                        const isRarity = pDef.levels.some(l => l.req && getRarityTier(l.req) !== -1);
+
+                        // Solo per le passive che NON sono di rarità (e quindi dipendono dal livello)
+                        if (!isRarity) {
+                            let bestIdx = -1;
+                            let hasLevelReq = false;
+
+                            pDef.levels.forEach((lvl, idx) => {
+                                const reqLv = getLevelTier(lvl.req);
+                                if (reqLv !== -1) {
+                                    hasLevelReq = true;
+                                    if (globalLevel >= reqLv) bestIdx = idx;
+                                }
+                            });
+
+                            // Applica l'aggiornamento solo se la passiva ha effettivamente dei requisiti di livello numerici
+                            if (hasLevelReq) {
+                                sel.value = bestIdx; // Può assegnare -1 (Spenta) se il lvl globale non è sufficiente
+                                sel.dispatchEvent(new Event('change'));
+                            }
+                        }
+                    }
+                });
+                this.hasUnsavedChanges = true;
+            });
+        }
 
         this.auth.setAuthStateListener((user) => this.handleAuthState(user));
         this.renderCollectionGrid();
@@ -155,9 +193,7 @@ class CollectionApp {
         col.className = 'col-12 col-md-6 col-xl-4 collection-item-wrapper';
         col.dataset.charId = baseChar.id;
 
-        const tagsHtml = (fullData.tags || []).map(tagUrl =>
-            `<img src="${tagUrl}" class="tag-icon-small" alt="tag">`
-        ).join('');
+        const tagsHtml = (fullData.tags || []).map(tagUrl => `<img src="${tagUrl}" class="tag-icon-small" alt="tag">`).join('');
 
         let manualOptionsHtml = `<option value="">-- Nessuna Tecnica Extra --</option>`;
         universalManualsKeys.forEach(mKey => {
@@ -167,14 +203,15 @@ class CollectionApp {
         });
 
         let html = `
-            <div class="toggle-container">
-                <label class="form-check-label small" for="toggle-${baseChar.id}">Posseduto</label>
-                <div class="form-check form-switch">
-                    <input class="form-check-input toggle-owned" type="checkbox" id="toggle-${baseChar.id}" data-char-id="${baseChar.id}" checked>
-                </div>
-            </div>
-
             <div class="collection-card owned" id="card-${baseChar.id}">
+                
+                <div class="toggle-container" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                    <label class="form-check-label small fw-bold" for="toggle-${baseChar.id}">POSSEDUTO</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input toggle-owned" type="checkbox" id="toggle-${baseChar.id}" data-char-id="${baseChar.id}" checked>
+                    </div>
+                </div>
+
                 <div class="d-flex align-items-start mb-3 border-bottom border-secondary pb-2">
                     <div class="position-relative me-3">
                         <img src="${baseChar.thumb}" class="char-thumb" alt="thumb">
@@ -226,16 +263,35 @@ class CollectionApp {
                         <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary tech-pwr manual-pwr" data-char="${baseChar.id}" data-tech="" placeholder="+Pwr" style="width: 25%; display: none;">
                     </div>
                     
+                    <h6 class="text-info mt-3 border-top border-secondary pt-2"><i class="fas fa-star"></i> Rarità Personaggio</h6>
+                    <div class="mb-3">
+                        <select class="form-select form-select-sm bg-dark text-info border-secondary char-rarity" data-char="${baseChar.id}">
+                            <option value="0">Inferiore Advanced Player</option>
+                            <option value="1">Advanced Player</option>
+                            <option value="2">Advanced Player +</option>
+                            <option value="3">Top Player</option>
+                            <option value="4">Top Player +</option>
+                            <option value="5">Legendary Player</option>
+                            <option value="6">Legendary Player +</option>
+                        </select>
+                    </div>
+
                     <h6>Livello Passive</h6>
                     ${[...(fullData.myBasicPassivesIds || []), ...(fullData.myRarityPassivesIds || [])].map(pId => {
             const pDef = passivesLibrary.find(p => p.id === pId);
             if (!pDef) return '';
+
+            let opts = `<option value="-1">Spenta</option>`;
+            pDef.levels.forEach((lvlData, idx) => {
+                // MOSTRA SOLO E SEMPRE LV 1, LV 2, ECC... (Come richiesto)
+                opts += `<option value="${idx}">Lv ${idx + 1}</option>`;
+            });
+
             return `
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="text-light small text-truncate" style="width: 65%;" title="${pDef.title}">${pDef.title}</span>
-                                <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl" data-char="${baseChar.id}" data-passive="${pId}" style="width: 30%;">
-                                    <option value="-1">Spenta</option>
-                                    ${pDef.levels.map((_, i) => `<option value="${i}" ${i===pDef.levels.length-1 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
+                                <span class="text-light small text-truncate" style="width: 55%;" title="${pDef.title}">${pDef.title}</span>
+                                <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl" data-char="${baseChar.id}" data-passive="${pId}" style="width: 40%;">
+                                    ${opts}
                                 </select>
                             </div>
                         `;
@@ -252,8 +308,8 @@ class CollectionApp {
         const manualEquip = col.querySelector('.manual-equip');
         const manualLvl = col.querySelector('.manual-lvl');
         const manualPwr = col.querySelector('.manual-pwr');
+        const charRarity = col.querySelector('.char-rarity');
 
-        // Logica attivazione carta
         toggle.addEventListener('change', (e) => {
             if (e.target.checked) {
                 cardBox.classList.remove('unowned-card');
@@ -264,7 +320,23 @@ class CollectionApp {
             }
         });
 
-        // Logica per mostrare/nascondere Livello e Potenza del Manuale
+        // AUTO-AGGIORNAMENTO PASSIVE IN BASE ALLA RARITÀ
+        charRarity.addEventListener('change', (e) => {
+            const val = parseInt(e.target.value);
+            col.querySelectorAll('.pass-lvl').forEach(sel => {
+                const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
+                if (pDef && pDef.levels.some(l => l.req && getRarityTier(l.req) !== -1)) {
+                    let bestIdx = -1;
+                    pDef.levels.forEach((lvl, idx) => {
+                        const reqR = getRarityTier(lvl.req);
+                        if (reqR !== -1 && val >= reqR) bestIdx = idx;
+                    });
+                    sel.value = bestIdx;
+                    sel.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
         manualEquip.addEventListener('change', (e) => {
             const selectedTech = e.target.value;
             if (selectedTech) {
@@ -291,14 +363,23 @@ class CollectionApp {
             rarity: document.getElementById('filter-rarity').dataset.value,
             style: document.getElementById('filter-style').dataset.value,
             team: document.getElementById('filter-team').dataset.value,
-            season: document.getElementById('filter-season').dataset.value
+            season: document.getElementById('filter-season').dataset.value,
+            ownedStatus: document.getElementById('filter-owned').dataset.value
         };
 
         const filteredArray = await filterCharacters(characterRegistry, currentFilters);
         const allowedIds = filteredArray.map(c => c.id);
 
         document.querySelectorAll('.collection-item-wrapper').forEach(card => {
-            if (allowedIds.includes(card.dataset.charId)) {
+            const isOwned = card.querySelector('.collection-card').classList.contains('owned');
+
+            let matchesFilter = allowedIds.includes(card.dataset.charId);
+            let matchesOwned = true;
+
+            if (currentFilters.ownedStatus === 'owned') matchesOwned = isOwned;
+            if (currentFilters.ownedStatus === 'not-owned') matchesOwned = !isOwned;
+
+            if (matchesFilter && matchesOwned) {
                 card.style.display = 'block';
             } else {
                 card.style.display = 'none';
@@ -316,14 +397,15 @@ class CollectionApp {
                 techLevels: {},
                 techCustomPower: {},
                 passives: {},
-                equippedManual: ""
+                equippedManual: "",
+                rarity: parseInt(document.querySelector(`.char-rarity[data-char="${charId}"]`).value) || 0
             };
 
             if (toggle.checked) {
                 document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => {
                     if(inp.value) charData.stats[inp.dataset.stat] = parseInt(inp.value);
                 });
-                // Salviamo le tecniche. Il manuale è incluso in automatico perché ha la classe tech-lvl e dataset aggiornato!
+
                 document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => {
                     if (sel.dataset.tech) {
                         charData.techLevels[sel.dataset.tech] = parseInt(sel.value);
@@ -402,14 +484,13 @@ class CollectionApp {
             const charId = toggle.dataset.charId;
             const data = this.collectionData[charId];
 
-            if (resetToDefault || !data || data.owned !== false) {
-                toggle.checked = true;
-            } else {
+            if (resetToDefault || !data) {
                 toggle.checked = false;
+            } else {
+                toggle.checked = (data.owned !== false);
             }
             toggle.dispatchEvent(new Event('change'));
 
-            // Svuotamento preventivo inputs
             document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => inp.value = '');
             document.querySelectorAll(`.tech-pwr[data-char="${charId}"]`).forEach(inp => inp.value = '');
             document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => sel.value = '9');
@@ -417,18 +498,32 @@ class CollectionApp {
             const manualSel = document.querySelector(`.manual-equip[data-char="${charId}"]`);
             if(manualSel) {
                 manualSel.value = '';
-                manualSel.dispatchEvent(new Event('change')); // Nasconde gli input del manuale e pulisce i dataset
+                manualSel.dispatchEvent(new Event('change'));
             }
 
             document.querySelectorAll(`.pass-lvl[data-char="${charId}"]`).forEach(sel => {
-                sel.value = sel.options[sel.options.length - 1].value;
+                sel.value = sel.options[sel.options.length - 1].value; // Inizialmente Max Level
             });
 
+            const raritySel = document.querySelector(`.char-rarity[data-char="${charId}"]`);
+            if (raritySel) raritySel.value = 0; // Default
+
             if (data && data.owned) {
-                // IMPORTANTISSIMO: Caricare PRIMA il manuale, così attiva i campi nascosti e assegna il data-tech corretto!
+                if (data.rarity !== undefined && raritySel) {
+                    raritySel.value = data.rarity;
+                }
+
                 if (data.equippedManual && manualSel) {
                     manualSel.value = data.equippedManual;
                     manualSel.dispatchEvent(new Event('change'));
+
+                    setTimeout(() => {
+                        const mLevel = document.querySelector(`.manual-lvl[data-char="${charId}"][data-tech="${data.equippedManual}"]`);
+                        const mPower = document.querySelector(`.manual-pwr[data-char="${charId}"][data-tech="${data.equippedManual}"]`);
+
+                        if (mLevel && data.techLevels[data.equippedManual] !== undefined) mLevel.value = data.techLevels[data.equippedManual];
+                        if (mPower && data.techCustomPower[data.equippedManual] !== undefined) mPower.value = data.techCustomPower[data.equippedManual];
+                    }, 50);
                 }
 
                 if (data.stats) {
@@ -439,12 +534,14 @@ class CollectionApp {
                 }
                 if (data.techLevels) {
                     for (const [tech, val] of Object.entries(data.techLevels)) {
+                        if (tech === data.equippedManual) continue;
                         const sel = document.querySelector(`.tech-lvl[data-char="${charId}"][data-tech="${tech}"]`);
                         if (sel) sel.value = val;
                     }
                 }
                 if (data.techCustomPower) {
                     for (const [tech, val] of Object.entries(data.techCustomPower)) {
+                        if (tech === data.equippedManual) continue;
                         const inp = document.querySelector(`.tech-pwr[data-char="${charId}"][data-tech="${tech}"]`);
                         if (inp) inp.value = val > 0 ? val : '';
                     }

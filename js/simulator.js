@@ -1,6 +1,6 @@
 // js/simulator.js
 
-import { characterRegistry, techniquesLibrary, passivesLibrary, getStatKeyByIcon, calculateDamageData } from './utils.js';
+import { characterRegistry, techniquesLibrary, passivesLibrary, getStatKeyByIcon, calculateDamageData, universalManualsKeys } from './utils.js';
 import { AuthManager } from './auth.js';
 
 let currentDb = null;
@@ -11,7 +11,9 @@ async function init() {
     const charSelect = document.getElementById('sim-char');
     if (!charSelect) return;
 
-    charSelect.innerHTML = characterRegistry.map(c => `<option value="${c.id}">${c.name} (${c.romanizedName})</option>`).join('');
+    // Aggiunto PG Generico come prima opzione
+    charSelect.innerHTML = `<option value="generic">--- PERSONAGGIO GENERICO ---</option>` +
+        characterRegistry.map(c => `<option value="${c.id}">${c.name} (${c.romanizedName})</option>`).join('');
 
     const urlParams = new URLSearchParams(window.location.search);
     let charParam = urlParams.get('char') || localStorage.getItem('selectedChar');
@@ -27,10 +29,9 @@ async function init() {
 
     charSelect.addEventListener('change', loadCharacter);
 
-    // Ascoltatori Eventi
     document.addEventListener('change', (e) => {
-        if (e.target.name === 'dataSource') applyPresets(); // Cambio da Max a Collezione
-        if (e.target.id === 'sim-tech') applyPresets();     // Cambio Tecnica ricarica i preset
+        if (e.target.name === 'dataSource') applyPresets();
+        if (e.target.id === 'sim-tech') applyPresets();
         if (e.target.matches('select, input[type="checkbox"]')) runSimulation();
     });
 
@@ -38,7 +39,6 @@ async function init() {
         if (e.target.matches('input[type="number"]')) runSimulation();
     });
 
-    // Gestione Autenticazione e recupero Dati
     document.getElementById('btn-login').addEventListener('click', () => auth.loginWithGoogle());
     document.getElementById('btn-logout').addEventListener('click', () => auth.logout());
 
@@ -51,7 +51,6 @@ async function init() {
             loginBtn.style.display = 'none';
             logoutBtn.style.display = 'inline-block';
             greeting.innerHTML = `Collezione di: <span class="text-warning">${user.displayName}</span>`;
-            // FUNZIONE CENTRALIZZATA CHIAMATA QUI:
             collectionData = await auth.getUserCollection();
         } else {
             loginBtn.style.display = 'inline-block';
@@ -68,14 +67,46 @@ async function init() {
 async function loadCharacter() {
     const id = document.getElementById('sim-char').value;
     try {
-        const module = await import(`./Characters/${id}.js`);
-        currentDb = module.charData;
+        if (id === 'generic') {
+            currentDb = {
+                id: 'generic',
+                name: 'Generico',
+                element: 'Void',
+                position: 'FW',
+                stats: { Tiro: {lv300: 100}, Tecnica: {lv300: 100}, Blocco: {lv300: 100}, Parata: {lv300: 100}, Velocità: {lv300: 100} },
+                myTechniques: ["ザ・ウォール", "グレネードショット"], // Due tecniche di esempio
+                myBasicPassivesIds: [],
+                myRarityPassivesIds: []
+            };
+        } else {
+            const module = await import(`./Characters/${id}.js`);
+            currentDb = module.charData;
+        }
 
         const techSelect = document.getElementById('sim-tech');
         if (techSelect) {
-            techSelect.innerHTML = currentDb.myTechniques
-                .filter(tKey => techniquesLibrary[tKey])
-                .map(tKey => `<option value="${tKey}">${techniquesLibrary[tKey].name}</option>`).join('');
+            let optionsHtml = '';
+
+            // 1. Tecniche Native del Personaggio
+            currentDb.myTechniques.forEach(tKey => {
+                if (techniquesLibrary[tKey]) {
+                    optionsHtml += `<option value="${tKey}">${techniquesLibrary[tKey].name}</option>`;
+                }
+            });
+
+            // 2. Manuali dello Shop (Come opzioni extra selezionabili liberamente)
+            const availableManuals = universalManualsKeys.filter(m => !currentDb.myTechniques.includes(m));
+            if (availableManuals.length > 0) {
+                optionsHtml += `<optgroup label="Manuali (Shop)">`;
+                availableManuals.forEach(tKey => {
+                    if (techniquesLibrary[tKey]) {
+                        optionsHtml += `<option value="${tKey}">📕 ${techniquesLibrary[tKey].name}</option>`;
+                    }
+                });
+                optionsHtml += `</optgroup>`;
+            }
+
+            techSelect.innerHTML = optionsHtml;
         }
 
         const container = document.getElementById('dynamic-passives-container');
@@ -116,7 +147,6 @@ async function loadCharacter() {
     } catch (err) { console.error("Errore caricamento:", err); }
 }
 
-// Funzione che Inserisce Automaticamente i Numeri (Max o Collezione)
 function applyPresets() {
     if (!currentDb) return;
 
@@ -125,20 +155,23 @@ function applyPresets() {
     const statKey = techKey && techniquesLibrary[techKey] ? getStatKeyByIcon(techniquesLibrary[techKey].icon) : 'Tiro';
 
     let statVal = 0;
-    let techLvIndex = 9; // Default max
+    let techLvIndex = 9;
+    let techPwrVal = 0; // Nuova Variabile Potenza Extra
     let passivesConfig = {};
 
     if (mode === 'max') {
         statVal = currentDb.stats[statKey] ? currentDb.stats[statKey]['lv300'] : 0;
         techLvIndex = 9;
+        techPwrVal = 0;
         [...(currentDb.myBasicPassivesIds || []), ...(currentDb.myRarityPassivesIds || [])].forEach(pId => {
             const pDef = passivesLibrary.find(p => p.id === pId);
             passivesConfig[pId] = pDef ? pDef.levels.length - 1 : 0;
         });
-    } else { // Modalità Collezione
+    } else {
         const coll = collectionData[currentDb.id] || {};
         statVal = coll.stats ? (coll.stats[statKey] || 0) : 0;
         techLvIndex = coll.techLevels ? (coll.techLevels[techKey] || 0) : 0;
+        techPwrVal = coll.techCustomPower ? (coll.techCustomPower[techKey] || 0) : 0;
 
         const cPass = coll.passives || {};
         [...(currentDb.myBasicPassivesIds || []), ...(currentDb.myRarityPassivesIds || [])].forEach(pId => {
@@ -146,11 +179,13 @@ function applyPresets() {
         });
     }
 
-    // Inietta i valori nell'interfaccia
     document.getElementById('sim-custom-stat').value = statVal;
 
     const techSelect = document.getElementById('sim-tech-lvl');
     if (techSelect) techSelect.value = techLvIndex + 1;
+
+    const pwrInput = document.getElementById('sim-tech-pwr');
+    if (pwrInput) pwrInput.value = techPwrVal > 0 ? techPwrVal : '';
 
     document.querySelectorAll('.sim-passive-lvl-select').forEach(sel => {
         const pid = sel.dataset.passiveId;
@@ -165,6 +200,7 @@ function runSimulation() {
 
     const techKey = document.getElementById('sim-tech').value;
     const techLvlIndex = parseInt(document.getElementById('sim-tech-lvl').value) - 1;
+    const customTechPwr = parseInt(document.getElementById('sim-tech-pwr').value) || 0;
     const roleMult = parseFloat(document.getElementById('sim-role').value);
     const adv = parseFloat(document.getElementById('sim-advantage').value);
     const customStatVal = document.getElementById('sim-custom-stat').value;
@@ -177,7 +213,8 @@ function runSimulation() {
             return { id, lvIndex: parseInt(s.value), stacks: stackInput ? (parseInt(stackInput.value) || 1) : 1 };
         });
 
-    const data = calculateDamageData(currentDb, techKey, techLvlIndex, customStatVal, roleMult, adv, passiveSelections);
+    // Passiamo customTechPwr come 8° parametro
+    const data = calculateDamageData(currentDb, techKey, techLvlIndex, customStatVal, roleMult, adv, passiveSelections, customTechPwr);
 
     if (!data) return;
 

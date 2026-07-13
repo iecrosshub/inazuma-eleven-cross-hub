@@ -59,7 +59,7 @@ export const characterRegistry = [
 
     {
         id: "markEvansJapanNationalTeam2026",
-        name: "Mark Evans",
+        name: "Mark Evans JNT2026",
         romanizedName: "Endō Mamoru",
         japaneseName: "円堂 守",
         thumb: "img/Characters/MarkEvansJapanNationalTeam2026.png",
@@ -74,7 +74,7 @@ export const characterRegistry = [
 
     {
         id: "judeSharpJapanNationalTeam2026",
-        name: "Jude Sharp",
+        name: "Jude Sharp JNT2026",
         romanizedName: "Kidō Yūto",
         japaneseName: "鬼道 有人",
         thumb: "img/Characters/JudeSharpJapanNationalTeam2026.png",
@@ -119,7 +119,7 @@ export const characterRegistry = [
 
     {
         id: "axelBlazeInazumaJapan",
-        name: "Axel Blaze",
+        name: "Axel Blaze InazumaJapan",
         romanizedName: "Gōenji Shūya",
         japaneseName: "豪炎寺 修也",
         thumb: "img/Characters/AxelBlazeInazumaJapan.png",
@@ -134,7 +134,7 @@ export const characterRegistry = [
 
     {
         id: "jackWallsideInazumaJapan",
-        name: "Jack Wallside",
+        name: "Jack Wallside InazumaJapan",
         romanizedName: "Kabeyama Heigorō",
         japaneseName: "壁山 塀吾郎",
         thumb: "img/Characters/JackWallsideInazumaJapan.png",
@@ -149,7 +149,7 @@ export const characterRegistry = [
 
     {
         id: "nathanSwiftInazumaJapan",
-        name: "Nathan Swift",
+        name: "Nathan Swift InazumaJapan",
         romanizedName: "Kazemaru Ichirōta",
         japaneseName: "風丸 一郎太",
         thumb: "img/Characters/NathanSwiftInazumaJapan.png",
@@ -164,7 +164,7 @@ export const characterRegistry = [
 
     {
         id: "judeSharpInazumaJapan",
-        name: "Jude Sharp",
+        name: "Jude Sharp InazumaJapan",
         romanizedName: "Kidō Yūto",
         japaneseName: "鬼道 有人",
         thumb: "img/Characters/JudeSharpInazumaJapan.png",
@@ -194,7 +194,7 @@ export const characterRegistry = [
 
     {
         id: "kevinDragonflyInazumaJapan",
-        name: "Kevin Dragonfly",
+        name: "Kevin Dragonfly InazumaJapan",
         romanizedName: "Someoka Ryūgo",
         japaneseName: "染岡 竜吾",
         thumb: "img/Characters/KevinDragonflyInazumaJapan.png",
@@ -209,7 +209,7 @@ export const characterRegistry = [
 
     {
         id: "markEvansInazumaJapan",
-        name: "Mark Evans",
+        name: "Mark Evans InazumaJapan",
         romanizedName: "Endō Mamoru",
         japaneseName: "円堂 守",
         thumb: "img/Characters/MarkEvansInazumaJapan.png",
@@ -338,7 +338,7 @@ export const characterRegistry = [
 
     {
         id: "todIronsideInazumaJapan",
-        name: "Tod Ironside",
+        name: "Tod Ironside InazumaJapan",
         romanizedName: "Kurimatsu Teppei",
         japaneseName: "栗松 鉄平",
         thumb: "img/Characters/TodIronsideInazumaJapan.png",
@@ -351,7 +351,7 @@ export const characterRegistry = [
 
     {
         id: "axelBlazeRaimon",
-        name: "Axel Blaze",
+        name: "Axel Blaze Raimon",
         romanizedName: "Gōenji Shūya",
         japaneseName: "豪炎寺 修也",
         thumb: "img/Characters/AxelBlazeRaimon.png",
@@ -364,7 +364,7 @@ export const characterRegistry = [
 
     {
         id: "markEvansRaimon",
-        name: "Mark Evans",
+        name: "Mark Evans Raimon",
         romanizedName: "Endō Mamoru",
         japaneseName: "円堂 守",
         thumb: "img/Characters/MarkEvansRaimon.png",
@@ -390,7 +390,7 @@ export const characterRegistry = [
 
     {
         id: "kevinDragonflyRaimon",
-        name: "Kevin Dragonfly",
+        name: "Kevin Dragonfly Raimon",
         romanizedName: "Someoka Ryūgo",
         japaneseName: "染岡 竜吾",
         thumb: "img/Characters/KevinDragonflyRaimon.png",
@@ -419,7 +419,7 @@ export const characterRegistry = [
 
     {
         id: "nathanSwiftRaimon",
-        name: "Nathan Swift",
+        name: "Nathan Swift Raimon",
         romanizedName: "Kazemaru Ichirōta",
         japaneseName: "風丸 一郎太",
         thumb: "img/Characters/NathanSwiftRaimon.png",
@@ -445,7 +445,7 @@ export const characterRegistry = [
 
     {
         id: "judeSharpRoyalAcademy",
-        name: "Jude Sharp",
+        name: "Jude Sharp RoyalAcademy",
         romanizedName: "Kidō Yūto",
         japaneseName: "鬼道 有人",
         thumb: "img/Characters/JudeSharpRoyalAcademy.png",
@@ -604,7 +604,7 @@ export const characterRegistry = [
 
     {
         id: "jackWallsideRaimon",
-        name: "Jack Wallside",
+        name: "Jack Wallside Raimon",
         romanizedName: "Kabeyama Heigorō",
         japaneseName: "壁山 塀吾郎",
         thumb: "img/Characters/JackWallsideRaimon.png",
@@ -644,7 +644,7 @@ export const characterRegistry = [
 
     {
         id: "todIronsideRaimon",
-        name: "Tod Ironside",
+        name: "Tod Ironside Raimon",
         romanizedName: "Kurimatsu Teppei",
         japaneseName: "栗松 鉄平",
         thumb: "img/Characters/TodIronsideRaimon.png",

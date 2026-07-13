@@ -19,6 +19,32 @@ export const universalManualsKeys = [
     "ザ・ウォール"            // Blocco (Montagna)
 ];
 
+// Funzioni per decodificare i requisiti di Sblocco
+export function getRarityTier(reqString) {
+    if (!reqString) return -1;
+    const str = reqString.toLowerCase();
+    if (str.includes("legendary player +")) return 6;
+    if (str.includes("legendary player")) return 5;
+    if (str.includes("top player +")) return 4;
+    if (str.includes("top player")) return 3;
+    if (str.includes("inferiore advanced player")) return 0;
+    if (str.includes("advanced player +")) return 2;
+    if (str.includes("advanced player")) return 1;
+    return -1;
+}
+
+export function getLevelTier(reqString) {
+    if (!reqString) return -1;
+    const lower = reqString.toLowerCase();
+    // Escludiamo le stringhe che si riferiscono alla Rarità per evitare conflitti
+    if (lower.includes("advanced") || lower.includes("top") || lower.includes("legendary")) return -1;
+
+    // Estrae qualsiasi numero presente nella stringa della passiva
+    const match = lower.match(/\d+/);
+    if (match) return parseInt(match[0]);
+    return -1;
+}
+
 // ==========================================
 // 1. GESTIONE URL E NAVIGAZIONE
 // ==========================================
@@ -94,16 +120,15 @@ export function getElementalAdvantage(moveElement, opponentElement) {
 }
 
 // ==========================================
-// 4. MOTORE DEL SIMULATORE (ORA INDISTRUTTIBILE)
+// 4. MOTORE DEL SIMULATORE
 // ==========================================
 
-export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, roleMult, adv, passiveSelections) {
+export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, roleMult, adv, passiveSelections, customTechPower = 0) {
     if (!charDb || !techKey || !techniquesLibrary[techKey]) return null;
 
     const tech = techniquesLibrary[techKey];
     const statKey = getStatKeyByIcon(tech.icon);
 
-    // STAB Calcolato in automatico
     const techElement = extractElement(tech.elementIcon);
     const charElement = extractElement(charDb.element);
     const hasStab = (techElement === charElement && techElement !== 'Void');
@@ -112,17 +137,16 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
     const elMapIt = { 'Fire': 'Fuoco', 'Wind': 'Vento', 'Forest': 'Foresta', 'Mountain': 'Montagna', 'Void': 'Vuoto' };
     const techElementIt = elMapIt[techElement];
 
-    // Valore Base della statistica
     const baseStat = parseInt(customStat) || 0;
 
-    // FIX 1: Lettura sicura della Potenza della Mossa ("tech.power")
-    const techPower = tech.power ? (parseInt(tech.power[techLvlIndex]) || 0) : 0;
+    // AGGIUNTA POTENZA EXTRA ALLA MOSSA!
+    const baseTechPower = tech.power ? (parseInt(tech.power[techLvlIndex]) || 0) : 0;
+    const techPower = baseTechPower + parseInt(customTechPower || 0);
 
     let passiveStatBuff = 0;
     let passivePowerBuff = 0;
     let passiveData = [];
 
-    // Mappa per unire il "moveKind" delle tue passive alla Statistica vera e propria
     const moveKindToStatKey = {
         "Tiro": "Tiro",
         "Dribbling": "Tecnica",
@@ -138,34 +162,27 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
         const stacks = sel.stacks || 1;
         let isAffecting = false;
 
-        // FIX 2: Prende il file passive sia che usi "effects" (nuovo) che "actions" (vecchio)
         const actionsList = p.effects || p.actions;
 
         if (actionsList) {
             actionsList.forEach(effect => {
                 let amount = 0;
 
-                // Lettura dei Valori a prescindere da come li hai salvati
                 if (effect.amount === "{VAL}") amount = parseInt(currentLvData.val) || 0;
                 else if (effect.amount === "{POWER}") amount = parseInt(currentLvData.power) || 0;
                 else if (effect.amount === "{VAL2}") amount = parseInt(currentLvData.val2) || 0;
                 else if (effect.valueRef) amount = parseInt(currentLvData[effect.valueRef]) || 0;
 
-                amount = amount * stacks; // Applica i moltiplicatori di carica ("x1", "x2", ecc)
+                amount = amount * stacks;
 
-                // 1. BUFF ALLA STATISTICA (es. Tiro +50)
                 if ((effect.type === "stat" && (effect.statName === statKey || effect.statName === "All" || effect.statName === "Tutte_le_Statistiche")) ||
                     (effect.type === "base_stat" && (effect.stat === statKey || effect.stat === "Tutte_le_Statistiche"))) {
                     passiveStatBuff += amount;
                     isAffecting = true;
                 }
-
-                // 2. BUFF ALLA POTENZA DELLA MOSSA (es. Potenza Tiro +15)
                 else if (effect.type === "power") {
                     let isMatch = true;
-                    // Se specifica il tipo di mossa e non combacia, salta
                     if (effect.moveKind && moveKindToStatKey[effect.moveKind] !== statKey) isMatch = false;
-                    // Se specifica l'elemento e non combacia, salta
                     if (effect.moveElement && effect.moveElement !== techElement) isMatch = false;
 
                     if (isMatch) {
@@ -173,7 +190,6 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
                         isAffecting = true;
                     }
                 }
-                // Compatibilità col formato vecchio
                 else if (effect.type === "move_power") {
                     let isMatch = false;
                     if (effect.stat === "Potenza_Tiro" && statKey === "Tiro") isMatch = true;
@@ -191,8 +207,6 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
                         isAffecting = true;
                     }
                 }
-
-                // 3. BUFF ALLA MOSSA SPECIFICA
                 else if (effect.type === "specific_move_power") {
                     if (effect.stat === techKey || effect.stat === tech.name || effect.moveName === techKey) {
                         passivePowerBuff += amount;
@@ -202,12 +216,10 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
             });
         }
 
-        // Crea il piccolo testo a destra per farti vedere se l'abilità è attiva e per quante volte
         const descSuffix = stacks > 1 ? `<br><span class="text-primary fw-bold">(Attivata ${stacks} volte)</span>` : '';
         passiveData.push({ title: p.title, level: sel.lvIndex + 1, active: isAffecting, desc: p.template + descSuffix });
     });
 
-    // Calcolo della formula Inazuma!
     const statFinale = Math.floor((baseStat + passiveStatBuff) * roleMult);
     const potenzaFinale = techPower + passivePowerBuff;
     const danno = Math.floor(statFinale * (potenzaFinale / 100) * stabMult * adv);
@@ -287,25 +299,14 @@ export class RosterManager {
 
     addCharacter(customChar) {
         this.currentId++;
-        const newChar = {
-            uid: `roster_${this.currentId}`,
-            ...customChar
-        };
+        const newChar = { uid: `roster_${this.currentId}`, ...customChar };
         this.roster.push(newChar);
         return newChar;
     }
 
-    getCharacter(uid) {
-        return this.roster.find(c => c.uid === uid);
-    }
-
-    getAllCharacters() {
-        return this.roster;
-    }
-
-    removeCharacter(uid) {
-        this.roster = this.roster.filter(c => c.uid !== uid);
-    }
+    getCharacter(uid) { return this.roster.find(c => c.uid === uid); }
+    getAllCharacters() { return this.roster; }
+    removeCharacter(uid) { this.roster = this.roster.filter(c => c.uid !== uid); }
 }
 
 // ==========================================
@@ -313,7 +314,6 @@ export class RosterManager {
 // ==========================================
 
 function isTargetValid(caster, targetChar, effect) {
-    // Gestione vecchie passive
     if (effect.target) {
         if (effect.target === "self") return caster.id === targetChar.id;
         if (effect.target === "team" || effect.target.includes("allies")) return true;
@@ -337,13 +337,11 @@ function isTargetValid(caster, targetChar, effect) {
         if (effect.target === "team_FW_Fire") return role === "FW" && element === "Fire";
         if (effect.target === "team_FW_Fire_Forest") return role === "FW" && (element === "Fire" || element === "Forest");
         if (effect.target === "team_MF_Wind") return role === "MF" && element === "Wind";
-
         if (effect.target === "team_Raimon_Emperors" || effect.target === "team_teikoku" || effect.target === "team_Raimon") return true;
 
         return false;
     }
 
-    // Gestione nuove passive (targetScope, targetRoles, targetElements)
     if (effect.targetScope === "self" && caster.id !== targetChar.id) return false;
     if (effect.targetScope === "enemy") return false;
 
@@ -366,7 +364,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         statDetails: [], powerDetails: []
     }));
 
-    // FASE 1: Calcolo incrociato dei Buff
     team.forEach((casterWrapper, casterIndex) => {
         const caster = casterWrapper.charData;
         const passiveLevelsMap = casterWrapper.passiveLevels || {};
@@ -374,7 +371,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
         allPassives.forEach(passiveId => {
             const userLevelIndex = passiveLevelsMap[passiveId];
-            if (userLevelIndex === -1 || userLevelIndex === undefined) return; // Disattivata
+            if (userLevelIndex === -1 || userLevelIndex === undefined) return;
 
             const passiveDef = passivesLibrary.find(p => p.id === passiveId);
             if (!passiveDef || !passiveDef.levels[userLevelIndex]) return;
@@ -385,7 +382,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             if (!actionsList) return;
 
             actionsList.forEach(effect => {
-                // Filtra Condizioni: consideriamo solo i potenziamenti base per questo simulatore
                 let isAlwaysOrBond = true;
                 if (effect.condition) {
                     isAlwaysOrBond = effect.condition === 'always' || effect.condition === 'in_penalty_area' || effect.condition.startsWith('3_allies');
@@ -402,7 +398,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
                 if (!isPower && !isStat) return;
 
-                // Estrazione Sicura del Valore
                 let actualValue = 0;
                 if (effect.valueRef) {
                     actualValue = parseInt(currentLvData[effect.valueRef]) || 0;
@@ -431,7 +426,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                             if (effect.moveKind && effect.moveKind !== "All" && mkMap[effect.moveKind] !== targetStatType) isMatch = false;
                             if (effect.moveElement && effect.moveElement !== targetTechElement) isMatch = false;
 
-                            // Retrocompatibilità vecchia sintassi
                             if (effect.stat && effect.stat.includes(targetStatType)) isMatch = true;
                             if (effect.stat === "Tutte_le_Statistiche") isMatch = true;
 
@@ -477,7 +471,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         const userTechLevelIndex = slot.techLevel || 0;
         const nakedPower = tech.power ? (parseInt(tech.power[userTechLevelIndex]) || 0) : 0;
 
-        // LA TUA NUOVA AGGIUNTA: POTENZA EXTRA INSERITA A MANO
         const manualBonusPower = slot.customTechPower ? (slot.customTechPower[slot.moveName] || 0) : 0;
 
         let stageBonus = 0;
@@ -486,7 +479,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             stageBonus = stageConfig.bonus;
         }
 
-        // Il manualBonusPower viene regolarmente sommato nel totale
         const totalPower = nakedPower + manualBonusPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
 
         let attributeMultiplier = 1.0;
@@ -520,7 +512,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                 base: { naked: nakedBaseStat, selfBuff: slotBuffs.statSelf, allyBuff: slotBuffs.statAlly, total: totalBase },
                 power: {
                     naked: nakedPower,
-                    customBonus: manualBonusPower, // Registrato per il modale UI
+                    customBonus: manualBonusPower,
                     selfBuff: slotBuffs.powerSelf,
                     allyBuff: slotBuffs.powerAlly,
                     stageBonus: stageBonus,

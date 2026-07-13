@@ -12,7 +12,7 @@
 
     <!-- CSS Personalizzati -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/styleTeamBuilder.css"> <!-- Per i filtri select -->
+    <link rel="stylesheet" href="css/styleTeamBuilder.css">
     <link rel="stylesheet" href="css/styleCollection.css">
 </head>
 <body class="pb-5">
@@ -39,7 +39,6 @@
     </div>
 </div>
 
-<!-- CONTENITORE FISSO ANTI-ZOOM -->
 <div class="container-fixed py-3">
     <!-- Barra Utente / Salvataggio -->
     <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded" style="background: #0b1a42; border: 2px solid #ffca28; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
@@ -53,11 +52,42 @@
         </div>
     </div>
 
+    <!-- IMPOSTAZIONI GLOBALI RAPIDE (SOLO LIVELLO PASSIVE) -->
+    <div class="global-settings-bar mb-4 p-3 rounded shadow-sm border border-info" style="background: #0b1a42;">
+        <h5 class="text-info mb-3 fw-bold"><i class="fas fa-globe"></i> Impostazioni Globali Rapide</h5>
+        <div class="row g-3 align-items-end">
+            <div class="col-12 col-md-8">
+                <label class="form-label text-light small fw-bold">Imposta Livello a TUTTE le passive legate al Livello</label>
+                <div class="d-flex gap-2">
+                    <input type="number" id="global-level-input" class="form-control form-control-sm border-info" value="30" min="1" max="50" style="max-width: 150px;">
+                    <button id="btn-apply-level" class="btn btn-info btn-sm fw-bold px-4">Applica Livello</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- PANNELLO FILTRI AVANZATI -->
     <div class="filters-container mb-4 shadow-sm">
-        <div class="filter-group mb-3" style="width: 100%;">
-            <label>Nome Giocatore</label>
-            <input type="text" id="search-name" placeholder="Cerca nome..." style="width: 100%;">
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-md-8">
+                <div class="filter-group">
+                    <label>Nome Giocatore</label>
+                    <input type="text" id="search-name" placeholder="Cerca nome..." style="width: 100%;">
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="filter-group">
+                    <label>Stato Possesso</label>
+                    <div class="custom-select" id="filter-owned" data-value="All">
+                        <div class="select-selected"><span>Tutti i Giocatori</span> <i class="fas fa-chevron-down"></i></div>
+                        <div class="select-items select-hide">
+                            <div data-value="All">Tutti i Giocatori</div>
+                            <div data-value="owned">Solo Posseduti</div>
+                            <div data-value="not-owned">Non Posseduti</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row g-3 mb-3">
@@ -98,10 +128,9 @@
                         <div class="select-selected"><span>Tutte le Rarità</span> <i class="fas fa-chevron-down"></i></div>
                         <div class="select-items select-hide">
                             <div data-value="All">Tutte le Rarità</div>
-                            <div data-value="5"><img src="img/Frm_GachaIcon/Icon_GradeStar.png" style="height:16px;"> 5 Stelle</div>
-                            <div data-value="4"><img src="img/Frm_GachaIcon/Icon_GradeStar.png" style="height:16px;"> 4 Stelle</div>
                             <div data-value="3"><img src="img/Frm_GachaIcon/Icon_GradeStar.png" style="height:16px;"> 3 Stelle</div>
                             <div data-value="2"><img src="img/Frm_GachaIcon/Icon_GradeStar.png" style="height:16px;"> 2 Stelle</div>
+                            <div data-value="1"><img src="img/Frm_GachaIcon/Icon_GradeStar.png" style="height:16px;"> 1 Stella</div>
                         </div>
                     </div>
                 </div>
