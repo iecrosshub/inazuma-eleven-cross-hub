@@ -220,6 +220,18 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
     },
 
+    {
+        id: "poseidonZeus",
+        name: "Poseidon",
+        romanizedName: "Posei Donichi",
+        japaneseName: "歩星 呑一",
+        thumb: "img/Characters/poseidonZeus.png", // Puoi aggiornare il nome dell'immagine con quello che usi tu
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_GK.png",
+        stars: 2, // Considerando le statistiche, probabile SR
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
 
     {
         id: "archerHawkinsInazumaJapan",
@@ -553,6 +565,42 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
 
+    {
+        id: "demeterZeus",
+        name: "Demeter",
+        romanizedName: "Deite Yutaka",
+        japaneseName: "出右手 豊",
+        thumb: "img/Characters/DemeterZeus.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "heraZeus",
+        name: "Hera",
+        romanizedName: "Taira Sada",
+        japaneseName: "平良 貞",
+        thumb: "img/Characters/HeraZeus.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "athenaZeus",
+        name: "Athena",
+        romanizedName: "Asuka Tomo",
+        japaneseName: "明天名 智",
+        thumb: "img/Characters/AthenaZeus.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
 
     {
         id: "jackWallsideRaimon",
@@ -832,5 +880,79 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
+    {
+        id: "aresZeus",
+        name: "Ares",
+        romanizedName: "Arasu Ran",
+        japaneseName: "荒須 乱",
+        thumb: "img/Characters/AresZeus.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
 
+    {
+        id: "hephesteusZeus",
+        name: "Hephesteus",
+        romanizedName: "Hepai En",
+        japaneseName: "部灰 炎",
+        thumb: "img/Characters/HephesteusZeus.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "apoloZeus",
+        name: "Apolo",
+        romanizedName: "Aporo Hikaru",
+        japaneseName: "阿保露 光",
+        thumb: "img/Characters/ApoloZeus.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+    {
+        id: "artemisZeus",
+        name: "Artemis",
+        romanizedName: "Zashiki Artemis",
+        japaneseName: "在手 実弓",
+        thumb: "img/Characters/ArtemisZeus.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+    {
+        id: "hermesZeus",
+        name: "Hermes",
+        romanizedName: "Kyome Sushan",
+        japaneseName: "経目 須商",
+        thumb: "img/Characters/HermesZeus.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "dionysusZeus",
+        name: "Dionysus",
+        romanizedName: "Teyo Geki",
+        japaneseName: "手魚 激",
+        thumb: "img/Characters/DionysusZeus.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
 ];

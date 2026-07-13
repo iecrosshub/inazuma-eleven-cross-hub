@@ -1,8 +1,6 @@
-/* =========================================
-   STILE SIMULATORE (Coerente con Allenatori)
-   ========================================= */
+/* css/styleSimulator.css */
 
-/* --- TITOLO PRINCIPALE (Bianco, massiccio, maiuscolo) --- */
+/* --- TITOLO PRINCIPALE --- */
 .album-title {
     color: #ffffff !important;
     font-weight: 900 !important;
@@ -11,7 +9,7 @@
     letter-spacing: 1px;
 }
 
-/* --- CARD E BOX (Stile 'info-card' Allenatori) --- */
+/* --- CARD E BOX --- */
 .card {
     background-color: #ffffff !important;
     border: none !important;
@@ -21,9 +19,9 @@
     padding: 20px !important;
 }
 
-/* --- TITOLI SEZIONI INTERNE (Blu scuro Inazuma, font allenatori) --- */
+/* --- TITOLI SEZIONI INTERNE --- */
 h5.text-info, h4.text-secondary {
-    color: #102247 !important; /* Blu scuro Inazuma */
+    color: #102247 !important;
     font-weight: 900 !important;
     border-bottom: 2px solid #d4e1f1 !important;
     padding-bottom: 12px !important;
@@ -35,38 +33,34 @@ h5.text-info, h4.text-secondary {
 
 /* --- POTENZA FINALE (Numero Grande) --- */
 #damage-result {
-    color: #1269e8 !important; /* Blu Elettrico Inazuma */
+    color: #1269e8 !important;
     font-weight: 900 !important;
     font-size: 80px !important;
     text-shadow: 0 4px 10px rgba(18, 105, 232, 0.2) !important;
 }
 
 /* --- FORMULA (Riquadro chiaro) --- */
-/* --- FORMULA (Riquadro chiaro) --- */
 #damage-formula {
     background-color: #f8fbff !important;
     border: 1px solid #d4e1f1 !important;
-    color: #102247 !important; /* Colore scuro e netto per i numeri del calcolo */
+    color: #102247 !important;
     padding: 15px !important;
     border-radius: 8px !important;
     font-weight: bold !important;
     display: block;
-
-    /* INGRANDISCE I NUMERI (Sovrascrive il tag <small> dell'HTML) */
     font-size: 1.2rem !important;
     line-height: 1.6 !important;
 }
 
-/* Colora e ingrandisce in modo specifico la parola "Equazione:" all'interno del riquadro */
 #damage-formula .text-info {
-    color: #0dcaf0 !important; /* Ciano brillante */
+    color: #0dcaf0 !important;
     font-weight: 900 !important;
     font-size: 1.2rem !important;
 }
 
-/* --- VALORI COINVOLTI (Stile 'Conditions' scuro Allenatori) --- */
+/* --- VALORI COINVOLTI E PASSIVE --- */
 #stats-display {
-    background-color: #0b1a42 !important; /* Sfondo scuro */
+    background-color: #0b1a42 !important;
     border-radius: 8px !important;
     padding: 15px 20px !important;
     list-style: none;
@@ -75,7 +69,7 @@ h5.text-info, h4.text-secondary {
 
 #stats-display li {
     background-color: transparent !important;
-    color: #ffffff !important; /* Testo bianco */
+    color: #ffffff !important;
     border: none !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     margin-bottom: 0 !important;
@@ -90,14 +84,13 @@ h5.text-info, h4.text-secondary {
     border-bottom: none !important;
 }
 
-/* Colore Giallo acceso per i numeri (come le condizioni in allenatori) */
 #stats-display li span {
     color: #f8fbff !important;
     font-weight: 900 !important;
     font-size: 1.2em;
 }
 
-/* --- SELECT E INPUT (Stile bottoni laterali Allenatori) --- */
+/* --- SELECT E INPUT --- */
 .form-select {
     background-color: #f8fbff !important;
     border: 1px solid #d4e1f1 !important;
@@ -111,7 +104,6 @@ h5.text-info, h4.text-secondary {
     background-color: #edf6ff !important;
 }
 
-/* Etichette sopra i select */
 .form-label {
     color: #506482 !important;
     font-weight: bold !important;

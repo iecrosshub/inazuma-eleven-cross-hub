@@ -1,5 +1,7 @@
+// js/teamBuilder.js
 import { coachRegistry } from './Coaches/registry.js';
 import { characterRegistry } from './Characters/registry.js';
+import { fetchCoachData, filterCharacters } from './utils.js'; // Le nostre utility!
 
 let currentCoachId = '';
 let activeCoachDb = null;
@@ -8,20 +10,13 @@ let teamRoster = {};
 
 async function init() {
     renderSidebar();
-
-    // 1. SETUP CUSTOM SELECTS
     setupCustomSelects();
 
-    // 2. Eventi Filtri Base
     document.getElementById('filter-name').addEventListener('input', applyFilters);
     document.getElementById('btn-reset-filters').addEventListener('click', resetFilters);
     document.getElementById('btn-remove-player').addEventListener('click', removePlayerFromSlot);
 
-    // 3. Renderizza griglia giocatori iniziale
     renderPlayerGrid(characterRegistry);
-
-    // --- AGGIUNTA PER PRESELEZIONE ---
-    // Sostituisci 'percival_travis' con l'id esatto che trovi nel tuo registro
     selectCoach('percivalTravis');
 }
 
@@ -30,38 +25,28 @@ async function init() {
 // ==========================================
 function setupCustomSelects() {
     const customSelects = document.getElementsByClassName("custom-select");
-
     for (let i = 0; i < customSelects.length; i++) {
         const selElmnt = customSelects[i];
         const selectedDiv = selElmnt.querySelector(".select-selected");
         const itemsDiv = selElmnt.querySelector(".select-items");
         const optionDivs = itemsDiv.getElementsByTagName("DIV");
 
-        // Quando clicchi la riga principale del menu
         selectedDiv.addEventListener("click", function(e) {
             e.stopPropagation();
-            closeAllSelect(this); // Chiude gli altri
-            itemsDiv.classList.toggle("select-hide"); // Apre questo
+            closeAllSelect(this);
+            itemsDiv.classList.toggle("select-hide");
         });
 
-        // Quando clicchi un'opzione interna
         for (let j = 0; j < optionDivs.length; j++) {
             optionDivs[j].addEventListener("click", function(e) {
-                // Aggiorna il valore invisibile e il testo visibile
                 const val = this.getAttribute("data-value");
                 selElmnt.setAttribute("data-value", val);
-
-                // Clona l'HTML (immagine + testo) nel bottone principale
                 selectedDiv.querySelector("span").innerHTML = this.innerHTML;
-
-                // Nascondi il menu e applica filtri
                 itemsDiv.classList.add("select-hide");
                 applyFilters();
             });
         }
     }
-
-    // Chiude i menu se si clicca da qualsiasi altra parte nello schermo
     document.addEventListener("click", closeAllSelect);
 }
 
@@ -75,18 +60,14 @@ function closeAllSelect(elmnt) {
     }
 }
 
-// Resetta i menu custom allo stato iniziale
 function resetFilters() {
     document.getElementById('filter-name').value = '';
-
     const selects = document.querySelectorAll('.custom-select');
     selects.forEach(sel => {
         sel.setAttribute("data-value", "");
-        // Prende il primo elemento (l'opzione vuota "Tutti...")
         const firstOptionHtml = sel.querySelector('.select-items div').innerHTML;
         sel.querySelector('.select-selected span').innerHTML = firstOptionHtml;
     });
-
     applyFilters();
 }
 
@@ -112,6 +93,7 @@ function renderSidebar() {
     });
 }
 
+// Guarda quanto è snella grazie a fetchCoachData!
 async function selectCoach(id) {
     currentCoachId = id;
     teamRoster = {};
@@ -119,46 +101,38 @@ async function selectCoach(id) {
     toggleRemoveButton();
     renderSidebar();
 
-    try {
-        const module = await import(`./Coaches/${id}.js`);
-        activeCoachDb = module.coachData;
+    activeCoachDb = await fetchCoachData(id);
+    if (!activeCoachDb) return;
 
-        // 1. Nome Allenatore
-        document.getElementById('coach-name').textContent = activeCoachDb.name;
+    document.getElementById('coach-name').textContent = activeCoachDb.name;
 
-        // 2. Immagine Ritratto
-        const portrait = document.getElementById('coach-portrait');
-        if (activeCoachDb.thumb) {
-            portrait.src = activeCoachDb.thumb;
-            portrait.style.display = 'block';
-        } else {
-            portrait.style.display = 'none';
-        }
-
-        // 3. Tendina Livelli (CONTROLLO DI SICUREZZA AGGIUNTO)
-        const levelSelect = document.getElementById('coach-level-select');
-        levelSelect.innerHTML = '';
-        if (activeCoachDb.levels && Array.isArray(activeCoachDb.levels)) {
-            activeCoachDb.levels.forEach(lv => {
-                const opt = document.createElement('option');
-                opt.value = lv.level;
-                opt.textContent = `Lv.${lv.level}`;
-                levelSelect.appendChild(opt);
-            });
-            levelSelect.style.display = 'block';
-        } else {
-            levelSelect.style.display = 'none';
-        }
-
-        // 4. Barra Blu Squadra
-        const teamHeader = document.getElementById('team-name-header');
-        teamHeader.textContent = activeCoachDb.formationName;
-        teamHeader.style.display = 'flex';
-
-        renderPitch();
-    } catch (err) {
-        console.error("Errore caricamento modulo allenatore:", err);
+    const portrait = document.getElementById('coach-portrait');
+    if (activeCoachDb.thumb) {
+        portrait.src = activeCoachDb.thumb;
+        portrait.style.display = 'block';
+    } else {
+        portrait.style.display = 'none';
     }
+
+    const levelSelect = document.getElementById('coach-level-select');
+    levelSelect.innerHTML = '';
+    if (activeCoachDb.levels && Array.isArray(activeCoachDb.levels)) {
+        activeCoachDb.levels.forEach(lv => {
+            const opt = document.createElement('option');
+            opt.value = lv.level;
+            opt.textContent = `Lv.${lv.level}`;
+            levelSelect.appendChild(opt);
+        });
+        levelSelect.style.display = 'block';
+    } else {
+        levelSelect.style.display = 'none';
+    }
+
+    const teamHeader = document.getElementById('team-name-header');
+    teamHeader.textContent = activeCoachDb.formationName;
+    teamHeader.style.display = 'flex';
+
+    renderPitch();
 }
 
 function renderPitch() {
@@ -171,7 +145,6 @@ function renderPitch() {
 
         if (playerId) {
             const player = characterRegistry.find(c => c.id === playerId);
-            // MODIFICA: Rimosso il tag <strong>${slot.number}</strong> da qui
             return `
                 <div class="pitch-slot has-player ${isSelectedClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
                     <img src="${slot.baseAsset}" class="role-icon" alt="${slot.position}">
@@ -179,7 +152,6 @@ function renderPitch() {
                 </div>
             `;
         } else {
-            // Se non c'è il giocatore, mostra normalmente maglietta e numero
             return `
                 <div class="pitch-slot ${isSelectedClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
                     <img src="${slot.baseAsset}" class="role-icon" alt="${slot.position}">
@@ -219,44 +191,23 @@ function removePlayerFromSlot() {
 }
 
 // ==========================================
-// FILTRAGGIO LOGICA
+// FILTRAGGIO LOGICA (Ora passa tutto per utils!)
 // ==========================================
 async function applyFilters() {
-    const nameFilter = document.getElementById('filter-name').value.toLowerCase();
-    const roleFilter = document.getElementById('custom-role').getAttribute('data-value');
-    const elementFilter = document.getElementById('custom-element').getAttribute('data-value');
-    const styleFilter = document.getElementById('custom-style').getAttribute('data-value');
-    const teamFilter = document.getElementById('custom-team').getAttribute('data-value');
-    const seasonFilter = document.getElementById('custom-season').getAttribute('data-value');
+    // 1. Raccogliamo i valori dai custom select (Nota gli ID diversi dall'HTML)
+    const filters = {
+        name: document.getElementById('filter-name').value,
+        position: document.getElementById('custom-role').getAttribute('data-value'),
+        element: document.getElementById('custom-element').getAttribute('data-value'),
+        style: document.getElementById('custom-style').getAttribute('data-value'),
+        team: document.getElementById('custom-team').getAttribute('data-value'),
+        season: document.getElementById('custom-season').getAttribute('data-value')
+    };
 
-    const isAdvancedFilterActive = styleFilter || teamFilter || seasonFilter;
+    // 2. Chiediamo a utils.js di fare il lavoro asincrono
+    const results = await filterCharacters(characterRegistry, filters);
 
-    let results = [];
-
-    for (let char of characterRegistry) {
-        if (nameFilter && !char.name.toLowerCase().includes(nameFilter) && !char.japaneseName.toLowerCase().includes(nameFilter)) continue;
-        if (roleFilter && !char.position.includes(roleFilter)) continue;
-        if (elementFilter && !char.element.includes(elementFilter)) continue;
-
-        if (isAdvancedFilterActive) {
-            try {
-                const module = await import(`./Characters/${char.id}.js`);
-                const fullCharData = module.charData;
-                const allTagsRaw = fullCharData.tags ? fullCharData.tags.join('').toLowerCase() : '';
-
-                if (styleFilter && !allTagsRaw.includes(`ability_${styleFilter.toLowerCase()}`)) continue;
-                if (teamFilter && !allTagsRaw.includes(`team_${teamFilter.toLowerCase()}`)) continue;
-                if (seasonFilter && !allTagsRaw.includes(`title_${seasonFilter.toLowerCase()}`)) continue;
-
-            } catch (err) {
-                console.error("Errore caricamento dati giocatore:", char.id);
-                continue;
-            }
-        }
-
-        results.push(char);
-    }
-
+    // 3. Stampiamo i risultati nella barra laterale
     renderPlayerGrid(results);
 }
 

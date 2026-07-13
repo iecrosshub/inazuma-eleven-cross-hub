@@ -1,0 +1,98 @@
+/* css/styleCollection.css */
+
+/* --- PANNELLO FILTRI --- */
+.filters-container {
+    background: #f8fbff;
+    border: 2px solid #d4e1f1;
+    border-radius: 12px;
+    padding: 20px;
+}
+.filter-group label {
+    color: #0b1a42;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    display: block;
+}
+.filter-group input[type="text"] {
+    background-color: #ffffff;
+    border: 1px solid #c0d3e8;
+    color: #102247;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+.filter-group input[type="text"]:focus {
+    outline: none;
+    border-color: #2482df;
+    box-shadow: 0 0 0 0.2rem rgba(36, 130, 223, 0.25);
+}
+
+/* --- SCHEDE COLLEZIONE --- */
+.collection-item-wrapper {
+    margin-bottom: 20px;
+}
+
+/* Interruttore "Posseduto" fuori dalla scheda */
+.toggle-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 5px;
+    padding-right: 5px;
+}
+.toggle-container .form-check-label {
+    color: #ffffff;
+    font-weight: 900;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    margin-right: 8px;
+    text-transform: uppercase;
+}
+
+/* La scheda vera e propria (Scura, stile Inazuma) */
+.collection-card {
+    background: #1a1a1e;
+    border: 2px solid #2e2e38;
+    border-radius: 8px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
+.collection-card.owned {
+    border-color: #ffca28;
+    box-shadow: 0 6px 15px rgba(255, 202, 40, 0.15);
+}
+
+/* Effetto Carta NON posseduta */
+.unowned-card {
+    filter: grayscale(100%);
+    opacity: 0.5;
+    border-color: #555 !important;
+}
+.unowned-card .card-details {
+    pointer-events: none; /* Disabilita i click sulle statistiche se non è posseduto */
+}
+
+/* Dettagli interni della scheda */
+.card-details h6 {
+    color: #0dcaf0 !important;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.char-thumb {
+    width: 65px;
+    height: 65px;
+    border-radius: 8px;
+    border: 2px solid #ffca28;
+    background-color: #0b1a42;
+}
+
+.tag-icon-small {
+    height: 22px;
+    object-fit: contain;
+}

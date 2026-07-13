@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="it">
 <head>
     <meta name="google-adsense-account" content="ca-pub-3582001665371701">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1450">
     <title>Dettaglio Personaggio</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- CSS Personalizzati -->
     <link rel="stylesheet" href="./css/style.css">
@@ -15,8 +16,8 @@
 </head>
 <body class="pt-3">
 
-<!-- NAVIGAZIONE PRINCIPALE (A Pillola + Precedente/Successivo) -->
-<div class="container my-4 position-relative" style="max-width: 1400px;">
+<!-- NAVIGAZIONE PRINCIPALE -->
+<div class="container-fixed my-4 position-relative">
 
     <!-- Tasti laterali -->
     <button type="button" id="btn-prev-char" class="btn btn-outline-info fw-bold rounded-pill px-4 position-absolute top-50 start-0 translate-middle-y">
@@ -26,19 +27,33 @@
         Successivo ▶
     </button>
 
-    <!-- Navigazione Centrale a Pillola -->
+    <!-- Navigazione Centrale a Pillola (Giocatori = Attivo) -->
     <div class="inazuma-nav-container">
-        <nav class="inazuma-nav">
-            <a href="./index.html" class="inazuma-nav-item">Giocatori</a>
-            <a href="./coaches.html" class="inazuma-nav-item">Allenatori</a>
+        <div class="inazuma-nav">
+            <a href="index.html" class="inazuma-nav-item active">Giocatori</a>
+            <a href="coaches.html" class="inazuma-nav-item">Allenatori</a>
             <a href="teamBuilder.html" class="inazuma-nav-item">Team Builder</a>
-            <a id="btn-send-to-sim" href="./simulator.html" class="inazuma-nav-item">Simulatore</a>
-        </nav>
+            <div class="nav-dropdown">
+                <button class="dropbtn">Simulatori <i class="fas fa-caret-down"></i></button>
+                <div class="dropdown-content">
+                    <a href="mode5vs1.html">Simulatore 5vs1</a>
+                    <a href="simulator.html">Simulatore Tecniche</a>
+                </div>
+            </div>
+            <div class="nav-dropdown">
+                <button class="dropbtn">Utility <i class="fas fa-caret-down"></i></button>
+                <div class="dropdown-content">
+                    <a href="calendar.html"><i class="fas fa-calendar-alt me-1"></i> Calendario Sfide</a>
+                </div>
+            </div>
+            <a href="collection.html" class="inazuma-nav-item">Collezione</a>
+        </div>
     </div>
 
 </div>
 
-<div class="container pb-5" style="max-width: 1400px;">
+<!-- CONTENITORE FISSO ANTI-ZOOM -->
+<div class="container-fixed pb-5">
     <div class="row g-4">
         <!-- Colonna Sinistra (Immagine e Statistiche) -->
         <div class="col-lg-4 col-xl-3 text-center">
@@ -77,8 +92,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Aggiungiamo un ?v=2 per costringere il browser a ricaricare il JS aggiornato -->
-<script type="module" src="./js/main.js?v=2"></script>
+<script type="module" src="./js/character.js?v=2"></script>
 
 </body>
 </html>

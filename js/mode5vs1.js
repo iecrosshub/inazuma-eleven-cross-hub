@@ -1,486 +1,298 @@
-import { characterRegistry } from './Characters/registry.js';
-import { techniquesLibrary } from './Techniques/library.js';
-import { passivesLibrary } from './Passive/library.js';
-import { runOptimizer } from './trialOptimizer.js';
-import { parsePassiveText, getStatKeyByIcon, extractElement, checkStab } from './utils.js';
+// js/mode5vs1.js
 
-// ==========================================
-// STATO DELL'APP E LOGICA
-// ==========================================
+import { characterRegistry, passivesLibrary, techniquesLibrary, calculateTeamDamage, extractPosition, universalManualsKeys } from './utils.js';
+import { AuthManager } from './auth.js';
+import { TrialOptimizer } from './trialoptimizer.js';
 
-const state = {
-    trialType: 'attack',
-    opponentElement: 'Wind',
-    opponentTechElement: 'Wind',
-    slots: Array.from({ length: 5 }, () => ({
-        playerId: '',
-        playerData: null,
-        baseStatObj: { base: 0, buffSelf: 0 },
-        powerObj: { base: 0, buffSelf: 0 },
-        techniqueId: '',
-        passiveLevels: {}
-    }))
-};
+class AppController {
+    constructor() {
+        this.auth = new AuthManager();
+        this.slotsCount = 5;
+        this.activeTeam = Array(this.slotsCount).fill(null);
+        this.lastResult = null;
+        this.collectionData = {};
 
-const elementAdvantages = {
-    'Wind': 'Mountain', 'Mountain': 'Fire', 'Fire': 'Forest', 'Forest': 'Wind'
-};
+        this.optimizer = new TrialOptimizer(this);
+        this.init();
+    }
 
-function init() {
-    renderSlots();
-    attachGlobalListeners();
-    calculateScore();
-}
+    init() {
+        this.renderSimSlots();
+        this.setupGlobalListeners();
+        document.getElementById('btn-login').addEventListener('click', () => this.auth.loginWithGoogle());
+        document.getElementById('btn-logout').addEventListener('click', () => this.auth.logout());
+        document.getElementById('btn-optimize').addEventListener('click', () => this.optimizer.runOptimization());
+        this.auth.setAuthStateListener((user) => this.handleAuthState(user));
+    }
 
-function attachGlobalListeners() {
-    document.getElementById('trial-type')?.addEventListener('change', (e) => {
-        state.trialType = e.target.value;
-        resetAllSlotsMoves();
-        renderSlots();
-        calculateScore();
-    });
+    handleAuthState(user) {
+        const loginBtn = document.getElementById('btn-login');
+        const logoutBtn = document.getElementById('btn-logout');
+        const greeting = document.getElementById('user-greeting');
 
-    document.getElementById('trial-opponent')?.addEventListener('change', (e) => {
-        state.opponentElement = e.target.value;
-        calculateScore();
-    });
-
-    document.getElementById('trial-opponent-tech')?.addEventListener('change', (e) => {
-        state.opponentTechElement = e.target.value;
-        calculateScore();
-    });
-
-    // ==========================================
-    // LOGICA PULSANTE OTTIMIZZAZIONE AUTOMATICA
-    // ==========================================
-    document.getElementById('btn-optimize')?.addEventListener('click', async (e) => {
-        const btn = e.target;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '⏳ Calcolo in corso...';
-        btn.disabled = true;
-
-        try {
-            const allLoadedPlayers = [];
-            const loadPromises = characterRegistry.map(async (char) => {
-                try {
-                    const module = await import(`./Characters/${char.id}.js`);
-                    allLoadedPlayers.push(module.charData);
-                } catch (err) {
-                    console.warn(`Impossibile caricare i dati per: ${char.id}`, err);
-                }
-            });
-
-            await Promise.all(loadPromises);
-
-            const bestLineup = runOptimizer(allLoadedPlayers, state.trialType, state.opponentElement, state.opponentTechElement);
-
-            if (bestLineup && bestLineup.length === 5) {
-                bestLineup.forEach((item, index) => {
-                    const slot = state.slots[index];
-                    slot.playerId = item.playerData.id;
-                    slot.playerData = item.playerData;
-                    slot.techniqueId = item.bestMove.techId;
-
-                    slot.passiveLevels = {};
-                    const allPassives = [...(item.playerData.myBasicPassivesIds || []), ...(item.playerData.myRarityPassivesIds || [])];
-                    allPassives.forEach(pid => {
-                        const pDef = passivesLibrary.find(p => p.id === pid);
-                        if (pDef) slot.passiveLevels[pid] = pDef.levels.length - 1;
-                    });
-
-                    const statNeeded = getStatKeyByIcon(techniquesLibrary[slot.techniqueId].icon);
-                    const statBaseLv300 = slot.playerData.stats[statNeeded] ? slot.playerData.stats[statNeeded].lv300 : 0;
-                    const buffs = calculatePlayerPassiveBuffs(slot, statNeeded);
-
-                    slot.baseStatObj = { base: statBaseLv300, buffSelf: buffs.statBuff };
-                    slot.powerObj = { base: getTechniquePower(slot.techniqueId), buffSelf: buffs.powerBuff };
-                });
-
-                renderSlots();
-                calculateScore();
-            } else {
-                alert("Non ci sono abbastanza giocatori o tecniche valide per completare questa prova!");
-            }
-        } catch (error) {
-            console.error("Errore durante l'ottimizzazione:", error);
-            alert("Si è verificato un errore durante l'ottimizzazione.");
-        } finally {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
-    });
-}
-
-function resetAllSlotsMoves() {
-    state.slots.forEach(slot => { slot.techniqueId = ''; });
-}
-
-function getValidMovesForSlot(playerData, slotIndex) {
-    if (!playerData || !playerData.myTechniques) return [];
-
-    return playerData.myTechniques.map(moveId => ({
-        id: moveId,
-        data: techniquesLibrary[moveId]
-    })).filter(move => {
-        if (!move.data) return false;
-        const statType = getStatKeyByIcon(move.data.icon);
-
-        if (state.trialType === 'attack') return statType === 'Tiro';
-        if (state.trialType === 'defense') {
-            // CONTROLLO "BLOCCO TIRI"
-            const bloccoTiri = move.data.details.find(d => d.label === "Blocco Tiri");
-            if (bloccoTiri && bloccoTiri.values[0] === "No") return false;
-
-            return slotIndex === 4 ? statType === 'Parata' : statType === 'Blocco';
-        }
-        return false;
-    });
-}
-
-function calculatePlayerPassiveBuffs(slot, statNeeded) {
-    let statBuff = 0;
-    let powerBuff = 0;
-    const playerData = slot.playerData;
-
-    if (!playerData) return { statBuff, powerBuff };
-
-    const allPassives = [...(playerData.myBasicPassivesIds || []), ...(playerData.myRarityPassivesIds || [])];
-
-    allPassives.forEach(passiveId => {
-        const passiveDef = passivesLibrary.find(p => p.id === passiveId);
-        if(!passiveDef) return;
-
-        const selectedLevelIndex = slot.passiveLevels[passiveId] !== undefined ? slot.passiveLevels[passiveId] : (passiveDef.levels.length - 1);
-        const levelData = passiveDef.levels[selectedLevelIndex];
-
-        passiveDef.actions.forEach(action => {
-            if(action.target !== 'self') return;
-
-            let amountToSum = 0;
-            if (action.amount === "{VAL}" && levelData.val !== undefined) amountToSum = parseInt(levelData.val);
-            if (action.amount === "{POWER}" && levelData.power !== undefined) amountToSum = parseInt(levelData.power);
-            if (action.amount === "{VAL2}" && levelData.val2 !== undefined) amountToSum = parseInt(levelData.val2);
-
-            if (action.type === 'base_stat' && action.stat === statNeeded) {
-                statBuff += amountToSum;
-            }
-
-            if (action.type === 'move_power') {
-                if (action.stat === 'Potenza_Tiro' && statNeeded === 'Tiro') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Blocco' && statNeeded === 'Blocco') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Parata' && statNeeded === 'Parata') powerBuff += amountToSum;
-
-                if (slot.techniqueId) {
-                    const techElement = extractElement(techniquesLibrary[slot.techniqueId].elementIcon);
-                    if (action.stat === 'Potenza_Wind' && techElement === 'Wind') powerBuff += amountToSum;
-                    if (action.stat === 'Potenza_Forest' && techElement === 'Forest') powerBuff += amountToSum;
-                    if (action.stat === 'Potenza_Fire' && techElement === 'Fire') powerBuff += amountToSum;
-                    if (action.stat === 'Potenza_Mountain' && techElement === 'Mountain') powerBuff += amountToSum;
-                }
-            }
-        });
-    });
-
-    return { statBuff, powerBuff };
-}
-
-function getTechniquePower(techKey) {
-    const tech = techniquesLibrary[techKey];
-    if (!tech) return 0;
-    const powerObj = tech.details.find(d => d.label === "Potenza");
-    return powerObj ? parseInt(powerObj.values[9]) : 0;
-}
-
-// ==========================================
-// CALCOLATORE UFFICIALE E MULTIPLI
-// ==========================================
-
-function calculateScore() {
-    let totalScore = 0;
-    let previousElement = null;
-
-    state.slots.forEach((slot, index) => {
-        const slotDOM = document.getElementById(`slot-${index}`);
-        const damageDOM = document.getElementById(`damage-${index}`);
-        const breakdownDOM = document.getElementById(`breakdown-${index}`);
-
-        if (!slot.playerData || !slot.techniqueId) {
-            damageDOM.textContent = "0";
-            if(breakdownDOM) breakdownDOM.textContent = "";
-            slotDOM.classList.remove('chain-active');
-            previousElement = null;
-            return;
-        }
-
-        const tech = techniquesLibrary[slot.techniqueId];
-        const baseTechPower = getTechniquePower(slot.techniqueId);
-
-        const charElement = extractElement(slot.playerData.element);
-        const techElement = extractElement(tech.elementIcon);
-
-        let totalBase = slot.baseStatObj.base + slot.baseStatObj.buffSelf;
-        let totalPower = baseTechPower + slot.powerObj.buffSelf;
-
-        const allPassives = [...(slot.playerData.myBasicPassivesIds || []), ...(slot.playerData.myRarityPassivesIds || [])];
-        allPassives.forEach(passiveId => {
-            const pDef = passivesLibrary.find(p => p.id === passiveId);
-            if(!pDef) return;
-            const selectedLevelIndex = slot.passiveLevels[passiveId] !== undefined ? slot.passiveLevels[passiveId] : (pDef.levels.length - 1);
-            const levelData = pDef.levels[selectedLevelIndex];
-
-            pDef.actions.forEach(act => {
-                if(act.type === 'specific_move_power' && tech.name.includes(act.stat)) {
-                    totalPower += parseInt(levelData.power || levelData.val || 0);
-                }
-            });
-        });
-
-        let attrMult = 1.0;
-
-        if (elementAdvantages[charElement] === state.opponentElement) attrMult += 0.1;
-        else if (elementAdvantages[state.opponentElement] === charElement) attrMult -= 0.1;
-
-        if (elementAdvantages[techElement] === state.opponentTechElement) attrMult += 0.1;
-        else if (elementAdvantages[state.opponentTechElement] === techElement) attrMult -= 0.1;
-
-        if (checkStab(slot.playerData.element, tech.elementIcon)) attrMult += 0.2;
-
-        attrMult = Math.round(attrMult * 10) / 10;
-
-        let rawDamage = Math.floor(totalBase * totalPower * 0.01 * attrMult);
-
-        let isChain = false;
-        if (previousElement && previousElement === techElement) {
-            isChain = true;
-            rawDamage = Math.floor(rawDamage * 1.1);
-            slotDOM.classList.add('chain-active');
+        if (user) {
+            loginBtn.style.display = 'none';
+            logoutBtn.style.display = 'inline-block';
+            greeting.innerHTML = `Collezione collegata: <span class="text-warning">${user.displayName}</span>`;
+            this.loadFromCloud();
         } else {
-            slotDOM.classList.remove('chain-active');
+            loginBtn.style.display = 'inline-block';
+            logoutBtn.style.display = 'none';
+            greeting.textContent = "Accedi per usare la tua Collezione";
+            this.collectionData = {};
+            this.updateTechDropdowns();
+            this.updateSimulation();
         }
-
-        previousElement = techElement;
-        totalScore += rawDamage;
-
-        damageDOM.textContent = rawDamage.toLocaleString();
-        if(breakdownDOM) {
-            breakdownDOM.innerHTML = `Base(${totalBase}) x Pow(${totalPower}) x Attr(${attrMult}) ${isChain ? ' x Chain(1.1)' : ''} <br> = <b>${rawDamage.toLocaleString()}</b>`;
-        }
-    });
-
-    let finalMultiplier = state.trialType === 'attack' ? 3.6 : 1.5;
-    let finalScore = Math.floor(totalScore * finalMultiplier);
-
-    document.getElementById('final-score').textContent = finalScore.toLocaleString();
-}
-
-// ==========================================
-// RENDER UI & EVENTI DINAMICI
-// ==========================================
-
-function renderPassivesForSlot(index, slot) {
-    const container = document.getElementById(`passives-container-${index}`);
-    if (!container) return;
-
-    if (!slot.playerData) {
-        container.innerHTML = '';
-        container.style.display = 'none';
-        return;
     }
 
-    const allPassives = [...(slot.playerData.myBasicPassivesIds || []), ...(slot.playerData.myRarityPassivesIds || [])];
-    if (allPassives.length === 0) {
-        container.innerHTML = '';
-        container.style.display = 'none';
-        return;
+    async loadFromCloud() {
+        if (!this.auth.user) return;
+        this.collectionData = await this.auth.getUserCollection();
+        this.updateTechDropdowns();
+        this.updateSimulation();
     }
 
-    let html = '<div style="font-size: 11px; font-weight: bold; color: #003a8c; margin-bottom: 5px;">Passive Personaggio:</div>';
-
-    allPassives.forEach(passiveId => {
-        const pDef = passivesLibrary.find(p => p.id === passiveId);
-        if (!pDef) return;
-
-        const selectedIdx = slot.passiveLevels[passiveId] !== undefined ? slot.passiveLevels[passiveId] : (pDef.levels.length - 1);
-
-        let options = pDef.levels.map((lv, idx) => {
-            let detail = lv.val || lv.power || lv.crt || lv.tp || 'Max';
-            return `<option value="${idx}" ${idx === selectedIdx ? 'selected' : ''}>Lv.${idx + 1} (${detail})</option>`;
-        }).join('');
-
-        html += `
-            <div style="margin-bottom: 6px;">
-                <label style="display:block; font-size: 10px; color: #1269e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${pDef.title}">${pDef.title}</label>
-                <select class="passive-select" data-slot="${index}" data-passive="${passiveId}" style="width: 100%; padding: 4px; border: 1px solid #c0d3e8; border-radius: 4px; font-size: 11px; font-weight: bold; color: #102247;">
-                    ${options}
-                </select>
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
-    container.style.display = 'block';
-
-    container.querySelectorAll('.passive-select').forEach(sel => {
-        sel.addEventListener('change', (e) => {
-            const sIdx = parseInt(e.target.getAttribute('data-slot'));
-            const pId = e.target.getAttribute('data-passive');
-            state.slots[sIdx].passiveLevels[pId] = parseInt(e.target.value);
-            triggerSlotUpdate(sIdx);
+    renderSimSlots() {
+        const grid = document.getElementById('teamGrid');
+        grid.innerHTML = '';
+        let charOptions = `<option value="">-- Seleziona Giocatore --</option>`;
+        characterRegistry.forEach(char => {
+            charOptions += `<option value="${char.id}">${char.name} (${char.romanizedName})</option>`;
         });
-    });
-}
 
-function triggerSlotUpdate(index) {
-    const slot = state.slots[index];
-    if (slot.techniqueId && slot.playerData) {
-        const statNeeded = getStatKeyByIcon(techniquesLibrary[slot.techniqueId].icon);
-        const statBaseLv300 = slot.playerData.stats[statNeeded] ? slot.playerData.stats[statNeeded].lv300 : 0;
-        const buffs = calculatePlayerPassiveBuffs(slot, statNeeded);
+        for (let i = 0; i < this.slotsCount; i++) {
+            const slotCard = document.createElement('div');
+            slotCard.className = 'slot-card';
+            slotCard.setAttribute('data-slot', i);
 
-        slot.baseStatObj = { base: statBaseLv300, buffSelf: buffs.statBuff };
-        slot.powerObj = { base: getTechniquePower(slot.techniqueId), buffSelf: buffs.powerBuff };
+            slotCard.innerHTML = `
+                <div class="slot-name">Slot ${i + 1}</div>
+                <div class="slot-dropdowns">
+                    <select class="sim-char-select">${charOptions}</select>
+                    <select class="sim-tech-select" disabled><option value="">-- Seleziona Tecnica --</option></select>
+                </div>
+                <div class="slot-result">
+                    Slot <span class="slot-damage">0</span>
+                    <i class="fas fa-info-circle details-btn-icon" style="display:none;" title="Dettagli Calcolo"></i>
+                </div>
+            `;
+            grid.appendChild(slotCard);
 
-        document.getElementById(`base-${index}`).value = slot.baseStatObj.base + slot.baseStatObj.buffSelf;
+            const charSelect = slotCard.querySelector('.sim-char-select');
+            const techSelect = slotCard.querySelector('.sim-tech-select');
+
+            charSelect.addEventListener('change', async (e) => {
+                const charId = e.target.value;
+                if (!charId) {
+                    this.activeTeam[i] = null;
+                    techSelect.innerHTML = '<option value="">-- Seleziona Tecnica --</option>';
+                    techSelect.disabled = true;
+                } else {
+                    try {
+                        const module = await import(`./Characters/${charId}.js`);
+                        this.activeTeam[i] = module.charData;
+                        this.renderTechDropdown(i);
+                    } catch (err) { }
+                }
+                this.updateSimulation();
+            });
+            techSelect.addEventListener('change', () => this.updateSimulation());
+            slotCard.querySelector('.details-btn-icon').addEventListener('click', () => this.openDetailsModal(i));
+        }
     }
-    calculateScore();
-}
 
-function renderSlots() {
-    const container = document.getElementById('slots-container');
-    if (!container) return;
-    container.innerHTML = '';
+    renderTechDropdown(slotIndex) {
+        const charData = this.activeTeam[slotIndex];
+        const slotCard = document.querySelector(`.slot-card[data-slot="${slotIndex}"]`);
+        const techSelect = slotCard.querySelector('.sim-tech-select');
+        const mode = document.querySelector('input[name="dataSource"]:checked').value;
+        const simMode = document.getElementById('simMode').value;
+        const allowManuals = document.getElementById('allowManualsToggle').checked;
 
-    const playerOptions = `<option value="">- Seleziona Giocatore -</option>` +
-        characterRegistry.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        if (!charData) return;
 
-    state.slots.forEach((slot, index) => {
-        const slotEl = document.createElement('div');
-        slotEl.className = 'trial-slot';
-        slotEl.id = `slot-${index}`;
+        let techOptions = '<option value="">-- Seleziona Tecnica --</option>';
+        const collData = this.collectionData[charData.id] || {};
 
-        let techGuideText = state.trialType === 'attack' ? 'Tiro' : (index === 4 ? 'Parata' : 'Blocco');
+        let allMoves = [...charData.myTechniques];
 
-        slotEl.innerHTML = `
-            <div class="slot-number">${index + 1}</div>
-            <div class="slot-chain-badge">🔗 Chain x1.1</div>
-            
-            <div class="slot-image-box">
-                <img id="img-${index}" class="player-thumb" src="https://placehold.co/150x180/e4edf8/102247?text=Player" alt="Player">
-                <img id="el-${index}" class="player-element-badge" style="display:none;" src="" alt="Element">
-            </div>
-
-            <div class="slot-controls">
-                <label>Giocatore</label>
-                <select id="player-${index}">${playerOptions}</select>
-
-                <div id="passives-container-${index}" style="display:none; background: #f0f5fa; padding: 8px; border-radius: 6px; border: 1px dashed #c0d3e8; margin-top: 5px;"></div>
-
-                <label>Tecnica (${techGuideText})</label>
-                <select id="tech-${index}" disabled><option value="">--</option></select>
-
-                <label>Statistica Totale Rilevata</label>
-                <input type="number" id="base-${index}" placeholder="Es: 1500" min="0" value="${slot.baseStatObj.base + slot.baseStatObj.buffSelf || ''}">
-
-                <div class="calc-breakdown" id="breakdown-${index}"></div>
-            </div>
-
-            <div class="slot-result">
-                <div class="slot-result-label">VALORE SLOT TRONCATO</div>
-                <div class="slot-result-damage" id="damage-${index}">0</div>
-            </div>
-        `;
-
-        container.appendChild(slotEl);
-
-        // Se lo slot è già valorizzato (es. dopo l'Optimizer), aggiorniamo immagine ed elementi grafici!
-        if (slot.playerId && slot.playerData) {
-            document.getElementById(`player-${index}`).value = slot.playerId;
-            document.getElementById(`img-${index}`).src = slot.playerData.thumb || characterRegistry.find(p => p.id === slot.playerId)?.thumb || 'https://placehold.co/150x180/e4edf8/102247?text=Player';
-
-            const elImg = document.getElementById(`el-${index}`);
-            elImg.src = slot.playerData.element;
-            elImg.style.display = 'block';
-
-            updateSlotUIWithPlayerData(index, slot.playerData);
-            renderPassivesForSlot(index, slot);
+        // AGGIUNTA IMPORTANTE: Se non sto forzando i manuali universali, ma il giocatore
+        // ha equipaggiato un manuale nella collezione, glielo faccio vedere!
+        if (collData.equippedManual && !allMoves.includes(collData.equippedManual)) {
+            allMoves.push(collData.equippedManual);
         }
 
-        document.getElementById(`player-${index}`).addEventListener('change', async (e) => {
-            const playerId = e.target.value;
-            slot.playerId = playerId;
+        if (allowManuals) {
+            universalManualsKeys.forEach(uniKey => {
+                if (!allMoves.includes(uniKey)) allMoves.push(uniKey);
+            });
+        }
 
-            if (!playerId) {
-                slot.playerData = null; slot.techniqueId = '';
-                slot.baseStatObj = { base: 0, buffSelf: 0 };
-                slot.powerObj = { base: 0, buffSelf: 0 };
-                slot.passiveLevels = {};
-                document.getElementById(`img-${index}`).src = 'https://placehold.co/150x180/e4edf8/102247?text=Player';
-                document.getElementById(`el-${index}`).style.display = 'none';
-                document.getElementById(`tech-${index}`).innerHTML = '<option value="">--</option>';
-                document.getElementById(`tech-${index}`).disabled = true;
-                document.getElementById(`base-${index}`).value = '';
-                renderPassivesForSlot(index, slot);
-                calculateScore();
-                return;
+        const isDefense = simMode === 'defense';
+        const isGK = extractPosition(charData.position) === 'GK';
+
+        allMoves.forEach(techKey => {
+            const techDef = techniquesLibrary[techKey];
+            if (!techDef) return;
+
+            if (isDefense) {
+                if (isGK && techDef.kind !== 'Parata') return;
+                if (!isGK) {
+                    if (techDef.kind !== 'Blocco') return;
+                    if (techDef.shootBlock === false) return;
+                }
+            } else {
+                if (techDef.kind !== 'Tiro') return;
             }
 
-            try {
-                const module = await import(`./Characters/${playerId}.js`);
-                slot.playerData = module.charData;
+            const isTaughtMove = !charData.myTechniques.includes(techKey);
+            let lv = isTaughtMove ? 1 : (mode === 'max' ? 10 : (collData.techLevels && collData.techLevels[techKey] !== undefined ? (collData.techLevels[techKey] + 1) : 10));
 
-                slot.passiveLevels = {};
-                const allPassives = [...(slot.playerData.myBasicPassivesIds || []), ...(slot.playerData.myRarityPassivesIds || [])];
-                allPassives.forEach(pid => {
-                    const pDef = passivesLibrary.find(p => p.id === pid);
-                    if (pDef) slot.passiveLevels[pid] = pDef.levels.length - 1;
-                });
-
-                document.getElementById(`img-${index}`).src = slot.playerData.thumb || characterRegistry.find(p => p.id === playerId).thumb;
-                const elImg = document.getElementById(`el-${index}`);
-                elImg.src = slot.playerData.element;
-                elImg.style.display = 'block';
-
-                renderPassivesForSlot(index, slot);
-                updateSlotUIWithPlayerData(index, slot.playerData);
-            } catch (err) {
-                console.error("Errore import:", err);
-            }
+            // Evidenzio se la mossa proviene da un manuale
+            const manualTag = isTaughtMove ? " 📕" : "";
+            techOptions += `<option value="${techKey}">${techDef.name} (Lv ${lv})${manualTag}</option>`;
         });
 
-        document.getElementById(`tech-${index}`).addEventListener('change', (e) => {
-            slot.techniqueId = e.target.value;
-            triggerSlotUpdate(index);
-        });
-
-        document.getElementById(`base-${index}`).addEventListener('input', (e) => {
-            const manualValue = parseInt(e.target.value) || 0;
-            slot.baseStatObj.base = manualValue;
-            slot.baseStatObj.buffSelf = 0;
-            calculateScore();
-        });
-    });
-}
-
-function updateSlotUIWithPlayerData(index, playerData) {
-    const techSelect = document.getElementById(`tech-${index}`);
-    const validMoves = getValidMovesForSlot(playerData, index);
-
-    if (validMoves.length === 0) {
-        techSelect.innerHTML = `<option value="">- No Mosse Valide -</option>`;
-        techSelect.disabled = true;
-    } else {
-        techSelect.innerHTML = `<option value="">- Scegli -</option>` +
-            validMoves.map(m => `<option value="${m.id}">${m.data.name}</option>`).join('');
+        techSelect.innerHTML = techOptions;
         techSelect.disabled = false;
     }
 
-    if (state.slots[index].techniqueId && validMoves.find(m => m.id === state.slots[index].techniqueId)) {
-        techSelect.value = state.slots[index].techniqueId;
-        techSelect.dispatchEvent(new Event('change'));
-    } else {
-        state.slots[index].techniqueId = '';
-        techSelect.dispatchEvent(new Event('change'));
+    updateTechDropdowns() {
+        for (let i = 0; i < this.slotsCount; i++) {
+            if (this.activeTeam[i]) {
+                const currentMove = document.querySelector(`.slot-card[data-slot="${i}"] .sim-tech-select`).value;
+                this.renderTechDropdown(i);
+                document.querySelector(`.slot-card[data-slot="${i}"] .sim-tech-select`).value = currentMove;
+            }
+        }
+    }
+
+    setupGlobalListeners() {
+        document.querySelectorAll('input[name="dataSource"]').forEach(radio => radio.addEventListener('change', () => { this.updateTechDropdowns(); this.updateSimulation(); }));
+        document.getElementById('simMode').addEventListener('change', () => { this.updateTechDropdowns(); this.updateSimulation(); });
+        document.getElementById('allowManualsToggle').addEventListener('change', () => { this.updateTechDropdowns(); this.updateSimulation(); });
+        document.getElementById('stageElement').addEventListener('change', () => this.updateSimulation());
+        document.getElementById('stageBonus').addEventListener('input', () => this.updateSimulation());
+        document.getElementById('opponentElement').addEventListener('change', () => this.updateSimulation());
+    }
+
+    updateSimulation() {
+        const teamDataForEngine = [];
+        const slotCards = document.querySelectorAll('.slot-card');
+        const mode = document.querySelector('input[name="dataSource"]:checked').value;
+        const stageConfig = {
+            element: document.getElementById('stageElement').value,
+            bonus: parseInt(document.getElementById('stageBonus').value) || 0,
+            opponent: document.getElementById('opponentElement').value,
+            mode: document.getElementById('simMode').value
+        };
+
+        for (let i = 0; i < this.slotsCount; i++) {
+            const charData = this.activeTeam[i];
+            const techSelect = slotCards[i].querySelector('.sim-tech-select');
+            const moveName = techSelect ? techSelect.value : null;
+
+            if (charData && moveName) {
+                const engineFormat = this.optimizer.createCharEngineFormat(charData, moveName, mode);
+                const techDef = techniquesLibrary[moveName];
+                const advBonus = this.optimizer.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
+
+                if (advBonus > 0) {
+                    engineFormat.customTechPower[moveName] = (engineFormat.customTechPower[moveName] || 0) + advBonus;
+                    engineFormat._hasAdvantageBonus = advBonus;
+                }
+                teamDataForEngine.push(engineFormat);
+            }
+        }
+
+        if (teamDataForEngine.length === 0) { this.clearDisplay(); return; }
+
+        this.lastResult = calculateTeamDamage(teamDataForEngine, stageConfig);
+        teamDataForEngine.forEach((engineFmt, idx) => {
+            this.lastResult.slots[idx]._hasAdvantageBonus = engineFmt._hasAdvantageBonus || 0;
+        });
+
+        let engineIndex = 0;
+        for (let i = 0; i < this.slotsCount; i++) {
+            const card = slotCards[i];
+            const detailsBtn = card.querySelector('.details-btn-icon');
+
+            if (this.activeTeam[i] && card.querySelector('.sim-tech-select').value) {
+                const slotResult = this.lastResult.slots[engineIndex];
+                card.querySelector('.slot-damage').textContent = Math.floor(slotResult.calculations.damage).toLocaleString('it-IT');
+                detailsBtn.style.display = 'inline-block';
+                engineIndex++;
+            } else {
+                card.querySelector('.slot-damage').textContent = "0";
+                detailsBtn.style.display = 'none';
+            }
+        }
+
+        document.getElementById('totalRawDamage').textContent = Math.floor(this.lastResult.totalDamage).toLocaleString('it-IT');
+        document.getElementById('defenseMult').textContent = `x${this.lastResult.finalMultiplier.toFixed(1)}`;
+        document.getElementById('totalScore').textContent = Math.floor(this.lastResult.finalScore).toLocaleString('it-IT');
+
+        const clearBox = document.getElementById('defenseClearCheck');
+        if (stageConfig.mode === 'defense') {
+            clearBox.textContent = this.lastResult.isClear ? "✓ SOGLIA DIFESA SUPERATA (Danno ≥ 200.000)" : "SOTTO SOGLIA DIFESA (Moltiplicatore 1.0x)";
+            clearBox.style.color = "#ffca28";
+        } else {
+            clearBox.textContent = this.lastResult.isClear ? "🔥 SOGLIA ATTACCO SUPERATA (Danno ≥ 250.000)" : "SOTTO SOGLIA ATTACCO (Moltiplicatore 2.4x)";
+            clearBox.style.color = "#ffca28";
+        }
+    }
+
+    openDetailsModal(slotIndex) {
+        if (!this.lastResult || !this.lastResult.slots[slotIndex]) return;
+        const slotData = this.lastResult.slots[slotIndex];
+        const calc = slotData.calculations;
+        const mode = document.querySelector('input[name="dataSource"]:checked').value;
+
+        document.getElementById('modalTitle').textContent = `Dettagli: ${slotData.charName}`;
+        document.getElementById('modalMath').innerHTML = `
+            <div>Base Stat (${slotData.statType}): ${calc.base.total.toLocaleString('it-IT')}</div>
+            <div>Potenza Mossa: ${calc.power.total}</div>
+            <div>Moltiplicatore (STAB + Affinità): x${calc.multipliers.attribute}</div>
+            <div>Moltiplicatore Catena: x${calc.multipliers.chain}</div>
+            <div style="color:#1269e8; font-size:1.2rem; margin-top: 15px; border-top: 2px solid #d4e1f1; padding-top: 10px;">
+                Equazione:<br>( ${calc.base.total.toLocaleString('it-IT')} × ${calc.power.total} × 0.01 ) × ${calc.multipliers.attribute} × ${calc.multipliers.chain} = <strong>${Math.floor(calc.damage).toLocaleString('it-IT')}</strong>
+            </div>
+        `;
+
+        const statSourceStr = mode === 'max' ? 'Statistica MAX' : 'Statistica Nuda (Collezione)';
+        let statHtml = `<li><span class="passive-source">${statSourceStr}</span> <span class="val-badge">+${calc.base.naked.toLocaleString('it-IT')}</span></li>`;
+        slotData.details.stats.forEach(detail => {
+            statHtml += `<li><div><span class="passive-source">[${detail.source}]</span> ${detail.passiveName} ${detail.isSelf ? "(Self)" : "(Alleato)"}</div> <span class="val-badge">+${detail.value.toLocaleString('it-IT')}</span></li>`;
+        });
+        document.getElementById('modalStatList').innerHTML = statHtml;
+
+        let powerHtml = `<li><span class="passive-source">Potenza Base Mossa</span> <span class="val-badge">+${calc.power.naked}</span></li>`;
+        if (calc.power.stageBonus > 0) powerHtml += `<li><span class="passive-source">Bonus Giornaliero (${document.getElementById('stageElement').value})</span> <span class="val-badge">+${calc.power.stageBonus}</span></li>`;
+
+        if (slotData._hasAdvantageBonus > 0) {
+            powerHtml += `<li><span class="passive-source text-danger fw-bold"><i class="fas fa-fire-alt"></i> Vantaggio vs Avversario</span> <span class="val-badge bg-warning text-dark">+${slotData._hasAdvantageBonus}</span></li>`;
+        }
+
+        let collCustomBonus = calc.power.customBonus - (slotData._hasAdvantageBonus || 0);
+        if (collCustomBonus > 0) powerHtml += `<li><span class="passive-source">Potenza Tecnica Passiva Reroll</span> <span class="val-badge">+${collCustomBonus}</span></li>`;
+
+        slotData.details.power.forEach(detail => {
+            powerHtml += `<li><div><span class="passive-source">[${detail.source}]</span> ${detail.passiveName} ${detail.isSelf ? "(Self)" : "(Alleato)"}</div> <span class="val-badge">+${detail.value}</span></li>`;
+        });
+        document.getElementById('modalPowerList').innerHTML = powerHtml;
+
+        document.getElementById('detailsModal').style.display = 'flex';
+    }
+
+    clearDisplay() {
+        document.querySelectorAll('.slot-damage').forEach(el => el.textContent = "0");
+        document.querySelectorAll('.details-btn-icon').forEach(btn => btn.style.display = 'none');
+        document.getElementById('totalRawDamage').textContent = "0";
+        document.getElementById('defenseMult').textContent = "x1.0";
+        document.getElementById('totalScore').textContent = "0";
+        document.getElementById('defenseClearCheck').textContent = "";
+        this.lastResult = null;
     }
 }
 
-document.addEventListener('DOMContentLoaded', init);
+new AppController();

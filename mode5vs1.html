@@ -2,69 +2,171 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prova 5vs1 | Inazuma Eleven Cross</title>
+    <meta name="viewport" content="width=1450">
+    <title>Team Chain Simulator | Inazuma Eleven</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styleModalita5vs1.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style5vs1.css">
 </head>
-<body class="trial-page">
+<body class="pb-5">
 
 <div class="inazuma-nav-container">
     <div class="inazuma-nav">
         <a href="index.html" class="inazuma-nav-item">Giocatori</a>
         <a href="coaches.html" class="inazuma-nav-item">Allenatori</a>
         <a href="teamBuilder.html" class="inazuma-nav-item">Team Builder</a>
-        <a href="mode5vs1.html" class="inazuma-nav-item active">Prova 5vs1</a>
+
+        <div class="nav-dropdown active">
+            <button class="dropbtn">Simulatori <i class="fas fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="mode5vs1.html">Simulatore 5vs1</a>
+                <a href="simulator.html">Simulatore Tecniche</a>
+            </div>
+        </div>
+
+        <div class="nav-dropdown">
+            <button class="dropbtn">Utility <i class="fas fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="calendar.html"><i class="fas fa-calendar-alt me-1"></i> Calendario Sfide</a>
+            </div>
+        </div>
+        <a href="collection.html" class="inazuma-nav-item">Collezione</a>
     </div>
 </div>
 
-<main class="app-container">
-    <div class="trial-header-card">
-        <div class="trial-settings">
-            <div class="setting-group">
-                <label>Tipo di Prova</label>
-                <select id="trial-type">
-                    <option value="attack">Prova di Attacco (Moltiplicatore x3.6)</option>
-                    <option value="defense">Prova di Difesa (Moltiplicatore x1.5)</option>
-                </select>
-            </div>
-            <div class="setting-group">
-                <label>Elemento Avversario</label>
-                <select id="trial-opponent">
-                    <option value="Wind">Vento (Wind)</option>
-                    <option value="Forest">Foresta (Forest)</option>
-                    <option value="Fire">Fuoco (Fire)</option>
-                    <option value="Mountain">Montagna (Mountain)</option>
-                </select>
-            </div>
+<div class="container-fixed py-3" style="width: 1100px !important; max-width: 1100px !important;">
 
-            <div class="setting-group" style="justify-content: flex-end; padding-bottom: 2px;">
-                <button id="btn-optimize" style="background: linear-gradient(180deg, #2eb3ff, #0a65ff); color: #ffffff; border: 2px solid #003a8c; border-radius: 6px; padding: 10px 20px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4), 0 4px 6px rgba(0,0,0,0.2); transition: all 0.2s; white-space: nowrap;">
-                    ✨ Ottimizzazione Automatica
-                </button>
+    <!-- BARRA UTENTE -->
+    <div class="top-bar d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div><h4 class="m-0 text-white fw-bold" id="user-greeting">Accedi per usare la tua Collezione</h4></div>
+        <div class="d-flex align-items-center gap-4">
+            <div class="bg-white p-2 rounded border border-light d-flex gap-3">
+                <div class="form-check m-0">
+                    <input class="form-check-input" type="radio" name="dataSource" id="radioCollection" value="collection" checked>
+                    <label class="form-check-label text-primary fw-bold" for="radioCollection">La Mia Collezione</label>
+                </div>
+                <div class="form-check m-0">
+                    <input class="form-check-input" type="radio" name="dataSource" id="radioMax" value="max">
+                    <label class="form-check-label text-warning fw-bold text-dark" for="radioMax">Giocatori al MAX</label>
+                </div>
             </div>
-
-        </div>
-        <div class="trial-score-display">
-            <div class="score-label">PUNTEGGIO TOTALE</div>
-            <div class="score-value" id="final-score">0</div>
+            <div>
+                <button id="btn-login" class="btn btn-light px-4 fw-bold text-dark"><i class="fab fa-google text-danger"></i> Login</button>
+                <button id="btn-logout" class="btn btn-outline-light px-4 fw-bold" style="display: none;">Esci</button>
+            </div>
         </div>
     </div>
 
-    <div class="slots-container" id="slots-container"></div>
+    <!-- CONFIGURAZIONE STAGE -->
+    <div class="stage-config position-relative">
+        <div class="stage-config-header w-100">
+            <h3>Configurazione Simulazion</h3>
+            <div class="stage-config-controls">
+                <div class="form-check form-switch m-0 d-flex align-items-center">
+                    <input class="form-check-input mt-0 me-2" type="checkbox" id="allowManualsToggle" style="cursor:pointer;">
+                    <label class="form-check-label fw-bold text-primary" for="allowManualsToggle" style="cursor:pointer;">Insegna Manuali</label>
+                    <i class="fas fa-info-circle ms-2 text-info fs-5" title="Se attivo, l'Auto-Ottimizzatore calcolerà le sinergie forzando TUTTE le mosse (native e manuali) a Livello 1 per scoprire qual è matematicamente la più forte a parità di livello!" style="cursor:help;"></i>
+                </div>
+                <button id="btn-optimize" class="btn btn-warning fw-bold text-dark px-4 shadow-sm" style="border: 2px solid #e0b022;"><i class="fas fa-magic me-2"></i> Auto-Ottimizza</button>
+            </div>
+        </div>
 
-    <div class="formula-guide">
-        <div class="formula-guide-title"><i class="fas fa-info-circle"></i> Come funziona il Calcolo del Punteggio?</div>
-        <div class="formula-guide-content">
-            <p><b>1. Moltiplicatore Elementale:</b> Parte da 1.0. Si confronta l'<b>Elemento della Mossa</b> con l'Avversario (+0.1 Vantaggio / -0.1 Svantaggio). Se l'elemento del Giocatore coincide con quello della Mossa, ottiene il bonus <b>STAB (+0.2)</b>.</p>
-            <p><b>2. Stage Buff:</b> Se la tua Mossa è in vantaggio elementale contro l'avversario, guadagna un bonus occulto alla Potenza di <b>+10 (Attacco)</b> o <b>+20 (Difesa)</b>.</p>
-            <p><b>3. Danno Slot:</b> <code>Tronca_Per_Difetto( Parametro Totale × Potenza Mossa Finale × 0.01 × Moltiplicatore Elementale )</code></p>
-            <p><b>4. Chain (Catena):</b> Se lo slot corrente usa una mossa dello <b>stesso elemento</b> dello slot precedente, il risultato viene moltiplicato per <b>1.1</b> e troncato di nuovo per difetto.</p>
-            <p>Il punteggio finale è la somma dei 5 slot, moltiplicato per 3.6 (Attacco) o 1.5 (Difesa), con un ultimo troncamento.</p>
+        <div class="stage-filters w-100">
+            <label>Modalità:
+                <select id="simMode">
+                    <option value="defense" selected>🛡️ Difesa</option>
+                    <option value="attack">⚔️ Attacco</option>
+                </select>
+            </label>
+            <label>Elemento Stage:
+                <select id="stageElement">
+                    <option value="">Nessuno</option>
+                    <option value="Wind">Vento</option>
+                    <option value="Forest">Foresta</option>
+                    <option value="Fire">Fuoco</option>
+                    <option value="Mountain">Montagna</option>
+                </select>
+            </label>
+            <label>Bonus Stage: <input type="number" id="stageBonus" value="20" style="width: 80px;"></label>
+            <label>Avversario:
+                <select id="opponentElement">
+                    <option value="None">Nessuno / Neutro</option>
+                    <option value="Wind">Vento</option>
+                    <option value="Forest">Foresta</option>
+                    <option value="Fire">Fuoco</option>
+                    <option value="Mountain" selected>Montagna</option>
+                </select>
+            </label>
         </div>
     </div>
-</main>
 
+    <!-- SLOT SQUADRA -->
+    <div id="teamGrid" class="team-grid"></div>
+
+    <!-- RISULTATO GLOBALE -->
+    <div class="global-results">
+        <span id="defenseClearCheck" style="font-weight: bold; display: block; margin-bottom: 5px; font-size: 1.2rem;"></span>
+        <h2>Score Totale: <span id="totalScore">0</span></h2>
+        <p class="text-white mt-2 mb-0" style="opacity: 0.9; font-size:1.1rem;">
+            Danno di base combinato: <span id="totalRawDamage" class="fw-bold text-warning">0</span>
+            (Moltiplicatore: <span id="defenseMult" class="fw-bold">x1.0</span>)
+        </p>
+    </div>
+</div>
+
+<!-- MODALI... -->
+<div id="detailsModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Dettagli Calcolo</h2>
+            <button class="close-btn" onclick="document.getElementById('detailsModal').style.display='none'">Chiudi</button>
+        </div>
+        <div class="math-box" id="modalMath"></div>
+        <h3 class="fw-bold" style="color:#1269e8; font-size: 1.2rem; border-bottom: 2px solid #d4e1f1; padding-bottom: 5px; margin-bottom: 15px;">Dettaglio Statistiche (Base + Buff)</h3>
+        <ul class="passive-list" id="modalStatList"></ul>
+        <h3 class="fw-bold" style="color:#1269e8; font-size: 1.2rem; border-bottom: 2px solid #d4e1f1; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px;">Dettaglio Potenza Mossa (Base + Buff)</h3>
+        <ul class="passive-list" id="modalPowerList"></ul>
+    </div>
+</div>
+
+<div id="optimizerModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 900px;">
+        <div class="modal-header">
+            <h2 class="text-success"><i class="fas fa-trophy me-2"></i> Top 5 Formazioni</h2>
+            <button class="close-btn" onclick="document.getElementById('optimizerModal').style.display='none'">Chiudi</button>
+        </div>
+        <p class="text-secondary fw-bold mb-4">Ecco le migliori sinergie a parità di livello. (Applica per vedere i danni coi tuoi livelli reali):</p>
+        <div id="optimizerResults" class="d-flex flex-column gap-3"></div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDJLzxu2tREehzZE79YAK7_TIq1G6lf4Rc",
+        authDomain: "inazumaelevencrosshub.firebaseapp.com",
+        projectId: "inazumaelevencrosshub",
+        storageBucket: "inazumaelevencrosshub.firebasestorage.app",
+        messagingSenderId: "100160386925",
+        appId: "1:100160386925:web:2f35aaacb877d70c9f4c64",
+        measurementId: "G-0R453LFDB0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(app);
+    window.googleProvider = new GoogleAuthProvider();
+    window.firebaseDb = getFirestore(app);
+    window.firebaseLogin = signInWithPopup;
+    window.firebaseLogout = signOut;
+    window.firebaseOnAuth = onAuthStateChanged;
+    window.dbDoc = doc;
+    window.dbGet = getDoc;
+</script>
 <script type="module" src="js/mode5vs1.js"></script>
 </body>
 </html>

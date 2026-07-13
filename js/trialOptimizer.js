@@ -1,241 +1,245 @@
-import { techniquesLibrary } from './Techniques/library.js';
-import { passivesLibrary } from './Passive/library.js';
-import { getStatKeyByIcon, extractElement } from './utils.js';
+// js/trialoptimizer.js
 
-const elementAdvantages = {
-    'Wind': 'Mountain', 'Mountain': 'Fire', 'Fire': 'Forest', 'Forest': 'Wind'
-};
+import { characterRegistry, passivesLibrary, techniquesLibrary, calculateTeamDamage, extractPosition, universalManualsKeys } from './utils.js';
 
-function getTechniquePower(techKey) {
-    const tech = techniquesLibrary[techKey];
-    if (!tech) return 0;
-    const powerObj = tech.details.find(d => d.label === "Potenza");
-    return powerObj ? parseInt(powerObj.values[9]) : 0;
-}
-
-function getPlayerBuffsForMove(playerData, techId, statNeeded) {
-    let statBuff = 0;
-    let powerBuff = 0;
-    if (!playerData) return { statBuff, powerBuff };
-
-    const allPassives = [...(playerData.myBasicPassivesIds || []), ...(playerData.myRarityPassivesIds || [])];
-    const tech = techniquesLibrary[techId];
-    const techElement = tech ? extractElement(tech.elementIcon) : 'Void';
-
-    allPassives.forEach(passiveId => {
-        const pDef = passivesLibrary.find(p => p.id === passiveId);
-        if (!pDef) return;
-
-        const levelData = pDef.levels[pDef.levels.length - 1];
-
-        pDef.actions.forEach(action => {
-            if (action.target !== 'self') return;
-
-            let amountToSum = 0;
-            if (action.amount === "{VAL}" && levelData.val !== undefined) amountToSum = parseInt(levelData.val);
-            if (action.amount === "{POWER}" && levelData.power !== undefined) amountToSum = parseInt(levelData.power);
-            if (action.amount === "{VAL2}" && levelData.val2 !== undefined) amountToSum = parseInt(levelData.val2);
-
-            if (action.type === 'base_stat' && action.stat === statNeeded) statBuff += amountToSum;
-
-            if (action.type === 'move_power') {
-                if (action.stat === 'Potenza_Tiro' && statNeeded === 'Tiro') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Blocco' && statNeeded === 'Blocco') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Parata' && statNeeded === 'Parata') powerBuff += amountToSum;
-
-                if (action.stat === 'Potenza_Wind' && techElement === 'Wind') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Forest' && techElement === 'Forest') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Fire' && techElement === 'Fire') powerBuff += amountToSum;
-                if (action.stat === 'Potenza_Mountain' && techElement === 'Mountain') powerBuff += amountToSum;
-            }
-
-            if (action.type === 'specific_move_power' && tech && tech.name.includes(action.stat)) {
-                powerBuff += amountToSum;
-            }
-        });
-    });
-
-    return { statBuff, powerBuff };
-}
-
-function evaluateBestMove(playerData, trialType, oppElement) {
-    if (!playerData || !playerData.myTechniques || playerData.myTechniques.length === 0) return null;
-
-    let bestMove = null;
-    let highestDamage = -1;
-
-    const validMoves = playerData.myTechniques.filter(techId => {
-        const tech = techniquesLibrary[techId];
-        if (!tech) return false;
-        const statType = getStatKeyByIcon(tech.icon);
-
-        if (trialType === 'attack') {
-            return statType === 'Tiro';
-        }
-
-        if (trialType === 'defense_block') {
-            if (statType !== 'Blocco') return false;
-            const bloccoTiri = tech.details.find(d => d.label === "Blocco Tiri");
-            if (bloccoTiri && bloccoTiri.values[0] === "No") return false;
-            return true;
-        }
-
-        if (trialType === 'defense_catch') {
-            return statType === 'Parata';
-        }
-
-        return false;
-    });
-
-    if (validMoves.length === 0) return null;
-
-    validMoves.forEach(techId => {
-        const tech = techniquesLibrary[techId];
-        const statNeeded = getStatKeyByIcon(tech.icon);
-        const baseStatLv300 = playerData.stats[statNeeded] ? playerData.stats[statNeeded].lv300 : 0;
-
-        if (baseStatLv300 === 0) return;
-
-        const techPower = getTechniquePower(techId);
-        const buffs = getPlayerBuffsForMove(playerData, techId, statNeeded);
-
-        const totalBase = baseStatLv300 + buffs.statBuff;
-        let totalPower = techPower + buffs.powerBuff;
-
-        const charElement = extractElement(playerData.element);
-        const techElement = extractElement(tech.elementIcon);
-
-        let attrMult = 1.0;
-        let stageBuff = 0;
-
-        // Vantaggio Elementale: Tecnica vs Avversario
-        if (elementAdvantages[techElement] === oppElement) {
-            attrMult += 0.1;
-            stageBuff = trialType === 'attack' ? 10 : 20; // Bonus nascosto Stage
-        } else if (elementAdvantages[oppElement] === techElement) {
-            attrMult -= 0.1;
-        }
-
-        // STAB
-        if (charElement === techElement && charElement !== 'Void') attrMult += 0.2;
-
-        attrMult = Math.round(attrMult * 10) / 10;
-        totalPower += stageBuff; // Aggiunta dello Stage Buff
-
-        let rawDamage = Math.floor(totalBase * totalPower * 0.01 * attrMult);
-
-        if (rawDamage > highestDamage) {
-            highestDamage = rawDamage;
-            bestMove = {
-                techId: techId,
-                techElement: techElement,
-                rawDamage: rawDamage
-            };
-        }
-    });
-
-    return bestMove;
-}
-
-function getPermutations(arr) {
-    if (arr.length <= 1) return [arr];
-    const perms = [];
-    for (let i = 0; i < arr.length; i++) {
-        const current = arr[i];
-        const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
-        const remainingPerms = getPermutations(remaining);
-        for (let j = 0; j < remainingPerms.length; j++) {
-            perms.push([current, ...remainingPerms[j]]);
-        }
-    }
-    return perms;
-}
-
-function calculateLineupScore(lineup) {
-    let totalScore = 0;
-    let previousElement = null;
-
-    lineup.forEach(slot => {
-        let dmg = slot.bestMove.rawDamage;
-        if (previousElement && previousElement === slot.bestMove.techElement) {
-            dmg = Math.floor(dmg * 1.1);
-        }
-        totalScore += dmg;
-        previousElement = slot.bestMove.techElement;
-    });
-
-    return totalScore;
-}
-
-export function runOptimizer(allLoadedPlayers, trialType, oppElement) {
-
-    if (trialType === 'attack') {
-        const candidates = [];
-
-        allLoadedPlayers.forEach(playerData => {
-            const bestMove = evaluateBestMove(playerData, 'attack', oppElement);
-            if (bestMove) {
-                candidates.push({ playerData, bestMove });
-            }
-        });
-
-        if (candidates.length < 5) return null;
-
-        candidates.sort((a, b) => b.bestMove.rawDamage - a.bestMove.rawDamage);
-
-        const topPlayers = candidates.slice(0, 5);
-
-        const permutations = getPermutations(topPlayers);
-        let bestLineup = null;
-        let maxScore = -1;
-
-        permutations.forEach(lineup => {
-            const score = calculateLineupScore(lineup);
-            if (score > maxScore) {
-                maxScore = score;
-                bestLineup = lineup;
-            }
-        });
-
-        return bestLineup;
+export class TrialOptimizer {
+    constructor(app) {
+        this.app = app;
     }
 
-    if (trialType === 'defense') {
-        const blockCandidates = [];
-        const catchCandidates = [];
+    createCharEngineFormat(charData, moveName, mode, forceLevel1 = false) {
+        const customStats = {};
+        const techLevels = {};
+        const customTechPower = {};
+        const passiveLevels = {};
 
-        allLoadedPlayers.forEach(playerData => {
-            const bestBlock = evaluateBestMove(playerData, 'defense_block', oppElement);
-            if (bestBlock) blockCandidates.push({ playerData, bestMove: bestBlock });
+        // Uniamo le mosse native del personaggio con quella eventuale salvata in Collezione (il manuale equipaggiato)
+        const collData = this.app.collectionData[charData.id] || {};
+        let allValidMoves = [...charData.myTechniques];
+        if (collData.equippedManual && !allValidMoves.includes(collData.equippedManual)) {
+            allValidMoves.push(collData.equippedManual);
+        }
 
-            const bestCatch = evaluateBestMove(playerData, 'defense_catch', oppElement);
-            if (bestCatch) catchCandidates.push({ playerData, bestMove: bestCatch });
-        });
+        const isTaughtMove = !charData.myTechniques.includes(moveName);
 
-        if (blockCandidates.length < 4 || catchCandidates.length < 1) return null;
+        if (mode === 'max') {
+            ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = charData.stats[s]?.lv300 || 0);
+            allValidMoves.forEach(t => { techLevels[t] = 9; customTechPower[t] = 0; });
 
-        blockCandidates.sort((a, b) => b.bestMove.rawDamage - a.bestMove.rawDamage);
-        catchCandidates.sort((a, b) => b.bestMove.rawDamage - a.bestMove.rawDamage);
-
-        const top4Blocks = blockCandidates.slice(0, 4);
-        const topCatch = catchCandidates[0];
-
-        const blockPermutations = getPermutations(top4Blocks);
-        let bestLineup = null;
-        let maxScore = -1;
-
-        blockPermutations.forEach(blockLineup => {
-            const fullLineup = [...blockLineup, topCatch];
-            const score = calculateLineupScore(fullLineup);
-
-            if (score > maxScore) {
-                maxScore = score;
-                bestLineup = fullLineup;
+            if (forceLevel1 || isTaughtMove) {
+                techLevels[moveName] = 0;
+                customTechPower[moveName] = 0;
             }
-        });
 
-        return bestLineup;
+            [...(charData.myBasicPassivesIds || []), ...(charData.myRarityPassivesIds || [])].forEach(pId => {
+                const pDef = passivesLibrary.find(p => p.id === pId);
+                passiveLevels[pId] = pDef ? pDef.levels.length - 1 : 0;
+            });
+        } else {
+            const cStats = collData.stats || {};
+            const cTechs = collData.techLevels || {};
+            const cPwr = collData.techCustomPower || {};
+            const cPass = collData.passives || {};
+
+            ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = cStats[s] || 0);
+            allValidMoves.forEach(t => { techLevels[t] = cTechs[t] || 0; customTechPower[t] = cPwr[t] || 0; });
+
+            if (forceLevel1 || isTaughtMove) {
+                techLevels[moveName] = 0;
+                customTechPower[moveName] = 0;
+            }
+
+            [...(charData.myBasicPassivesIds || []), ...(charData.myRarityPassivesIds || [])].forEach(pId => {
+                passiveLevels[pId] = cPass[pId] !== undefined ? cPass[pId] : -1;
+            });
+        }
+        return { charData, moveName, customStats, techLevel: techLevels[moveName] || 0, customTechPower, passiveLevels };
     }
 
-    return null;
+    getPermutations(arr, size) {
+        const results = [];
+        function permute(current, remaining) {
+            if (current.length === size) { results.push(current); return; }
+            for (let i = 0; i < remaining.length; i++) {
+                permute([...current, remaining[i]], remaining.slice(0, i).concat(remaining.slice(i + 1)));
+            }
+        }
+        permute([], arr);
+        return results;
+    }
+
+    getAdvantageBonus(techElem, oppElem, techKind, mode) {
+        if (!oppElem || oppElem === 'None') return 0;
+        const wins = { 'Fire': 'Forest', 'Forest': 'Wind', 'Wind': 'Mountain', 'Mountain': 'Fire' };
+        if (wins[techElem] === oppElem) {
+            if (mode === 'defense' && (techKind === 'Blocco' || techKind === 'Parata')) return 20;
+            if (mode === 'attack' && techKind === 'Tiro') return 10;
+        }
+        return 0;
+    }
+
+    async runOptimization() {
+        const modal = document.getElementById('optimizerModal');
+        const container = document.getElementById('optimizerResults');
+        modal.style.display = 'flex';
+        container.innerHTML = '<div class="text-center text-secondary py-5"><i class="fas fa-spinner fa-spin fa-3x mb-3"></i><br>Elaborazione formazioni in corso...</div>';
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const mode = document.querySelector('input[name="dataSource"]:checked').value;
+        const allowManuals = document.getElementById('allowManualsToggle').checked;
+        const stageConfig = {
+            element: document.getElementById('stageElement').value,
+            bonus: parseInt(document.getElementById('stageBonus').value) || 0,
+            opponent: document.getElementById('opponentElement').value,
+            mode: document.getElementById('simMode').value
+        };
+        const isDefense = stageConfig.mode === 'defense';
+
+        const availableChars = [];
+        for (const char of characterRegistry) {
+            if (mode === 'collection') {
+                const dbEntry = this.app.collectionData[char.id];
+                if (!dbEntry || dbEntry.owned === false) continue;
+            }
+            try {
+                const module = await import(`./Characters/${char.id}.js`);
+                availableChars.push(module.charData);
+            } catch (e) { }
+        }
+
+        const evaluatedPlayers = [];
+        for (const char of availableChars) {
+            const isGK = extractPosition(char.position) === 'GK';
+            let bestMove = null;
+            let bestScore = -1;
+
+            let movesToTest = [...char.myTechniques];
+            if (allowManuals) {
+                movesToTest.push(...universalManualsKeys);
+            } else if (mode === 'collection') {
+                // Se i manuali completi non sono ammessi, testa solo quello effettivamente equipaggiato
+                const dbEntry = this.app.collectionData[char.id];
+                if (dbEntry && dbEntry.equippedManual && !movesToTest.includes(dbEntry.equippedManual)) {
+                    movesToTest.push(dbEntry.equippedManual);
+                }
+            }
+            movesToTest = [...new Set(movesToTest)];
+
+            for (const move of movesToTest) {
+                const techDef = techniquesLibrary[move];
+                if (!techDef) continue;
+
+                if (isDefense) {
+                    if (isGK && techDef.kind !== 'Parata') continue;
+                    if (!isGK) {
+                        if (techDef.kind !== 'Blocco') continue;
+                        if (techDef.shootBlock === false) continue;
+                    }
+                } else {
+                    if (techDef.kind !== 'Tiro') continue;
+                }
+
+                const engineFormat = this.createCharEngineFormat(char, move, mode, allowManuals);
+                const advBonus = this.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
+                if (advBonus > 0) engineFormat.customTechPower[move] = (engineFormat.customTechPower[move] || 0) + advBonus;
+
+                const dummyTeam = [engineFormat];
+                const sim = calculateTeamDamage(dummyTeam, stageConfig);
+
+                if (sim.totalDamage > bestScore) {
+                    bestScore = sim.totalDamage;
+                    bestMove = move;
+                }
+            }
+
+            if (bestMove) evaluatedPlayers.push({ char, bestMove, bestScore, isGK });
+        }
+
+        evaluatedPlayers.sort((a, b) => b.bestScore - a.bestScore);
+
+        let permutations = [];
+        if (isDefense) {
+            const topGKs = evaluatedPlayers.filter(p => p.isGK).slice(0, 2);
+            const topBlockers = evaluatedPlayers.filter(p => !p.isGK).slice(0, 8);
+            const blockPerms = this.getPermutations(topBlockers, 4);
+            for (const bp of blockPerms) {
+                for (const gk of topGKs) permutations.push([...bp, gk]);
+            }
+        } else {
+            const topShooters = evaluatedPlayers.slice(0, 8);
+            permutations = this.getPermutations(topShooters, 5);
+        }
+
+        const teamResults = [];
+        for (const perm of permutations) {
+            const teamData = perm.map(p => {
+                const eFmt = this.createCharEngineFormat(p.char, p.bestMove, mode, allowManuals);
+                const tDef = techniquesLibrary[p.bestMove];
+                const aBon = this.getAdvantageBonus(tDef.element, stageConfig.opponent, tDef.kind, stageConfig.mode);
+                if (aBon > 0) eFmt.customTechPower[p.bestMove] = (eFmt.customTechPower[p.bestMove] || 0) + aBon;
+                return eFmt;
+            });
+            const simResult = calculateTeamDamage(teamData, stageConfig);
+            teamResults.push({ team: perm, score: simResult.finalScore, rawData: simResult });
+        }
+
+        teamResults.sort((a, b) => b.score - a.score);
+
+        const top5 = [];
+        const seenScores = new Set();
+        const seenSquads = new Set();
+
+        for (const res of teamResults) {
+            const scoreInt = Math.floor(res.score);
+            const squadSignature = res.team.map(p => p.char.id).sort().join('_');
+
+            if (!seenScores.has(scoreInt) && !seenSquads.has(squadSignature)) {
+                seenScores.add(scoreInt);
+                seenSquads.add(squadSignature);
+                top5.push(res);
+            }
+            if (top5.length === 5) break;
+        }
+
+        container.innerHTML = '';
+        if (top5.length === 0) {
+            container.innerHTML = '<div class="text-danger fw-bold text-center">Nessuna formazione trovata. Rivedi i filtri!</div>';
+            return;
+        }
+
+        top5.forEach((res, idx) => {
+            const row = document.createElement('div');
+            row.className = 'bg-white rounded p-3 d-flex justify-content-between align-items-center shadow-sm border border-light';
+
+            const scoreText = allowManuals ? `Score (Tutto a Lv.1):` : `Score:`;
+            let htmlStr = `<div class="d-flex flex-column"><strong class="text-primary fs-5">#${idx + 1} - ${scoreText} ${Math.floor(res.score).toLocaleString('it-IT')}</strong><div class="d-flex gap-2 mt-2 flex-wrap">`;
+
+            res.team.forEach(p => {
+                const isManual = !p.char.myTechniques.includes(p.bestMove);
+                const badgeColor = isManual ? 'bg-danger' : 'bg-secondary';
+                htmlStr += `<span class="badge ${badgeColor}" title="${techniquesLibrary[p.bestMove].name}"><img src="${techniquesLibrary[p.bestMove].elementIcon}" style="height:12px; margin-right:4px; margin-bottom:2px;">${p.char.name}</span>`;
+            });
+
+            htmlStr += `</div></div><button class="btn btn-success fw-bold text-nowrap px-4 py-2 apply-btn" data-index="${idx}">APPLICA</button>`;
+            row.innerHTML = htmlStr;
+            container.appendChild(row);
+        });
+
+        container.querySelectorAll('.apply-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const idx = e.target.dataset.index;
+                const bestTeam = top5[idx].team;
+                for (let i = 0; i < 5; i++) {
+                    this.app.activeTeam[i] = bestTeam[i].char;
+                    const slotSelect = document.querySelector(`.slot-card[data-slot="${i}"] .sim-char-select`);
+                    slotSelect.value = bestTeam[i].char.id;
+                    this.app.renderTechDropdown(i);
+                    document.querySelector(`.slot-card[data-slot="${i}"] .sim-tech-select`).value = bestTeam[i].bestMove;
+                }
+                this.app.updateSimulation();
+                document.getElementById('optimizerModal').style.display = 'none';
+            });
+        });
+    }
 }

@@ -1,35 +1,23 @@
+// js/gallery.js
 import { characterRegistry } from './Characters/registry.js';
-
-// Funzione helper per estrarre l'elemento dal percorso immagine
-function getElement(path) {
-    if (path.includes('Forest')) return 'Forest';
-    if (path.includes('Fire')) return 'Fire';
-    if (path.includes('Mountain')) return 'Mountain';
-    if (path.includes('Wind')) return 'Wind';
-    return '';
-}
-
-// Funzione helper per estrarre la posizione dal percorso immagine
-function getPosition(path) {
-    if (path.includes('GK')) return 'GK';
-    if (path.includes('DF')) return 'DF';
-    if (path.includes('MF')) return 'MF';
-    if (path.includes('FW')) return 'FW';
-    return '';
-}
+import { filterCharacters } from './utils.js';
 
 function renderGallery(filteredList = characterRegistry) {
     const grid = document.getElementById('character-grid');
     if (!grid) return;
+
+    if (filteredList.length === 0) {
+        grid.innerHTML = `<div class="col-12 text-center mt-5"><h5 class="text-white opacity-75">Nessun giocatore trovato con questi filtri.</h5></div>`;
+        return;
+    }
 
     grid.innerHTML = filteredList.map(char => {
         const starsHTML = Array(char.stars).fill(
             `<img src="img/Frm_GachaIcon/Icon_GradeStar.png" class="star-icon">`
         ).join('');
 
-        // --- LA MODIFICA È QUI ---
-        // Controlliamo se il background è un gradiente CSS o un link a un'immagine
-        const bgStyle = char.background.includes('linear-gradient')
+        // Salvavita: se il background non c'è, previene il blocco del render
+        const bgStyle = (char.background || '').includes('linear-gradient')
             ? `background: ${char.background};`
             : `background-image: url('${char.background}');`;
 
@@ -56,32 +44,70 @@ function renderGallery(filteredList = characterRegistry) {
     }).join('');
 }
 
-function filterCharacters() {
-    const nameSearch = document.getElementById('search-name').value.toLowerCase();
-    const elementVal = document.getElementById('filter-element').value;
-    const posVal = document.getElementById('filter-position').value;
-    const rarityVal = document.getElementById('filter-rarity').value;
+// ==========================================
+// GESTIONE DEI MENU A TENDINA CUSTOM (COPIATA DA TEAM BUILDER)
+// ==========================================
+function setupCustomSelects() {
+    const customSelects = document.getElementsByClassName("custom-select");
 
-    const filtered = characterRegistry.filter(char => {
-        // Estraiamo le categorie al volo dai path
-        const charElement = getElement(char.element);
-        const charPosition = getPosition(char.position);
+    for (let i = 0; i < customSelects.length; i++) {
+        const selElmnt = customSelects[i];
+        const selectedDiv = selElmnt.querySelector(".select-selected");
+        const itemsDiv = selElmnt.querySelector(".select-items");
+        const optionDivs = itemsDiv.getElementsByTagName("DIV");
 
-        const matchesName = char.name.toLowerCase().includes(nameSearch);
-        const matchesElement = elementVal === 'All' || charElement === elementVal;
-        const matchesPos = posVal === 'All' || charPosition === posVal;
-        const matchesRarity = rarityVal === 'All' || char.stars == rarityVal;
+        selectedDiv.addEventListener("click", function(e) {
+            e.stopPropagation();
+            closeAllSelect(this);
+            itemsDiv.classList.toggle("select-hide");
+        });
 
-        return matchesName && matchesElement && matchesPos && matchesRarity;
-    });
-
-    renderGallery(filtered);
+        for (let j = 0; j < optionDivs.length; j++) {
+            optionDivs[j].addEventListener("click", function(e) {
+                const val = this.getAttribute("data-value");
+                selElmnt.setAttribute("data-value", val);
+                selectedDiv.querySelector("span").innerHTML = this.innerHTML;
+                itemsDiv.classList.add("select-hide");
+                handleFiltersChange(); // Scatta il filtro ogni volta che selezioni una voce
+            });
+        }
+    }
+    document.addEventListener("click", closeAllSelect);
 }
 
+function closeAllSelect(elmnt) {
+    const items = document.getElementsByClassName("select-items");
+    const selectedDivs = document.getElementsByClassName("select-selected");
+    for (let i = 0; i < selectedDivs.length; i++) {
+        if (elmnt !== selectedDivs[i]) {
+            items[i].classList.add("select-hide");
+        }
+    }
+}
+
+// ==========================================
+// LOGICA FILTRAGGIO (Con le chiamate esatte all'HTML aggiornato)
+// ==========================================
+async function handleFiltersChange() {
+    const currentFilters = {
+        name: document.getElementById('search-name').value,
+        element: document.getElementById('filter-element').getAttribute('data-value'),
+        position: document.getElementById('filter-position').getAttribute('data-value'),
+        rarity: document.getElementById('filter-rarity').getAttribute('data-value'),
+        style: document.getElementById('filter-style').getAttribute('data-value'),
+        team: document.getElementById('filter-team').getAttribute('data-value'),
+        season: document.getElementById('filter-season').getAttribute('data-value')
+    };
+
+    const filteredList = await filterCharacters(characterRegistry, currentFilters);
+    renderGallery(filteredList);
+}
+
+// Inizializzazione pagina
 document.addEventListener('DOMContentLoaded', () => {
-    renderGallery();
-    document.getElementById('search-name').addEventListener('input', filterCharacters);
-    document.getElementById('filter-element').addEventListener('change', filterCharacters);
-    document.getElementById('filter-position').addEventListener('change', filterCharacters);
-    document.getElementById('filter-rarity').addEventListener('change', filterCharacters);
+    renderGallery(); // Il primissimo caricamento mostra tutti i giocatori
+    setupCustomSelects();
+
+    // L'input testo non ha bisogno dei menu custom, usiamo l'evento input classico
+    document.getElementById('search-name').addEventListener('input', handleFiltersChange);
 });

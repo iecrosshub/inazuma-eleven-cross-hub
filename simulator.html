@@ -2,15 +2,16 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inazuma Simulator</title>
+    <meta name="viewport" content="width=1450">
+    <title>Inazuma Simulator 1vs1</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- CSS Personalizzati -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/styleSimulator.css?v=2">
+    <link rel="stylesheet" href="css/styleSimulator.css">
 </head>
 <body class="pb-5">
 
@@ -19,30 +20,71 @@
         <a href="index.html" class="inazuma-nav-item">Giocatori</a>
         <a href="coaches.html" class="inazuma-nav-item">Allenatori</a>
         <a href="teamBuilder.html" class="inazuma-nav-item">Team Builder</a>
-        <a href="simulator.html" class="inazuma-nav-item active">Simulatore</a>
+
+        <!-- ATTIVO QUI -->
+        <div class="nav-dropdown active">
+            <button class="dropbtn">Simulatori <i class="fas fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="mode5vs1.html">Simulatore 5vs1</a>
+                <a href="simulator.html">Simulatore Tecniche</a>
+            </div>
+        </div>
+
+        <div class="nav-dropdown">
+            <button class="dropbtn">Utility <i class="fas fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="calendar.html"><i class="fas fa-calendar-alt me-1"></i> Calendario Sfide</a>
+            </div>
+        </div>
+
+        <a href="collection.html" class="inazuma-nav-item">Collezione</a>
     </div>
 </div>
 
-<div class="container" style="max-width: 1200px;">
-    <h2 class="album-title text-center text-lg-start fw-bold mb-4">Simulatore Potenza Tecnica</h2>
+<!-- CONTENITORE RIGIDO MA RISTRETTO -->
+<div class="container-fixed" style="width: 1200px !important; max-width: 1200px !important; padding-top: 20px;">
+
+    <!-- BARRA UTENTE E SORGENTE DATI -->
+    <div class="top-bar d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 p-3 rounded" style="background: #0b1a42; border: 2px solid #ffca28; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+        <div>
+            <h4 class="m-0 text-white fw-bold" id="user-greeting">Accedi per usare la tua Collezione</h4>
+        </div>
+
+        <div class="d-flex align-items-center gap-4">
+            <div class="bg-white p-2 rounded border border-light" style="box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="dataSource" id="radioCollection" value="collection" checked>
+                    <label class="form-check-label text-primary fw-bold" for="radioCollection">La Mia Collezione</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="dataSource" id="radioMax" value="max">
+                    <label class="form-check-label text-warning fw-bold text-dark" for="radioMax">Giocatori al MAX</label>
+                </div>
+            </div>
+
+            <div>
+                <button id="btn-login" class="btn btn-light px-4 fw-bold text-dark"><i class="fab fa-google text-danger"></i> Login</button>
+                <button id="btn-logout" class="btn btn-outline-light px-4 fw-bold" style="display: none;">Esci</button>
+            </div>
+        </div>
+    </div>
 
     <div class="row g-4">
         <!-- Colonna Sinistra -->
         <div class="col-lg-6">
-            <!-- Usiamo .card per avere l'azzurrino del nuovo tema -->
             <div class="card p-4 shadow mb-4">
                 <h5 class="text-info mb-3">Impostazioni Calcolo</h5>
 
-                <label class="form-label small text-secondary fw-bold">PERSONAGGIO</label>
+                <label class="form-label small fw-bold">PERSONAGGIO</label>
                 <select id="sim-char" class="form-select mb-3"></select>
 
-                <label class="form-label small text-secondary fw-bold">LIVELLO GIOCATORE</label>
-                <select id="sim-lvl" class="form-select mb-3">
-                    <option value="lv1">Livello 1</option>
-                    <option value="lv300" selected>Livello 300</option>
-                </select>
+                <!-- IL CAMPO STATISTICA UNIFICATO -->
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">STATISTICA BASE NUDA</label>
+                    <input type="number" id="sim-custom-stat" class="form-control" placeholder="Es. 150" min="0">
+                </div>
 
-                <label class="form-label small text-secondary fw-bold">MOLTIPLICATORE RUOLO</label>
+                <label class="form-label small fw-bold">MOLTIPLICATORE RUOLO</label>
                 <select id="sim-role" class="form-select mb-3">
                     <option value="1.00">Nessuno (x1.00)</option>
                     <option value="1.05">Ruolo B (x1.05)</option>
@@ -50,7 +92,7 @@
                     <option value="1.15" selected>Ruolo S (x1.15)</option>
                 </select>
 
-                <label class="form-label small text-secondary fw-bold">TECNICA E LIVELLO MOSSA</label>
+                <label class="form-label small fw-bold">TECNICA E LIVELLO MOSSA</label>
                 <div class="row g-2 mb-3">
                     <div class="col-8">
                         <select id="sim-tech" class="form-select"></select>
@@ -65,7 +107,7 @@
                     <label class="form-check-label fw-bold small text-info" id="stab-label">STAB AUTOMATICO</label>
                 </div>
 
-                <label class="form-label small text-secondary fw-bold">VANTAGGIO DI TIPO</label>
+                <label class="form-label small fw-bold">VANTAGGIO DI TIPO</label>
                 <select id="sim-advantage" class="form-select">
                     <option value="1.0" selected>Neutro (x1.00)</option>
                     <option value="1.2">Vantaggio (+20%)</option>
@@ -74,7 +116,7 @@
             </div>
 
             <div class="card p-4 shadow">
-                <h5 class="text-info mb-3">Seleziona Livello delle Abilità Passive</h5>
+                <h5 class="text-info mb-3">Livello delle Abilità Passive</h5>
                 <div id="dynamic-passives-container"></div>
             </div>
         </div>
@@ -82,22 +124,53 @@
         <!-- Colonna Destra -->
         <div class="col-lg-6">
             <div class="card p-4 text-center mb-4 shadow">
-                <h4 class="text-secondary h5">Potenza Finale Stimata</h4>
-                <div id="damage-result" class="display-1 text-info fw-bold my-2">0</div>
-                <div class="p-2 rounded border border-secondary mt-3 bg-white">
+                <h4 class="h5 text-dark fw-bold">Potenza Finale Stimata</h4>
+                <div id="damage-result" class="display-1 text-primary fw-bold my-2">0</div>
+                <div class="p-2 rounded border border-secondary mt-3" style="background:#f8fbff;">
                     <small id="damage-formula" class="text-secondary font-monospace" style="font-size: 0.85rem; display: block; white-space: pre-wrap; text-align: left;"></small>
                 </div>
             </div>
 
-            <div class="card p-4 shadow">
+            <div class="card p-4 shadow mb-4">
                 <h5 class="text-info border-bottom border-secondary pb-2">Valori Coinvolti</h5>
                 <ul id="stats-display" class="list-unstyled mb-0 style-list" style="line-height: 2;"></ul>
+            </div>
+
+            <div class="card p-4 shadow">
+                <h5 class="text-info border-bottom border-secondary pb-2">Effetti delle Passive</h5>
+                <ul id="passive-display" class="list-unstyled mb-0 mt-3" style="font-size: 0.95rem; line-height: 1.6;"></ul>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script type="module" src="js/simulator.js?v=2"></script>
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDJLzxu2tREehzZE79YAK7_TIq1G6lf4Rc",
+        authDomain: "inazumaelevencrosshub.firebaseapp.com",
+        projectId: "inazumaelevencrosshub",
+        storageBucket: "inazumaelevencrosshub.firebasestorage.app",
+        messagingSenderId: "100160386925",
+        appId: "1:100160386925:web:2f35aaacb877d70c9f4c64",
+        measurementId: "G-0R453LFDB0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(app);
+    window.googleProvider = new GoogleAuthProvider();
+    window.firebaseDb = getFirestore(app);
+    window.firebaseLogin = signInWithPopup;
+    window.firebaseLogout = signOut;
+    window.firebaseOnAuth = onAuthStateChanged;
+    window.dbDoc = doc;
+    window.dbGet = getDoc;
+</script>
+
+<script type="module" src="js/simulator.js"></script>
 </body>
 </html>

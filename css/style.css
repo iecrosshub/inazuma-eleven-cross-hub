@@ -1,21 +1,146 @@
+/* css/style.css */
+
 /* =========================================
-   TEMA GLOBALE: INAZUMA LIGHT BLUE (GENERICO)
+   TEMA GLOBALE: INAZUMA LIGHT BLUE
    ========================================= */
 body {
     background: repeating-linear-gradient(90deg, #1b75d0, #1b75d0 40px, #2482df 40px, #2482df 80px) !important;
     color: #102247 !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    min-width: 1450px; /* Blocca l'asse centrale! */
 }
 
-/* --- NAVIGAZIONE A PILLOLA (Globale) --- */
-.inazuma-nav-container { display: flex; justify-content: center; padding: 25px 0; }
-.inazuma-nav { background-color: #e4edf8; border-radius: 50px; display: inline-flex; padding: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
-.inazuma-nav-item { color: #003a8c; font-weight: 900; text-decoration: none; padding: 8px 24px; border-radius: 50px; font-size: 16px; transition: all 0.2s; }
-.inazuma-nav-item.active { background: linear-gradient(180deg, #2eb3ff, #0a65ff); color: #ffffff; border: 2px solid #000000; padding: 6px 22px; box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4); }
+/* =========================================
+   BLOCCO LAYOUT (Anti-Zoom e Anti-Resize)
+   ========================================= */
+.container-fixed {
+    width: 1400px !important;
+    max-width: 1400px !important;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
 
-/* --- BOTTONI GLOBALI --- */
+.app-container {
+    width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px 20px 15px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   NAVIGAZIONE A PILLOLA - UNIFICATA
+   ========================================= */
+.inazuma-nav-container { display: flex; justify-content: center; padding: 25px 0; flex-shrink: 0; }
+.inazuma-nav {
+    background-color: #e4edf8;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    padding: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
+
+.inazuma-nav-item, .nav-dropdown .dropbtn {
+    color: #003a8c;
+    font-weight: 900;
+    text-decoration: none;
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 16px;
+    transition: all 0.2s;
+    background: transparent;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+.inazuma-nav-item:hover, .nav-dropdown .dropbtn:hover { color: #007aff; }
+
+.inazuma-nav-item.active, .nav-dropdown.active .dropbtn {
+    background: linear-gradient(180deg, #2eb3ff, #0a65ff);
+    color: #ffffff;
+    border: 2px solid #000000;
+    padding: 6px 22px;
+    box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4);
+}
+
+/* --- MENU A TENDINA --- */
+.nav-dropdown { position: relative; display: inline-flex; }
+
+.dropdown-content {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: 115%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: #e4edf8;
+    min-width: 180px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.5);
+    border-radius: 12px;
+    z-index: 100;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.3s ease;
+    border: 2px solid #ffffff;
+}
+
+.nav-dropdown:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.dropdown-content a {
+    color: #003a8c;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #1269e8;
+    color: #ffffff;
+}
+
+/* =========================================
+   BOTTONI GLOBALI E UTILITY
+   ========================================= */
 .btn-outline-info { color: #1269e8 !important; border-color: #1269e8 !important; background-color: #ffffff !important; }
 .btn-outline-info:hover, .btn-outline-info.active { background-color: #1269e8 !important; color: #ffffff !important; }
 .btn-info { background-color: #1269e8 !important; color: #ffffff !important; border: none !important; }
 .btn-secondary { background-color: #0b1a42 !important; color: #ffffff !important; border: 1px solid #0b1a42 !important; }
+
+/* =========================================
+   POP-UP GLOBALE (Riutilizzabile)
+   ========================================= */
+.global-modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center;
+}
+.global-modal-content {
+    background: #ffffff; padding: 30px; border-radius: 12px; max-width: 450px; width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4); color: #102247; text-align: center;
+}
+.global-modal-header {
+    font-size: 1.5rem; font-weight: 900; color: #d32f2f; margin-bottom: 15px;
+}
+.global-modal-actions {
+    display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap;
+}

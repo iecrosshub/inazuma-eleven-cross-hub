@@ -1,9 +1,6 @@
-/* =========================================
-   STILE DETTAGLIO PERSONAGGIO
-   ========================================= */
+/* css/styleCharacter.css */
 
-/* --- TESTATA (Nome Personaggio) E TITOLO STATISTICHE --- */
-/* Stile font possente degli Allenatori ma in Blu Scuro Inazuma */
+/* --- TESTATA (Nome Personaggio) E TITOLI --- */
 #char-name-main,
 .text-info.fw-bold.fs-5 {
     color: #102247 !important; /* Blu scuro Inazuma */
@@ -13,8 +10,6 @@
     letter-spacing: 1px;
 }
 
-/* --- TITOLI SEZIONI (Tecniche, Passive) --- */
-/* Stile font possente degli Allenatori ma Bianco con Ombra */
 h3.text-info {
     color: #ffffff !important;
     font-weight: 900 !important;
@@ -35,6 +30,7 @@ table.table {
     background-color: #0b1a42 !important;
     color: #0dcaf0 !important;
     border: 2px solid #1269e8 !important;
+    margin-bottom: 0;
 }
 .card-header {
     background-color: #102247 !important;
@@ -49,22 +45,22 @@ td {
 tr:nth-child(even) td { background-color: #102247 !important; }
 td:last-child { color: #0dcaf0 !important; font-weight: 900; }
 
-/* --- PASSIVE: IL BOX CHE TI DAVA PROBLEMI --- */
+/* --- PASSIVE --- */
 .bg-light {
-    background-color: #0b1a42 !important; /* Blu scuro */
-    border: 2px solid #1269e8 !important; /* Bordo blu */
-    color: #0dcaf0 !important; /* TESTO AZZURRO CHIARO */
+    background-color: #0b1a42 !important;
+    border: 2px solid #1269e8 !important;
+    color: #0dcaf0 !important;
     padding: 15px !important;
     border-radius: 6px;
     margin-top: 10px;
 }
-/* Forza il colore azzurro a tutto il testo interno al box */
 .bg-light p, .bg-light span, .bg-light div {
     color: #ffffff !important;
     font-weight: bold;
 }
 
 /* --- LISTA DELLE STATISTICHE A SINISTRA --- */
+#stats-list { list-style: none; padding: 0; margin: 0; }
 #stats-list li {
     background-color: #0b1a42 !important;
     color: #e4edf8 !important;
@@ -75,65 +71,48 @@ td:last-child { color: #0dcaf0 !important; font-weight: 900; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: nowrap !important; /* Forza il contenuto a restare su una riga */
-    white-space: nowrap;          /* Impedisce il ritorno a capo */
+    flex-wrap: nowrap !important;
+    white-space: nowrap;
     font-weight: bold;
 }
 
-/* Nomi statistiche (es. TP, Tiro) -> BLU SCURO (il testo dentro è #e4edf8, ma impostiamo il container) */
-#stats-list li span:first-child {
-    color: #e4edf8 !important;
-}
-
-/* Numeri delle statistiche -> CIANO */
+#stats-list li span:first-child { color: #e4edf8 !important; }
 #stats-list li span:last-child {
     color: #0dcaf0 !important;
     font-size: 1.1em;
     font-weight: 900;
 }
 
-/* =========================================
-   ZONE (GRIGLIA)
-   ========================================= */
-.field-zone {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 15px;
-}
-
+/* --- ZONE E GRIGLIA TATTICA --- */
+.field-zone { display: flex; flex-direction: column; align-items: center; margin-top: 15px; }
 .field-zone-title {
-    color: #102247 !important; /* Blu scuro Inazuma */
+    color: #102247 !important;
     font-size: 1.1rem;
     font-weight: 900 !important;
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-
 .position-grid {
     display: grid;
     grid-template-columns: repeat(4, 25px);
     grid-template-rows: repeat(5, 23px);
     gap: 4px;
     padding: 8px;
-    background: #e4edf8 !important; /* Azzurrino coerente col tema */
-    border: 2px solid #1269e8 !important; /* Bordo blu */
+    background: #e4edf8 !important;
+    border: 2px solid #1269e8 !important;
     border-radius: 9px;
 }
-
 .zone-cell {
     display: grid;
     place-items: center;
-    background: #0b1a42 !important; /* Blu scuro per le caselle base */
+    background: #0b1a42 !important;
     border: 1px solid #1269e8 !important;
     border-radius: 3px;
     font-size: 14px;
     font-weight: 900;
-    color: #0dcaf0 !important; /* Testo azzurrino per le caselle */
+    color: #0dcaf0 !important;
 }
-
-/* Colori dei Rank S, A, B (Forzati per visibilità) */
 .rank-s { background: #ffd337 !important; color: #0b1a42 !important; }
 .rank-a { background: #9be335 !important; color: #0b1a42 !important; }
 .rank-b { background: #21bc73 !important; color: #0b1a42 !important; }

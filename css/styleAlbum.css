@@ -1,7 +1,6 @@
-/* =========================================
-   STRUTTURA GACHA CARD E DETTAGLI PERSONAGGIO
-   ========================================= */
-/* --- TITOLO PRINCIPALE (Stile Allenatori) --- */
+/* css/styleAlbum.css */
+
+/* --- TITOLO PRINCIPALE --- */
 .album-title {
     color: #ffffff !important;
     font-weight: 900 !important;
@@ -10,7 +9,21 @@
     letter-spacing: 1px;
 }
 
-/* --- Wrapper della Card (Il contenitore quadrato 140x140) --- */
+/* --- PANNELLO FILTRI --- */
+.filter-panel {
+    border: 2px solid #2482df;
+    color: white;
+}
+.filter-panel select, .filter-panel input {
+    background-color: #1b75d0 !important;
+    color: white !important;
+    border: 1px solid #2482df !important;
+}
+.filter-panel select option {
+    background-color: #0b1a42;
+}
+
+/* --- STRUTTURA GACHA CARD --- */
 .gacha-icon-wrapper {
     width: 140px;
     height: 140px;
@@ -18,7 +31,7 @@
     margin: 0 auto;
 }
 
-/* --- Layer 1: Sfondo Rarity --- */
+/* Layer 1: Sfondo Rarity */
 .rarity-bg-layer {
     position: absolute;
     inset: 4px;
@@ -30,7 +43,7 @@
     background-position: center;
 }
 
-/* --- Layer 2: Personaggio --- */
+/* Layer 2: Personaggio */
 .personaje-imagen {
     position: absolute;
     top: 0; left: 0;
@@ -43,7 +56,7 @@
     background: transparent !important;
 }
 
-/* --- Layer 3: Frame / Cornice --- */
+/* Layer 3: Frame / Cornice */
 .frame-overlay {
     position: absolute;
     top: 0; left: 0;
@@ -53,7 +66,7 @@
     pointer-events: none;
 }
 
-/* --- Layer 4: Hud Superiore Sinistra (Elemento e Ruolo) --- */
+/* Layer 4: Hud Superiore Sinistra (Elemento e Ruolo) */
 .hud-top-left {
     position: absolute;
     top: 2px;
@@ -66,7 +79,7 @@
 .atributo-tag { width: 32px; height: 32px; object-fit: contain; }
 .posicion-tag { width: 29px; height: 17px; object-fit: contain; margin-top: -3px; }
 
-/* --- Layer 5: Stelle (Basso a sinistra) --- */
+/* Layer 5: Stelle (Basso a sinistra) */
 .stars-curved-container {
     position: absolute;
     bottom: 5px;
@@ -90,63 +103,9 @@
 /* --- Nome personaggio sotto la card --- */
 .personaje-nombre {
     margin-top: 8px;
-    color: #ffffff; /* Si legge perfettamente sul blu */
+    color: #ffffff;
     font-size: 0.88rem;
     font-weight: bold;
     text-align: center;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-}
-
-/* =========================================
-   GRIGLIA ZONE E RANK (Campetto tattico nel Dettaglio)
-   ========================================= */
-.field-zone {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 15px;
-}
-.field-zone-title {
-    color: #003a8c;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-}
-.position-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 25px);
-    grid-template-rows: repeat(5, 23px);
-    gap: 4px;
-    padding: 8px;
-    background: #0e64c8;
-    border: 3px solid #0d55aa;
-    border-radius: 9px;
-}
-.zone-cell {
-    display: grid;
-    place-items: center;
-    color: #0b326e;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 3px;
-    font-size: 14px;
-    font-weight: 900;
-}
-.rank-s { background: #ffd337; color: #0b326e; }
-.rank-a { background: #9be335; color: #0b326e; }
-.rank-b { background: #21bc73; color: #0b326e; }
-.rank-empty { background: rgba(0, 0, 0, 0.05); color: transparent; }
-
-.filter-panel {
-    border: 2px solid #2482df;
-    color: white;
-}
-.filter-panel select, .filter-panel input {
-    background-color: #1b75d0 !important;
-    color: white !important;
-    border: 1px solid #2482df !important;
-}
-.filter-panel select option {
-    background-color: #0b1a42;
 }
