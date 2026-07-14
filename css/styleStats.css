@@ -1,0 +1,62 @@
+/* css/styleStats.css */
+
+.stats-table { width: 100%; margin-top: 20px; }
+
+.stats-header {
+    display: flex;
+    background: #0b1a42 !important;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+/* LA SOLUZIONE AL BLU SU BLU: Forza il testo bianco e l'icona bianca nell'header */
+.stats-header .col-name,
+.stats-header .col-stat,
+.stats-header i {
+    color: #ffffff !important;
+    font-weight: 900 !important;
+}
+
+.stats-row {
+    display: flex;
+    background: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+    border: 1px solid #d4e1f1;
+    transition: background 0.2s;
+}
+.stats-row:hover { background: #f0f7ff; }
+
+/* Allineamento colonne (per le righe normali) */
+.col-name { flex: 3; display: flex; align-items: center; gap: 10px; font-weight: bold; color: #0b1a42; }
+.col-stat {
+    flex: 1;
+    text-align: center;
+    color: #102247;
+    font-weight: 800;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.char-thumb-mini { width: 40px; height: 40px; border-radius: 4px; border: 1px solid #d4e1f1; }
+
+/* Stile per il riquadro filtri come da foto */
+.filters-container {
+    background-color: #f4f7fb;
+    border: 1px solid #d4e1f1;
+    padding: 20px;
+    border-radius: 8px;
+}
+.filter-group label {
+    color: #0b1a42;
+    font-weight: 800;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    display: block;
+}

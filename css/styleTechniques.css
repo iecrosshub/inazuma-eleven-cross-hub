@@ -1,0 +1,103 @@
+/* css/styleTechniques.css */
+
+.tech-card {
+    background: #eef2f7;
+    border: 2px solid #1269e8;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+}
+
+.tech-header {
+    background: #0a1b44;
+    color: #00d2ff;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.4rem;
+    font-weight: 900;
+    border-bottom: 2px solid #1269e8;
+}
+
+.tech-header img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.tech-content-wrapper {
+    background: #e6f0ff; /* Sfondo celestino tipico dei pannelli info */
+    padding-bottom: 20px;
+}
+
+.tech-badges {
+    padding: 12px 20px;
+    display: flex;
+    gap: 8px;
+}
+
+.tech-badge {
+    background: #8e9bb0; /* Grigio tipico */
+    color: #ffffff;
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.tech-badge.badge-special {
+    background: #00d2ff; /* Azzurro ciano brillante */
+    color: #0a1b44; /* Testo blu notte */
+}
+
+.tech-table-container {
+    padding: 0 20px;
+    overflow-x: auto;
+}
+
+.tech-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+.tech-table th, .tech-table td {
+    border: 1px solid #1269e8;
+    padding: 8px;
+}
+
+/* RIGA INTESTAZIONE */
+.tech-table th {
+    background: #ffffff;
+    color: #0a1b44;
+    font-size: 1rem;
+}
+
+/* COLONNA DELLE ETICHETTE */
+.tech-table tr td:first-child {
+    background: #ffffff;
+    color: #0a1b44;
+    text-align: left;
+    width: 160px;
+}
+
+/* RIGHE DEI DATI (Alternate) */
+.tech-table tbody tr:nth-child(even) td:not(:first-child) {
+    background: #0a1b44;
+    color: #ffffff;
+}
+.tech-table tbody tr:nth-child(odd) td:not(:first-child) {
+    background: #112b65;
+    color: #ffffff;
+}
+
+/* HIGHLIGHT DELL'ULTIMA COLONNA (LIVELLO 10) */
+.tech-table tbody tr td:last-child {
+    color: #00d2ff !important;
+    font-weight: 900;
+    font-size: 1.05rem;
+}
