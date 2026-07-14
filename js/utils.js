@@ -584,7 +584,8 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
         const statKey = getStatKeyByIcon(tech.icon);
         const nakedBaseStat = slot.customStats[statKey] || 0;
-        const totalBase = nakedBaseStat + slotBuffs.statSelf + slotBuffs.statAlly;
+        const rawBase = nakedBaseStat + slotBuffs.statSelf + slotBuffs.statAlly;
+        const totalBase = Math.floor(rawBase * 0.9735); // Correzione del 5,75%
 
         const userTechLevelIndex = slot.techLevel || 0;
         const nakedPower = tech.power ? (parseInt(tech.power[userTechLevelIndex]) || 0) : 0;
@@ -598,7 +599,8 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             stageBonus = stageConfig.bonus;
         }
 
-        const totalPower = nakedPower + manualBonusPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
+        const rawPower = nakedPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
+        const totalPower = Math.floor(rawPower * 0.9735);
 
         let attributeMultiplier = 1.0;
         if (checkStab(char.element, tech.elementIcon)) attributeMultiplier += 0.2;
