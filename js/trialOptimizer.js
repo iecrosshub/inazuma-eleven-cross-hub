@@ -1,4 +1,4 @@
-// js/trialoptimizer.js
+// js/trialOptimizer.js
 
 import { characterRegistry, passivesLibrary, techniquesLibrary, calculateTeamDamage, extractPosition, universalManualsKeys } from './utils.js';
 
@@ -7,7 +7,7 @@ export class TrialOptimizer {
         this.app = app;
     }
 
-    createCharEngineFormat(charData, moveName, mode, forceLevel1 = false) {
+    createCharEngineFormat(charData, moveName, mode) {
         const customStats = {};
         const techLevels = {};
         const customTechPower = {};
@@ -25,8 +25,8 @@ export class TrialOptimizer {
             ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = charData.stats[s]?.lv300 || 0);
             allValidMoves.forEach(t => { techLevels[t] = 9; customTechPower[t] = 0; });
 
-            if (forceLevel1 || isTaughtMove) {
-                techLevels[moveName] = 0;
+            if (isTaughtMove) {
+                techLevels[moveName] = 9; // Valutiamo i manuali al massimo!
                 customTechPower[moveName] = 0;
             }
 
@@ -43,9 +43,14 @@ export class TrialOptimizer {
             ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = cStats[s] || 0);
             allValidMoves.forEach(t => { techLevels[t] = cTechs[t] || 0; customTechPower[t] = cPwr[t] || 0; });
 
-            if (forceLevel1 || isTaughtMove) {
-                techLevels[moveName] = 0;
-                customTechPower[moveName] = 0;
+            if (isTaughtMove) {
+                if (moveName === collData.equippedManual) {
+                    techLevels[moveName] = cTechs[moveName] !== undefined ? cTechs[moveName] : 0;
+                    customTechPower[moveName] = cPwr[moveName] || 0;
+                } else {
+                    techLevels[moveName] = 0;
+                    customTechPower[moveName] = 0;
+                }
             }
 
             [...(charData.myBasicPassivesIds || []), ...(charData.myRarityPassivesIds || [])].forEach(pId => {
@@ -86,9 +91,11 @@ export class TrialOptimizer {
         await new Promise(resolve => setTimeout(resolve, 100));
 
         const mode = document.querySelector('input[name="dataSource"]:checked').value;
-        const allowManuals = document.getElementById('allowManualsToggle').checked;
+        const allowManualsToggle = document.getElementById('allowManualsToggle');
 
-        // FIX: Lettura sicura da custom-select
+        // Se siamo in collezione, il toggle è disabilitato e forzato a false
+        const allowManuals = allowManualsToggle.disabled ? false : allowManualsToggle.checked;
+
         const stageElementNode = document.getElementById('stageElement');
         const opponentElementNode = document.getElementById('opponentElement');
         const simModeNode = document.getElementById('simMode');
@@ -146,7 +153,7 @@ export class TrialOptimizer {
                     if (techDef.kind !== 'Tiro') continue;
                 }
 
-                const engineFormat = this.createCharEngineFormat(char, move, mode, allowManuals);
+                const engineFormat = this.createCharEngineFormat(char, move, mode);
                 const advBonus = this.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
                 if (advBonus > 0) engineFormat.customTechPower[move] = (engineFormat.customTechPower[move] || 0) + advBonus;
 
@@ -180,7 +187,7 @@ export class TrialOptimizer {
         const teamResults = [];
         for (const perm of permutations) {
             const teamData = perm.map(p => {
-                const eFmt = this.createCharEngineFormat(p.char, p.bestMove, mode, allowManuals);
+                const eFmt = this.createCharEngineFormat(p.char, p.bestMove, mode);
                 const tDef = techniquesLibrary[p.bestMove];
                 const aBon = this.getAdvantageBonus(tDef.element, stageConfig.opponent, tDef.kind, stageConfig.mode);
                 if (aBon > 0) eFmt.customTechPower[p.bestMove] = (eFmt.customTechPower[p.bestMove] || 0) + aBon;
@@ -218,8 +225,7 @@ export class TrialOptimizer {
             const row = document.createElement('div');
             row.className = 'bg-white rounded p-3 d-flex justify-content-between align-items-center shadow-sm border border-light';
 
-            const scoreText = allowManuals ? `Score (Tutto a Lv.1):` : `Score:`;
-            let htmlStr = `<div class="d-flex flex-column"><strong class="text-primary fs-5">#${idx + 1} - ${scoreText} ${Math.floor(res.score).toLocaleString('it-IT')}</strong><div class="d-flex gap-2 mt-2 flex-wrap">`;
+            let htmlStr = `<div class="d-flex flex-column"><strong class="text-primary fs-5">#${idx + 1} - Score: ${Math.floor(res.score).toLocaleString('it-IT')}</strong><div class="d-flex gap-2 mt-2 flex-wrap">`;
 
             res.team.forEach(p => {
                 const isManual = !p.char.myTechniques.includes(p.bestMove);

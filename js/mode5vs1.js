@@ -99,7 +99,6 @@ class AppController {
             slotCard.className = 'slot-card';
             slotCard.setAttribute('data-slot', i);
 
-            // FIX: flex: 1 e width: 0 garantiscono che i due campi siano IDENTICI per lunghezza.
             slotCard.innerHTML = `
                 <div class="slot-name">Slot ${i + 1}</div>
                 <div class="slot-dropdowns" style="display:flex; gap: 15px; flex:1;">
@@ -148,7 +147,10 @@ class AppController {
         const techSelect = slotCard.querySelector('.sim-tech-select');
         const mode = document.querySelector('input[name="dataSource"]:checked').value;
         const simMode = document.getElementById('simMode').dataset.value;
-        const allowManuals = document.getElementById('allowManualsToggle').checked;
+        const allowManualsToggle = document.getElementById('allowManualsToggle');
+
+        // Se la levetta è disabilitata, consideriamo allowManuals falso
+        const allowManuals = allowManualsToggle.disabled ? false : allowManualsToggle.checked;
 
         if (!charData) return;
 
@@ -185,7 +187,17 @@ class AppController {
             }
 
             const isTaughtMove = !charData.myTechniques.includes(techKey);
-            let lv = isTaughtMove ? 1 : (mode === 'max' ? 10 : (collData.techLevels && collData.techLevels[techKey] !== undefined ? (collData.techLevels[techKey] + 1) : 10));
+
+            let lv;
+            if (mode === 'max') {
+                lv = 10;
+            } else {
+                if (isTaughtMove && techKey !== collData.equippedManual) {
+                    lv = 1;
+                } else {
+                    lv = collData.techLevels && collData.techLevels[techKey] !== undefined ? (collData.techLevels[techKey] + 1) : 1;
+                }
+            }
 
             const manualTag = isTaughtMove ? " 📕" : "";
             techOptions += `<option value="${techKey}">${techDef.name} (Lv ${lv})${manualTag}</option>`;
@@ -210,7 +222,6 @@ class AppController {
         const stageElSelect = document.getElementById('stageElement');
         const opponentElSelect = document.getElementById('opponentElement');
 
-        // LOGICA AUTOMATICA BONUS
         this.initCustomSelect(simModeSelect, (val) => {
             const bonus = val === 'defense' ? 20 : 10;
             document.getElementById('stageBonusDisplay').textContent = bonus;
@@ -218,7 +229,6 @@ class AppController {
             this.updateSimulation();
         });
 
-        // INVERSA: TU SCEGLI L'AVVERSARIO E LUI METTE IL BONUS GIUSTO (Debolezza)
         this.initCustomSelect(opponentElSelect, (val) => {
             const mapStage = {
                 'None': { val: '', text: 'Nessuno', img: '' },
@@ -240,8 +250,35 @@ class AppController {
             this.updateSimulation();
         });
 
-        document.querySelectorAll('input[name="dataSource"]').forEach(radio => radio.addEventListener('change', () => { this.updateTechDropdowns(); this.updateSimulation(); }));
-        document.getElementById('allowManualsToggle').addEventListener('change', () => { this.updateTechDropdowns(); this.updateSimulation(); });
+        // GESTIONE ATTIVAZIONE/DISATTIVAZIONE SWITCH INSEGNA TECNICHE
+        const radios = document.querySelectorAll('input[name="dataSource"]');
+        const toggle = document.getElementById('allowManualsToggle');
+        const toggleLabel = document.querySelector('label[for="allowManualsToggle"]');
+
+        const updateToggleState = (mode) => {
+            if (mode === 'collection') {
+                toggle.checked = false;
+                toggle.disabled = true;
+                toggleLabel.style.opacity = '0.5';
+            } else {
+                toggle.disabled = false;
+                toggleLabel.style.opacity = '1';
+            }
+        };
+
+        const currentMode = document.querySelector('input[name="dataSource"]:checked').value;
+        updateToggleState(currentMode);
+
+        radios.forEach(radio => radio.addEventListener('change', (e) => {
+            updateToggleState(e.target.value);
+            this.updateTechDropdowns();
+            this.updateSimulation();
+        }));
+
+        document.getElementById('allowManualsToggle').addEventListener('change', () => {
+            this.updateTechDropdowns();
+            this.updateSimulation();
+        });
     }
 
     updateSimulation() {
