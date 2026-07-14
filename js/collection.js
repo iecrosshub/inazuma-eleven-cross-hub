@@ -6,7 +6,9 @@ import {
     filterCharacters,
     universalManualsKeys,
     getRarityTier,
-    getLevelTier
+    getLevelTier,
+    rerollPassivesByRole,
+    extractPosition
 } from './utils.js';
 import { AuthManager } from './auth.js';
 
@@ -24,8 +26,6 @@ class CollectionApp {
         document.getElementById('btn-save-cloud').addEventListener('click', () => this.saveToCloud());
 
         this.setupCustomSelects();
-
-        // 1. RIPRISTINA I FILTRI SALVATI PRIMA E IL LIVELLO GLOBALE
         this.restoreFilters();
 
         const savedGlobalLevel = localStorage.getItem('collection_global_level') || '';
@@ -34,7 +34,6 @@ class CollectionApp {
 
         document.getElementById('search-name').addEventListener('input', () => this.triggerFilter());
 
-        // LOGICA APPLICA LIVELLO GLOBALE
         const btnLevel = document.getElementById('btn-apply-level');
         if (btnLevel) {
             btnLevel.addEventListener('click', () => {
@@ -44,28 +43,23 @@ class CollectionApp {
                 const globalLevel = parseInt(inputVal);
                 localStorage.setItem('collection_global_level', globalLevel);
 
-                document.querySelectorAll('.pass-lvl').forEach(sel => {
+                document.querySelectorAll('.pass-lvl-basic').forEach(sel => {
                     const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
                     if (pDef) {
-                        const isRarity = pDef.levels.some(l => l.req && getRarityTier(l.req) !== -1);
+                        let bestIdx = -1;
+                        let hasLevelReq = false;
 
-                        // Solo per le passive che NON sono di rarità
-                        if (!isRarity) {
-                            let bestIdx = -1;
-                            let hasLevelReq = false;
-
-                            pDef.levels.forEach((lvl, idx) => {
-                                const reqLv = getLevelTier(lvl.req);
-                                if (reqLv !== -1) {
-                                    hasLevelReq = true;
-                                    if (globalLevel >= reqLv) bestIdx = idx;
-                                }
-                            });
-
-                            if (hasLevelReq) {
-                                sel.value = bestIdx;
-                                sel.dispatchEvent(new Event('change'));
+                        pDef.levels.forEach((lvl, idx) => {
+                            const reqLv = getLevelTier(lvl.req);
+                            if (reqLv !== -1) {
+                                hasLevelReq = true;
+                                if (globalLevel >= reqLv) bestIdx = idx;
                             }
+                        });
+
+                        if (hasLevelReq) {
+                            sel.value = bestIdx;
+                            sel.dispatchEvent(new Event('change'));
                         }
                     }
                 });
@@ -80,7 +74,6 @@ class CollectionApp {
         this.setupNavigationInterception();
     }
 
-    // Inizializza un singolo selettore custom per i manuali generati dinamicamente
     initSingleCustomSelect(customSelect) {
         const selectedDiv = customSelect.querySelector('.select-selected');
         const itemsDiv = customSelect.querySelector('.select-items');
@@ -115,7 +108,6 @@ class CollectionApp {
                     const el = document.getElementById(id);
                     if (el && val !== undefined && val !== null) {
                         el.dataset.value = val;
-                        // Cerca l'opzione corrispondente, se non c'è prende la prima di default
                         const option = el.querySelector(`.select-items div[data-value="${val}"]`) || el.querySelector('.select-items div');
                         if (option) {
                             el.dataset.value = option.dataset.value;
@@ -194,7 +186,6 @@ class CollectionApp {
     setupCustomSelects() {
         document.querySelectorAll('.filters-container .custom-select').forEach(customSelect => {
             this.initSingleCustomSelect(customSelect);
-
             customSelect.addEventListener('change', () => this.triggerFilter());
         });
 
@@ -248,7 +239,6 @@ class CollectionApp {
 
         const tagsHtml = (fullData.tags || []).map(tagUrl => `<img src="${tagUrl}" class="tag-icon-small" alt="tag">`).join('');
 
-        // Mappatura Icone PNG per le Statistiche
         const statIcons = {
             "Tiro": "img/Status/Icon_Status_Kick.png",
             "Tecnica": "img/Status/Icon_Status_Technic.png",
@@ -257,7 +247,6 @@ class CollectionApp {
             "Velocità": "img/Status/Icon_Status_Speed.png"
         };
 
-        // Opzioni Menu a tendina Insegna Tecnica (Testo chiaro su sfondo scuro con Hover Giallo)
         let manualOptionsCustomHtml = `<div data-value="" style="display:flex; align-items:center; padding: 6px 10px; color: #f8f9fa; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">-- Nessuna Tecnica Extra --</div>`;
         universalManualsKeys.forEach(mKey => {
             if (!fullData.myTechniques.includes(mKey)) {
@@ -274,7 +263,6 @@ class CollectionApp {
             }
         });
 
-        // HTML Mosse Native Personaggio (Icone allineate e Badge SB non tagliato)
         const nativeTechsHtml = fullData.myTechniques.map(techKey => {
             const techDef = techniquesLibrary[techKey];
             const tName = techDef?.name || techKey;
@@ -284,19 +272,40 @@ class CollectionApp {
 
             return `
                 <div class="d-flex gap-1 mb-2 align-items-center">
-                    <div class="d-flex align-items-center gap-1" style="width: 50%;">
+                    <div class="d-flex align-items-center gap-1" style="width: 70%;">
                         ${typeIcon ? `<img src="${typeIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">` : ''}
                         ${elIcon ? `<img src="${elIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">` : ''}
                         <span class="text-light small text-truncate" title="${tName}">${tName}</span>
                         ${sbBadge}
                     </div>
-                    <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl" data-char="${baseChar.id}" data-tech="${techKey}" style="width: 25%;">
+                    <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl" data-char="${baseChar.id}" data-tech="${techKey}" style="width: 30%;">
                         ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===9 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
                     </select>
-                    <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary tech-pwr" data-char="${baseChar.id}" data-tech="${techKey}" placeholder="+Pwr" style="width: 25%;">
                 </div>
             `;
         }).join('');
+
+        // Sezione Reroll: Inizializziamo a 0 per disabilitare dinamicamente
+        const role = extractPosition(fullData.position);
+        const availableRerolls = rerollPassivesByRole[role] || [];
+        let rerollOptions = `<option value="">-- Vuota --</option>`;
+        availableRerolls.forEach(p => {
+            rerollOptions += `<option value="${p.id}">${p.title}</option>`;
+        });
+
+        let rerollSlotsHtml = '';
+        for (let i = 1; i <= 3; i++) {
+            rerollSlotsHtml += `
+                <div class="d-flex gap-1 mb-2 align-items-center">
+                    <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-id" data-char="${baseChar.id}" data-slot="${i}" style="width: 70%;">
+                        ${rerollOptions}
+                    </select>
+                    <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-lvl" data-char="${baseChar.id}" data-slot="${i}" style="width: 30%;" disabled>
+                        <option value="0">Lv 1</option>
+                    </select>
+                </div>
+            `;
+        }
 
         let html = `
             <div class="collection-card owned" id="card-${baseChar.id}">
@@ -341,7 +350,7 @@ class CollectionApp {
                     
                     <h6 class="text-warning mt-3"><i class="fas fa-book"></i> Insegna Tecnica (Shop)</h6>
                     <div class="d-flex gap-1 mb-3 align-items-center">
-                        <div class="custom-select manual-equip" data-char="${baseChar.id}" data-value="" style="width: 50%;">
+                        <div class="custom-select manual-equip" data-char="${baseChar.id}" data-value="" style="width: 70%;">
                             <div class="select-selected bg-dark border-secondary form-select-sm" style="height: 31px; display:flex; align-items:center; color: #ffca28; cursor:pointer;">
                                 <span class="text-truncate" style="color: inherit;">-- Nessuna Tecnica Extra --</span>
                                 <i class="fas fa-chevron-down" style="margin-left:auto;"></i>
@@ -350,10 +359,9 @@ class CollectionApp {
                                 ${manualOptionsCustomHtml}
                             </div>
                         </div>
-                        <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl manual-lvl" data-char="${baseChar.id}" data-tech="" style="width: 25%; display: none;">
+                        <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl manual-lvl" data-char="${baseChar.id}" data-tech="" style="width: 30%; display: none;">
                             ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===9 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
                         </select>
-                        <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary tech-pwr manual-pwr" data-char="${baseChar.id}" data-tech="" placeholder="+Pwr" style="width: 25%; display: none;">
                     </div>
                     
                     <h6 class="text-info mt-3 border-top border-secondary pt-2"><i class="fas fa-star"></i> Rarità Personaggio</h6>
@@ -369,25 +377,41 @@ class CollectionApp {
                         </select>
                     </div>
 
-                    <h6>Livello Passive</h6>
-                    ${[...(fullData.myBasicPassivesIds || []), ...(fullData.myRarityPassivesIds || [])].map(pId => {
+                    <h6 class="mt-4 mb-2 text-info">Passive di Livello</h6>
+                    ${(fullData.myBasicPassivesIds || []).map(pId => {
             const pDef = passivesLibrary.find(p => p.id === pId);
             if (!pDef) return '';
-
             let opts = `<option value="-1">Spenta</option>`;
-            pDef.levels.forEach((lvlData, idx) => {
-                opts += `<option value="${idx}">Lv ${idx + 1}</option>`;
-            });
-
+            pDef.levels.forEach((lvlData, idx) => { opts += `<option value="${idx}">Lv ${idx + 1}</option>`; });
             return `
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="text-light small text-truncate" style="width: 55%;" title="${pDef.title}">${pDef.title}</span>
-                                <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl" data-char="${baseChar.id}" data-passive="${pId}" style="width: 40%;">
+                                <span class="text-light small text-truncate" style="width: 55%; color:#aaa;" title="${pDef.title}">${pDef.title}</span>
+                                <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl pass-lvl-basic" data-char="${baseChar.id}" data-passive="${pId}" style="width: 40%;">
                                     ${opts}
                                 </select>
                             </div>
                         `;
         }).join('')}
+
+                    <h6 class="mt-4 mb-2 text-info">Passive di Risveglio</h6>
+                    ${(fullData.myRarityPassivesIds || []).map(pId => {
+            const pDef = passivesLibrary.find(p => p.id === pId);
+            if (!pDef) return '';
+            let opts = `<option value="-1">Spenta</option>`;
+            pDef.levels.forEach((lvlData, idx) => { opts += `<option value="${idx}">Lv ${idx + 1}</option>`; });
+            return `
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-light small text-truncate" style="width: 55%; color:#aaa;" title="${pDef.title}">${pDef.title}</span>
+                                <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl pass-lvl-rarity" data-char="${baseChar.id}" data-passive="${pId}" style="width: 40%;">
+                                    ${opts}
+                                </select>
+                            </div>
+                        `;
+        }).join('')}
+
+                    <h6 class="mt-4 mb-2 text-info">Passive di Reroll (Personalizzate)</h6>
+                    ${rerollSlotsHtml}
+
                 </div>
             </div>
         `;
@@ -395,14 +419,34 @@ class CollectionApp {
         col.innerHTML = html;
         container.appendChild(col);
 
-        // Inizializza il Custom Select Manuale per questa singola Card
         const manualCustomSelect = col.querySelector('.manual-equip');
         this.initSingleCustomSelect(manualCustomSelect);
+
+        // --- GESTIONE DINAMICA DEI LIVELLI PER IL REROLL ---
+        const rerollIdSelects = col.querySelectorAll('.reroll-id');
+        rerollIdSelects.forEach(selectEl => {
+            selectEl.addEventListener('change', (e) => {
+                const slot = e.target.dataset.slot;
+                const pId = e.target.value;
+                const lvlSelect = col.querySelector(`.reroll-lvl[data-slot="${slot}"]`);
+
+                if (!pId) {
+                    lvlSelect.innerHTML = `<option value="0">Lv 1</option>`;
+                    lvlSelect.disabled = true;
+                    return;
+                }
+
+                const passiveDef = availableRerolls.find(p => p.id === pId);
+                if (passiveDef) {
+                    lvlSelect.innerHTML = passiveDef.levels.map((_, idx) => `<option value="${idx}">Lv ${idx+1}</option>`).join('');
+                    lvlSelect.disabled = false;
+                }
+            });
+        });
 
         const toggle = col.querySelector('.toggle-owned');
         const cardBox = col.querySelector('.collection-card');
         const manualLvl = col.querySelector('.manual-lvl');
-        const manualPwr = col.querySelector('.manual-pwr');
         const charRarity = col.querySelector('.char-rarity');
 
         toggle.addEventListener('change', (e) => {
@@ -417,7 +461,7 @@ class CollectionApp {
 
         charRarity.addEventListener('change', (e) => {
             const val = parseInt(e.target.value);
-            col.querySelectorAll('.pass-lvl').forEach(sel => {
+            col.querySelectorAll('.pass-lvl-rarity').forEach(sel => {
                 const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
                 if (pDef && pDef.levels.some(l => l.req && getRarityTier(l.req) !== -1)) {
                     let bestIdx = -1;
@@ -435,16 +479,11 @@ class CollectionApp {
             const selectedTech = manualCustomSelect.dataset.value;
             if (selectedTech) {
                 manualLvl.dataset.tech = selectedTech;
-                manualPwr.dataset.tech = selectedTech;
                 manualLvl.style.display = 'block';
-                manualPwr.style.display = 'block';
             } else {
                 manualLvl.dataset.tech = '';
-                manualPwr.dataset.tech = '';
                 manualLvl.style.display = 'none';
-                manualPwr.style.display = 'none';
                 manualLvl.value = '9';
-                manualPwr.value = '';
             }
         });
     }
@@ -461,7 +500,6 @@ class CollectionApp {
             ownedStatus: document.getElementById('filter-owned').dataset.value
         };
 
-        // Salva i filtri nel browser
         localStorage.setItem('collection_filters', JSON.stringify(currentFilters));
 
         const filteredArray = await filterCharacters(characterRegistry, currentFilters);
@@ -492,8 +530,8 @@ class CollectionApp {
                 owned: toggle.checked,
                 stats: {},
                 techLevels: {},
-                techCustomPower: {},
                 passives: {},
+                rerollSlots: {},
                 equippedManual: "",
                 rarity: parseInt(document.querySelector(`.char-rarity[data-char="${charId}"]`).value) || 0
             };
@@ -508,13 +546,19 @@ class CollectionApp {
                         charData.techLevels[sel.dataset.tech] = parseInt(sel.value);
                     }
                 });
-                document.querySelectorAll(`.tech-pwr[data-char="${charId}"]`).forEach(inp => {
-                    if (inp.dataset.tech && inp.value) {
-                        charData.techCustomPower[inp.dataset.tech] = parseInt(inp.value);
-                    }
-                });
+
                 document.querySelectorAll(`.pass-lvl[data-char="${charId}"]`).forEach(sel => {
                     charData.passives[sel.dataset.passive] = parseInt(sel.value);
+                });
+
+                document.querySelectorAll(`.reroll-id[data-char="${charId}"]`).forEach(sel => {
+                    const slot = sel.dataset.slot;
+                    const pId = sel.value;
+                    const lvlSel = document.querySelector(`.reroll-lvl[data-char="${charId}"][data-slot="${slot}"]`);
+                    if (pId && lvlSel && !lvlSel.disabled) {
+                        charData.rerollSlots[slot] = { id: pId, lv: parseInt(lvlSel.value) };
+                        charData.passives[pId] = parseInt(lvlSel.value);
+                    }
                 });
 
                 const manualSelect = document.querySelector(`.manual-equip[data-char="${charId}"]`);
@@ -589,8 +633,13 @@ class CollectionApp {
             toggle.dispatchEvent(new Event('change'));
 
             document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => inp.value = '');
-            document.querySelectorAll(`.tech-pwr[data-char="${charId}"]`).forEach(inp => inp.value = '');
             document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => sel.value = '9');
+
+            // Reset visivo Reroll
+            document.querySelectorAll(`.reroll-id[data-char="${charId}"]`).forEach(sel => {
+                sel.value = '';
+                sel.dispatchEvent(new Event('change')); // Scatena il blocco dei livelli
+            });
 
             const manualSel = document.querySelector(`.manual-equip[data-char="${charId}"]`);
             if(manualSel) {
@@ -604,7 +653,7 @@ class CollectionApp {
             });
 
             const raritySel = document.querySelector(`.char-rarity[data-char="${charId}"]`);
-            if (raritySel) raritySel.value = 0; // Default
+            if (raritySel) raritySel.value = 0;
 
             if (data && data.owned) {
                 if (data.rarity !== undefined && raritySel) {
@@ -621,10 +670,7 @@ class CollectionApp {
 
                     setTimeout(() => {
                         const mLevel = document.querySelector(`.manual-lvl[data-char="${charId}"][data-tech="${data.equippedManual}"]`);
-                        const mPower = document.querySelector(`.manual-pwr[data-char="${charId}"][data-tech="${data.equippedManual}"]`);
-
                         if (mLevel && data.techLevels && data.techLevels[data.equippedManual] !== undefined) mLevel.value = data.techLevels[data.equippedManual];
-                        if (mPower && data.techCustomPower && data.techCustomPower[data.equippedManual] !== undefined) mPower.value = data.techCustomPower[data.equippedManual];
                     }, 50);
                 }
 
@@ -641,23 +687,26 @@ class CollectionApp {
                         if (sel) sel.value = val;
                     }
                 }
-                if (data.techCustomPower) {
-                    for (const [tech, val] of Object.entries(data.techCustomPower)) {
-                        if (tech === data.equippedManual) continue;
-                        const inp = document.querySelector(`.tech-pwr[data-char="${charId}"][data-tech="${tech}"]`);
-                        if (inp) inp.value = val > 0 ? val : '';
-                    }
-                }
                 if (data.passives) {
                     for (const [passive, val] of Object.entries(data.passives)) {
                         const sel = document.querySelector(`.pass-lvl[data-char="${charId}"][data-passive="${passive}"]`);
                         if (sel) sel.value = val;
                     }
                 }
+                if (data.rerollSlots) {
+                    for (const [slot, rData] of Object.entries(data.rerollSlots)) {
+                        const idSel = document.querySelector(`.reroll-id[data-char="${charId}"][data-slot="${slot}"]`);
+                        const lvlSel = document.querySelector(`.reroll-lvl[data-char="${charId}"][data-slot="${slot}"]`);
+                        if (idSel && lvlSel) {
+                            idSel.value = rData.id;
+                            idSel.dispatchEvent(new Event('change')); // Forza la generazione dei livelli dinamici
+                            lvlSel.value = rData.lv; // Assegna il livello salvato
+                        }
+                    }
+                }
             }
         });
 
-        // Dopo aver caricato i dati, applico i filtri salvati
         this.triggerFilter();
 
         setTimeout(() => {

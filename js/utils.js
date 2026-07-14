@@ -7,7 +7,10 @@ import { characterRegistry } from './Characters/registry.js';
 import { techniquesLibrary } from './Techniques/library.js';
 import { passivesLibrary } from './Passive/library.js';
 
-export { characterRegistry, techniquesLibrary, passivesLibrary };
+// IMPORTIAMO LE TUE NUOVE PASSIVE DI REROLL
+import { rerollPassivesByRole } from './Passive/passivesReroll/passivesReroll.js';
+
+export { characterRegistry, techniquesLibrary, passivesLibrary, rerollPassivesByRole };
 
 // LISTA COMPLETA DEI 40 MANUALI ESTRATTI DA APPMEDIA ("秘伝書あり")
 export const universalManualsKeys = [
@@ -52,6 +55,7 @@ export const universalManualsKeys = [
     "デスソード",           // Death Sword
     "プロファイルゾーン"    // Profile Zone
 ];
+
 
 export function getRarityTier(reqString) {
     if (!reqString) return -1;
@@ -151,7 +155,7 @@ export function getElementalAdvantage(moveElement, opponentElement) {
 }
 
 // ==========================================
-// 4. MOTORE DEL SIMULATORE SINGOLO
+// 4. MOTORE DEL SIMULATORE
 // ==========================================
 
 export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, roleMult, adv, passiveSelections, customTechPower = 0) {
@@ -176,7 +180,12 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
     let passivePowerBuff = 0;
     let passiveData = [];
 
-    const moveKindToStatKey = { "Tiro": "Tiro", "Dribbling": "Tecnica", "Blocco": "Blocco", "Parata": "Parata" };
+    const moveKindToStatKey = {
+        "Tiro": "Tiro",
+        "Dribbling": "Tecnica",
+        "Blocco": "Blocco",
+        "Parata": "Parata"
+    };
 
     passiveSelections.forEach(sel => {
         const p = passivesLibrary.find(x => x.id === sel.id);
@@ -185,6 +194,7 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
         const currentLvData = p.levels[sel.lvIndex];
         const stacks = sel.stacks || 1;
         let isAffecting = false;
+
         const actionsList = p.effects || p.actions;
 
         if (actionsList) {
@@ -411,7 +421,9 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
     team.forEach((casterWrapper, casterIndex) => {
         const caster = casterWrapper.charData;
         const passiveLevelsMap = casterWrapper.passiveLevels || {};
-        const allPassives = [...(caster.myBasicPassivesIds || []), ...(caster.myRarityPassivesIds || [])];
+
+        // RECUPERA TUTTE LE PASSIVE: Base + Rarità + Reroll (le Reroll ora vengono passate qui dall'optimizer!)
+        const allPassives = Object.keys(passiveLevelsMap);
 
         allPassives.forEach(passiveId => {
             const userLevelIndex = passiveLevelsMap[passiveId];
@@ -426,13 +438,27 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             if (!actionsList) return;
 
             actionsList.forEach(effect => {
-
-                // EFFICIENZA: Per il calcolo base ignoriamo del tutto le restrizioni sui Trigger in modo che
-                // tutte le passive che devono funzionare per le Potenze o per l'inizio partita passino senza problemi.
                 const isPower = effect.type === 'move_power' || effect.type === 'specific_move_power' || effect.type === 'specific_move' || effect.type === 'power';
                 const isStat = effect.type === 'base_stat' || effect.type === 'stat';
 
                 if (!isPower && !isStat) return;
+
+                if (!isPower) {
+                    let isAlwaysOrBond = true;
+                    const validTriggers = ['always', 'in_penalty_area', 'command_battle', 'action', 'use_move', 'battle'];
+
+                    if (effect.condition) {
+                        if (!validTriggers.some(v => effect.condition.includes(v)) && !effect.condition.includes('allies')) {
+                            isAlwaysOrBond = false;
+                        }
+                    } else if (passiveDef.conditions && passiveDef.conditions.triggerEvent) {
+                        const trig = passiveDef.conditions.triggerEvent;
+                        if (!validTriggers.some(v => trig.includes(v)) && !trig.includes('allies')) {
+                            isAlwaysOrBond = false;
+                        }
+                    }
+                    if (!isAlwaysOrBond) return;
+                }
 
                 let actualValue = 0;
                 if (effect.valueRef) {
@@ -468,13 +494,11 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                             if (statName === targetStatType || statName === "All" || statName === "Tutte_le_Statistiche") isGenericOrSpecific = true;
                         } else if (isPower) {
 
-                            // RICERCA ROBUSTA (FUZZY) PER LE MOSSE SPECIFICHE
                             if (effect.type === "specific_move_power" || effect.type === "specific_move") {
                                 const possibleNames = [effect.stat, effect.statName, effect.moveName, effect.move, effect.tech, effect.targetMove].filter(Boolean);
                                 let statMatch = false;
 
                                 if (possibleNames.length === 0) {
-                                    // Se la passiva non specifica il campo esatto, leggiamo direttamente il titolo della passiva
                                     if (passiveDef.title && (passiveDef.title.includes(targetTech.name) || passiveDef.title.includes(targetWrapper.moveName))) {
                                         statMatch = true;
                                     }
@@ -510,7 +534,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                                     if (effect.stat === `Potenza_Parata_${targetTechElementIt}` && targetStatType === "Parata") statMatch = true;
                                     if (effect.stat.includes(targetStatType)) statMatch = true;
 
-                                    // Check di sicurezza: se la stat contiene il nome esatto della mossa (Es: "Potenza_ウルフレジェンド")
                                     const strippedStat = effect.stat.replace("Potenza_", "");
                                     if (strippedStat === targetWrapper.moveName || targetTech.name.includes(strippedStat)) statMatch = true;
                                     if (effect.stat === targetWrapper.moveName || targetTech.name.includes(effect.stat)) statMatch = true;
