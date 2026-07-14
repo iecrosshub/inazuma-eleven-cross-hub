@@ -53,7 +53,6 @@ export const universalManualsKeys = [
     "プロファイルゾーン"    // Profile Zone
 ];
 
-
 export function getRarityTier(reqString) {
     if (!reqString) return -1;
     const str = reqString.toLowerCase();
@@ -152,7 +151,7 @@ export function getElementalAdvantage(moveElement, opponentElement) {
 }
 
 // ==========================================
-// 4. MOTORE DEL SIMULATORE
+// 4. MOTORE DEL SIMULATORE SINGOLO
 // ==========================================
 
 export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, roleMult, adv, passiveSelections, customTechPower = 0) {
@@ -170,8 +169,6 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
     const techElementIt = elMapIt[techElement];
 
     const baseStat = parseInt(customStat) || 0;
-
-    // AGGIUNTA POTENZA EXTRA ALLA MOSSA!
     const baseTechPower = tech.power ? (parseInt(tech.power[techLvlIndex]) || 0) : 0;
     const techPower = baseTechPower + parseInt(customTechPower || 0);
 
@@ -179,12 +176,7 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
     let passivePowerBuff = 0;
     let passiveData = [];
 
-    const moveKindToStatKey = {
-        "Tiro": "Tiro",
-        "Dribbling": "Tecnica",
-        "Blocco": "Blocco",
-        "Parata": "Parata"
-    };
+    const moveKindToStatKey = { "Tiro": "Tiro", "Dribbling": "Tecnica", "Blocco": "Blocco", "Parata": "Parata" };
 
     passiveSelections.forEach(sel => {
         const p = passivesLibrary.find(x => x.id === sel.id);
@@ -193,19 +185,28 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
         const currentLvData = p.levels[sel.lvIndex];
         const stacks = sel.stacks || 1;
         let isAffecting = false;
-
         const actionsList = p.effects || p.actions;
 
         if (actionsList) {
             actionsList.forEach(effect => {
                 let amount = 0;
 
-                if (effect.amount === "{VAL}") amount = parseInt(currentLvData.val) || 0;
-                else if (effect.amount === "{POWER}") amount = parseInt(currentLvData.power) || 0;
-                else if (effect.amount === "{VAL2}") amount = parseInt(currentLvData.val2) || 0;
-                else if (effect.valueRef) amount = parseInt(currentLvData[effect.valueRef]) || 0;
+                if (effect.valueRef) {
+                    amount = parseInt(currentLvData[effect.valueRef]) || 0;
+                } else if (effect.amount !== undefined) {
+                    if (effect.amount === "{VAL}") amount = parseInt(currentLvData.val) || 0;
+                    else if (effect.amount === "{POWER}") amount = parseInt(currentLvData.power) || 0;
+                    else if (effect.amount === "{VAL2}") amount = parseInt(currentLvData.val2) || 0;
+                    else {
+                        let parsed = parseInt(effect.amount);
+                        amount = isNaN(parsed) ? (parseInt(currentLvData.power) || parseInt(currentLvData.val) || 0) : parsed;
+                    }
+                } else {
+                    amount = parseInt(currentLvData.power) || parseInt(currentLvData.val) || 0;
+                }
 
                 amount = amount * stacks;
+                if (amount === 0) return;
 
                 if ((effect.type === "stat" && (effect.statName === statKey || effect.statName === "All" || effect.statName === "Tutte_le_Statistiche")) ||
                     (effect.type === "base_stat" && (effect.stat === statKey || effect.stat === "Tutte_le_Statistiche"))) {
@@ -239,8 +240,19 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
                         isAffecting = true;
                     }
                 }
-                else if (effect.type === "specific_move_power") {
-                    if (effect.stat === techKey || effect.stat === tech.name || effect.moveName === techKey) {
+                else if (effect.type === "specific_move_power" || effect.type === "specific_move") {
+                    const possibleNames = [effect.stat, effect.statName, effect.moveName, effect.move, effect.tech].filter(Boolean);
+                    let statMatch = false;
+
+                    if (possibleNames.length === 0) {
+                        if (p.title && (p.title.includes(tech.name) || p.title.includes(techKey))) statMatch = true;
+                    } else {
+                        possibleNames.forEach(n => {
+                            if (techKey === n || tech.name.includes(n) || n.includes(techKey)) statMatch = true;
+                        });
+                    }
+
+                    if (statMatch) {
                         passivePowerBuff += amount;
                         isAffecting = true;
                     }
@@ -342,10 +354,10 @@ export class RosterManager {
 }
 
 // ==========================================
-// 7. MOTORE SIMULAZIONE SQUADRA (5vs1)
+// 7. MOTORE SIMULAZIONE SQUADRA (5vs1 & TEAM BUILDER)
 // ==========================================
 
-function isTargetValid(caster, targetChar, effect) {
+export function isTargetValid(caster, targetChar, effect) {
     if (effect.target) {
         if (effect.target === "self") return caster.id === targetChar.id;
         if (effect.target === "team" || effect.target.includes("allies")) return true;
@@ -414,18 +426,10 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             if (!actionsList) return;
 
             actionsList.forEach(effect => {
-                let isAlwaysOrBond = true;
-                if (effect.condition) {
-                    isAlwaysOrBond = effect.condition === 'always' || effect.condition === 'in_penalty_area' || effect.condition.startsWith('3_allies');
-                } else if (passiveDef.conditions && passiveDef.conditions.triggerEvent) {
-                    const trig = passiveDef.conditions.triggerEvent;
-                    if (trig !== 'always' && !trig.includes('allies')) {
-                        isAlwaysOrBond = false;
-                    }
-                }
-                if (!isAlwaysOrBond) return;
 
-                const isPower = effect.type === 'move_power' || effect.type === 'specific_move_power' || effect.type === 'power';
+                // EFFICIENZA: Per il calcolo base ignoriamo del tutto le restrizioni sui Trigger in modo che
+                // tutte le passive che devono funzionare per le Potenze o per l'inizio partita passino senza problemi.
+                const isPower = effect.type === 'move_power' || effect.type === 'specific_move_power' || effect.type === 'specific_move' || effect.type === 'power';
                 const isStat = effect.type === 'base_stat' || effect.type === 'stat';
 
                 if (!isPower && !isStat) return;
@@ -433,19 +437,29 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                 let actualValue = 0;
                 if (effect.valueRef) {
                     actualValue = parseInt(currentLvData[effect.valueRef]) || 0;
-                } else if (effect.amount) {
+                } else if (effect.amount !== undefined) {
                     if (effect.amount === "{VAL}") actualValue = parseInt(currentLvData.val) || 0;
                     else if (effect.amount === "{POWER}") actualValue = parseInt(currentLvData.power) || 0;
                     else if (effect.amount === "{VAL2}") actualValue = parseInt(currentLvData.val2) || 0;
+                    else {
+                        let parsed = parseInt(effect.amount);
+                        actualValue = isNaN(parsed) ? (parseInt(currentLvData.power) || parseInt(currentLvData.val) || 0) : parsed;
+                    }
+                } else {
+                    actualValue = parseInt(currentLvData.power) || parseInt(currentLvData.val) || 0;
                 }
+
+                if (actualValue === 0) return;
 
                 team.forEach((targetWrapper, targetIndex) => {
                     const target = targetWrapper.charData;
 
                     if (isTargetValid(caster, target, effect)) {
                         const targetTech = techniquesLibrary[targetWrapper.moveName];
-                        const targetStatType = targetTech ? getStatKeyByIcon(targetTech.icon) : 'Tiro';
-                        const targetTechElement = targetTech ? extractElement(targetTech.elementIcon) : 'Void';
+                        if (!targetTech) return;
+
+                        const targetStatType = getStatKeyByIcon(targetTech.icon);
+                        const targetTechElement = extractElement(targetTech.elementIcon);
 
                         let isGenericOrSpecific = false;
 
@@ -453,15 +467,61 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                             const statName = effect.stat || effect.statName;
                             if (statName === targetStatType || statName === "All" || statName === "Tutte_le_Statistiche") isGenericOrSpecific = true;
                         } else if (isPower) {
-                            let isMatch = true;
-                            const mkMap = {"Tiro":"Tiro", "Dribbling":"Tecnica", "Blocco":"Blocco", "Parata":"Parata"};
-                            if (effect.moveKind && effect.moveKind !== "All" && mkMap[effect.moveKind] !== targetStatType) isMatch = false;
-                            if (effect.moveElement && effect.moveElement !== targetTechElement) isMatch = false;
 
-                            if (effect.stat && effect.stat.includes(targetStatType)) isMatch = true;
-                            if (effect.stat === "Tutte_le_Statistiche") isMatch = true;
+                            // RICERCA ROBUSTA (FUZZY) PER LE MOSSE SPECIFICHE
+                            if (effect.type === "specific_move_power" || effect.type === "specific_move") {
+                                const possibleNames = [effect.stat, effect.statName, effect.moveName, effect.move, effect.tech, effect.targetMove].filter(Boolean);
+                                let statMatch = false;
 
-                            if (isMatch) isGenericOrSpecific = true;
+                                if (possibleNames.length === 0) {
+                                    // Se la passiva non specifica il campo esatto, leggiamo direttamente il titolo della passiva
+                                    if (passiveDef.title && (passiveDef.title.includes(targetTech.name) || passiveDef.title.includes(targetWrapper.moveName))) {
+                                        statMatch = true;
+                                    }
+                                } else {
+                                    possibleNames.forEach(n => {
+                                        if (targetWrapper.moveName === n || targetTech.name.includes(n) || n.includes(targetWrapper.moveName)) {
+                                            statMatch = true;
+                                        }
+                                    });
+                                }
+
+                                if (statMatch) isGenericOrSpecific = true;
+
+                            } else {
+                                let isMatch = true;
+                                const mkMap = {"Tiro":"Tiro", "Dribbling":"Tecnica", "Blocco":"Blocco", "Parata":"Parata"};
+                                if (effect.moveKind && effect.moveKind !== "All" && mkMap[effect.moveKind] !== targetStatType) isMatch = false;
+                                if (effect.moveElement && effect.moveElement !== targetTechElement) isMatch = false;
+
+                                if (effect.stat && effect.stat !== "All" && effect.stat !== "Tutte_le_Statistiche") {
+                                    const elMapIt = { 'Fire': 'Fuoco', 'Wind': 'Vento', 'Forest': 'Foresta', 'Mountain': 'Montagna', 'Void': 'Vuoto' };
+                                    const targetTechElementIt = elMapIt[targetTechElement];
+                                    let statMatch = false;
+
+                                    if (effect.stat === "Potenza_Tiro" && targetStatType === "Tiro") statMatch = true;
+                                    if (effect.stat === "Potenza_Dribbling" && targetStatType === "Tecnica") statMatch = true;
+                                    if (effect.stat === "Potenza_Blocco" && targetStatType === "Blocco") statMatch = true;
+                                    if (effect.stat === "Potenza_Parata" && targetStatType === "Parata") statMatch = true;
+                                    if (effect.stat === `Potenza_${targetTechElementIt}`) statMatch = true;
+                                    if (effect.stat === `Potenza_Tiro_${targetTechElementIt}` && targetStatType === "Tiro") statMatch = true;
+                                    if (effect.stat === `Potenza_Dribbling_${targetTechElementIt}` && targetStatType === "Tecnica") statMatch = true;
+                                    if (effect.stat === `Potenza_Blocco_${targetTechElementIt}` && targetStatType === "Blocco") statMatch = true;
+                                    if (effect.stat === `Potenza_Parata_${targetTechElementIt}` && targetStatType === "Parata") statMatch = true;
+                                    if (effect.stat.includes(targetStatType)) statMatch = true;
+
+                                    // Check di sicurezza: se la stat contiene il nome esatto della mossa (Es: "Potenza_ウルフレジェンド")
+                                    const strippedStat = effect.stat.replace("Potenza_", "");
+                                    if (strippedStat === targetWrapper.moveName || targetTech.name.includes(strippedStat)) statMatch = true;
+                                    if (effect.stat === targetWrapper.moveName || targetTech.name.includes(effect.stat)) statMatch = true;
+
+                                    if (effect.moveName && (effect.moveName === targetWrapper.moveName || targetTech.name.includes(effect.moveName))) statMatch = true;
+
+                                    if (!statMatch) isMatch = false;
+                                }
+
+                                if (isMatch) isGenericOrSpecific = true;
+                            }
                         }
 
                         if (isGenericOrSpecific) {
@@ -577,4 +637,81 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         isClear: isClear,
         finalScore: finalScore
     };
+}
+
+// ==========================================
+// 8. MOTORE CALCOLO ALLENATORI E SQUADRA (TEAM BUILDER)
+// ==========================================
+export function calculateCoachBuffs(charData, coachDb, coachLevel) {
+    let statBuffs = { Tiro: 0, Tecnica: 0, Blocco: 0, Parata: 0, Velocità: 0 };
+    let powerBuffs = { Tiro: 0, Tecnica: 0, Blocco: 0, Parata: 0 };
+    let logsStats = [];
+    let logsPower = [];
+
+    if (!charData || !coachDb) return { statBuffs, powerBuffs, logsStats, logsPower };
+
+    const charRole = extractPosition(charData.position).toLowerCase();
+    const charTags = charData.tags ? charData.tags.map(t => t.toLowerCase()) : [];
+
+    const processActions = (actions, levelData, sourceName) => {
+        if (!actions) return;
+
+        actions.forEach(action => {
+            let isTarget = false;
+            const target = action.target ? action.target.toLowerCase() : "";
+
+            if (target === "all" || target.includes("allies") || target.includes("team")) {
+                isTarget = true;
+                if(target.includes("fw") && charRole !== "fw") isTarget = false;
+                if(target.includes("mf") && charRole !== "mf") isTarget = false;
+                if(target.includes("df") && charRole !== "df") isTarget = false;
+                if(target.includes("gk") && charRole !== "gk") isTarget = false;
+
+                if(target.includes("inazumajapan") && !charTags.some(t => t.includes("inazumajapan"))) isTarget = false;
+                if(target.includes("raimon") && !charTags.some(t => t.includes("raimon"))) isTarget = false;
+            }
+
+            if (isTarget) {
+                let amount = 0;
+                if (action.amount === "{VAL}") amount = parseInt(levelData?.val) || 0;
+                else if (action.amount === "{POWER}") amount = parseInt(levelData?.power) || 0;
+                else if (action.amount === "{VAL2}") amount = parseInt(levelData?.val2) || 0;
+                else amount = parseInt(action.amount) || 0;
+
+                if (action.type === "base_stat" || action.type === "stat") {
+                    const statName = action.stat || action.statName;
+                    if (statBuffs[statName] !== undefined) {
+                        statBuffs[statName] += amount;
+                        logsStats.push(`[Mister] ${sourceName} : +${amount} ${statName}`);
+                    } else if (statName === "Tutte_le_Statistiche" || statName === "All") {
+                        for (let key in statBuffs) statBuffs[key] += amount;
+                        logsStats.push(`[Mister] ${sourceName} : +${amount} Tutte le Stat.`);
+                    }
+                }
+                else if (action.type === "move_power" || action.type === "power") {
+                    let matchCat = null;
+                    if (action.stat === "Potenza_Tiro" || action.moveKind === "Tiro") matchCat = "Tiro";
+                    if (action.stat === "Potenza_Dribbling" || action.moveKind === "Dribbling") matchCat = "Tecnica";
+                    if (action.stat === "Potenza_Blocco" || action.moveKind === "Blocco") matchCat = "Blocco";
+                    if (action.stat === "Potenza_Parata" || action.moveKind === "Parata") matchCat = "Parata";
+
+                    if (matchCat) {
+                        powerBuffs[matchCat] += amount;
+                        logsPower.push(`[Mister] ${sourceName} : +${amount} Pot. ${matchCat}`);
+                    }
+                }
+            }
+        });
+    };
+
+    if (coachDb.coachPassive && coachDb.coachPassive.actions) {
+        const levelData = coachDb.coachPassive.levels[Math.max(0, coachLevel - 1)];
+        processActions(coachDb.coachPassive.actions, levelData, coachDb.coachPassive.title || "Passiva Allenatore");
+    }
+
+    if (coachDb.formationPassive && coachDb.formationPassive.actions) {
+        processActions(coachDb.formationPassive.actions, null, coachDb.formationPassive.title || "Passiva Formazione");
+    }
+
+    return { statBuffs, powerBuffs, logsStats, logsPower };
 }
