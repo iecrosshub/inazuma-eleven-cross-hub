@@ -144,3 +144,28 @@ body {
 .global-modal-actions {
     display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap;
 }
+
+/* Allineamento perfetto per le voci del dropdown */
+.dropdown-content a {
+    display: flex !important;      /* Mette icona e testo sulla stessa riga */
+    align-items: center;           /* Li centra verticalmente */
+    white-space: nowrap;           /* Impedisce al testo di andare a capo */
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #0b1a42;
+}
+
+/* Larghezza fissa per l'icona, così il testo parte sempre dallo stesso punto */
+.dropdown-content a i {
+    width: 25px;                   /* Spazio fisso dedicato all'icona */
+    text-align: center;            /* Centra l'icona nello spazio */
+    margin-right: 10px;            /* Spazio tra icona e testo */
+}
+
+/* Fix per impedire ai testi dei menu di andare a capo e sbordare */
+.custom-select .select-selected {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 25px;
+}

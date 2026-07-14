@@ -675,7 +675,7 @@ export const characterRegistry = [
         japaneseName: "松野 空介",
         thumb: "img/Characters/MaxwellCarsonRaimon.png",
         element: "img/Element/Icon_Element_Wind.png",
-        position: "img/Position/Icon_Position_MF.png",
+        position: "img/Position/Icon_Position_FW.png",
         stars: 1,
         background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"

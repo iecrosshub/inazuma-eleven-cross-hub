@@ -13,29 +13,9 @@
 </head>
 <body class="pb-5">
 
-<div class="inazuma-nav-container">
-    <div class="inazuma-nav">
-        <a href="index.html" class="inazuma-nav-item">Giocatori</a>
-        <a href="coaches.html" class="inazuma-nav-item">Allenatori</a>
-        <a href="teamBuilder.html" class="inazuma-nav-item">Team Builder</a>
-
-        <div class="nav-dropdown active">
-            <button class="dropbtn">Simulatori <i class="fas fa-caret-down"></i></button>
-            <div class="dropdown-content">
-                <a href="mode5vs1.html">Simulatore 5vs1</a>
-                <a href="simulator.html">Simulatore Tecniche</a>
-            </div>
-        </div>
-
-        <div class="nav-dropdown">
-            <button class="dropbtn">Info & Risorse<i class="fas fa-caret-down"></i></button>
-            <div class="dropdown-content">
-                <a href="calendar.html"><i class="fas fa-calendar-alt me-1"></i> Calendario Sfide</a>
-            </div>
-        </div>
-        <a href="collection.html" class="inazuma-nav-item">Collezione</a>
-    </div>
-</div>
+<!-- NAVBAR INIETTATA DINAMICAMENTE -->
+<script type="module" src="js/navbar.js"></script>
+<inazuma-navbar></inazuma-navbar>
 
 <div class="container-fixed py-3" style="width: 1100px !important; max-width: 1100px !important;">
 
@@ -89,9 +69,9 @@
             <div class="filter-group" style="flex: 1;">
                 <label class="fw-bold mb-1 d-block" style="color: #1269e8; font-size: 0.9rem;">Avversario (Seleziona)</label>
                 <div class="custom-select shadow-sm" id="opponentElement" data-value="None" style="border-radius: 6px;">
-                    <div class="select-selected"><span>Nessuno / Neutro</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="select-selected"><span>Nessuno</span> <i class="fas fa-chevron-down"></i></div>
                     <div class="select-items select-hide">
-                        <div data-value="None">Nessuno / Neutro</div>
+                        <div data-value="None">Nessuno</div>
                         <div data-value="Fire"><img src="img/Element/Icon_Element_Fire.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Fuoco</div>
                         <div data-value="Wind"><img src="img/Element/Icon_Element_Wind.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Vento</div>
                         <div data-value="Forest"><img src="img/Element/Icon_Element_Forest.png" style="width:20px; vertical-align:middle; margin-right:5px;"> Foresta</div>

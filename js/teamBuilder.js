@@ -34,26 +34,28 @@ function restoreFilters() {
     if (saved) {
         try {
             const filters = JSON.parse(saved);
-            const searchInput = document.getElementById('filter-name');
+            const searchInput = document.getElementById('search-name');
             if (searchInput) searchInput.value = filters.name || '';
 
             const setCustomSelect = (id, val) => {
                 const el = document.getElementById(id);
                 if (el && val !== undefined && val !== null) {
-                    el.dataset.value = val;
+                    el.setAttribute('data-value', val);
                     const option = el.querySelector(`.select-items div[data-value="${val}"]`) || el.querySelector('.select-items div');
                     if (option) {
-                        el.dataset.value = option.dataset.value;
+                        el.setAttribute('data-value', option.getAttribute('data-value'));
                         el.querySelector('.select-selected span').innerHTML = option.innerHTML;
                     }
                 }
             };
 
-            setCustomSelect('custom-role', filters.position);
-            setCustomSelect('custom-element', filters.element);
-            setCustomSelect('custom-style', filters.style);
-            setCustomSelect('custom-team', filters.team);
-            setCustomSelect('custom-season', filters.season);
+            // USIAMO I NUOVI ID UNIFICATI
+            setCustomSelect('filter-position', filters.position);
+            setCustomSelect('filter-element', filters.element);
+            setCustomSelect('filter-rarity', filters.rarity);
+            setCustomSelect('filter-style', filters.style);
+            setCustomSelect('filter-team', filters.team);
+            setCustomSelect('filter-season', filters.season);
         } catch (e) {}
     }
 }
@@ -61,33 +63,41 @@ function restoreFilters() {
 // ==========================================
 // INIZIALIZZAZIONE PAGINA
 // ==========================================
-document.addEventListener('DOMContentLoaded', async () => {
-    loadTeamState();
-    restoreFilters();
+document.addEventListener('DOMContentLoaded', () => {
+    // Aspettiamo un istante per assicurarci che il componente <inazuma-filters> sia generato
+    setTimeout(async () => {
+        loadTeamState();
+        restoreFilters();
 
-    setupCustomSelects();
+        setupCustomSelects();
 
-    document.getElementById('filter-name').addEventListener('input', applyFilters);
-    document.getElementById('btn-reset-filters').addEventListener('click', resetFilters);
-    document.getElementById('btn-remove-player').addEventListener('click', removePlayerFromSlot);
+        const searchInput = document.getElementById('search-name');
+        if(searchInput) searchInput.addEventListener('input', applyFilters);
 
-    if (!currentCoachId || !coachRegistry.some(c => c.id === currentCoachId)) {
-        currentCoachId = 'percivalTravis';
-    }
-    await selectCoach(currentCoachId);
-    applyFilters();
+        const btnReset = document.getElementById('btn-reset-filters');
+        if(btnReset) btnReset.addEventListener('click', resetFilters);
+
+        document.getElementById('btn-remove-player').addEventListener('click', removePlayerFromSlot);
+
+        if (!currentCoachId || !coachRegistry.some(c => c.id === currentCoachId)) {
+            currentCoachId = 'percivalTravis';
+        }
+        await selectCoach(currentCoachId);
+        applyFilters();
+    }, 100);
 });
 
 // ==========================================
 // FUNZIONAMENTO MENU A TENDINA E FILTRI
 // ==========================================
 function setupCustomSelects() {
-    const customSelects = document.getElementsByClassName("custom-select");
-    for (let i = 0; i < customSelects.length; i++) {
-        const selElmnt = customSelects[i];
+    const customSelects = document.querySelectorAll(".custom-select");
+    customSelects.forEach(selElmnt => {
         const selectedDiv = selElmnt.querySelector(".select-selected");
         const itemsDiv = selElmnt.querySelector(".select-items");
-        const optionDivs = itemsDiv.getElementsByTagName("DIV");
+        if (!selectedDiv || !itemsDiv) return;
+
+        const optionDivs = itemsDiv.querySelectorAll("div");
 
         selectedDiv.addEventListener("click", function(e) {
             e.stopPropagation();
@@ -95,16 +105,16 @@ function setupCustomSelects() {
             itemsDiv.classList.toggle("select-hide");
         });
 
-        for (let j = 0; j < optionDivs.length; j++) {
-            optionDivs[j].addEventListener("click", function(e) {
+        optionDivs.forEach(opt => {
+            opt.addEventListener("click", function(e) {
                 const val = this.getAttribute("data-value");
                 selElmnt.setAttribute("data-value", val);
                 selectedDiv.querySelector("span").innerHTML = this.innerHTML;
                 itemsDiv.classList.add("select-hide");
                 applyFilters();
             });
-        }
-    }
+        });
+    });
     document.addEventListener("click", closeAllSelect);
 }
 
@@ -119,24 +129,30 @@ function closeAllSelect(elmnt) {
 }
 
 function resetFilters() {
-    document.getElementById('filter-name').value = '';
+    const searchInput = document.getElementById('search-name');
+    if(searchInput) searchInput.value = '';
+
     const selects = document.querySelectorAll('.custom-select');
     selects.forEach(sel => {
-        sel.setAttribute("data-value", "");
-        const firstOptionHtml = sel.querySelector('.select-items div').innerHTML;
-        sel.querySelector('.select-selected span').innerHTML = firstOptionHtml;
+        const firstOption = sel.querySelector('.select-items div');
+        if(firstOption) {
+            sel.setAttribute("data-value", firstOption.getAttribute("data-value"));
+            sel.querySelector('.select-selected span').innerHTML = firstOption.innerHTML;
+        }
     });
     applyFilters();
 }
 
 async function applyFilters() {
+    // USIAMO I NUOVI ID UNIFICATI
     const filters = {
-        name: document.getElementById('filter-name').value,
-        position: document.getElementById('custom-role').getAttribute('data-value'),
-        element: document.getElementById('custom-element').getAttribute('data-value'),
-        style: document.getElementById('custom-style').getAttribute('data-value'),
-        team: document.getElementById('custom-team').getAttribute('data-value'),
-        season: document.getElementById('custom-season').getAttribute('data-value')
+        name: document.getElementById('search-name')?.value || '',
+        position: document.getElementById('filter-position')?.getAttribute('data-value') || 'All',
+        element: document.getElementById('filter-element')?.getAttribute('data-value') || 'All',
+        rarity: document.getElementById('filter-rarity')?.getAttribute('data-value') || 'All',
+        style: document.getElementById('filter-style')?.getAttribute('data-value') || 'All',
+        team: document.getElementById('filter-team')?.getAttribute('data-value') || 'All',
+        season: document.getElementById('filter-season')?.getAttribute('data-value') || 'All'
     };
 
     localStorage.setItem('tb_filters', JSON.stringify(filters));

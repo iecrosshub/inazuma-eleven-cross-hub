@@ -253,3 +253,9 @@
     color: #ffd337;
     text-shadow: 2px 2px 5px rgba(0,0,0,1);
 }
+
+/* Forza i filtri universali a 2 colonne nella sidebar del Team Builder */
+.sidebar-right inazuma-filters .col-md-4 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+}

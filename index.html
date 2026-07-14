@@ -2,170 +2,29 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <!-- MAGIA MOBILE: Blocca la larghezza a 1450px -->
   <meta name="viewport" content="width=1450">
   <title>Inazuma Hub | Inazuma Eleven Cross</title>
   <link rel="icon" type="image/png" href="img/IECross.png">
 
-  <!-- Bootstrap & FontAwesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- CSS Personalizzati -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/styleAlbum.css">
-  <link rel="stylesheet" href="css/styleTeamBuilder.css"> <!-- Per ereditare i filtri -->
+  <link rel="stylesheet" href="css/styleTeamBuilder.css">
 </head>
 <body>
 
-<div class="inazuma-nav-container">
-  <div class="inazuma-nav">
-    <a href="index.html" class="inazuma-nav-item active">Giocatori</a>
-    <a href="coaches.html" class="inazuma-nav-item">Allenatori</a>
-    <a href="teamBuilder.html" class="inazuma-nav-item">Team Builder</a>
-    <div class="nav-dropdown">
-      <button class="dropbtn">Simulatori <i class="fas fa-caret-down"></i></button>
-      <div class="dropdown-content">
-        <a href="mode5vs1.html">Simulatore 5vs1</a>
-        <a href="simulator.html">Simulatore Tecniche</a>
-      </div>
-    </div>
-    <div class="nav-dropdown">
-      <button class="dropbtn">Info & Risorse<i class="fas fa-caret-down"></i></button>
-      <div class="dropdown-content">
-        <a href="calendar.html"><i class="fas fa-calendar-alt me-1"></i> Calendario Sfide</a>
-      </div>
-    </div>
-    <a href="collection.html" class="inazuma-nav-item">Collezione</a>
-  </div>
-</div>
+<script type="module" src="js/navbar.js"></script>
+<inazuma-navbar></inazuma-navbar>
 
-<!-- CONTENITORE FISSO ANTI-ZOOM -->
 <div class="container-fixed py-3">
   <h2 class="album-title text-center mb-5 fw-bold">Seleziona un Giocatore</h2>
 
   <!-- PANNELLO FILTRI -->
-  <div class="filters-container mb-5 shadow-sm">
-    <div class="filter-group mb-4" style="flex: 1 1 100%; width: 100%;">
-      <label>Nome Giocatore</label>
-      <input type="text" id="search-name" placeholder="Cerca nome..." style="width: 100%;">
-    </div>
-
-    <div class="row g-3 mb-3">
-      <div class="col-12 col-md-4">
-        <div class="filter-group">
-          <label>Elemento</label>
-          <div class="custom-select" id="filter-element" data-value="All">
-            <div class="select-selected"><span>Tutti gli Elementi</span> <i class="fas fa-chevron-down"></i></div>
-            <div class="select-items select-hide">
-              <div data-value="All">Tutti gli Elementi</div>
-              <div data-value="Fire"><img src="img/Element/Icon_Element_Fire.png" alt=""> Fuoco</div>
-              <div data-value="Wind"><img src="img/Element/Icon_Element_Wind.png" alt=""> Vento</div>
-              <div data-value="Forest"><img src="img/Element/Icon_Element_Forest.png" alt=""> Foresta</div>
-              <div data-value="Mountain"><img src="img/Element/Icon_Element_Mountain.png" alt=""> Montagna</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-4">
-        <div class="filter-group">
-          <label>Ruolo</label>
-          <div class="custom-select" id="filter-position" data-value="All">
-            <div class="select-selected"><span>Tutti i Ruoli</span> <i class="fas fa-chevron-down"></i></div>
-            <div class="select-items select-hide">
-              <div data-value="All">Tutti i Ruoli</div>
-              <div data-value="FW"><img src="img/Position/Icon_Position_FW.png" alt=""> Attaccanti (FW)</div>
-              <div data-value="MF"><img src="img/Position/Icon_Position_MF.png" alt=""> Centrocampisti (MF)</div>
-              <div data-value="DF"><img src="img/Position/Icon_Position_DF.png" alt=""> Difensori (DF)</div>
-              <div data-value="GK"><img src="img/Position/Icon_Position_GK.png" alt=""> Portieri (GK)</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-4">
-        <div class="filter-group">
-          <label>Rarità</label>
-          <div class="custom-select" id="filter-rarity" data-value="All">
-            <div class="select-selected"><span>Tutte le Rarità</span> <i class="fas fa-chevron-down"></i></div>
-            <div class="select-items select-hide">
-              <div data-value="All">Tutte le Rarità</div>
-              <div data-value="1"><img src="img/Frm_GachaIcon/Icon_GradeStar.png" alt="" style="height: 16px;"> 1 Stella</div>
-              <div data-value="2"><img src="img/Frm_GachaIcon/Icon_GradeStar.png" alt="" style="height: 16px;"> 2 Stelle</div>
-              <div data-value="3"><img src="img/Frm_GachaIcon/Icon_GradeStar.png" alt="" style="height: 16px;"> 3 Stelle</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-12 col-md-4">
-        <div class="filter-group">
-          <label>Stile Abilità</label>
-          <div class="custom-select" id="filter-style" data-value="">
-            <div class="select-selected"><span>Tutti gli Stili</span> <i class="fas fa-chevron-down"></i></div>
-            <div class="select-items select-hide">
-              <div data-value="">Tutti gli Stili</div>
-              <div data-value="Striker"><img src="img/TagTitle/Icon_Tag_Ability_Striker.png" alt=""> Striker</div>
-              <div data-value="Playmaker"><img src="img/TagTitle/Icon_Tag_Ability_Playmaker.png" alt=""> Playmaker</div>
-              <div data-value="Stopper"><img src="img/TagTitle/Icon_Tag_Ability_Stopper.png" alt=""> Stopper</div>
-              <div data-value="Keeper"><img src="img/TagTitle/Icon_Tag_Ability_Keeper.png" alt=""> Keeper</div>
-              <div data-value="Buffer"><img src="img/TagTitle/Icon_Tag_Ability_Buffer.png" alt=""> Buffer</div>
-              <div data-value="Defensivehalf"><img src="img/TagTitle/Icon_Tag_Ability_Defensivehalf.png" alt=""> Defensive Half</div>
-              <div data-value="Longshooter"><img src="img/TagTitle/Icon_Tag_Ability_Longshooter.png" alt=""> Long Shooter</div>
-              <div data-value="SecondTop"><img src="img/TagTitle/Icon_Tag_Ability_SecondTop.png" alt=""> Second Top</div>
-              <div data-value="Shootblocker"><img src="img/TagTitle/Icon_Tag_Ability_Shootblocker.png" alt=""> Shoot Blocker</div>
-              <div data-value="SideBack"><img src="img/TagTitle/Icon_Tag_Ability_SideBack.png" alt=""> Side Back</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-4">
-        <div class="filter-group">
-          <label>Squadra</label>
-          <div class="custom-select" id="filter-team" data-value="">
-            <div class="select-selected"><span>Tutte le Squadre</span> <i class="fas fa-chevron-down"></i></div>
-            <div class="select-items select-hide">
-              <div data-value="">Tutte le Squadre</div>
-              <div data-value="RaimonGO"><img src="img/TagTitle/Icon_Tag_Team_RaimonGO.png" alt=""> RaimonGO</div>
-              <div data-value="Raimon"><img src="img/TagTitle/Icon_Tag_Team_Raimon.png" alt=""> Raimon</div>
-              <div data-value="RoyalAcademy"><img src="img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" alt=""> Royal Academy</div>
-              <div data-value="Zeus"><img src="img/TagTitle/Icon_Tag_Team_Zeus.png" alt=""> Zeus</div>
-              <div data-value="Brainwashing"><img src="img/TagTitle/Icon_Tag_Team_Brainwashing.png" alt=""> Brainwashing</div>
-              <div data-value="Kirkwood"><img src="img/TagTitle/Icon_Tag_Team_Kirkwood.png" alt=""> Kirkwood</div>
-              <div data-value="Occult"><img src="img/TagTitle/Icon_Tag_Team_Occult.png" alt=""> Occult</div>
-              <div data-value="Otaku"><img src="img/TagTitle/Icon_Tag_Team_Otaku.png" alt=""> Otaku</div>
-              <div data-value="Shuriken"><img src="img/TagTitle/Icon_Tag_Team_Shuriken.png" alt=""> Shuriken</div>
-              <div data-value="Wild"><img src="img/TagTitle/Icon_Tag_Team_Wild.png" alt=""> Wild</div>
-              <div data-value="InazumaJapan"><img src="img/TagTitle/Icon_Tag_Team_InazumaJapan.png" alt=""> Inazuma Japan</div>
-              <div data-value="InazumaKidsFC"><img src="img/TagTitle/Icon_Tag_Team_InazumaKidsFC.png" alt=""> Inazuma Kids FC</div>
-              <div data-value="JapanNationalTeam2026"><img src="img/TagTitle/Icon_Tag_Team_JapanNationalTeam2026.png" alt=""> Japan 2026</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-4">
-        <div class="filter-group">
-          <label>Stagione</label>
-          <div class="custom-select" id="filter-season" data-value="">
-            <div class="select-selected"><span>Tutte le Stagioni</span> <i class="fas fa-chevron-down"></i></div>
-            <div class="select-items select-hide">
-              <div data-value="">Tutte le Stagioni</div>
-              <div data-value="InaEle1"><img src="img/TagTitle/Icon_Tag_Title_InaEle1.png" alt=""> Inazuma Eleven 1</div>
-              <div data-value="InaEle2"><img src="img/TagTitle/Icon_Tag_Title_InaEle2.png" alt=""> Inazuma Eleven 2</div>
-              <div data-value="InaEle3"><img src="img/TagTitle/Icon_Tag_Title_InaEle3.png" alt=""> Inazuma Eleven 3</div>
-              <div data-value="Cross"><img src="img/TagTitle/Icon_Tag_Title_Cross.png" alt=""> Cross</div>
-              <div data-value="InaEleGO"><img src="img/TagTitle/Icon_Tag_Title_InaEleGO.png" alt=""> GO</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <div class="filters-container mb-4 shadow-sm">
+    <script type="module" src="js/filters.js"></script>
+    <inazuma-filters></inazuma-filters>
   </div>
 
   <div id="character-grid" class="row g-3"></div>
