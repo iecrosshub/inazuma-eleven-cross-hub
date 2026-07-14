@@ -5,12 +5,21 @@
 // ==========================================
 import { characterRegistry } from './Characters/registry.js';
 import { techniquesLibrary } from './Techniques/library.js';
-import { passivesLibrary } from './Passive/library.js';
+import { passivesLibrary as basePassivesLibrary } from './Passive/library.js';
 
 // IMPORTIAMO LE TUE NUOVE PASSIVE DI REROLL
 import { rerollPassivesByRole } from './Passive/passivesReroll/passivesReroll.js';
 
-export { characterRegistry, techniquesLibrary, passivesLibrary, rerollPassivesByRole };
+// UNIAMO TUTTE LE PASSIVE IN UN UNICO GRANDE DATABASE
+const allRerollPassives = [
+    ...(rerollPassivesByRole.FW || []),
+    ...(rerollPassivesByRole.MF || []),
+    ...(rerollPassivesByRole.DF || []),
+    ...(rerollPassivesByRole.GK || [])
+];
+export const passivesLibrary = [...basePassivesLibrary, ...allRerollPassives];
+
+export { characterRegistry, techniquesLibrary, rerollPassivesByRole };
 
 // LISTA COMPLETA DEI 40 MANUALI ESTRATTI DA APPMEDIA ("秘伝書あり")
 export const universalManualsKeys = [
@@ -155,7 +164,7 @@ export function getElementalAdvantage(moveElement, opponentElement) {
 }
 
 // ==========================================
-// 4. MOTORE DEL SIMULATORE
+// 4. MOTORE DEL SIMULATORE SINGOLO
 // ==========================================
 
 export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, roleMult, adv, passiveSelections, customTechPower = 0) {
@@ -180,12 +189,7 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
     let passivePowerBuff = 0;
     let passiveData = [];
 
-    const moveKindToStatKey = {
-        "Tiro": "Tiro",
-        "Dribbling": "Tecnica",
-        "Blocco": "Blocco",
-        "Parata": "Parata"
-    };
+    const moveKindToStatKey = { "Tiro": "Tiro", "Dribbling": "Tecnica", "Blocco": "Blocco", "Parata": "Parata" };
 
     passiveSelections.forEach(sel => {
         const p = passivesLibrary.find(x => x.id === sel.id);
@@ -194,7 +198,6 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
         const currentLvData = p.levels[sel.lvIndex];
         const stacks = sel.stacks || 1;
         let isAffecting = false;
-
         const actionsList = p.effects || p.actions;
 
         if (actionsList) {
@@ -422,7 +425,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         const caster = casterWrapper.charData;
         const passiveLevelsMap = casterWrapper.passiveLevels || {};
 
-        // RECUPERA TUTTE LE PASSIVE: Base + Rarità + Reroll (le Reroll ora vengono passate qui dall'optimizer!)
+        // RECUPERA TUTTE LE PASSIVE (Incluse quelle di Reroll!)
         const allPassives = Object.keys(passiveLevelsMap);
 
         allPassives.forEach(passiveId => {
@@ -586,6 +589,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         const userTechLevelIndex = slot.techLevel || 0;
         const nakedPower = tech.power ? (parseInt(tech.power[userTechLevelIndex]) || 0) : 0;
 
+        // customTechPower serve SOLO come vettore per l'advBonus (Vantaggio vs Avversario) gestito da trialOptimizer
         const manualBonusPower = slot.customTechPower ? (slot.customTechPower[slot.moveName] || 0) : 0;
 
         let stageBonus = 0;

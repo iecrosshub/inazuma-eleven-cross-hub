@@ -768,7 +768,7 @@ export const characterRegistry = [
         japaneseName: "洞面 秀一郎",
         thumb: "img/Characters/DerekSwingRoyalAcademy.png",
         element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_FW.png",
+        position: "img/Position/Icon_Position_MF.png",
         stars: 1,
         background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"

@@ -21,12 +21,16 @@ export class TrialOptimizer {
 
         const isTaughtMove = !charData.myTechniques.includes(moveName);
 
+        // Estrazione delle passive Reroll (che applichiamo sempre, a prescindere dal mode MAX,
+        // perché sono personalizzazioni esclusive dell'utente salvate nella collezione)
+        const cRerolls = collData.rerollSlots || {};
+
         if (mode === 'max') {
             ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = charData.stats[s]?.lv300 || 0);
             allValidMoves.forEach(t => { techLevels[t] = 9; customTechPower[t] = 0; });
 
             if (isTaughtMove) {
-                techLevels[moveName] = 9; // Valutiamo i manuali al massimo!
+                techLevels[moveName] = 9;
                 customTechPower[moveName] = 0;
             }
 
@@ -34,27 +38,36 @@ export class TrialOptimizer {
                 const pDef = passivesLibrary.find(p => p.id === pId);
                 passiveLevels[pId] = pDef ? pDef.levels.length - 1 : 0;
             });
+
+            // Inietta le passive Reroll
+            Object.values(cRerolls).forEach(r => {
+                if (r && r.id) passiveLevels[r.id] = r.lv;
+            });
+
         } else {
             const cStats = collData.stats || {};
             const cTechs = collData.techLevels || {};
-            const cPwr = collData.techCustomPower || {};
+            const cPwr = collData.techCustomPower || {}; // Non più usato per il reroll, mantenuto per retrocompatibilità
             const cPass = collData.passives || {};
 
             ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = cStats[s] || 0);
-            allValidMoves.forEach(t => { techLevels[t] = cTechs[t] || 0; customTechPower[t] = cPwr[t] || 0; });
+            allValidMoves.forEach(t => { techLevels[t] = cTechs[t] || 0; customTechPower[t] = 0; });
 
             if (isTaughtMove) {
                 if (moveName === collData.equippedManual) {
                     techLevels[moveName] = cTechs[moveName] !== undefined ? cTechs[moveName] : 0;
-                    customTechPower[moveName] = cPwr[moveName] || 0;
                 } else {
                     techLevels[moveName] = 0;
-                    customTechPower[moveName] = 0;
                 }
             }
 
             [...(charData.myBasicPassivesIds || []), ...(charData.myRarityPassivesIds || [])].forEach(pId => {
                 passiveLevels[pId] = cPass[pId] !== undefined ? cPass[pId] : -1;
+            });
+
+            // Inietta le passive Reroll
+            Object.values(cRerolls).forEach(r => {
+                if (r && r.id) passiveLevels[r.id] = r.lv;
             });
         }
         return { charData, moveName, customStats, techLevel: techLevels[moveName] || 0, customTechPower, passiveLevels };
@@ -93,7 +106,6 @@ export class TrialOptimizer {
         const mode = document.querySelector('input[name="dataSource"]:checked').value;
         const allowManualsToggle = document.getElementById('allowManualsToggle');
 
-        // Se siamo in collezione, il toggle è disabilitato e forzato a false
         const allowManuals = allowManualsToggle.disabled ? false : allowManualsToggle.checked;
 
         const stageElementNode = document.getElementById('stageElement');
@@ -155,7 +167,9 @@ export class TrialOptimizer {
 
                 const engineFormat = this.createCharEngineFormat(char, move, mode);
                 const advBonus = this.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
-                if (advBonus > 0) engineFormat.customTechPower[move] = (engineFormat.customTechPower[move] || 0) + advBonus;
+
+                // Usiamo customTechPower SOLO per veicolare l'AdvBonus nel calcolatore finale
+                if (advBonus > 0) engineFormat.customTechPower[move] = advBonus;
 
                 const dummyTeam = [engineFormat];
                 const sim = calculateTeamDamage(dummyTeam, stageConfig);
@@ -190,7 +204,7 @@ export class TrialOptimizer {
                 const eFmt = this.createCharEngineFormat(p.char, p.bestMove, mode);
                 const tDef = techniquesLibrary[p.bestMove];
                 const aBon = this.getAdvantageBonus(tDef.element, stageConfig.opponent, tDef.kind, stageConfig.mode);
-                if (aBon > 0) eFmt.customTechPower[p.bestMove] = (eFmt.customTechPower[p.bestMove] || 0) + aBon;
+                if (aBon > 0) eFmt.customTechPower[p.bestMove] = aBon;
                 return eFmt;
             });
             const simResult = calculateTeamDamage(teamData, stageConfig);

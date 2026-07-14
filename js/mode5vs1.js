@@ -149,7 +149,6 @@ class AppController {
         const simMode = document.getElementById('simMode').dataset.value;
         const allowManualsToggle = document.getElementById('allowManualsToggle');
 
-        // Se la levetta è disabilitata, consideriamo allowManuals falso
         const allowManuals = allowManualsToggle.disabled ? false : allowManualsToggle.checked;
 
         if (!charData) return;
@@ -250,7 +249,6 @@ class AppController {
             this.updateSimulation();
         });
 
-        // GESTIONE ATTIVAZIONE/DISATTIVAZIONE SWITCH INSEGNA TECNICHE
         const radios = document.querySelectorAll('input[name="dataSource"]');
         const toggle = document.getElementById('allowManualsToggle');
         const toggleLabel = document.querySelector('label[for="allowManualsToggle"]');
@@ -352,6 +350,7 @@ class AppController {
         const slotData = this.lastResult.slots[slotIndex];
         const calc = slotData.calculations;
         const mode = document.querySelector('input[name="dataSource"]:checked').value;
+        const charDb = this.activeTeam[slotIndex];
 
         document.getElementById('modalTitle').textContent = `Dettagli: ${slotData.charName}`;
         document.getElementById('modalMath').innerHTML = `
@@ -364,27 +363,85 @@ class AppController {
             </div>
         `;
 
-        const statSourceStr = mode === 'max' ? 'Statistica MAX' : 'Statistica Base + Passiva Reroll';
-        let statHtml = `<li><span class="passive-source">${statSourceStr}</span> <span class="val-badge">+${calc.base.naked.toLocaleString('it-IT')}</span></li>`;
-        slotData.details.stats.forEach(detail => {
-            statHtml += `<li><div><span class="passive-source">[${detail.source}]</span> ${detail.passiveName} ${detail.isSelf ? "(Self)" : "(Alleato)"}</div> <span class="val-badge">+${detail.value.toLocaleString('it-IT')}</span></li>`;
-        });
+        // CATEGORIZZATORE
+        const categorizeDetail = (detail) => {
+            if (!detail.isSelf) return 'compagni';
+            const pDef = passivesLibrary.find(p => p.title === detail.passiveName);
+            if (!pDef) return 'livello'; // Fallback
+            if (pDef.category === 'Reroll') return 'reroll';
+            if (charDb.myRarityPassivesIds && charDb.myRarityPassivesIds.includes(pDef.id)) return 'risveglio';
+            return 'livello'; // Default per tutto il resto (Basic)
+        };
+
+        // RENDERER GRUPPI
+        const renderGroup = (groupArr, groupTitle) => {
+            if (groupArr.length === 0) return '';
+            let html = `<div class="mt-3 mb-2 ms-1 fw-bold text-uppercase" style="font-size: 0.8rem; color: #506482; letter-spacing: 0.5px;">${groupTitle}</div>`;
+            groupArr.forEach(detail => {
+                let label = detail.isSelf ? `[${slotData.charName}] ${detail.passiveName} (Self)` : `[${detail.source}] ${detail.passiveName} (Alleato)`;
+                html += `
+                    <li>
+                        <div><span class="passive-source fw-bold" style="color:#0b1a42;">${label}</span></div>
+                        <span class="val-badge">+${detail.value.toLocaleString('it-IT')}</span>
+                    </li>`;
+            });
+            return html;
+        };
+
+        // --- GESTIONE STATISTICHE BASE E PASSIVE ---
+        let statsGroups = { livello: [], risveglio: [], reroll: [], compagni: [] };
+        slotData.details.stats.forEach(detail => statsGroups[categorizeDetail(detail)].push(detail));
+
+        // Ordine alfabetico per i compagni
+        statsGroups.compagni.sort((a, b) => a.source.localeCompare(b.source));
+
+        const statSourceStr = mode === 'max' ? 'Statistica Base (Lv. 300)' : 'Statistica Base';
+        let statHtml = `
+            <li>
+                <span class="passive-source fw-bold" style="color: #0b1a42;">${statSourceStr}</span>
+                <span class="val-badge">+${calc.base.naked.toLocaleString('it-IT')}</span>
+            </li>`;
+
+        statHtml += renderGroup(statsGroups.livello, "Passive di Livello");
+        statHtml += renderGroup(statsGroups.risveglio, "Passive di Risveglio");
+        statHtml += renderGroup(statsGroups.reroll, "Passive di Reroll");
+        statHtml += renderGroup(statsGroups.compagni, "Passive Compagni");
         document.getElementById('modalStatList').innerHTML = statHtml;
 
-        let powerHtml = `<li><span class="passive-source">Potenza Base Mossa</span> <span class="val-badge">+${calc.power.naked}</span></li>`;
 
-        if (calc.power.stageBonus > 0) powerHtml += `<li><span class="passive-source">Bonus Giornaliero (${document.getElementById('stageElement').dataset.value})</span> <span class="val-badge">+${calc.power.stageBonus}</span></li>`;
+        // --- GESTIONE POTENZA MOSSE E PASSIVE ---
+        let powerGroups = { livello: [], risveglio: [], reroll: [], compagni: [] };
+        slotData.details.power.forEach(detail => powerGroups[categorizeDetail(detail)].push(detail));
 
-        if (slotData._hasAdvantageBonus > 0) {
-            powerHtml += `<li><span class="passive-source text-danger fw-bold"><i class="fas fa-fire-alt"></i> Vantaggio vs Avversario</span> <span class="val-badge bg-warning text-dark">+${slotData._hasAdvantageBonus}</span></li>`;
+        // Ordine alfabetico per i compagni
+        powerGroups.compagni.sort((a, b) => a.source.localeCompare(b.source));
+
+        let powerHtml = `
+            <li>
+                <span class="passive-source fw-bold" style="color: #0b1a42;">Potenza Base Mossa</span>
+                <span class="val-badge">+${calc.power.naked}</span>
+            </li>`;
+
+        if (calc.power.stageBonus > 0) {
+            powerHtml += `
+            <li>
+                <span class="passive-source fw-bold" style="color: #0b1a42;">Bonus Giornaliero (${document.getElementById('stageElement').dataset.value})</span>
+                <span class="val-badge">+${calc.power.stageBonus}</span>
+            </li>`;
         }
 
-        let collCustomBonus = calc.power.customBonus - (slotData._hasAdvantageBonus || 0);
-        if (collCustomBonus > 0) powerHtml += `<li><span class="passive-source">Potenza Tecnica Passiva Reroll</span> <span class="val-badge">+${collCustomBonus}</span></li>`;
+        if (slotData._hasAdvantageBonus > 0) {
+            powerHtml += `
+            <li style="border-left: 4px solid #dc3545; background: #fff5f5;">
+                <span class="passive-source text-danger fw-bold"><i class="fas fa-fire-alt"></i> Vantaggio vs Avversario</span>
+                <span class="val-badge bg-warning text-dark border border-warning">+${slotData._hasAdvantageBonus}</span>
+            </li>`;
+        }
 
-        slotData.details.power.forEach(detail => {
-            powerHtml += `<li><div><span class="passive-source">[${detail.source}]</span> ${detail.passiveName} ${detail.isSelf ? "(Self)" : "(Alleato)"}</div> <span class="val-badge">+${detail.value}</span></li>`;
-        });
+        powerHtml += renderGroup(powerGroups.livello, "Passive di Livello");
+        powerHtml += renderGroup(powerGroups.risveglio, "Passive di Risveglio");
+        powerHtml += renderGroup(powerGroups.reroll, "Passive di Reroll");
+        powerHtml += renderGroup(powerGroups.compagni, "Passive Compagni");
         document.getElementById('modalPowerList').innerHTML = powerHtml;
 
         document.getElementById('detailsModal').style.display = 'flex';
