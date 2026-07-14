@@ -7,7 +7,7 @@ export class TrialOptimizer {
         this.app = app;
     }
 
-    createCharEngineFormat(charData, moveName, mode) {
+    createCharEngineFormat(charData, moveName, mode, customConfig) {
         const customStats = {};
         const techLevels = {};
         const customTechPower = {};
@@ -20,9 +20,8 @@ export class TrialOptimizer {
         }
 
         const isTaughtMove = !charData.myTechniques.includes(moveName);
-
-        // Estrazione delle passive Reroll
         const cRerolls = collData.rerollSlots || {};
+        const ignoreRerolls = customConfig ? customConfig.ignoreRerolls : false;
 
         if (mode === 'max') {
             ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = charData.stats[s]?.lv300 || 0);
@@ -38,9 +37,11 @@ export class TrialOptimizer {
                 passiveLevels[pId] = pDef ? pDef.levels.length - 1 : 0;
             });
 
-            Object.values(cRerolls).forEach(r => {
-                if (r && r.id) passiveLevels[r.id] = r.lv;
-            });
+            if (!ignoreRerolls) {
+                Object.values(cRerolls).forEach(r => {
+                    if (r && r.id) passiveLevels[r.id] = r.lv;
+                });
+            }
 
         } else {
             const cStats = collData.stats || {};
@@ -62,9 +63,11 @@ export class TrialOptimizer {
                 passiveLevels[pId] = cPass[pId] !== undefined ? cPass[pId] : -1;
             });
 
-            Object.values(cRerolls).forEach(r => {
-                if (r && r.id) passiveLevels[r.id] = r.lv;
-            });
+            if (!ignoreRerolls) {
+                Object.values(cRerolls).forEach(r => {
+                    if (r && r.id) passiveLevels[r.id] = r.lv;
+                });
+            }
         }
         return { charData, moveName, customStats, techLevel: techLevels[moveName] || 0, customTechPower, passiveLevels };
     }
@@ -91,33 +94,32 @@ export class TrialOptimizer {
         return 0;
     }
 
-    async runOptimization() {
-        const modal = document.getElementById('optimizerModal');
-        const container = document.getElementById('optimizerResults');
-        modal.style.display = 'flex';
+    async runOptimization(customConfig = null) {
+        const modalId = customConfig?.modalId || 'optimizerModal';
+        const containerId = customConfig?.containerId || 'optimizerResults';
+        const modal = document.getElementById(modalId);
+        const container = document.getElementById(containerId);
+
+        if (modal) modal.style.display = 'flex';
         container.innerHTML = '<div class="text-center text-secondary py-5"><i class="fas fa-spinner fa-spin fa-3x mb-3"></i><br>Elaborazione formazioni in corso...</div>';
 
         await new Promise(resolve => setTimeout(resolve, 100));
 
-        // FIX DELL'ERRORE: Hardcodiamo i valori visto che abbiamo rimosso i selettori HTML
-        const mode = 'collection';
-        const allowManuals = false;
+        const mode = customConfig ? customConfig.mode : 'collection';
+        const allowManuals = customConfig ? customConfig.allowManuals : false;
+        const hideApplyButton = customConfig ? customConfig.hideApplyButton : false;
+        const hideScore = customConfig ? customConfig.hideScore : false;
 
-        const stageElementNode = document.getElementById('stageElement');
-        const opponentElementNode = document.getElementById('opponentElement');
-        const simModeNode = document.getElementById('simMode');
-        const stageBonusDisplay = document.getElementById('stageBonusDisplay');
-
-        const stageConfig = {
-            element: stageElementNode ? stageElementNode.dataset.value : '',
-            bonus: parseInt(stageBonusDisplay ? stageBonusDisplay.textContent : '0') || 0,
-            opponent: opponentElementNode ? opponentElementNode.dataset.value : 'None',
-            mode: simModeNode ? simModeNode.dataset.value : 'defense'
+        const stageConfig = customConfig?.stageConfig || {
+            element: document.getElementById('stageElement')?.dataset.value || '',
+            bonus: parseInt(document.getElementById('stageBonusDisplay')?.textContent || '0') || 0,
+            opponent: document.getElementById('opponentElement')?.dataset.value || 'None',
+            mode: document.getElementById('simMode')?.dataset.value || 'defense'
         };
 
         const isDefense = stageConfig.mode === 'defense';
-
         const availableChars = [];
+
         for (const char of characterRegistry) {
             if (mode === 'collection') {
                 const dbEntry = this.app.collectionData[char.id];
@@ -160,7 +162,7 @@ export class TrialOptimizer {
                     if (techDef.kind !== 'Tiro') continue;
                 }
 
-                const engineFormat = this.createCharEngineFormat(char, move, mode);
+                const engineFormat = this.createCharEngineFormat(char, move, mode, customConfig);
                 const advBonus = this.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
 
                 if (advBonus > 0) engineFormat.customTechPower[move] = advBonus;
@@ -173,7 +175,6 @@ export class TrialOptimizer {
                     bestMove = move;
                 }
             }
-
             if (bestMove) evaluatedPlayers.push({ char, bestMove, bestScore, isGK });
         }
 
@@ -195,7 +196,7 @@ export class TrialOptimizer {
         const teamResults = [];
         for (const perm of permutations) {
             const teamData = perm.map(p => {
-                const eFmt = this.createCharEngineFormat(p.char, p.bestMove, mode);
+                const eFmt = this.createCharEngineFormat(p.char, p.bestMove, mode, customConfig);
                 const tDef = techniquesLibrary[p.bestMove];
                 const aBon = this.getAdvantageBonus(tDef.element, stageConfig.opponent, tDef.kind, stageConfig.mode);
                 if (aBon > 0) eFmt.customTechPower[p.bestMove] = aBon;
@@ -220,50 +221,82 @@ export class TrialOptimizer {
                 seenSquads.add(squadSignature);
                 top5.push(res);
             }
-            if (top5.length === 5) break;
+            if (top5.length === 10) break;
         }
 
         container.innerHTML = '';
         if (top5.length === 0) {
-            container.innerHTML = '<div class="text-danger fw-bold text-center">Nessuna formazione trovata. Rivedi i filtri!</div>';
+            container.innerHTML = '<div class="text-danger fw-bold text-center">Nessuna formazione trovata.</div>';
             return;
         }
 
         top5.forEach((res, idx) => {
             const row = document.createElement('div');
-            row.className = 'bg-white rounded p-3 d-flex justify-content-between align-items-center shadow-sm border border-light';
+            row.className = 'bg-white rounded p-3 d-flex justify-content-between align-items-center shadow-sm border border-light mb-3';
 
-            let htmlStr = `<div class="d-flex flex-column"><strong class="text-primary fs-5">#${idx + 1} - Score: ${Math.floor(res.score).toLocaleString('it-IT')}</strong><div class="d-flex gap-2 mt-2 flex-wrap">`;
+            // Titolo (mostra o nasconde lo score in base alla flag)
+            let headerText = hideScore
+                ? `Rank #${idx + 1}`
+                : `#${idx + 1} - Score: ${Math.floor(res.score).toLocaleString('it-IT')}`;
+
+            let htmlStr = `<div class="d-flex flex-column w-100"><strong class="text-primary fs-5"><i class="fas fa-medal text-warning"></i> ${headerText}</strong><div class="d-flex gap-2 mt-2 flex-wrap">`;
+
+            let manualsToTeach = [];
 
             res.team.forEach(p => {
                 const isManual = !p.char.myTechniques.includes(p.bestMove);
+                const techDef = techniquesLibrary[p.bestMove];
                 const badgeColor = isManual ? 'bg-danger' : 'bg-secondary';
-                htmlStr += `<span class="badge ${badgeColor}" title="${techniquesLibrary[p.bestMove].name}"><img src="${techniquesLibrary[p.bestMove].elementIcon}" style="height:12px; margin-right:4px; margin-bottom:2px;">${p.char.name}</span>`;
+
+                htmlStr += `<span class="badge ${badgeColor}" title="${techDef.name}"><img src="${techDef.elementIcon}" style="height:12px; margin-right:4px; margin-bottom:2px;">${p.char.name}</span>`;
+
+                // Se è un manuale e siamo nella pagina Meta (hideScore = true), lo annotiamo per la stringa esplicativa
+                if (isManual && hideScore) {
+                    manualsToTeach.push(`📕 Insegna <strong>${techDef.name}</strong> a <strong>${p.char.name}</strong>`);
+                }
             });
 
-            htmlStr += `</div></div><button class="btn btn-success fw-bold text-nowrap px-4 py-2 apply-btn" data-index="${idx}">APPLICA</button>`;
+            htmlStr += `</div>`;
+
+            // Se ci sono manuali da insegnare, crea un box dedicato sotto ai badge
+            if (manualsToTeach.length > 0) {
+                htmlStr += `
+                <div class="mt-3 p-2 rounded bg-light border-start border-4 border-danger" style="font-size: 0.9rem;">
+                    <span class="text-danger fw-bold d-block mb-1"><i class="fas fa-book"></i> Manuali necessari per questa Formazione:</span>
+                    <div style="color: #506482;">${manualsToTeach.join('<br>')}</div>
+                </div>`;
+            }
+
+            htmlStr += `</div>`; // Chiude il flex column
+
+            if (!hideApplyButton) {
+                htmlStr += `<button class="btn btn-success fw-bold text-nowrap px-4 py-2 apply-btn ms-3" data-index="${idx}">APPLICA</button>`;
+            }
+
             row.innerHTML = htmlStr;
             container.appendChild(row);
         });
 
-        container.querySelectorAll('.apply-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const idx = e.target.dataset.index;
-                const bestTeam = top5[idx].team;
-                for (let i = 0; i < 5; i++) {
-                    this.app.activeTeam[i] = bestTeam[i].char;
-                    const slotCharSelect = document.querySelector(`.slot-card[data-slot="${i}"] .sim-char-select`);
-                    const slotSelectSelected = slotCharSelect.querySelector('.select-selected span');
+        if (!hideApplyButton) {
+            container.querySelectorAll('.apply-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const idx = e.target.dataset.index;
+                    const bestTeam = top5[idx].team;
+                    for (let i = 0; i < 5; i++) {
+                        this.app.activeTeam[i] = bestTeam[i].char;
+                        const slotCharSelect = document.querySelector(`.slot-card[data-slot="${i}"] .sim-char-select`);
+                        const slotSelectSelected = slotCharSelect.querySelector('.select-selected span');
 
-                    slotCharSelect.dataset.value = bestTeam[i].char.id;
-                    slotSelectSelected.innerHTML = `<img src="${bestTeam[i].char.thumb}" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; vertical-align: middle;"> ${bestTeam[i].char.name}`;
+                        slotCharSelect.dataset.value = bestTeam[i].char.id;
+                        slotSelectSelected.innerHTML = `<img src="${bestTeam[i].char.thumb}" style="width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; vertical-align: middle;"> ${bestTeam[i].char.name}`;
 
-                    this.app.renderTechDropdown(i);
-                    document.querySelector(`.slot-card[data-slot="${i}"] .sim-tech-select`).value = bestTeam[i].bestMove;
-                }
-                this.app.updateSimulation();
-                document.getElementById('optimizerModal').style.display = 'none';
+                        this.app.renderTechDropdown(i);
+                        document.querySelector(`.slot-card[data-slot="${i}"] .sim-tech-select`).value = bestTeam[i].bestMove;
+                    }
+                    this.app.updateSimulation();
+                    if (modal) modal.style.display = 'none';
+                });
             });
-        });
+        }
     }
 }
