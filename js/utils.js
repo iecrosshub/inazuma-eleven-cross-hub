@@ -1,7 +1,7 @@
 // js/utils.js
 
 // ==========================================
-// 0. GESTIONE DATABASE GLOBALE
+// 0. GESTIONE DATABASE GLOBALE E MANUALI
 // ==========================================
 import { characterRegistry } from './Characters/registry.js';
 import { techniquesLibrary } from './Techniques/library.js';
@@ -9,17 +9,51 @@ import { passivesLibrary } from './Passive/library.js';
 
 export { characterRegistry, techniquesLibrary, passivesLibrary };
 
+// LISTA COMPLETA DEI 40 MANUALI ESTRATTI DA APPMEDIA ("秘伝書あり")
 export const universalManualsKeys = [
-    "グレネードショット",     // Tiro (Fuoco)
-    "ドラゴンクラッシュ",     // Tiro (Foresta)
-    "エターナルブリザード",   // Tiro (Vento)
-    "つちだるま",             // Tiro (Montagna)
-    "スーパー四股踏み",       // Blocco (Fuoco)
-    "スピニングカット",       // Blocco (Vento)
-    "ザ・ウォール"            // Blocco (Montagna)
+    "ファイアトルネード",   // Tornado di Fuoco
+    "ヒートタックル",       // Heat Tackle
+    "爆熱パンチ",           // Bakunetsu Punch
+    "疾風ダッシュ",         // Shippuu Dash
+    "ザ・ウォール",         // The Wall
+    "ジグザグスパーク",     // Zigzag Spark
+    "スピニングカット",     // Spinning Cut
+    "サイクロン",           // Cyclone
+    "グレネードショット",   // Grenade Shot
+    "スピニングシュート",   // Spinning Shoot
+    "アースクエイク",       // Earthquake
+    "ジャッジスルー",       // Judge Through
+    "ザ・マウンテン",       // The Mountain
+    "旋風陣",               // Senpuujin
+    "真空魔",               // Shinkuuma
+    "エターナルブリザード", // Eternal Blizzard
+    "ボルケイノカット",     // Volcano Cut
+    "ターザンキック",       // Tarzan Kick
+    "つむじ",               // Tsumuji
+    "ゆがむ空間",           // Yugamu Kuukan
+    "炎風ダッシュ",         // Enpuu Dash
+    "フレイムダンス",       // Flame Dance
+    "つちだるま",           // Tsuchidaruma
+    "五里霧中",             // Gorimuchuu
+    "ワイルドクロウ",       // Wild Claw
+    "バックトルネード",     // Back Tornado
+    "アステロイドベルト",   // Asteroid Belt
+    "ファントムシュート",   // Phantom Shoot
+    "四股踏み",             // Shikofumi
+    "スーパー四股踏み",     // Super Shikofumi
+    "怨霊",                 // Onryou
+    "流星ブレード",         // Ryuusei Blade
+    "ヘブンズタイム",       // Heaven's Time
+    "リフレクトバスター",   // Reflect Buster
+    "つなみウォール",       // Tsunami Wall
+    "裁きの鉄槌",           // Sabaki no Tettsui
+    "ディバインアロー",     // Divine Arrow
+    "そよかぜステップ",     // Soyokaze Step
+    "デスソード",           // Death Sword
+    "プロファイルゾーン"    // Profile Zone
 ];
 
-// Funzioni per decodificare i requisiti di Sblocco
+
 export function getRarityTier(reqString) {
     if (!reqString) return -1;
     const str = reqString.toLowerCase();
@@ -36,10 +70,8 @@ export function getRarityTier(reqString) {
 export function getLevelTier(reqString) {
     if (!reqString) return -1;
     const lower = reqString.toLowerCase();
-    // Escludiamo le stringhe che si riferiscono alla Rarità per evitare conflitti
     if (lower.includes("advanced") || lower.includes("top") || lower.includes("legendary")) return -1;
 
-    // Estrae qualsiasi numero presente nella stringa della passiva
     const match = lower.match(/\d+/);
     if (match) return parseInt(match[0]);
     return -1;

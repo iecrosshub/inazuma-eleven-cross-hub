@@ -14,6 +14,18 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/styleTeamBuilder.css">
     <link rel="stylesheet" href="css/styleCollection.css">
+
+    <!-- FIX PER IL MENU A TENDINA "INSEGNA TECNICA" SCURO -->
+    <style>
+        .manual-equip .select-items div {
+            color: #f8f9fa !important;
+            border-bottom: 1px solid #444 !important;
+        }
+        .manual-equip .select-items div:hover {
+            background-color: #343a40 !important;
+            color: #ffca28 !important;
+        }
+    </style>
 </head>
 <body class="pb-5">
 
@@ -52,14 +64,14 @@
         </div>
     </div>
 
-    <!-- IMPOSTAZIONI GLOBALI RAPIDE (SOLO LIVELLO PASSIVE) -->
+    <!-- IMPOSTAZIONI GLOBALI RAPIDE -->
     <div class="global-settings-bar mb-4 p-3 rounded shadow-sm border border-info" style="background: #0b1a42;">
         <h5 class="text-info mb-3 fw-bold"><i class="fas fa-globe"></i> Impostazioni Globali Rapide</h5>
         <div class="row g-3 align-items-end">
             <div class="col-12 col-md-8">
                 <label class="form-label text-light small fw-bold">Imposta Livello a TUTTE le passive legate al Livello</label>
                 <div class="d-flex gap-2">
-                    <input type="number" id="global-level-input" class="form-control form-control-sm border-info" value="30" min="1" max="50" style="max-width: 150px;">
+                    <input type="number" id="global-level-input" class="form-control form-control-sm border-info" min="1" max="50" style="max-width: 150px;">
                     <button id="btn-apply-level" class="btn btn-info btn-sm fw-bold px-4">Applica Livello</button>
                 </div>
             </div>

@@ -24,20 +24,32 @@ class CollectionApp {
         document.getElementById('btn-save-cloud').addEventListener('click', () => this.saveToCloud());
 
         this.setupCustomSelects();
+
+        // 1. RIPRISTINA I FILTRI SALVATI PRIMA E IL LIVELLO GLOBALE
+        this.restoreFilters();
+
+        const savedGlobalLevel = localStorage.getItem('collection_global_level') || '';
+        const globalInput = document.getElementById('global-level-input');
+        if (globalInput && savedGlobalLevel) globalInput.value = savedGlobalLevel;
+
         document.getElementById('search-name').addEventListener('input', () => this.triggerFilter());
 
-        // LOGICA APPLICA LIVELLO GLOBALE (Aggiorna SOLO le passive legate al livello)
+        // LOGICA APPLICA LIVELLO GLOBALE
         const btnLevel = document.getElementById('btn-apply-level');
         if (btnLevel) {
             btnLevel.addEventListener('click', () => {
-                const globalLevel = parseInt(document.getElementById('global-level-input').value) || 1;
+                const inputVal = document.getElementById('global-level-input').value;
+                if(!inputVal) return;
+
+                const globalLevel = parseInt(inputVal);
+                localStorage.setItem('collection_global_level', globalLevel);
 
                 document.querySelectorAll('.pass-lvl').forEach(sel => {
                     const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
                     if (pDef) {
                         const isRarity = pDef.levels.some(l => l.req && getRarityTier(l.req) !== -1);
 
-                        // Solo per le passive che NON sono di rarità (e quindi dipendono dal livello)
+                        // Solo per le passive che NON sono di rarità
                         if (!isRarity) {
                             let bestIdx = -1;
                             let hasLevelReq = false;
@@ -50,9 +62,8 @@ class CollectionApp {
                                 }
                             });
 
-                            // Applica l'aggiornamento solo se la passiva ha effettivamente dei requisiti di livello numerici
                             if (hasLevelReq) {
-                                sel.value = bestIdx; // Può assegnare -1 (Spenta) se il lvl globale non è sufficiente
+                                sel.value = bestIdx;
                                 sel.dispatchEvent(new Event('change'));
                             }
                         }
@@ -69,10 +80,65 @@ class CollectionApp {
         this.setupNavigationInterception();
     }
 
+    // Inizializza un singolo selettore custom per i manuali generati dinamicamente
+    initSingleCustomSelect(customSelect) {
+        const selectedDiv = customSelect.querySelector('.select-selected');
+        const itemsDiv = customSelect.querySelector('.select-items');
+
+        selectedDiv.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.select-items').forEach(el => {
+                if(el !== itemsDiv) el.classList.add('select-hide');
+            });
+            itemsDiv.classList.toggle('select-hide');
+        });
+
+        itemsDiv.querySelectorAll('div').forEach(option => {
+            option.addEventListener('click', () => {
+                customSelect.dataset.value = option.dataset.value;
+                selectedDiv.querySelector('span').innerHTML = option.innerHTML;
+                itemsDiv.classList.add('select-hide');
+                customSelect.dispatchEvent(new Event('change'));
+            });
+        });
+    }
+
+    restoreFilters() {
+        const saved = localStorage.getItem('collection_filters');
+        if (saved) {
+            try {
+                const filters = JSON.parse(saved);
+                const searchInput = document.getElementById('search-name');
+                if (searchInput) searchInput.value = filters.name || '';
+
+                const setCustomSelect = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (el && val !== undefined && val !== null) {
+                        el.dataset.value = val;
+                        // Cerca l'opzione corrispondente, se non c'è prende la prima di default
+                        const option = el.querySelector(`.select-items div[data-value="${val}"]`) || el.querySelector('.select-items div');
+                        if (option) {
+                            el.dataset.value = option.dataset.value;
+                            el.querySelector('.select-selected span').innerHTML = option.innerHTML;
+                        }
+                    }
+                };
+
+                setCustomSelect('filter-owned', filters.ownedStatus);
+                setCustomSelect('filter-element', filters.element);
+                setCustomSelect('filter-position', filters.position);
+                setCustomSelect('filter-rarity', filters.rarity);
+                setCustomSelect('filter-style', filters.style);
+                setCustomSelect('filter-team', filters.team);
+                setCustomSelect('filter-season', filters.season);
+            } catch (e) {}
+        }
+    }
+
     setupUnsavedTracking() {
         const grid = document.getElementById('collection-grid');
         grid.addEventListener('change', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.classList.contains('custom-select')) {
                 this.hasUnsavedChanges = true;
             }
         });
@@ -126,23 +192,10 @@ class CollectionApp {
     }
 
     setupCustomSelects() {
-        document.querySelectorAll('.custom-select').forEach(customSelect => {
-            const selectedDiv = customSelect.querySelector('.select-selected');
-            const itemsDiv = customSelect.querySelector('.select-items');
+        document.querySelectorAll('.filters-container .custom-select').forEach(customSelect => {
+            this.initSingleCustomSelect(customSelect);
 
-            selectedDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                itemsDiv.classList.toggle('select-hide');
-            });
-
-            itemsDiv.querySelectorAll('div').forEach(option => {
-                option.addEventListener('click', () => {
-                    customSelect.dataset.value = option.dataset.value;
-                    selectedDiv.querySelector('span').innerHTML = option.innerHTML;
-                    itemsDiv.classList.add('select-hide');
-                    this.triggerFilter();
-                });
-            });
+            customSelect.addEventListener('change', () => this.triggerFilter());
         });
 
         document.addEventListener('click', () => {
@@ -195,12 +248,55 @@ class CollectionApp {
 
         const tagsHtml = (fullData.tags || []).map(tagUrl => `<img src="${tagUrl}" class="tag-icon-small" alt="tag">`).join('');
 
-        let manualOptionsHtml = `<option value="">-- Nessuna Tecnica Extra --</option>`;
+        // Mappatura Icone PNG per le Statistiche
+        const statIcons = {
+            "Tiro": "img/Status/Icon_Status_Kick.png",
+            "Tecnica": "img/Status/Icon_Status_Technic.png",
+            "Blocco": "img/Status/Icon_Status_Block.png",
+            "Parata": "img/Status/Icon_Status_Catch.png",
+            "Velocità": "img/Status/Icon_Status_Speed.png"
+        };
+
+        // Opzioni Menu a tendina Insegna Tecnica (Testo chiaro su sfondo scuro con Hover Giallo)
+        let manualOptionsCustomHtml = `<div data-value="" style="display:flex; align-items:center; padding: 6px 10px; color: #f8f9fa; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">-- Nessuna Tecnica Extra --</div>`;
         universalManualsKeys.forEach(mKey => {
             if (!fullData.myTechniques.includes(mKey)) {
-                manualOptionsHtml += `<option value="${mKey}">📕 ${techniquesLibrary[mKey].name}</option>`;
+                const tDef = techniquesLibrary[mKey];
+                if (tDef) {
+                    const sbBadge = tDef.shootBlock ? `<span class="badge bg-danger ms-1 px-1 py-0" style="font-size:0.6rem; flex-shrink:0;" title="Shoot Block">SB</span>` : '';
+                    manualOptionsCustomHtml += `
+                        <div data-value="${mKey}" style="display:flex; align-items:center; gap: 4px; padding: 6px 10px; color: #f8f9fa; border-bottom: 1px solid #444; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">
+                            <img src="${tDef.icon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
+                            <img src="${tDef.elementIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
+                            <span class="text-truncate">${tDef.name}</span>${sbBadge}
+                        </div>`;
+                }
             }
         });
+
+        // HTML Mosse Native Personaggio (Icone allineate e Badge SB non tagliato)
+        const nativeTechsHtml = fullData.myTechniques.map(techKey => {
+            const techDef = techniquesLibrary[techKey];
+            const tName = techDef?.name || techKey;
+            const typeIcon = techDef?.icon || '';
+            const elIcon = techDef?.elementIcon || '';
+            const sbBadge = techDef?.shootBlock ? `<span class="badge bg-danger ms-1 px-1 py-0" style="font-size:0.65rem; flex-shrink:0;" title="Shoot Block">SB</span>` : '';
+
+            return `
+                <div class="d-flex gap-1 mb-2 align-items-center">
+                    <div class="d-flex align-items-center gap-1" style="width: 50%;">
+                        ${typeIcon ? `<img src="${typeIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">` : ''}
+                        ${elIcon ? `<img src="${elIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">` : ''}
+                        <span class="text-light small text-truncate" title="${tName}">${tName}</span>
+                        ${sbBadge}
+                    </div>
+                    <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl" data-char="${baseChar.id}" data-tech="${techKey}" style="width: 25%;">
+                        ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===9 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
+                    </select>
+                    <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary tech-pwr" data-char="${baseChar.id}" data-tech="${techKey}" placeholder="+Pwr" style="width: 25%;">
+                </div>
+            `;
+        }).join('');
 
         let html = `
             <div class="collection-card owned" id="card-${baseChar.id}">
@@ -231,7 +327,9 @@ class CollectionApp {
                     <div class="d-flex flex-wrap gap-2 mb-3">
                         ${["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].map(stat => `
                             <div class="input-group input-group-sm" style="width: 48%;">
-                                <span class="input-group-text bg-dark text-light border-secondary" style="font-size: 0.75rem;">${stat}</span>
+                                <span class="input-group-text bg-dark text-light border-secondary" style="font-size: 0.75rem; display: flex; align-items: center; gap: 4px;">
+                                    <img src="${statIcons[stat]}" style="width: 14px; height: 14px; object-fit: contain;">${stat}
+                                </span>
                                 <input type="number" class="form-control bg-dark text-white border-secondary stat-input" 
                                        data-char="${baseChar.id}" data-stat="${stat}" placeholder="${fullData.stats[stat]?.lv300 || 0}">
                             </div>
@@ -239,24 +337,19 @@ class CollectionApp {
                     </div>
 
                     <h6>Livello Mosse</h6>
-                    ${fullData.myTechniques.map(techKey => {
-            const tName = techniquesLibrary[techKey]?.name || techKey;
-            return `
-                            <div class="d-flex gap-1 mb-2">
-                                <span class="text-light small text-truncate" style="width: 50%;" title="${tName}">${tName}</span>
-                                <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl" data-char="${baseChar.id}" data-tech="${techKey}" style="width: 25%;">
-                                    ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===9 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
-                                </select>
-                                <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary tech-pwr" data-char="${baseChar.id}" data-tech="${techKey}" placeholder="+Pwr" style="width: 25%;">
-                            </div>
-                        `;
-        }).join('')}
+                    ${nativeTechsHtml}
                     
                     <h6 class="text-warning mt-3"><i class="fas fa-book"></i> Insegna Tecnica (Shop)</h6>
-                    <div class="d-flex gap-1 mb-3">
-                        <select class="form-select form-select-sm bg-dark text-warning border-secondary manual-equip" data-char="${baseChar.id}" style="width: 50%;">
-                            ${manualOptionsHtml}
-                        </select>
+                    <div class="d-flex gap-1 mb-3 align-items-center">
+                        <div class="custom-select manual-equip" data-char="${baseChar.id}" data-value="" style="width: 50%;">
+                            <div class="select-selected bg-dark border-secondary form-select-sm" style="height: 31px; display:flex; align-items:center; color: #ffca28; cursor:pointer;">
+                                <span class="text-truncate" style="color: inherit;">-- Nessuna Tecnica Extra --</span>
+                                <i class="fas fa-chevron-down" style="margin-left:auto;"></i>
+                            </div>
+                            <div class="select-items select-hide bg-dark border-secondary" style="font-size: 0.85rem; padding:0;">
+                                ${manualOptionsCustomHtml}
+                            </div>
+                        </div>
                         <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl manual-lvl" data-char="${baseChar.id}" data-tech="" style="width: 25%; display: none;">
                             ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===9 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
                         </select>
@@ -283,7 +376,6 @@ class CollectionApp {
 
             let opts = `<option value="-1">Spenta</option>`;
             pDef.levels.forEach((lvlData, idx) => {
-                // MOSTRA SOLO E SEMPRE LV 1, LV 2, ECC... (Come richiesto)
                 opts += `<option value="${idx}">Lv ${idx + 1}</option>`;
             });
 
@@ -303,9 +395,12 @@ class CollectionApp {
         col.innerHTML = html;
         container.appendChild(col);
 
+        // Inizializza il Custom Select Manuale per questa singola Card
+        const manualCustomSelect = col.querySelector('.manual-equip');
+        this.initSingleCustomSelect(manualCustomSelect);
+
         const toggle = col.querySelector('.toggle-owned');
         const cardBox = col.querySelector('.collection-card');
-        const manualEquip = col.querySelector('.manual-equip');
         const manualLvl = col.querySelector('.manual-lvl');
         const manualPwr = col.querySelector('.manual-pwr');
         const charRarity = col.querySelector('.char-rarity');
@@ -320,7 +415,6 @@ class CollectionApp {
             }
         });
 
-        // AUTO-AGGIORNAMENTO PASSIVE IN BASE ALLA RARITÀ
         charRarity.addEventListener('change', (e) => {
             const val = parseInt(e.target.value);
             col.querySelectorAll('.pass-lvl').forEach(sel => {
@@ -337,8 +431,8 @@ class CollectionApp {
             });
         });
 
-        manualEquip.addEventListener('change', (e) => {
-            const selectedTech = e.target.value;
+        manualCustomSelect.addEventListener('change', (e) => {
+            const selectedTech = manualCustomSelect.dataset.value;
             if (selectedTech) {
                 manualLvl.dataset.tech = selectedTech;
                 manualPwr.dataset.tech = selectedTech;
@@ -366,6 +460,9 @@ class CollectionApp {
             season: document.getElementById('filter-season').dataset.value,
             ownedStatus: document.getElementById('filter-owned').dataset.value
         };
+
+        // Salva i filtri nel browser
+        localStorage.setItem('collection_filters', JSON.stringify(currentFilters));
 
         const filteredArray = await filterCharacters(characterRegistry, currentFilters);
         const allowedIds = filteredArray.map(c => c.id);
@@ -421,8 +518,8 @@ class CollectionApp {
                 });
 
                 const manualSelect = document.querySelector(`.manual-equip[data-char="${charId}"]`);
-                if (manualSelect && manualSelect.value) {
-                    charData.equippedManual = manualSelect.value;
+                if (manualSelect && manualSelect.dataset.value) {
+                    charData.equippedManual = manualSelect.dataset.value;
                 }
             }
             payload[charId] = charData;
@@ -497,12 +594,13 @@ class CollectionApp {
 
             const manualSel = document.querySelector(`.manual-equip[data-char="${charId}"]`);
             if(manualSel) {
-                manualSel.value = '';
+                manualSel.dataset.value = '';
+                manualSel.querySelector('.select-selected span').innerHTML = '-- Nessuna Tecnica Extra --';
                 manualSel.dispatchEvent(new Event('change'));
             }
 
             document.querySelectorAll(`.pass-lvl[data-char="${charId}"]`).forEach(sel => {
-                sel.value = sel.options[sel.options.length - 1].value; // Inizialmente Max Level
+                sel.value = sel.options[sel.options.length - 1].value;
             });
 
             const raritySel = document.querySelector(`.char-rarity[data-char="${charId}"]`);
@@ -514,15 +612,19 @@ class CollectionApp {
                 }
 
                 if (data.equippedManual && manualSel) {
-                    manualSel.value = data.equippedManual;
+                    manualSel.dataset.value = data.equippedManual;
+                    const option = manualSel.querySelector(`.select-items div[data-value="${data.equippedManual}"]`);
+                    if (option) {
+                        manualSel.querySelector('.select-selected span').innerHTML = option.innerHTML;
+                    }
                     manualSel.dispatchEvent(new Event('change'));
 
                     setTimeout(() => {
                         const mLevel = document.querySelector(`.manual-lvl[data-char="${charId}"][data-tech="${data.equippedManual}"]`);
                         const mPower = document.querySelector(`.manual-pwr[data-char="${charId}"][data-tech="${data.equippedManual}"]`);
 
-                        if (mLevel && data.techLevels[data.equippedManual] !== undefined) mLevel.value = data.techLevels[data.equippedManual];
-                        if (mPower && data.techCustomPower[data.equippedManual] !== undefined) mPower.value = data.techCustomPower[data.equippedManual];
+                        if (mLevel && data.techLevels && data.techLevels[data.equippedManual] !== undefined) mLevel.value = data.techLevels[data.equippedManual];
+                        if (mPower && data.techCustomPower && data.techCustomPower[data.equippedManual] !== undefined) mPower.value = data.techCustomPower[data.equippedManual];
                     }, 50);
                 }
 
@@ -555,7 +657,12 @@ class CollectionApp {
             }
         });
 
-        this.hasUnsavedChanges = false;
+        // Dopo aver caricato i dati, applico i filtri salvati
+        this.triggerFilter();
+
+        setTimeout(() => {
+            this.hasUnsavedChanges = false;
+        }, 100);
     }
 }
 
