@@ -1,0 +1,228 @@
+export const rerollPassivesDF = [
+    {
+        title: "Tecnica + [テクニック＋]",
+        id: "REROLL_DF_TECH",
+        template: "Aumenta la statistica di Tecnica di {VAL}.",
+        levels: [
+            { val: 25, req: "Livello 1" },
+            { val: 40, req: "Livello 2" },
+            { val: 60, req: "Livello 3" },
+            { val: 80, req: "Livello 4" },
+            { val: 100, req: "Livello 5" },
+            { val: 125, req: "Livello 6" },
+            { val: 150, req: "Livello 7" },
+            { val: 175, req: "Livello 8" },
+            { val: 200, req: "Livello 9" },
+            { val: 250, req: "Livello 10" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+        ]
+    },
+    {
+        title: "Potenza di Dribbling + (Generica) [ドリブルパワー＋]",
+        id: "REROLL_DF_DRIBBLE_POWER",
+        template: "Aumenta la potenza delle tecniche di Dribbling di {VAL}.",
+        levels: [
+            { val: 1, req: "Livello 1" },
+            { val: 2, req: "Livello 2" },
+            { val: 3, req: "Livello 3" },
+            { val: 4, req: "Livello 4" },
+            { val: 5, req: "Livello 5" },
+            { val: 6, req: "Livello 6" },
+            { val: 7, req: "Livello 7" },
+            { val: 8, req: "Livello 8" },
+            { val: 9, req: "Livello 9" },
+            { val: 10, req: "Livello 10" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
+        ]
+    },
+    {
+        title: "Blocco + [ブロック＋]",
+        id: "REROLL_DF_BLOCK",
+        template: "Aumenta la statistica di Blocco di {VAL}.",
+        levels: [
+            { val: 50, req: "Livello 1" },
+            { val: 75, req: "Livello 2" },
+            { val: 100, req: "Livello 3" },
+            { val: 150, req: "Livello 4" },
+            { val: 200, req: "Livello 5" },
+            { val: 250, req: "Livello 6" },
+            { val: 300, req: "Livello 7" },
+            { val: 350, req: "Livello 8" },
+            { val: 400, req: "Livello 9" },
+            { val: 500, req: "Livello 10" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+    {
+        title: "Potenza di Blocco + (Generica) [ブロックパワー＋]",
+        id: "REROLL_DF_BLOCK_POWER",
+        template: "Aumenta la potenza delle tecniche di Blocco di {VAL}.",
+        levels: [
+            { val: 2, req: "Livello 1" },
+            { val: 4, req: "Livello 2" },
+            { val: 6, req: "Livello 3" },
+            { val: 8, req: "Livello 4" },
+            { val: 10, req: "Livello 5" },
+            { val: 12, req: "Livello 6" },
+            { val: 14, req: "Livello 7" },
+            { val: 16, req: "Livello 8" },
+            { val: 18, req: "Livello 9" },
+            { val: 20, req: "Livello 10" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+        ]
+    },
+    {
+        title: "Potenza di Blocco + (Fuoco) [ブロックパワー＋〈火〉]",
+        id: "REROLL_DF_BLOCK_POWER_FIRE",
+        template: "Aumenta la potenza delle tecniche di Blocco di elemento Fuoco di {VAL}.",
+        levels: [
+            { val: 3, req: "Livello 1" },
+            { val: 5, req: "Livello 2" },
+            { val: 8, req: "Livello 3" },
+            { val: 11, req: "Livello 4" },
+            { val: 14, req: "Livello 5" },
+            { val: 17, req: "Livello 6" },
+            { val: 21, req: "Livello 7" },
+            { val: 25, req: "Livello 8" },
+            { val: 31, req: "Livello 9" },
+            { val: 35, req: "Livello 10" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "Blocco", moveElement: "Fire", valueRef: "val" }
+        ]
+    },
+    {
+        title: "Potenza di Blocco + (Montagna) [ブロックパワー＋〈山〉]",
+        id: "REROLL_DF_BLOCK_POWER_MOUNTAIN",
+        template: "Aumenta la potenza delle tecniche di Blocco di elemento Montagna di {VAL}.",
+        levels: [
+            { val: 3, req: "Livello 1" },
+            { val: 5, req: "Livello 2" },
+            { val: 8, req: "Livello 3" },
+            { val: 11, req: "Livello 4" },
+            { val: 14, req: "Livello 5" },
+            { val: 17, req: "Livello 6" },
+            { val: 21, req: "Livello 7" },
+            { val: 25, req: "Livello 8" },
+            { val: 31, req: "Livello 9" },
+            { val: 35, req: "Livello 10" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: ["Mountain"], type: "power", moveKind: "Blocco", moveElement: "Mountain", valueRef: "val" }
+        ]
+    },
+    {
+        title: "Potenza di Blocco + (Vento) [ブロックパワー＋〈風〉]",
+        id: "REROLL_DF_BLOCK_POWER_WIND",
+        template: "Aumenta la potenza delle tecniche di Blocco di elemento Vento di {VAL}.",
+        levels: [
+            { val: 3, req: "Livello 1" },
+            { val: 5, req: "Livello 2" },
+            { val: 8, req: "Livello 3" },
+            { val: 11, req: "Livello 4" },
+            { val: 14, req: "Livello 5" },
+            { val: 17, req: "Livello 6" },
+            { val: 21, req: "Livello 7" },
+            { val: 25, req: "Livello 8" },
+            { val: 31, req: "Livello 9" },
+            { val: 35, req: "Livello 10" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "Blocco", moveElement: "Wind", valueRef: "val" }
+        ]
+    },
+    {
+        title: "Potenza di Blocco + (Bosco) [ブロックパワー＋〈林〉]",
+        id: "REROLL_DF_BLOCK_POWER_FOREST",
+        template: "Aumenta la potenza delle tecniche di Blocco di elemento Bosco di {VAL}.",
+        levels: [
+            { val: 3, req: "Livello 1" },
+            { val: 5, req: "Livello 2" },
+            { val: 8, req: "Livello 3" },
+            { val: 11, req: "Livello 4" },
+            { val: 14, req: "Livello 5" },
+            { val: 17, req: "Livello 6" },
+            { val: 21, req: "Livello 7" },
+            { val: 25, req: "Livello 8" },
+            { val: 31, req: "Livello 9" },
+            { val: 35, req: "Livello 10" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "Blocco", moveElement: "Forest", valueRef: "val" }
+        ]
+    },
+    {
+        title: "[Secondo tempo] TP + [【後半】TP＋]",
+        id: "REROLL_DF_SECOND_HALF_TP",
+        template: "All'inizio del secondo tempo, aumenta il limite massimo di TP di {VAL}.",
+        levels: [
+            { val: 5, req: "Livello 1" },
+            { val: 10, req: "Livello 2" },
+            { val: 15, req: "Livello 3" },
+            { val: 20, req: "Livello 4" },
+            { val: 25, req: "Livello 5" },
+            { val: 30, req: "Livello 6" },
+            { val: 35, req: "Livello 7" },
+            { val: 40, req: "Livello 8" }
+        ],
+        category: "Reroll",
+        conditions: { time: "second_half" },
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "TP", valueRef: "val" }
+        ]
+    },
+    {
+        title: "Limite massimo TP + [TP上限＋]",
+        id: "REROLL_DF_MAX_TP",
+        template: "Aumenta il limite massimo di TP di {VAL}.",
+        levels: [
+            { val: 5, req: "Livello 1" },
+            { val: 10, req: "Livello 2" },
+            { val: 15, req: "Livello 3" },
+            { val: 20, req: "Livello 4" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "TP", valueRef: "val" }
+        ]
+    },
+    {
+        title: "Velocità + [スピード＋]",
+        id: "REROLL_DF_SPEED",
+        template: "Aumenta la statistica di Velocità di {VAL}.",
+        levels: [
+            { val: 1, req: "Livello 1" },
+            { val: 2, req: "Livello 2" }
+        ],
+        category: "Reroll",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Velocità", valueRef: "val" }
+        ]
+    }
+];
