@@ -145,11 +145,9 @@ class AppController {
         const charData = this.activeTeam[slotIndex];
         const slotCard = document.querySelector(`.slot-card[data-slot="${slotIndex}"]`);
         const techSelect = slotCard.querySelector('.sim-tech-select');
-        const mode = document.querySelector('input[name="dataSource"]:checked').value;
         const simMode = document.getElementById('simMode').dataset.value;
-        const allowManualsToggle = document.getElementById('allowManualsToggle');
-
-        const allowManuals = allowManualsToggle.disabled ? false : allowManualsToggle.checked;
+        const mode = 'collection'; // Modalità fissa
+        const allowManuals = false; // Manuali disattivati
 
         if (!charData) return;
 
@@ -160,12 +158,6 @@ class AppController {
 
         if (collData.equippedManual && !allMoves.includes(collData.equippedManual)) {
             allMoves.push(collData.equippedManual);
-        }
-
-        if (allowManuals) {
-            universalManualsKeys.forEach(uniKey => {
-                if (!allMoves.includes(uniKey)) allMoves.push(uniKey);
-            });
         }
 
         const isDefense = simMode === 'defense';
@@ -188,14 +180,10 @@ class AppController {
             const isTaughtMove = !charData.myTechniques.includes(techKey);
 
             let lv;
-            if (mode === 'max') {
-                lv = 10;
+            if (isTaughtMove && techKey !== collData.equippedManual) {
+                lv = 1;
             } else {
-                if (isTaughtMove && techKey !== collData.equippedManual) {
-                    lv = 1;
-                } else {
-                    lv = collData.techLevels && collData.techLevels[techKey] !== undefined ? (collData.techLevels[techKey] + 1) : 1;
-                }
+                lv = collData.techLevels && collData.techLevels[techKey] !== undefined ? (collData.techLevels[techKey] + 1) : 1;
             }
 
             const manualTag = isTaughtMove ? " 📕" : "";
@@ -248,41 +236,13 @@ class AppController {
 
             this.updateSimulation();
         });
-
-        const radios = document.querySelectorAll('input[name="dataSource"]');
-        const toggle = document.getElementById('allowManualsToggle');
-        const toggleLabel = document.querySelector('label[for="allowManualsToggle"]');
-
-        const updateToggleState = (mode) => {
-            if (mode === 'collection') {
-                toggle.checked = false;
-                toggle.disabled = true;
-                toggleLabel.style.opacity = '0.5';
-            } else {
-                toggle.disabled = false;
-                toggleLabel.style.opacity = '1';
-            }
-        };
-
-        const currentMode = document.querySelector('input[name="dataSource"]:checked').value;
-        updateToggleState(currentMode);
-
-        radios.forEach(radio => radio.addEventListener('change', (e) => {
-            updateToggleState(e.target.value);
-            this.updateTechDropdowns();
-            this.updateSimulation();
-        }));
-
-        document.getElementById('allowManualsToggle').addEventListener('change', () => {
-            this.updateTechDropdowns();
-            this.updateSimulation();
-        });
     }
 
     updateSimulation() {
         const teamDataForEngine = [];
         const slotCards = document.querySelectorAll('.slot-card');
-        const mode = document.querySelector('input[name="dataSource"]:checked').value;
+        const mode = 'collection'; // Modalità fissa
+
         const stageConfig = {
             element: document.getElementById('stageElement').dataset.value,
             bonus: parseInt(document.getElementById('stageBonusDisplay').textContent) || 0,
@@ -337,10 +297,10 @@ class AppController {
 
         const clearBox = document.getElementById('defenseClearCheck');
         if (stageConfig.mode === 'defense') {
-            clearBox.textContent = this.lastResult.isClear ? "✓ SOGLIA DIFESA SUPERATA (Danno ≥ 200.000)" : "SOTTO SOGLIA DIFESA (Moltiplicatore 1.0x)";
+            clearBox.textContent = this.lastResult.isClear ? "✓ SOGLIA DIFESA SUPERATA (Danno ≥ 200.000)" : "SOTTO SOGLIA DIFESA (Moltiplicatore base x1.0)";
             clearBox.style.color = "#ffca28";
         } else {
-            clearBox.textContent = this.lastResult.isClear ? "🔥 SOGLIA ATTACCO SUPERATA (Danno ≥ 250.000)" : "SOTTO SOGLIA ATTACCO (Moltiplicatore 2.4x)";
+            clearBox.textContent = this.lastResult.isClear ? "🔥 SOGLIA ATTACCO SUPERATA (Danno ≥ 250.000)" : "SOTTO SOGLIA ATTACCO (Moltiplicatore base x2.4)";
             clearBox.style.color = "#ffca28";
         }
     }
@@ -349,7 +309,7 @@ class AppController {
         if (!this.lastResult || !this.lastResult.slots[slotIndex]) return;
         const slotData = this.lastResult.slots[slotIndex];
         const calc = slotData.calculations;
-        const mode = document.querySelector('input[name="dataSource"]:checked').value;
+        const mode = 'collection'; // Modalità fissa
         const charDb = this.activeTeam[slotIndex];
 
         document.getElementById('modalTitle').textContent = `Dettagli: ${slotData.charName}`;
@@ -392,13 +352,11 @@ class AppController {
         let statsGroups = { livello: [], risveglio: [], reroll: [], compagni: [] };
         slotData.details.stats.forEach(detail => statsGroups[categorizeDetail(detail)].push(detail));
 
-        // Ordine alfabetico per i compagni
         statsGroups.compagni.sort((a, b) => a.source.localeCompare(b.source));
 
-        const statSourceStr = mode === 'max' ? 'Statistica Base (Lv. 300)' : 'Statistica Base';
         let statHtml = `
             <li>
-                <span class="passive-source fw-bold" style="color: #0b1a42;">${statSourceStr}</span>
+                <span class="passive-source fw-bold" style="color: #0b1a42;">Statistica Base</span>
                 <span class="val-badge">+${calc.base.naked.toLocaleString('it-IT')}</span>
             </li>`;
 
@@ -413,7 +371,6 @@ class AppController {
         let powerGroups = { livello: [], risveglio: [], reroll: [], compagni: [] };
         slotData.details.power.forEach(detail => powerGroups[categorizeDetail(detail)].push(detail));
 
-        // Ordine alfabetico per i compagni
         powerGroups.compagni.sort((a, b) => a.source.localeCompare(b.source));
 
         let powerHtml = `

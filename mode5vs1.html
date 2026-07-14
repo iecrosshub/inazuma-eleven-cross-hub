@@ -23,16 +23,6 @@
     <div class="top-bar d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div><h4 class="m-0 text-white fw-bold" id="user-greeting">Accedi per usare la tua Collezione</h4></div>
         <div class="d-flex align-items-center gap-4">
-            <div class="bg-white p-2 rounded border border-light d-flex gap-3">
-                <div class="form-check m-0">
-                    <input class="form-check-input" type="radio" name="dataSource" id="radioCollection" value="collection" checked>
-                    <label class="form-check-label fw-bold" style="color:#0b1a42;" for="radioCollection">La Mia Collezione</label>
-                </div>
-                <div class="form-check m-0">
-                    <input class="form-check-input" type="radio" name="dataSource" id="radioMax" value="max">
-                    <label class="form-check-label text-warning fw-bold text-dark" for="radioMax">Giocatori al MAX</label>
-                </div>
-            </div>
             <div>
                 <button id="btn-login" class="btn btn-light px-4 fw-bold text-dark"><i class="fab fa-google text-danger"></i> Login</button>
                 <button id="btn-logout" class="btn btn-outline-light px-4 fw-bold" style="display: none;">Esci</button>
@@ -45,11 +35,6 @@
         <div class="stage-config-header w-100" style="border-bottom: 1px solid #eef2f7; padding-bottom: 15px;">
             <h3 style="color: #1269e8; font-weight: 900; margin: 0; font-size: 1.6rem;">Configurazione Simulazione</h3>
             <div class="stage-config-controls d-flex align-items-center gap-3">
-                <div class="form-check form-switch m-0 d-flex align-items-center">
-                    <input class="form-check-input mt-0 me-2" type="checkbox" id="allowManualsToggle" style="cursor:pointer; width: 40px; height: 20px;">
-                    <label class="form-check-label fw-bold" style="color: #1269e8; font-size: 1.1rem; cursor:pointer;" for="allowManualsToggle">Insegna Tecniche</label>
-                    <i class="fas fa-info-circle ms-2 fs-5" style="color: #00bcd4; cursor:help;" title="Se attivo, l'Auto-Ottimizzatore valuterà anche le mosse Shop per scoprire qual è la combinazione più forte!"></i>
-                </div>
                 <button id="btn-optimize" class="btn fw-bold text-dark px-4 shadow-sm" style="background-color: #ffc107; border-radius: 6px;"><i class="fas fa-pen me-2"></i> Auto-Ottimizza</button>
             </div>
         </div>
@@ -102,9 +87,32 @@
             (Moltiplicatore: <span id="defenseMult" class="fw-bold">x1.0</span>)
         </p>
     </div>
+
+    <!-- GUIDA AL SIMULATORE -->
+    <div class="p-4 mt-5 rounded shadow-sm" style="background-color: #ffffff; border: 1px solid #d4e1f1;">
+        <h4 style="color: #0b1a42; font-weight: 900; border-bottom: 2px solid #ffca28; padding-bottom: 10px; margin-bottom: 20px;"><i class="fas fa-info-circle text-warning me-2"></i> Guida al Simulatore 5vs1</h4>
+        <div style="color: #506482; font-size: 1.05rem; line-height: 1.6;">
+            <p>Questo simulatore calcola lo <strong>Score Totale</strong> che la tua squadra infliggerà nelle battaglie boss 5vs1 (es. contro l'Alia Academy), utilizzando esclusivamente i livelli e le passive che hai salvato nella tua <a href="collection.html" style="color:#1269e8; font-weight:bold;">Collezione</a>.</p>
+
+            <ul class="mb-0 ps-3">
+                <li class="mb-3"><strong>Danno di Base Combinato:</strong> È la somma pura dei danni inflitti da ogni singolo giocatore. Cliccando sull'icona blu <i class="fas fa-info-circle mx-1 text-primary"></i> accanto al danno di uno slot, potrai vedere l'equazione precisa e quali passive (tue o dei compagni) stanno influenzando il calcolo.</li>
+
+                <li class="mb-3"><strong>Le Soglie di Vittoria:</strong> Affinché il Danno di Base venga convertito in uno Score massiccio, devi superare la soglia richiesta dalla modalità.
+                    <ul class="mt-2 ps-3" style="list-style-type: none;">
+                        <li class="mb-1"><img src="img/Status/Icon_Status_Block.png" style="width:20px; vertical-align:middle; margin-right:5px; margin-bottom:3px;"> <strong>Fase di Difesa:</strong> Richiede <strong>≥ 200.000</strong> di danno combinato. <br> <span class="text-success fw-bold ms-4">✓ Successo: Moltiplicatore x1.5</span> <span class="text-danger fw-bold ms-2">✗ Fallimento: Moltiplicatore x1.0</span></li>
+                        <li class="mt-2"><img src="img/Status/Icon_Status_Kick.png" style="width:20px; vertical-align:middle; margin-right:5px; margin-bottom:3px;"> <strong>Fase di Attacco:</strong> Richiede <strong>≥ 250.000</strong> di danno combinato. <br> <span class="text-success fw-bold ms-4">✓ Successo: Moltiplicatore x3.6</span> <span class="text-danger fw-bold ms-2">✗ Fallimento: Moltiplicatore x2.4</span></li>
+                    </ul>
+                </li>
+
+                <li class="mb-3 mt-3"><strong>Vantaggi Elementali:</strong> Impostando l'<strong>Avversario</strong> nel menu in alto, il sistema ricaverà automaticamente l'elemento dello "Stage" e assegnerà i corretti potenziamenti a chi usa tecniche super-efficaci.</li>
+
+                <li><strong>Auto-Ottimizza:</strong> Usando il tasto giallo <span class="badge bg-warning text-dark mx-1"><i class="fas fa-pen"></i> Auto-Ottimizza</span> in alto a destra, il sistema scansionerà interamente la tua Collezione e troverà matematicamente le migliori formazioni possibili per massimizzare i danni.</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
-<!-- MODALI... -->
+<!-- MODALI -->
 <div id="detailsModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">

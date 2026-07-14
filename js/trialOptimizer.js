@@ -21,8 +21,7 @@ export class TrialOptimizer {
 
         const isTaughtMove = !charData.myTechniques.includes(moveName);
 
-        // Estrazione delle passive Reroll (che applichiamo sempre, a prescindere dal mode MAX,
-        // perché sono personalizzazioni esclusive dell'utente salvate nella collezione)
+        // Estrazione delle passive Reroll
         const cRerolls = collData.rerollSlots || {};
 
         if (mode === 'max') {
@@ -39,7 +38,6 @@ export class TrialOptimizer {
                 passiveLevels[pId] = pDef ? pDef.levels.length - 1 : 0;
             });
 
-            // Inietta le passive Reroll
             Object.values(cRerolls).forEach(r => {
                 if (r && r.id) passiveLevels[r.id] = r.lv;
             });
@@ -47,7 +45,6 @@ export class TrialOptimizer {
         } else {
             const cStats = collData.stats || {};
             const cTechs = collData.techLevels || {};
-            const cPwr = collData.techCustomPower || {}; // Non più usato per il reroll, mantenuto per retrocompatibilità
             const cPass = collData.passives || {};
 
             ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = cStats[s] || 0);
@@ -65,7 +62,6 @@ export class TrialOptimizer {
                 passiveLevels[pId] = cPass[pId] !== undefined ? cPass[pId] : -1;
             });
 
-            // Inietta le passive Reroll
             Object.values(cRerolls).forEach(r => {
                 if (r && r.id) passiveLevels[r.id] = r.lv;
             });
@@ -103,10 +99,9 @@ export class TrialOptimizer {
 
         await new Promise(resolve => setTimeout(resolve, 100));
 
-        const mode = document.querySelector('input[name="dataSource"]:checked').value;
-        const allowManualsToggle = document.getElementById('allowManualsToggle');
-
-        const allowManuals = allowManualsToggle.disabled ? false : allowManualsToggle.checked;
+        // FIX DELL'ERRORE: Hardcodiamo i valori visto che abbiamo rimosso i selettori HTML
+        const mode = 'collection';
+        const allowManuals = false;
 
         const stageElementNode = document.getElementById('stageElement');
         const opponentElementNode = document.getElementById('opponentElement');
@@ -168,7 +163,6 @@ export class TrialOptimizer {
                 const engineFormat = this.createCharEngineFormat(char, move, mode);
                 const advBonus = this.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
 
-                // Usiamo customTechPower SOLO per veicolare l'AdvBonus nel calcolatore finale
                 if (advBonus > 0) engineFormat.customTechPower[move] = advBonus;
 
                 const dummyTeam = [engineFormat];
