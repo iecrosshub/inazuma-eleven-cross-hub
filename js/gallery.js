@@ -45,7 +45,7 @@ function renderGallery(filteredList = characterRegistry) {
 }
 
 // ==========================================
-// GESTIONE DEI MENU A TENDINA CUSTOM (COPIATA DA TEAM BUILDER)
+// GESTIONE DEI MENU A TENDINA CUSTOM
 // ==========================================
 function setupCustomSelects() {
     const customSelects = document.getElementsByClassName("custom-select");
@@ -86,7 +86,40 @@ function closeAllSelect(elmnt) {
 }
 
 // ==========================================
-// LOGICA FILTRAGGIO (Con le chiamate esatte all'HTML aggiornato)
+// LOGICA RIPRISTINO FILTRI SALVATI
+// ==========================================
+function restoreFilters() {
+    const saved = localStorage.getItem('gallery_filters');
+    if (saved) {
+        try {
+            const filters = JSON.parse(saved);
+            const searchInput = document.getElementById('search-name');
+            if (searchInput) searchInput.value = filters.name || '';
+
+            const setCustomSelect = (id, val) => {
+                const el = document.getElementById(id);
+                if (el && val !== undefined && val !== null) {
+                    el.dataset.value = val;
+                    const option = el.querySelector(`.select-items div[data-value="${val}"]`) || el.querySelector('.select-items div');
+                    if (option) {
+                        el.dataset.value = option.dataset.value;
+                        el.querySelector('.select-selected span').innerHTML = option.innerHTML;
+                    }
+                }
+            };
+
+            setCustomSelect('filter-element', filters.element);
+            setCustomSelect('filter-position', filters.position);
+            setCustomSelect('filter-rarity', filters.rarity);
+            setCustomSelect('filter-style', filters.style);
+            setCustomSelect('filter-team', filters.team);
+            setCustomSelect('filter-season', filters.season);
+        } catch (e) {}
+    }
+}
+
+// ==========================================
+// LOGICA FILTRAGGIO (Salvataggio ed Esecuzione)
 // ==========================================
 async function handleFiltersChange() {
     const currentFilters = {
@@ -99,15 +132,26 @@ async function handleFiltersChange() {
         season: document.getElementById('filter-season').getAttribute('data-value')
     };
 
+    // Salva i filtri nel browser
+    localStorage.setItem('gallery_filters', JSON.stringify(currentFilters));
+
     const filteredList = await filterCharacters(characterRegistry, currentFilters);
     renderGallery(filteredList);
 }
 
-// Inizializzazione pagina
+// ==========================================
+// INIZIALIZZAZIONE PAGINA (UNICO BLOCCO)
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    renderGallery(); // Il primissimo caricamento mostra tutti i giocatori
+    // 1. Ripristina i valori HTML dei filtri
+    restoreFilters();
+
+    // 2. Attiva i click delle tendine (UNA SOLA VOLTA)
     setupCustomSelects();
 
-    // L'input testo non ha bisogno dei menu custom, usiamo l'evento input classico
+    // 3. Attiva il filtro testo
     document.getElementById('search-name').addEventListener('input', handleFiltersChange);
+
+    // 4. Lancia il filtro iniziale per renderizzare la griglia corretta all'avvio
+    handleFiltersChange();
 });

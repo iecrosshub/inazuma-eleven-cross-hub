@@ -1,27 +1,85 @@
 // js/teamBuilder.js
 import { coachRegistry } from './Coaches/registry.js';
 import { characterRegistry } from './Characters/registry.js';
-import { fetchCoachData, filterCharacters } from './utils.js'; // Le nostre utility!
+import { fetchCoachData, filterCharacters } from './utils.js';
 
 let currentCoachId = '';
 let activeCoachDb = null;
-let currentSelectedSlot = null;
 let teamRoster = {};
+let activeSelection = null; // Memorizza la selezione attiva: { type: 'slot'|'char', value: ID }
+let lastFilteredList = characterRegistry;
 
-async function init() {
-    renderSidebar();
+// ==========================================
+// SALVATAGGIO E CARICAMENTO MEMORIA
+// ==========================================
+function saveTeamState() {
+    localStorage.setItem('tb_roster', JSON.stringify(teamRoster));
+    localStorage.setItem('tb_coach', currentCoachId);
+}
+
+function loadTeamState() {
+    const savedRoster = localStorage.getItem('tb_roster');
+    const savedCoach = localStorage.getItem('tb_coach');
+
+    if (savedRoster) {
+        try { teamRoster = JSON.parse(savedRoster); } catch(e) { teamRoster = {}; }
+    }
+    if (savedCoach) {
+        currentCoachId = savedCoach;
+    }
+}
+
+function restoreFilters() {
+    const saved = localStorage.getItem('tb_filters');
+    if (saved) {
+        try {
+            const filters = JSON.parse(saved);
+            const searchInput = document.getElementById('filter-name');
+            if (searchInput) searchInput.value = filters.name || '';
+
+            const setCustomSelect = (id, val) => {
+                const el = document.getElementById(id);
+                if (el && val !== undefined && val !== null) {
+                    el.dataset.value = val;
+                    const option = el.querySelector(`.select-items div[data-value="${val}"]`) || el.querySelector('.select-items div');
+                    if (option) {
+                        el.dataset.value = option.dataset.value;
+                        el.querySelector('.select-selected span').innerHTML = option.innerHTML;
+                    }
+                }
+            };
+
+            setCustomSelect('custom-role', filters.position);
+            setCustomSelect('custom-element', filters.element);
+            setCustomSelect('custom-style', filters.style);
+            setCustomSelect('custom-team', filters.team);
+            setCustomSelect('custom-season', filters.season);
+        } catch (e) {}
+    }
+}
+
+// ==========================================
+// INIZIALIZZAZIONE PAGINA
+// ==========================================
+document.addEventListener('DOMContentLoaded', async () => {
+    loadTeamState();
+    restoreFilters();
+
     setupCustomSelects();
 
     document.getElementById('filter-name').addEventListener('input', applyFilters);
     document.getElementById('btn-reset-filters').addEventListener('click', resetFilters);
     document.getElementById('btn-remove-player').addEventListener('click', removePlayerFromSlot);
 
-    renderPlayerGrid(characterRegistry);
-    selectCoach('percivalTravis');
-}
+    if (!currentCoachId || !coachRegistry.some(c => c.id === currentCoachId)) {
+        currentCoachId = 'percivalTravis';
+    }
+    await selectCoach(currentCoachId);
+    applyFilters();
+});
 
 // ==========================================
-// FUNZIONAMENTO DEI MENU A TENDINA CUSTOM
+// FUNZIONAMENTO MENU A TENDINA E FILTRI
 // ==========================================
 function setupCustomSelects() {
     const customSelects = document.getElementsByClassName("custom-select");
@@ -71,8 +129,24 @@ function resetFilters() {
     applyFilters();
 }
 
+async function applyFilters() {
+    const filters = {
+        name: document.getElementById('filter-name').value,
+        position: document.getElementById('custom-role').getAttribute('data-value'),
+        element: document.getElementById('custom-element').getAttribute('data-value'),
+        style: document.getElementById('custom-style').getAttribute('data-value'),
+        team: document.getElementById('custom-team').getAttribute('data-value'),
+        season: document.getElementById('custom-season').getAttribute('data-value')
+    };
+
+    localStorage.setItem('tb_filters', JSON.stringify(filters));
+
+    lastFilteredList = await filterCharacters(characterRegistry, filters);
+    renderPlayerGrid(lastFilteredList);
+}
+
 // ==========================================
-// ALLENATORE E CAMPO
+// ALLENATORE E RENDER
 // ==========================================
 function renderSidebar() {
     const listContainer = document.getElementById('coach-list');
@@ -93,11 +167,11 @@ function renderSidebar() {
     });
 }
 
-// Guarda quanto è snella grazie a fetchCoachData!
 async function selectCoach(id) {
     currentCoachId = id;
-    teamRoster = {};
-    currentSelectedSlot = null;
+    activeSelection = null;
+    saveTeamState();
+
     toggleRemoveButton();
     renderSidebar();
 
@@ -114,46 +188,59 @@ async function selectCoach(id) {
         portrait.style.display = 'none';
     }
 
-    const levelSelect = document.getElementById('coach-level-select');
-    levelSelect.innerHTML = '';
-    if (activeCoachDb.levels && Array.isArray(activeCoachDb.levels)) {
-        activeCoachDb.levels.forEach(lv => {
-            const opt = document.createElement('option');
-            opt.value = lv.level;
-            opt.textContent = `Lv.${lv.level}`;
-            levelSelect.appendChild(opt);
-        });
-        levelSelect.style.display = 'block';
-    } else {
-        levelSelect.style.display = 'none';
-    }
-
     const teamHeader = document.getElementById('team-name-header');
     teamHeader.textContent = activeCoachDb.formationName;
     teamHeader.style.display = 'flex';
 
+    // RENDERIZZA LA BOX DELLE CONDIZIONI
+    const condBox = document.getElementById('tb-conditions-box');
+    const condList = document.getElementById('tb-conditions-list');
+
+    if (activeCoachDb.formationConditions && activeCoachDb.formationConditions.length > 0) {
+        condList.innerHTML = activeCoachDb.formationConditions.map(cond => {
+            const icons = cond.icons || (cond.icon ? [cond.icon] : []);
+            const iconsHtml = icons.map(icon => `<img src="${icon}" onerror="this.src='https://placehold.co/35?text=⚡'">`).join('');
+            return `
+                <div class="tb-condition-row">
+                    <strong>${cond.slotCode}</strong>
+                    ${iconsHtml}
+                </div>
+            `;
+        }).join('');
+        condBox.style.display = 'block';
+    } else {
+        condBox.style.display = 'none';
+    }
+
     renderPitch();
+    renderPlayerGrid(lastFilteredList);
 }
 
+// ==========================================
+// INTERAZIONE CAMPO (Click, Scambio, Spostamento)
+// ==========================================
 function renderPitch() {
     const pitchContainer = document.getElementById('pitch-container');
     if (!activeCoachDb) return;
 
+    const conditionSlots = activeCoachDb.formationConditions ? activeCoachDb.formationConditions.map(c => c.slotCode) : [];
+
     pitchContainer.innerHTML = activeCoachDb.slots.map(slot => {
         const playerId = teamRoster[slot.number];
-        const isSelectedClass = currentSelectedSlot === slot.number ? 'active-selection' : '';
+        const isSelectedClass = (activeSelection && activeSelection.type === 'slot' && activeSelection.value === slot.number) ? 'active-selection' : '';
+        const isConditionClass = conditionSlots.includes(slot.number) ? 'condition-slot' : '';
 
         if (playerId) {
             const player = characterRegistry.find(c => c.id === playerId);
             return `
-                <div class="pitch-slot has-player ${isSelectedClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
+                <div class="pitch-slot has-player ${isSelectedClass} ${isConditionClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
                     <img src="${slot.baseAsset}" class="role-icon" alt="${slot.position}">
                     <img src="${player.thumb}" class="player-thumb" onerror="this.src='https://placehold.co/65'">
                 </div>
             `;
         } else {
             return `
-                <div class="pitch-slot ${isSelectedClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
+                <div class="pitch-slot ${isSelectedClass} ${isConditionClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
                     <img src="${slot.baseAsset}" class="role-icon" alt="${slot.position}">
                     <strong>${slot.number}</strong>
                 </div>
@@ -163,61 +250,54 @@ function renderPitch() {
 }
 
 window.handleSlotClick = function(slotNumber) {
-    if(currentSelectedSlot === slotNumber) {
-        currentSelectedSlot = null;
-    } else {
-        currentSelectedSlot = slotNumber;
+    if (!activeSelection) {
+        // Nulla selezionato: seleziono questo slot in campo
+        activeSelection = { type: 'slot', value: slotNumber };
+    } else if (activeSelection.type === 'slot') {
+        if (activeSelection.value === slotNumber) {
+            // Deseleziona se riclicchi lo stesso
+            activeSelection = null;
+        } else {
+            // SCAMBIO O SPOSTAMENTO DA UNO SLOT ALL'ALTRO
+            const slotA = activeSelection.value;
+            const slotB = slotNumber;
+            const charA = teamRoster[slotA];
+            const charB = teamRoster[slotB];
+
+            if (charB) teamRoster[slotA] = charB; else delete teamRoster[slotA];
+            if (charA) teamRoster[slotB] = charA; else delete teamRoster[slotB];
+
+            activeSelection = null;
+            saveTeamState();
+        }
+    } else if (activeSelection.type === 'char') {
+        // ASSEGNAZIONE: Ho selezionato prima un PG dalla lista a destra, e ora clicco il campo
+        const charId = activeSelection.value;
+        for (const [key, val] of Object.entries(teamRoster)) {
+            if (val === charId) delete teamRoster[key];
+        }
+        teamRoster[slotNumber] = charId;
+        activeSelection = null;
+        saveTeamState();
     }
+
     renderPitch();
+    renderPlayerGrid(lastFilteredList);
     toggleRemoveButton();
 };
-
-function toggleRemoveButton() {
-    const btn = document.getElementById('btn-remove-player');
-    if (currentSelectedSlot !== null && teamRoster[currentSelectedSlot]) {
-        btn.style.display = 'block';
-    } else {
-        btn.style.display = 'none';
-    }
-}
-
-function removePlayerFromSlot() {
-    if (currentSelectedSlot !== null) {
-        delete teamRoster[currentSelectedSlot];
-        currentSelectedSlot = null;
-        renderPitch();
-        toggleRemoveButton();
-    }
-}
-
-// ==========================================
-// FILTRAGGIO LOGICA (Ora passa tutto per utils!)
-// ==========================================
-async function applyFilters() {
-    // 1. Raccogliamo i valori dai custom select (Nota gli ID diversi dall'HTML)
-    const filters = {
-        name: document.getElementById('filter-name').value,
-        position: document.getElementById('custom-role').getAttribute('data-value'),
-        element: document.getElementById('custom-element').getAttribute('data-value'),
-        style: document.getElementById('custom-style').getAttribute('data-value'),
-        team: document.getElementById('custom-team').getAttribute('data-value'),
-        season: document.getElementById('custom-season').getAttribute('data-value')
-    };
-
-    // 2. Chiediamo a utils.js di fare il lavoro asincrono
-    const results = await filterCharacters(characterRegistry, filters);
-
-    // 3. Stampiamo i risultati nella barra laterale
-    renderPlayerGrid(results);
-}
 
 function renderPlayerGrid(playersList) {
     const grid = document.getElementById('player-grid-container');
     grid.innerHTML = '';
 
     playersList.forEach(char => {
+        // Evidenzia visivamente se il personaggio è attualmente il "bersaglio attivo"
+        const isSelected = (activeSelection && activeSelection.type === 'char' && activeSelection.value === char.id);
+        const cardStyle = isSelected ? 'border-color: #ffca28; background: #fffdf5; box-shadow: 0 0 10px rgba(255,202,40,0.8); transform: translateY(-2px);' : '';
+
         const card = document.createElement('div');
         card.className = 'tb-player-card';
+        card.style.cssText = cardStyle;
         card.innerHTML = `
             <img src="${char.thumb}" class="thumb" onerror="this.src='https://placehold.co/50'">
             <div class="name">${char.name}</div>
@@ -231,18 +311,48 @@ function renderPlayerGrid(playersList) {
     });
 }
 
-function assignPlayerToSlot(charId) {
-    if (currentSelectedSlot !== null) {
-        for (const [slot, id] of Object.entries(teamRoster)) {
-            if (id === charId) delete teamRoster[slot];
+window.assignPlayerToSlot = function(charId) {
+    if (!activeSelection) {
+        // Seleziono il giocatore dalla lista
+        activeSelection = { type: 'char', value: charId };
+    } else if (activeSelection.type === 'char') {
+        if (activeSelection.value === charId) {
+            activeSelection = null; // Deseleziona
+        } else {
+            activeSelection = { type: 'char', value: charId }; // Cambia selezione
         }
-        teamRoster[currentSelectedSlot] = charId;
-        currentSelectedSlot = null;
-        renderPitch();
-        toggleRemoveButton();
+    } else if (activeSelection.type === 'slot') {
+        // ASSEGNAZIONE: Ho prima cliccato il campo, ora clicco il PG
+        const slotNumber = activeSelection.value;
+        for (const [key, val] of Object.entries(teamRoster)) {
+            if (val === charId) delete teamRoster[key];
+        }
+        teamRoster[slotNumber] = charId;
+        activeSelection = null;
+        saveTeamState();
+    }
+
+    renderPitch();
+    renderPlayerGrid(lastFilteredList);
+    toggleRemoveButton();
+};
+
+function toggleRemoveButton() {
+    const btn = document.getElementById('btn-remove-player');
+    if (activeSelection && activeSelection.type === 'slot' && teamRoster[activeSelection.value]) {
+        btn.style.display = 'block';
     } else {
-        alert("Clicca prima su un ruolo nel campo per selezionarlo!");
+        btn.style.display = 'none';
     }
 }
 
-document.addEventListener('DOMContentLoaded', init);
+function removePlayerFromSlot() {
+    if (activeSelection && activeSelection.type === 'slot') {
+        delete teamRoster[activeSelection.value];
+        activeSelection = null;
+        saveTeamState();
+        renderPitch();
+        renderPlayerGrid(lastFilteredList);
+        toggleRemoveButton();
+    }
+}
