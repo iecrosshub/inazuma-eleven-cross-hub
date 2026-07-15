@@ -1,12 +1,14 @@
-// js/teamBuilder.js
-import { coachRegistry } from './Coaches/registry.js';
-import { characterRegistry } from './Characters/registry.js';
-import { fetchCoachData, filterCharacters } from './utils.js';
+// js/Controllers/teamBuilder.js
+
+import { coachRegistry } from '../Coaches/registry.js';
+import { characterRegistry, fetchCoachData } from '../Core/database.js';
+import { filterCharacters } from '../Core/roster.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 let currentCoachId = '';
 let activeCoachDb = null;
 let teamRoster = {};
-let activeSelection = null; // Memorizza la selezione attiva: { type: 'slot'|'char', value: ID }
+let activeSelection = null;
 let lastFilteredList = characterRegistry;
 
 // ==========================================
@@ -40,16 +42,15 @@ function restoreFilters() {
             const setCustomSelect = (id, val) => {
                 const el = document.getElementById(id);
                 if (el && val !== undefined && val !== null) {
-                    el.setAttribute('data-value', val);
+                    el.dataset.value = val;
                     const option = el.querySelector(`.select-items div[data-value="${val}"]`) || el.querySelector('.select-items div');
                     if (option) {
-                        el.setAttribute('data-value', option.getAttribute('data-value'));
+                        el.dataset.value = option.dataset.value;
                         el.querySelector('.select-selected span').innerHTML = option.innerHTML;
                     }
                 }
             };
 
-            // USIAMO I NUOVI ID UNIFICATI
             setCustomSelect('filter-position', filters.position);
             setCustomSelect('filter-element', filters.element);
             setCustomSelect('filter-rarity', filters.rarity);
@@ -64,12 +65,15 @@ function restoreFilters() {
 // INIZIALIZZAZIONE PAGINA
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Aspettiamo un istante per assicurarci che il componente <inazuma-filters> sia generato
     setTimeout(async () => {
         loadTeamState();
         restoreFilters();
 
-        setupCustomSelects();
+        // Uso del Componente Universale
+        document.querySelectorAll(".custom-select").forEach(sel => {
+            initCustomSelect(sel, () => applyFilters());
+        });
+        setupGlobalSelectClose();
 
         const searchInput = document.getElementById('search-name');
         if(searchInput) searchInput.addEventListener('input', applyFilters);
@@ -87,47 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
 });
 
-// ==========================================
-// FUNZIONAMENTO MENU A TENDINA E FILTRI
-// ==========================================
-function setupCustomSelects() {
-    const customSelects = document.querySelectorAll(".custom-select");
-    customSelects.forEach(selElmnt => {
-        const selectedDiv = selElmnt.querySelector(".select-selected");
-        const itemsDiv = selElmnt.querySelector(".select-items");
-        if (!selectedDiv || !itemsDiv) return;
-
-        const optionDivs = itemsDiv.querySelectorAll("div");
-
-        selectedDiv.addEventListener("click", function(e) {
-            e.stopPropagation();
-            closeAllSelect(this);
-            itemsDiv.classList.toggle("select-hide");
-        });
-
-        optionDivs.forEach(opt => {
-            opt.addEventListener("click", function(e) {
-                const val = this.getAttribute("data-value");
-                selElmnt.setAttribute("data-value", val);
-                selectedDiv.querySelector("span").innerHTML = this.innerHTML;
-                itemsDiv.classList.add("select-hide");
-                applyFilters();
-            });
-        });
-    });
-    document.addEventListener("click", closeAllSelect);
-}
-
-function closeAllSelect(elmnt) {
-    const items = document.getElementsByClassName("select-items");
-    const selectedDivs = document.getElementsByClassName("select-selected");
-    for (let i = 0; i < selectedDivs.length; i++) {
-        if (elmnt !== selectedDivs[i]) {
-            items[i].classList.add("select-hide");
-        }
-    }
-}
-
 function resetFilters() {
     const searchInput = document.getElementById('search-name');
     if(searchInput) searchInput.value = '';
@@ -136,7 +99,7 @@ function resetFilters() {
     selects.forEach(sel => {
         const firstOption = sel.querySelector('.select-items div');
         if(firstOption) {
-            sel.setAttribute("data-value", firstOption.getAttribute("data-value"));
+            sel.dataset.value = firstOption.dataset.value;
             sel.querySelector('.select-selected span').innerHTML = firstOption.innerHTML;
         }
     });
@@ -144,15 +107,14 @@ function resetFilters() {
 }
 
 async function applyFilters() {
-    // USIAMO I NUOVI ID UNIFICATI
     const filters = {
         name: document.getElementById('search-name')?.value || '',
-        position: document.getElementById('filter-position')?.getAttribute('data-value') || 'All',
-        element: document.getElementById('filter-element')?.getAttribute('data-value') || 'All',
-        rarity: document.getElementById('filter-rarity')?.getAttribute('data-value') || 'All',
-        style: document.getElementById('filter-style')?.getAttribute('data-value') || 'All',
-        team: document.getElementById('filter-team')?.getAttribute('data-value') || 'All',
-        season: document.getElementById('filter-season')?.getAttribute('data-value') || 'All'
+        position: document.getElementById('filter-position')?.dataset.value || 'All',
+        element: document.getElementById('filter-element')?.dataset.value || 'All',
+        rarity: document.getElementById('filter-rarity')?.dataset.value || 'All',
+        style: document.getElementById('filter-style')?.dataset.value || 'All',
+        team: document.getElementById('filter-team')?.dataset.value || 'All',
+        season: document.getElementById('filter-season')?.dataset.value || 'All'
     };
 
     localStorage.setItem('tb_filters', JSON.stringify(filters));
@@ -208,7 +170,6 @@ async function selectCoach(id) {
     teamHeader.textContent = activeCoachDb.formationName;
     teamHeader.style.display = 'flex';
 
-    // RENDERIZZA LA BOX DELLE CONDIZIONI
     const condBox = document.getElementById('tb-conditions-box');
     const condList = document.getElementById('tb-conditions-list');
 
@@ -233,7 +194,7 @@ async function selectCoach(id) {
 }
 
 // ==========================================
-// INTERAZIONE CAMPO (Click, Scambio, Spostamento)
+// INTERAZIONE CAMPO
 // ==========================================
 function renderPitch() {
     const pitchContainer = document.getElementById('pitch-container');
@@ -267,14 +228,11 @@ function renderPitch() {
 
 window.handleSlotClick = function(slotNumber) {
     if (!activeSelection) {
-        // Nulla selezionato: seleziono questo slot in campo
         activeSelection = { type: 'slot', value: slotNumber };
     } else if (activeSelection.type === 'slot') {
         if (activeSelection.value === slotNumber) {
-            // Deseleziona se riclicchi lo stesso
             activeSelection = null;
         } else {
-            // SCAMBIO O SPOSTAMENTO DA UNO SLOT ALL'ALTRO
             const slotA = activeSelection.value;
             const slotB = slotNumber;
             const charA = teamRoster[slotA];
@@ -287,7 +245,6 @@ window.handleSlotClick = function(slotNumber) {
             saveTeamState();
         }
     } else if (activeSelection.type === 'char') {
-        // ASSEGNAZIONE: Ho selezionato prima un PG dalla lista a destra, e ora clicco il campo
         const charId = activeSelection.value;
         for (const [key, val] of Object.entries(teamRoster)) {
             if (val === charId) delete teamRoster[key];
@@ -307,7 +264,6 @@ function renderPlayerGrid(playersList) {
     grid.innerHTML = '';
 
     playersList.forEach(char => {
-        // Evidenzia visivamente se il personaggio è attualmente il "bersaglio attivo"
         const isSelected = (activeSelection && activeSelection.type === 'char' && activeSelection.value === char.id);
         const cardStyle = isSelected ? 'border-color: #ffca28; background: #fffdf5; box-shadow: 0 0 10px rgba(255,202,40,0.8); transform: translateY(-2px);' : '';
 
@@ -329,16 +285,14 @@ function renderPlayerGrid(playersList) {
 
 window.assignPlayerToSlot = function(charId) {
     if (!activeSelection) {
-        // Seleziono il giocatore dalla lista
         activeSelection = { type: 'char', value: charId };
     } else if (activeSelection.type === 'char') {
         if (activeSelection.value === charId) {
-            activeSelection = null; // Deseleziona
+            activeSelection = null;
         } else {
-            activeSelection = { type: 'char', value: charId }; // Cambia selezione
+            activeSelection = { type: 'char', value: charId };
         }
     } else if (activeSelection.type === 'slot') {
-        // ASSEGNAZIONE: Ho prima cliccato il campo, ora clicco il PG
         const slotNumber = activeSelection.value;
         for (const [key, val] of Object.entries(teamRoster)) {
             if (val === charId) delete teamRoster[key];

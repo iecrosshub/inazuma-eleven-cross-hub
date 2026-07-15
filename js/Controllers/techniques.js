@@ -1,6 +1,7 @@
-// js/techniques.js
+// js/Controllers/techniques.js
 
-import { techniquesLibrary } from './utils.js';
+import { techniquesLibrary } from '../Core/database.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 class TechniquesDatabase {
     constructor() {
@@ -9,12 +10,12 @@ class TechniquesDatabase {
     }
 
     init() {
-        this.restoreFilters(); // Ripristina i filtri dal LocalStorage PRIMA di generare i menu
+        this.restoreFilters();
         this.setupCustomSelects();
 
         document.getElementById('search-name').addEventListener('input', () => this.applyFilters());
 
-        this.applyFilters(); // Applica i filtri all'avvio
+        this.applyFilters();
     }
 
     restoreFilters() {
@@ -46,31 +47,11 @@ class TechniquesDatabase {
     }
 
     setupCustomSelects() {
+        // Uso del Componente Universale
         document.querySelectorAll('.filters-container .custom-select').forEach(customSelect => {
-            const selectedDiv = customSelect.querySelector('.select-selected');
-            const itemsDiv = customSelect.querySelector('.select-items');
-
-            selectedDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('.select-items').forEach(el => {
-                    if (el !== itemsDiv) el.classList.add('select-hide');
-                });
-                itemsDiv.classList.toggle('select-hide');
-            });
-
-            itemsDiv.querySelectorAll('div').forEach(option => {
-                option.addEventListener('click', () => {
-                    customSelect.dataset.value = option.dataset.value;
-                    selectedDiv.querySelector('span').innerHTML = option.innerHTML;
-                    itemsDiv.classList.add('select-hide');
-                    this.applyFilters();
-                });
-            });
+            initCustomSelect(customSelect, () => this.applyFilters());
         });
-
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.select-items').forEach(el => el.classList.add('select-hide'));
-        });
+        setupGlobalSelectClose();
     }
 
     applyFilters() {
@@ -82,7 +63,6 @@ class TechniquesDatabase {
             catchType: document.getElementById('filter-catch').dataset.value
         };
 
-        // Salva i filtri aggiornati nel LocalStorage
         localStorage.setItem('techniques_filters', JSON.stringify(filters));
 
         const filteredArray = this.allTechniques.filter(tech => {
@@ -93,9 +73,8 @@ class TechniquesDatabase {
             if (filters.sb === 'yes' && !tech.shootBlock) return false;
             if (filters.sb === 'no' && tech.shootBlock) return false;
 
-            // Filtro Parata (Blocco / Respinta)
             if (filters.catchType !== 'All') {
-                if (tech.kind !== 'Parata') return false; // Se cerchiamo un tipo di parata, escludiamo tiri/dribbling/blocchi
+                if (tech.kind !== 'Parata') return false;
 
                 const isPunch = tech.punch === true || tech.catchType === 'Respinta' || tech.catchType === 'Punch';
                 if (filters.catchType === 'Respinta' && !isPunch) return false;

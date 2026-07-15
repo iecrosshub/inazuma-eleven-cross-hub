@@ -1,4 +1,4 @@
-// js/filters.js
+// js/Components/filters.js
 
 const filtersHTML = `
 <div class="row g-3">

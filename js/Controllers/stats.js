@@ -1,6 +1,8 @@
-// js/stats.js
+// js/Controllers/stats.js
 
-import { characterRegistry, filterCharacters } from './utils.js';
+import { characterRegistry } from '../Core/database.js';
+import { filterCharacters } from '../Core/roster.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 class StatsDatabase {
     constructor() {
@@ -13,7 +15,7 @@ class StatsDatabase {
     async init() {
         for (const char of characterRegistry) {
             try {
-                const module = await import(`./Characters/${char.id}.js`);
+                const module = await import(`../Characters/${char.id}.js`);
                 this.allChars.push({ id: char.id, ...char, ...module.charData });
             } catch (e) { console.error("Error loading", char.id); }
         }
@@ -26,32 +28,11 @@ class StatsDatabase {
     }
 
     setupCustomSelects() {
+        // Uso del Componente Universale
         document.querySelectorAll('.custom-select').forEach(customSelect => {
-            const selectedDiv = customSelect.querySelector('.select-selected');
-            const itemsDiv = customSelect.querySelector('.select-items');
-
-            selectedDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('.select-items').forEach(el => {
-                    if(el !== itemsDiv) el.classList.add('select-hide');
-                });
-                itemsDiv.classList.toggle('select-hide');
-            });
-
-            itemsDiv.querySelectorAll('div').forEach(option => {
-                option.addEventListener('click', () => {
-                    customSelect.dataset.value = option.dataset.value;
-                    selectedDiv.querySelector('span').innerHTML = option.innerHTML;
-                    itemsDiv.classList.add('select-hide');
-
-                    customSelect.dispatchEvent(new Event('change'));
-                });
-            });
+            initCustomSelect(customSelect, () => this.updateView());
         });
-
-        document.querySelectorAll('.custom-select').forEach(sel => {
-            sel.addEventListener('change', () => this.updateView());
-        });
+        setupGlobalSelectClose();
     }
 
     toggleSort(key) {
@@ -61,7 +42,6 @@ class StatsDatabase {
     }
 
     async updateView() {
-        // Leggiamo tutti i 7 filtri presenti in pagina
         const filters = {
             name: document.getElementById('search-name').value,
             element: document.getElementById('filter-element').dataset.value,
@@ -72,7 +52,6 @@ class StatsDatabase {
             season: document.getElementById('filter-season').dataset.value
         };
 
-        // Passa l'oggetto filters alla funzione universale di filtraggio
         let data = await filterCharacters(this.allChars, filters);
 
         data.sort((a, b) => {

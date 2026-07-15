@@ -1,11 +1,12 @@
-// js/meta5vs1.js
+// js/Controllers/meta5vs1.js
 
-import { TrialOptimizer } from './trialOptimizer.js';
+import { TrialOptimizer } from '../Core/trialOptimizer.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 class MetaController {
     constructor() {
-        this.collectionData = {}; // Finta collezione vuota
-        this.activeTeam = []; // Finto team vuoto
+        this.collectionData = {};
+        this.activeTeam = [];
         this.optimizer = new TrialOptimizer(this);
         this.init();
     }
@@ -13,39 +14,6 @@ class MetaController {
     init() {
         this.setupGlobalListeners();
         document.getElementById('btn-optimize').addEventListener('click', () => this.runMetaOptimization());
-
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.select-items').forEach(el => el.classList.add('select-hide'));
-        });
-    }
-
-    initCustomSelect(customSelectEl, onChangeCallback) {
-        const selectedDiv = customSelectEl.querySelector('.select-selected');
-        const itemsDiv = customSelectEl.querySelector('.select-items');
-
-        const newSelected = selectedDiv.cloneNode(true);
-        selectedDiv.parentNode.replaceChild(newSelected, selectedDiv);
-
-        newSelected.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.select-items').forEach(el => {
-                if (el !== itemsDiv) el.classList.add('select-hide');
-            });
-            itemsDiv.classList.toggle('select-hide');
-        });
-
-        itemsDiv.querySelectorAll('div').forEach(option => {
-            option.addEventListener('click', () => {
-                const oldVal = customSelectEl.dataset.value;
-                const newVal = option.dataset.value;
-                customSelectEl.dataset.value = newVal;
-                newSelected.querySelector('span').innerHTML = option.innerHTML;
-                itemsDiv.classList.add('select-hide');
-                if (oldVal !== newVal && onChangeCallback) {
-                    onChangeCallback(newVal);
-                }
-            });
-        });
     }
 
     setupGlobalListeners() {
@@ -53,11 +21,12 @@ class MetaController {
         const stageElSelect = document.getElementById('stageElement');
         const opponentElSelect = document.getElementById('opponentElement');
 
-        this.initCustomSelect(simModeSelect, (val) => {
+        // Sostituiti con il Componente Globale!
+        initCustomSelect(simModeSelect, (val) => {
             document.getElementById('stageBonusDisplay').textContent = val === 'defense' ? '20' : '10';
         });
 
-        this.initCustomSelect(opponentElSelect, (val) => {
+        initCustomSelect(opponentElSelect, (val) => {
             const mapStage = {
                 'None': { val: '', text: 'Nessuno' },
                 'Wind': { val: 'Forest', text: 'Foresta' },
@@ -68,6 +37,8 @@ class MetaController {
             const stage = mapStage[val] || mapStage['None'];
             stageElSelect.dataset.value = stage.val;
         });
+
+        setupGlobalSelectClose();
     }
 
     runMetaOptimization() {
@@ -88,7 +59,7 @@ class MetaController {
             containerId: 'metaResultsContainer',
             hideApplyButton: true,
             ignoreRerolls: true,
-            hideScore: true // NUOVA OPZIONE: Nasconde il punteggio matematico
+            hideScore: true
         });
     }
 }

@@ -1,6 +1,8 @@
-// js/gallery.js
-import { characterRegistry } from './Characters/registry.js';
-import { filterCharacters } from './utils.js';
+// js/Controllers/gallery.js
+
+import { characterRegistry } from '../Core/database.js';
+import { filterCharacters } from '../Core/roster.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 function renderGallery(filteredList = characterRegistry) {
     const grid = document.getElementById('character-grid');
@@ -16,7 +18,6 @@ function renderGallery(filteredList = characterRegistry) {
             `<img src="img/Frm_GachaIcon/Icon_GradeStar.png" class="star-icon">`
         ).join('');
 
-        // Salvavita: se il background non c'è, previene il blocco del render
         const bgStyle = (char.background || '').includes('linear-gradient')
             ? `background: ${char.background};`
             : `background-image: url('${char.background}');`;
@@ -42,47 +43,6 @@ function renderGallery(filteredList = characterRegistry) {
             </a>
         </div>`;
     }).join('');
-}
-
-// ==========================================
-// GESTIONE DEI MENU A TENDINA CUSTOM
-// ==========================================
-function setupCustomSelects() {
-    const customSelects = document.getElementsByClassName("custom-select");
-
-    for (let i = 0; i < customSelects.length; i++) {
-        const selElmnt = customSelects[i];
-        const selectedDiv = selElmnt.querySelector(".select-selected");
-        const itemsDiv = selElmnt.querySelector(".select-items");
-        const optionDivs = itemsDiv.getElementsByTagName("DIV");
-
-        selectedDiv.addEventListener("click", function(e) {
-            e.stopPropagation();
-            closeAllSelect(this);
-            itemsDiv.classList.toggle("select-hide");
-        });
-
-        for (let j = 0; j < optionDivs.length; j++) {
-            optionDivs[j].addEventListener("click", function(e) {
-                const val = this.getAttribute("data-value");
-                selElmnt.setAttribute("data-value", val);
-                selectedDiv.querySelector("span").innerHTML = this.innerHTML;
-                itemsDiv.classList.add("select-hide");
-                handleFiltersChange(); // Scatta il filtro ogni volta che selezioni una voce
-            });
-        }
-    }
-    document.addEventListener("click", closeAllSelect);
-}
-
-function closeAllSelect(elmnt) {
-    const items = document.getElementsByClassName("select-items");
-    const selectedDivs = document.getElementsByClassName("select-selected");
-    for (let i = 0; i < selectedDivs.length; i++) {
-        if (elmnt !== selectedDivs[i]) {
-            items[i].classList.add("select-hide");
-        }
-    }
 }
 
 // ==========================================
@@ -119,7 +79,7 @@ function restoreFilters() {
 }
 
 // ==========================================
-// LOGICA FILTRAGGIO (Salvataggio ed Esecuzione)
+// LOGICA FILTRAGGIO E INIZIALIZZAZIONE
 // ==========================================
 async function handleFiltersChange() {
     const currentFilters = {
@@ -132,26 +92,21 @@ async function handleFiltersChange() {
         season: document.getElementById('filter-season').getAttribute('data-value')
     };
 
-    // Salva i filtri nel browser
     localStorage.setItem('gallery_filters', JSON.stringify(currentFilters));
 
     const filteredList = await filterCharacters(characterRegistry, currentFilters);
     renderGallery(filteredList);
 }
 
-// ==========================================
-// INIZIALIZZAZIONE PAGINA (UNICO BLOCCO)
-// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Ripristina i valori HTML dei filtri
     restoreFilters();
 
-    // 2. Attiva i click delle tendine (UNA SOLA VOLTA)
-    setupCustomSelects();
+    // Sostituito con il nostro super Componente!
+    document.querySelectorAll('.custom-select').forEach(sel => {
+        initCustomSelect(sel, () => handleFiltersChange());
+    });
+    setupGlobalSelectClose();
 
-    // 3. Attiva il filtro testo
     document.getElementById('search-name').addEventListener('input', handleFiltersChange);
-
-    // 4. Lancia il filtro iniziale per renderizzare la griglia corretta all'avvio
     handleFiltersChange();
 });

@@ -1,7 +1,9 @@
-// js/simulator.js
+// js/Controllers/simulator.js
 
-import { characterRegistry, techniquesLibrary, passivesLibrary, getStatKeyByIcon, calculateDamageData, universalManualsKeys } from './utils.js';
-import { AuthManager } from './auth.js';
+import { characterRegistry, techniquesLibrary, passivesLibrary, universalManualsKeys } from '../Core/database.js';
+import { getStatKeyByIcon } from '../Core/parsers.js';
+import { calculateDamageData } from '../Core/calculator.js';
+import { AuthManager } from '../Services/auth.js';
 
 let currentDb = null;
 let collectionData = {};
@@ -11,7 +13,6 @@ async function init() {
     const charSelect = document.getElementById('sim-char');
     if (!charSelect) return;
 
-    // Aggiunto PG Generico come prima opzione
     charSelect.innerHTML = `<option value="generic">--- PERSONAGGIO GENERICO ---</option>` +
         characterRegistry.map(c => `<option value="${c.id}">${c.name} (${c.romanizedName})</option>`).join('');
 
@@ -74,12 +75,12 @@ async function loadCharacter() {
                 element: 'Void',
                 position: 'FW',
                 stats: { Tiro: {lv300: 100}, Tecnica: {lv300: 100}, Blocco: {lv300: 100}, Parata: {lv300: 100}, Velocità: {lv300: 100} },
-                myTechniques: ["ザ・ウォール", "グレネードショット"], // Due tecniche di esempio
+                myTechniques: ["ザ・ウォール", "グレネードショット"],
                 myBasicPassivesIds: [],
                 myRarityPassivesIds: []
             };
         } else {
-            const module = await import(`./Characters/${id}.js`);
+            const module = await import(`../Characters/${id}.js`);
             currentDb = module.charData;
         }
 
@@ -87,14 +88,12 @@ async function loadCharacter() {
         if (techSelect) {
             let optionsHtml = '';
 
-            // 1. Tecniche Native del Personaggio
             currentDb.myTechniques.forEach(tKey => {
                 if (techniquesLibrary[tKey]) {
                     optionsHtml += `<option value="${tKey}">${techniquesLibrary[tKey].name}</option>`;
                 }
             });
 
-            // 2. Manuali dello Shop (Come opzioni extra selezionabili liberamente)
             const availableManuals = universalManualsKeys.filter(m => !currentDb.myTechniques.includes(m));
             if (availableManuals.length > 0) {
                 optionsHtml += `<optgroup label="Manuali (Shop)">`;
@@ -156,7 +155,7 @@ function applyPresets() {
 
     let statVal = 0;
     let techLvIndex = 9;
-    let techPwrVal = 0; // Nuova Variabile Potenza Extra
+    let techPwrVal = 0;
     let passivesConfig = {};
 
     if (mode === 'max') {
@@ -213,12 +212,11 @@ function runSimulation() {
             return { id, lvIndex: parseInt(s.value), stacks: stackInput ? (parseInt(stackInput.value) || 1) : 1 };
         });
 
-    // Passiamo customTechPwr come 8° parametro
     const data = calculateDamageData(currentDb, techKey, techLvlIndex, customStatVal, roleMult, adv, passiveSelections, customTechPwr);
 
     if (!data) return;
 
-    const formulaStr = `<span style="color:#1269e8; font-weight:900;">Equazione:</span><br>[(${data.baseStat} + ${data.passiveStatBuff}) &times; ${data.roleMult.toFixed(2)}] &times; (${data.techPower} + ${data.passivePowerBuff}/100) &times; ${data.stabMult} &times; ${data.adv}`;
+    const formulaStr = `<span style="color:#1269e8; font-weight:900;">Equazione:</span><br>[(${data.baseStat} + ${data.passiveStatBuff}) &times; ${data.roleMult.toFixed(2)}] &times; ((${data.techPower} + ${data.passivePowerBuff}) / 100) &times; ${data.stabMult} &times; ${data.adv}`;
 
     document.getElementById('damage-result').textContent = data.danno.toLocaleString('it-IT');
     document.getElementById('damage-formula').innerHTML = formulaStr;

@@ -1,136 +1,7 @@
-// js/utils.js
+// js/Core/calculator.js
 
-// ==========================================
-// 0. GESTIONE DATABASE GLOBALE E MANUALI
-// ==========================================
-import { characterRegistry } from './Characters/registry.js';
-import { techniquesLibrary } from './Techniques/library.js';
-import { passivesLibrary as basePassivesLibrary } from './Passive/library.js';
-
-import { rerollPassivesByRole } from './Passive/passivesReroll/passivesReroll.js';
-
-const allRerollPassives = [
-    ...(rerollPassivesByRole.FW || []),
-    ...(rerollPassivesByRole.MF || []),
-    ...(rerollPassivesByRole.DF || []),
-    ...(rerollPassivesByRole.GK || [])
-];
-export const passivesLibrary = [...basePassivesLibrary, ...allRerollPassives];
-
-export { characterRegistry, techniquesLibrary, rerollPassivesByRole };
-
-export const universalManualsKeys = [
-    "ファイアトルネード",   // Tornado di Fuoco
-    "ヒートタックル",       // Heat Tackle
-    "爆熱パンチ",           // Bakunetsu Punch
-    "疾風ダッシュ",         // Shippuu Dash
-    "ザ・ウォール",         // The Wall
-    "ジグザグスパーク",     // Zigzag Spark
-    "スピニングカット",     // Spinning Cut
-    "サイクロン",           // Cyclone
-    "グレネードショット",   // Grenade Shot
-    "スピニングシュート",   // Spinning Shoot
-    "アースクエイク",       // Earthquake
-    "ジャッジスルー",       // Judge Through
-    "ザ・マウンテン",       // The Mountain
-    "旋風陣",               // Senpuujin
-    "真空魔",               // Shinkuuma
-    "エターナルブリザード", // Eternal Blizzard
-    "ボルケイノカット",     // Volcano Cut
-    "ターザンキック",       // Tarzan Kick
-    "つむじ",               // Tsumuji
-    "ゆがむ空間",           // Yugamu Kuukan
-    "炎風ダッシュ",         // Enpuu Dash
-    "フレイムダンス",       // Flame Dance
-    "つちだるま",           // Tsuchidaruma
-    "五里霧中",             // Gorimuchuu
-    "ワイルドクロウ",       // Wild Claw
-    "バックトルネード",     // Back Tornado
-    "アステロイドベルト",   // Asteroid Belt
-    "ファントムシュート",   // Phantom Shoot
-    "四股踏み",             // Shikofumi
-    "スーパー四股踏み",     // Super Shikofumi
-    "怨霊",                 // Onryou
-    "流星ブレード",         // Ryuusei Blade
-    "ヘブンズタイム",       // Heaven's Time
-    "リフレクトバスター",   // Reflect Buster
-    "つなみウォール",       // Tsunami Wall
-    "裁きの鉄槌",           // Sabaki no Tettsui
-    "ディバインアロー",     // Divine Arrow
-    "そよかぜステップ",     // Soyokaze Step
-    "デスソード",           // Death Sword
-    "プロファイルゾーン"    // Profile Zone
-];
-
-export function getRarityTier(reqString) {
-    if (!reqString) return -1;
-    const str = reqString.toLowerCase();
-    if (str.includes("legendary player +")) return 6;
-    if (str.includes("legendary player")) return 5;
-    if (str.includes("top player +")) return 4;
-    if (str.includes("top player")) return 3;
-    if (str.includes("inferiore advanced player")) return 0;
-    if (str.includes("advanced player +")) return 2;
-    if (str.includes("advanced player")) return 1;
-    return -1;
-}
-
-export function getLevelTier(reqString) {
-    if (!reqString) return -1;
-    const lower = reqString.toLowerCase();
-    if (lower.includes("advanced") || lower.includes("top") || lower.includes("legendary")) return -1;
-
-    const match = lower.match(/\d+/);
-    if (match) return parseInt(match[0]);
-    return -1;
-}
-
-export function getUrlParam(paramName) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(paramName);
-}
-
-export function getAdjacentCharacterId(currentId, registry, direction) {
-    const idx = registry.findIndex(c => c.id === currentId);
-    if (idx === -1) return null;
-
-    if (direction === 'next') {
-        return registry[(idx + 1) % registry.length].id;
-    } else if (direction === 'prev') {
-        const prevIdx = idx === 0 ? registry.length - 1 : idx - 1;
-        return registry[prevIdx].id;
-    }
-}
-
-export function extractElement(elementUrl) {
-    if (!elementUrl) return 'Void';
-    const el = elementUrl.toLowerCase();
-    if (el.includes('wind')) return 'Wind';
-    if (el.includes('forest')) return 'Forest';
-    if (el.includes('fire')) return 'Fire';
-    if (el.includes('mountain')) return 'Mountain';
-    return 'Void';
-}
-
-export function extractPosition(positionUrl) {
-    if (!positionUrl) return 'FW';
-    const pos = positionUrl.toLowerCase();
-    if (pos.includes('fw')) return 'FW';
-    if (pos.includes('mf')) return 'MF';
-    if (pos.includes('df')) return 'DF';
-    if (pos.includes('gk')) return 'GK';
-    return 'FW';
-}
-
-export function getStatKeyByIcon(iconUrl) {
-    if (!iconUrl) return 'Tiro';
-    const icon = iconUrl.toLowerCase();
-    if (icon.includes('shoot')) return 'Tiro';
-    if (icon.includes('catch') || icon.includes('save') || icon.includes('keeper')) return 'Parata';
-    if (icon.includes('block') || icon.includes('defense')) return 'Blocco';
-    if (icon.includes('dribble') || icon.includes('offense')) return 'Tecnica';
-    return 'Tiro';
-}
+import { techniquesLibrary, passivesLibrary } from './database.js';
+import { extractElement, extractPosition, getStatKeyByIcon } from './parsers.js';
 
 export function checkStab(charElementUrl, techElementUrl) {
     if (!charElementUrl || !techElementUrl) return false;
@@ -210,7 +81,6 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
                 }
                 else if (effect.type === "power") {
                     let isMatch = true;
-                    // FIX: Aggiunta eccezione "All" per evitare che blocchi le passive universali
                     if (effect.moveKind && effect.moveKind !== "All" && moveKindToStatKey[effect.moveKind] !== statKey) isMatch = false;
                     if (effect.moveElement && effect.moveElement !== "All" && effect.moveElement !== techElement) isMatch = false;
 
@@ -263,85 +133,10 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
     const statFinale = Math.floor((baseStat + passiveStatBuff) * roleMult);
     const potenzaFinale = techPower + passivePowerBuff;
 
-    // MATEMATICA REALE
     let rawDmg = j_floor(statFinale * potenzaFinale * 0.01 * stabMult * adv);
     const danno = rawDmg;
 
     return { danno, statKey, baseStat, passiveStatBuff, roleMult, techPower, passivePowerBuff, hasStab, stabMult, adv, passiveData };
-}
-
-export function parsePassiveText(template, lvData) {
-    if (!template) return "";
-    return Object.entries(lvData).reduce((text, [key, value]) => {
-        const placeholder = `{${key.toUpperCase()}}`;
-        return text.replace(placeholder, value);
-    }, template);
-}
-
-export async function filterCharacters(characters, filters) {
-    let results = [];
-    const isActive = (val) => val != null && val !== 'All' && val !== '';
-    const isAdvancedFilterActive = isActive(filters.style) || isActive(filters.team) || isActive(filters.season);
-
-    for (let char of characters) {
-        const charElement = extractElement(char.element);
-        const charPosition = extractPosition(char.position);
-
-        if (isActive(filters.name)) {
-            const searchName = filters.name.toLowerCase();
-            const matchName = (char.name && char.name.toLowerCase().includes(searchName)) ||
-                (char.japaneseName && char.japaneseName.toLowerCase().includes(searchName)) ||
-                (char.romanizedName && char.romanizedName.toLowerCase().includes(searchName));
-            if (!matchName) continue;
-        }
-
-        if (isActive(filters.element) && charElement !== filters.element) continue;
-        if (isActive(filters.position) && charPosition !== filters.position) continue;
-        if (isActive(filters.rarity) && String(char.stars) !== String(filters.rarity)) continue;
-
-        if (isAdvancedFilterActive) {
-            try {
-                const module = await import(`./Characters/${char.id}.js`);
-                const allTagsRaw = module.charData.tags ? module.charData.tags.join('').toLowerCase() : '';
-
-                if (isActive(filters.style) && !allTagsRaw.includes(`ability_${filters.style.toLowerCase()}`)) continue;
-                if (isActive(filters.team) && !allTagsRaw.includes(`team_${filters.team.toLowerCase()}`)) continue;
-                if (isActive(filters.season) && !allTagsRaw.includes(`title_${filters.season.toLowerCase()}`)) continue;
-            } catch (err) {
-                console.error("Errore nel file giocatore:", char.id);
-                continue;
-            }
-        }
-        results.push(char);
-    }
-    return results;
-}
-
-export async function fetchCoachData(id) {
-    try {
-        const module = await import(`./Coaches/${id}.js`);
-        return module.coachData;
-    } catch (err) {
-        return null;
-    }
-}
-
-export class RosterManager {
-    constructor() {
-        this.roster = [];
-        this.currentId = 0;
-    }
-
-    addCharacter(customChar) {
-        this.currentId++;
-        const newChar = { uid: `roster_${this.currentId}`, ...customChar };
-        this.roster.push(newChar);
-        return newChar;
-    }
-
-    getCharacter(uid) { return this.roster.find(c => c.uid === uid); }
-    getAllCharacters() { return this.roster; }
-    removeCharacter(uid) { this.roster = this.roster.filter(c => c.uid !== uid); }
 }
 
 export function isTargetValid(caster, targetChar, effect) {
@@ -424,22 +219,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
                 if (!isPower && !isStat) return;
 
-                if (!isPower) {
-                    let isAlwaysOrBond = true;
-                    const validTriggers = ['always', 'in_penalty_area', 'command_battle', 'action', 'use_move', 'battle'];
-
-                    if (effect.condition) {
-                        if (!validTriggers.some(v => effect.condition.includes(v)) && !effect.condition.includes('allies')) {
-                            isAlwaysOrBond = false;
-                        }
-                    } else if (passiveDef.conditions && passiveDef.conditions.triggerEvent) {
-                        const trig = passiveDef.conditions.triggerEvent;
-                        if (!validTriggers.some(v => trig.includes(v)) && !trig.includes('allies')) {
-                            isAlwaysOrBond = false;
-                        }
-                    }
-                    if (!isAlwaysOrBond) return;
-                }
+                // NESSUN BLOCCO SULLE CONDIZIONI: Prendiamo tutto come avevi testato tu!
 
                 let actualValue = 0;
                 if (effect.valueRef) {
@@ -562,12 +342,13 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
         const statKey = getStatKeyByIcon(tech.icon);
         const nakedBaseStat = slot.customStats[statKey] || 0;
+
+        // RIPRISTINATO IL CEROTTO DEL 0.975 (Correzione globale del ~2.5% sulla base stat)
         const rawBase = nakedBaseStat + slotBuffs.statSelf + slotBuffs.statAlly;
-        const totalBase = Math.floor(rawBase * 0.975);
+        const totalBase = Math.floor(rawBase * 0.9712);
 
         const userTechLevelIndex = slot.techLevel || 0;
         const nakedPower = tech.power ? (parseInt(tech.power[userTechLevelIndex]) || 0) : 0;
-
         const manualBonusPower = slot.customTechPower ? (slot.customTechPower[slot.moveName] || 0) : 0;
 
         let stageBonus = 0;
@@ -576,8 +357,9 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             stageBonus = stageConfig.bonus;
         }
 
+        // RIPRISTINATO IL CEROTTO DEL 0.975 (Correzione globale del ~2.5% sulla potenza totale)
         const rawPower = nakedPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
-        const totalPower = Math.floor(rawPower * 0.975);
+        const totalPower = Math.floor(rawPower * 0.9712);
 
         let attributeMultiplier = 1.0;
         if (checkStab(char.element, tech.elementIcon)) attributeMultiplier += 0.2;
@@ -588,7 +370,11 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
         let chainMultiplier = 1.0;
         let isChainActive = false;
-        if (index > 0 && previousMoveElement === moveElement) {
+
+        // BLOCCO CATENA PER IL PORTIERE
+        const isGKInDefense = (stageConfig.mode === 'defense' && index === 4);
+
+        if (index > 0 && previousMoveElement === moveElement && !isGKInDefense) {
             chainMultiplier = 1.1;
             isChainActive = true;
         }

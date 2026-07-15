@@ -1,16 +1,10 @@
-// js/collection.js
-import {
-    characterRegistry,
-    techniquesLibrary,
-    passivesLibrary,
-    filterCharacters,
-    universalManualsKeys,
-    getRarityTier,
-    getLevelTier,
-    rerollPassivesByRole,
-    extractPosition
-} from './utils.js';
-import { AuthManager } from './auth.js';
+// js/Controllers/collection.js
+
+import { characterRegistry, techniquesLibrary, passivesLibrary, universalManualsKeys, rerollPassivesByRole } from '../core/database.js';
+import { getRarityTier, getLevelTier, extractPosition } from '../Core/parsers.js';
+import { filterCharacters } from '../Core/roster.js';
+import { AuthManager } from '../Services/auth.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 class CollectionApp {
     constructor() {
@@ -72,28 +66,6 @@ class CollectionApp {
 
         this.setupUnsavedTracking();
         this.setupNavigationInterception();
-    }
-
-    initSingleCustomSelect(customSelect) {
-        const selectedDiv = customSelect.querySelector('.select-selected');
-        const itemsDiv = customSelect.querySelector('.select-items');
-
-        selectedDiv.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.select-items').forEach(el => {
-                if(el !== itemsDiv) el.classList.add('select-hide');
-            });
-            itemsDiv.classList.toggle('select-hide');
-        });
-
-        itemsDiv.querySelectorAll('div').forEach(option => {
-            option.addEventListener('click', () => {
-                customSelect.dataset.value = option.dataset.value;
-                selectedDiv.querySelector('span').innerHTML = option.innerHTML;
-                itemsDiv.classList.add('select-hide');
-                customSelect.dispatchEvent(new Event('change'));
-            });
-        });
     }
 
     restoreFilters() {
@@ -185,13 +157,10 @@ class CollectionApp {
 
     setupCustomSelects() {
         document.querySelectorAll('.filters-container .custom-select').forEach(customSelect => {
-            this.initSingleCustomSelect(customSelect);
+            initCustomSelect(customSelect); // Usa il Componente Universale!
             customSelect.addEventListener('change', () => this.triggerFilter());
         });
-
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.select-items').forEach(el => el.classList.add('select-hide'));
-        });
+        setupGlobalSelectClose();
     }
 
     handleAuthState(user) {
@@ -222,7 +191,7 @@ class CollectionApp {
 
         for (const char of characterRegistry) {
             try {
-                const module = await import(`./Characters/${char.id}.js`);
+                const module = await import(`../Characters/${char.id}.js`);
                 const fullData = module.charData;
                 this.buildPlayerCard(grid, char, fullData);
             } catch (e) {
@@ -285,7 +254,6 @@ class CollectionApp {
             `;
         }).join('');
 
-        // Sezione Reroll: Inizializziamo a 0 per disabilitare dinamicamente
         const role = extractPosition(fullData.position);
         const availableRerolls = rerollPassivesByRole[role] || [];
         let rerollOptions = `<option value="">-- Vuota --</option>`;
@@ -419,10 +387,20 @@ class CollectionApp {
         col.innerHTML = html;
         container.appendChild(col);
 
+        // Usa il componente UI customSelect!
         const manualCustomSelect = col.querySelector('.manual-equip');
-        this.initSingleCustomSelect(manualCustomSelect);
+        initCustomSelect(manualCustomSelect, (selectedTech) => {
+            const manualLvl = col.querySelector('.manual-lvl');
+            if (selectedTech) {
+                manualLvl.dataset.tech = selectedTech;
+                manualLvl.style.display = 'block';
+            } else {
+                manualLvl.dataset.tech = '';
+                manualLvl.style.display = 'none';
+                manualLvl.value = '9';
+            }
+        });
 
-        // --- GESTIONE DINAMICA DEI LIVELLI PER IL REROLL ---
         const rerollIdSelects = col.querySelectorAll('.reroll-id');
         rerollIdSelects.forEach(selectEl => {
             selectEl.addEventListener('change', (e) => {
@@ -446,7 +424,6 @@ class CollectionApp {
 
         const toggle = col.querySelector('.toggle-owned');
         const cardBox = col.querySelector('.collection-card');
-        const manualLvl = col.querySelector('.manual-lvl');
         const charRarity = col.querySelector('.char-rarity');
 
         toggle.addEventListener('change', (e) => {
@@ -473,18 +450,6 @@ class CollectionApp {
                     sel.dispatchEvent(new Event('change'));
                 }
             });
-        });
-
-        manualCustomSelect.addEventListener('change', (e) => {
-            const selectedTech = manualCustomSelect.dataset.value;
-            if (selectedTech) {
-                manualLvl.dataset.tech = selectedTech;
-                manualLvl.style.display = 'block';
-            } else {
-                manualLvl.dataset.tech = '';
-                manualLvl.style.display = 'none';
-                manualLvl.value = '9';
-            }
         });
     }
 
@@ -635,10 +600,9 @@ class CollectionApp {
             document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => inp.value = '');
             document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => sel.value = '9');
 
-            // Reset visivo Reroll
             document.querySelectorAll(`.reroll-id[data-char="${charId}"]`).forEach(sel => {
                 sel.value = '';
-                sel.dispatchEvent(new Event('change')); // Scatena il blocco dei livelli
+                sel.dispatchEvent(new Event('change'));
             });
 
             const manualSel = document.querySelector(`.manual-equip[data-char="${charId}"]`);
@@ -699,8 +663,8 @@ class CollectionApp {
                         const lvlSel = document.querySelector(`.reroll-lvl[data-char="${charId}"][data-slot="${slot}"]`);
                         if (idSel && lvlSel) {
                             idSel.value = rData.id;
-                            idSel.dispatchEvent(new Event('change')); // Forza la generazione dei livelli dinamici
-                            lvlSel.value = rData.lv; // Assegna il livello salvato
+                            idSel.dispatchEvent(new Event('change'));
+                            lvlSel.value = rData.lv;
                         }
                     }
                 }

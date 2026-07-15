@@ -1,8 +1,11 @@
-// js/mode5vs1.js
+// js/Controllers/mode5vs1.js
 
-import { characterRegistry, passivesLibrary, techniquesLibrary, calculateTeamDamage, extractPosition, universalManualsKeys } from './utils.js';
-import { AuthManager } from './auth.js';
-import { TrialOptimizer } from './trialOptimizer.js';
+import { characterRegistry, passivesLibrary, techniquesLibrary } from '../Core/database.js';
+import { extractPosition } from '../Core/parsers.js';
+import { calculateTeamDamage } from '../Core/calculator.js';
+import { AuthManager } from '../Services/auth.js';
+import { TrialOptimizer } from '../Core/trialOptimizer.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 class AppController {
     constructor() {
@@ -23,39 +26,6 @@ class AppController {
         document.getElementById('btn-logout').addEventListener('click', () => this.auth.logout());
         document.getElementById('btn-optimize').addEventListener('click', () => this.optimizer.runOptimization());
         this.auth.setAuthStateListener((user) => this.handleAuthState(user));
-
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.select-items').forEach(el => el.classList.add('select-hide'));
-        });
-    }
-
-    initCustomSelect(customSelectEl, onChangeCallback) {
-        const selectedDiv = customSelectEl.querySelector('.select-selected');
-        const itemsDiv = customSelectEl.querySelector('.select-items');
-
-        const newSelected = selectedDiv.cloneNode(true);
-        selectedDiv.parentNode.replaceChild(newSelected, selectedDiv);
-
-        newSelected.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.select-items').forEach(el => {
-                if (el !== itemsDiv) el.classList.add('select-hide');
-            });
-            itemsDiv.classList.toggle('select-hide');
-        });
-
-        itemsDiv.querySelectorAll('div').forEach(option => {
-            option.addEventListener('click', () => {
-                const oldVal = customSelectEl.dataset.value;
-                const newVal = option.dataset.value;
-                customSelectEl.dataset.value = newVal;
-                newSelected.querySelector('span').innerHTML = option.innerHTML;
-                itemsDiv.classList.add('select-hide');
-                if (oldVal !== newVal && onChangeCallback) {
-                    onChangeCallback(newVal);
-                }
-            });
-        });
     }
 
     handleAuthState(user) {
@@ -119,7 +89,8 @@ class AppController {
 
             const charCustomSelect = slotCard.querySelector('.sim-char-select');
 
-            this.initCustomSelect(charCustomSelect, async (charId) => {
+            // Uso del componente universale!
+            initCustomSelect(charCustomSelect, async (charId) => {
                 const techSelect = slotCard.querySelector('.sim-tech-select');
                 if (!charId) {
                     this.activeTeam[i] = null;
@@ -127,7 +98,7 @@ class AppController {
                     techSelect.disabled = true;
                 } else {
                     try {
-                        const module = await import(`./Characters/${charId}.js`);
+                        const module = await import(`../Characters/${charId}.js`);
                         this.activeTeam[i] = module.charData;
                         this.renderTechDropdown(i);
                     } catch (err) {}
@@ -146,8 +117,8 @@ class AppController {
         const slotCard = document.querySelector(`.slot-card[data-slot="${slotIndex}"]`);
         const techSelect = slotCard.querySelector('.sim-tech-select');
         const simMode = document.getElementById('simMode').dataset.value;
-        const mode = 'collection'; // Modalità fissa
-        const allowManuals = false; // Manuali disattivati
+        const mode = 'collection';
+        const allowManuals = false;
 
         if (!charData) return;
 
@@ -209,14 +180,14 @@ class AppController {
         const stageElSelect = document.getElementById('stageElement');
         const opponentElSelect = document.getElementById('opponentElement');
 
-        this.initCustomSelect(simModeSelect, (val) => {
+        initCustomSelect(simModeSelect, (val) => {
             const bonus = val === 'defense' ? 20 : 10;
             document.getElementById('stageBonusDisplay').textContent = bonus;
             this.updateTechDropdowns();
             this.updateSimulation();
         });
 
-        this.initCustomSelect(opponentElSelect, (val) => {
+        initCustomSelect(opponentElSelect, (val) => {
             const mapStage = {
                 'None': { val: '', text: 'Nessuno', img: '' },
                 'Wind': { val: 'Forest', text: 'Foresta', img: 'img/Element/Icon_Element_Forest.png' },
@@ -236,12 +207,14 @@ class AppController {
 
             this.updateSimulation();
         });
+
+        setupGlobalSelectClose();
     }
 
     updateSimulation() {
         const teamDataForEngine = [];
         const slotCards = document.querySelectorAll('.slot-card');
-        const mode = 'collection'; // Modalità fissa
+        const mode = 'collection';
 
         const stageConfig = {
             element: document.getElementById('stageElement').dataset.value,
@@ -258,12 +231,12 @@ class AppController {
             if (charData && moveName) {
                 const engineFormat = this.optimizer.createCharEngineFormat(charData, moveName, mode);
                 const techDef = techniquesLibrary[moveName];
-                const advBonus = this.optimizer.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
 
+                const advBonus = this.optimizer.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
                 if (advBonus > 0) {
-                    engineFormat.customTechPower[moveName] = (engineFormat.customTechPower[moveName] || 0) + advBonus;
                     engineFormat._hasAdvantageBonus = advBonus;
                 }
+
                 teamDataForEngine.push(engineFormat);
             }
         }
@@ -297,10 +270,10 @@ class AppController {
 
         const clearBox = document.getElementById('defenseClearCheck');
         if (stageConfig.mode === 'defense') {
-            clearBox.textContent = this.lastResult.isClear ? "✓ SOGLIA DIFESA SUPERATA (Danno ≥ 200.000)" : "SOTTO SOGLIA DIFESA (Moltiplicatore base x1.0)";
+            clearBox.innerHTML = this.lastResult.isClear ? "✓ SOGLIA DIFESA SUPERATA (Danno ≥ 200.000) <br> <span style='font-size:0.9rem; color:#4caf50;'>Moltiplicatore applicato: x1.5</span>" : "SOTTO SOGLIA DIFESA <br> <span style='font-size:0.9rem; color:#f44336;'>Moltiplicatore applicato: x1.0</span>";
             clearBox.style.color = "#ffca28";
         } else {
-            clearBox.textContent = this.lastResult.isClear ? "🔥 SOGLIA ATTACCO SUPERATA (Danno ≥ 250.000)" : "SOTTO SOGLIA ATTACCO (Moltiplicatore base x2.4)";
+            clearBox.innerHTML = this.lastResult.isClear ? "🔥 SOGLIA ATTACCO SUPERATA (Danno ≥ 250.000) <br> <span style='font-size:0.9rem; color:#4caf50;'>Moltiplicatore applicato: x3.6</span>" : "SOTTO SOGLIA ATTACCO <br> <span style='font-size:0.9rem; color:#f44336;'>Moltiplicatore applicato: x2.4</span>";
             clearBox.style.color = "#ffca28";
         }
     }
@@ -309,31 +282,29 @@ class AppController {
         if (!this.lastResult || !this.lastResult.slots[slotIndex]) return;
         const slotData = this.lastResult.slots[slotIndex];
         const calc = slotData.calculations;
-        const mode = 'collection'; // Modalità fissa
         const charDb = this.activeTeam[slotIndex];
 
         document.getElementById('modalTitle').textContent = `Dettagli: ${slotData.charName}`;
+
         document.getElementById('modalMath').innerHTML = `
             <div>Base Stat (${slotData.statType}): ${calc.base.total.toLocaleString('it-IT')}</div>
             <div>Potenza Mossa: ${calc.power.total}</div>
             <div>Moltiplicatore (STAB + Affinità): x${calc.multipliers.attribute}</div>
             <div>Moltiplicatore Catena: x${calc.multipliers.chain}</div>
             <div style="color:#1269e8; font-size:1.2rem; margin-top: 15px; border-top: 2px solid #d4e1f1; padding-top: 10px;">
-                Equazione:<br>( ${calc.base.total.toLocaleString('it-IT')} × ${calc.power.total} × 0.01 ) × ${calc.multipliers.attribute} × ${calc.multipliers.chain} = <strong>${Math.floor(calc.damage).toLocaleString('it-IT')}</strong>
+                Equazione Reale Gioco:<br>⌊ ⌊ ${calc.base.total.toLocaleString('it-IT')} × ${calc.power.total}% ⌋ × ${calc.multipliers.attribute} ⌋ × ${calc.multipliers.chain} = <strong>${Math.floor(calc.damage).toLocaleString('it-IT')}</strong>
             </div>
         `;
 
-        // CATEGORIZZATORE
         const categorizeDetail = (detail) => {
             if (!detail.isSelf) return 'compagni';
             const pDef = passivesLibrary.find(p => p.title === detail.passiveName);
-            if (!pDef) return 'livello'; // Fallback
+            if (!pDef) return 'livello';
             if (pDef.category === 'Reroll') return 'reroll';
             if (charDb.myRarityPassivesIds && charDb.myRarityPassivesIds.includes(pDef.id)) return 'risveglio';
-            return 'livello'; // Default per tutto il resto (Basic)
+            return 'livello';
         };
 
-        // RENDERER GRUPPI
         const renderGroup = (groupArr, groupTitle) => {
             if (groupArr.length === 0) return '';
             let html = `<div class="mt-3 mb-2 ms-1 fw-bold text-uppercase" style="font-size: 0.8rem; color: #506482; letter-spacing: 0.5px;">${groupTitle}</div>`;
@@ -348,7 +319,6 @@ class AppController {
             return html;
         };
 
-        // --- GESTIONE STATISTICHE BASE E PASSIVE ---
         let statsGroups = { livello: [], risveglio: [], reroll: [], compagni: [] };
         slotData.details.stats.forEach(detail => statsGroups[categorizeDetail(detail)].push(detail));
 
@@ -367,7 +337,6 @@ class AppController {
         document.getElementById('modalStatList').innerHTML = statHtml;
 
 
-        // --- GESTIONE POTENZA MOSSE E PASSIVE ---
         let powerGroups = { livello: [], risveglio: [], reroll: [], compagni: [] };
         slotData.details.power.forEach(detail => powerGroups[categorizeDetail(detail)].push(detail));
 

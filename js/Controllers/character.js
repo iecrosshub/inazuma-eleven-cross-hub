@@ -1,9 +1,7 @@
-// js/character.js
+// js/Controllers/character.js
 
-import { characterRegistry } from './Characters/registry.js';
-import { techniquesLibrary } from './Techniques/library.js';
-import { passivesLibrary } from './Passive/library.js';
-import { getUrlParam, getAdjacentCharacterId, parsePassiveText } from './utils.js';
+import { characterRegistry, getPopulatedCharacter } from '../Core/database.js';
+import { getUrlParam, getAdjacentCharacterId, parsePassiveText } from '../Core/parsers.js';
 
 let db = {};
 let currentId = '';
@@ -12,29 +10,15 @@ let currentId = '';
 // 1. INIZIALIZZAZIONE E RECUPERO DATI
 // ==========================================
 
-function buildCharacterDB(charData) {
-    // Paracadute per evitare crash se mancano array nel JSON del personaggio
-    const safeTechniques = charData.myTechniques || [];
-    const safeBasicPassives = charData.myBasicPassivesIds || [];
-    const safeRarityPassives = charData.myRarityPassivesIds || [];
-
-    return {
-        ...charData,
-        techniques: Object.fromEntries(
-            Object.entries(techniquesLibrary).filter(([key]) => safeTechniques.includes(key))
-        ),
-        basicPassives: passivesLibrary.filter(p => safeBasicPassives.includes(p.id)),
-        rarityPassives: passivesLibrary.filter(p => safeRarityPassives.includes(p.id))
-    };
-}
-
 async function init() {
     currentId = getUrlParam('id') || localStorage.getItem('selectedChar') || 'byronLoveZeus';
     localStorage.setItem('selectedChar', currentId);
 
     try {
-        const module = await import(`./Characters/${currentId}.js`);
-        db = buildCharacterDB(module.charData);
+        const module = await import(`../Characters/${currentId}.js`);
+
+        // Uso della nuova funzione ottimizzata dal Core Database!
+        db = getPopulatedCharacter(module.charData);
 
         // Aggiornamento UI Base
         document.getElementById('char-name-main').textContent = `${db.name} (${db.romanizedName})`;
@@ -54,7 +38,6 @@ async function init() {
         if (btnLv1) btnLv1.onclick = () => renderStats(db, 'lv1');
         if (btnLv300) btnLv300.onclick = () => renderStats(db, 'lv300');
 
-        // Lanciamo i render grafici
         renderStats(db, 'lv1');
         renderPassives(db);
         renderTechniques(db);
@@ -89,7 +72,7 @@ function setupNavigationControls() {
 }
 
 // ==========================================
-// 2. FUNZIONI DI RENDER GRAFICO (Ex renderUI)
+// 2. FUNZIONI DI RENDER GRAFICO
 // ==========================================
 
 function renderStats(db, level) {
@@ -99,7 +82,6 @@ function renderStats(db, level) {
     document.getElementById('btn-lv300').classList.toggle('active', level === 'lv300');
 
     Object.entries(db.stats).forEach(([key, data]) => {
-        // Ho unito icona e testo nel primo span per far funzionare alla perfezione il tuo :first-child nel CSS!
         statsList.innerHTML += `
             <li>
                 <span class="d-flex align-items-center gap-2">

@@ -1,6 +1,8 @@
-// js/passiveDB.js
+// js/Controllers/passiveDB.js
 
-import { passivesLibrary, parsePassiveText } from './utils.js';
+import { passivesLibrary } from '../Core/database.js';
+import { parsePassiveText } from '../Core/parsers.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 class PassiveDatabase {
     constructor() {
@@ -47,24 +49,11 @@ class PassiveDatabase {
     }
 
     setupCustomSelects() {
+        // Uso del Componente Universale
         document.querySelectorAll('.filters-container .custom-select').forEach(customSelect => {
-            const selectedDiv = customSelect.querySelector('.select-selected');
-            const itemsDiv = customSelect.querySelector('.select-items');
-            selectedDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('.select-items').forEach(el => { if(el !== itemsDiv) el.classList.add('select-hide'); });
-                itemsDiv.classList.toggle('select-hide');
-            });
-            itemsDiv.querySelectorAll('div').forEach(option => {
-                option.addEventListener('click', () => {
-                    customSelect.dataset.value = option.dataset.value;
-                    selectedDiv.querySelector('span').innerHTML = option.innerHTML;
-                    itemsDiv.classList.add('select-hide');
-                    this.applyFilters();
-                });
-            });
+            initCustomSelect(customSelect, () => this.applyFilters());
         });
-        document.addEventListener('click', () => { document.querySelectorAll('.select-items').forEach(el => el.classList.add('select-hide')); });
+        setupGlobalSelectClose();
     }
 
     getCategory(p) {
@@ -115,12 +104,10 @@ class PassiveDatabase {
         list.forEach(p => {
             const cat = this.getCategory(p);
 
-            // Genera la lista dei Tab di livello per questa passiva
             const tabsHtml = p.levels.map((_, idx) => `
                 <div class="passive-tab ${idx === 0 ? 'active' : ''}" data-index="${idx}">Lv. ${idx + 1}</div>
             `).join('');
 
-            // Calcola la descrizione iniziale basata sempre sul Livello 1
             const initialDesc = parsePassiveText(p.template, p.levels[0]);
             const initialReq = p.levels[0].req || 'Sbloccato di base';
 
@@ -131,24 +118,17 @@ class PassiveDatabase {
                         <span style="font-size: 0.9rem; color: #8e9bb0; font-weight: normal;">ID: ${p.id}</span>
                     </div>
                     <div class="tech-content-wrapper" style="padding: 15px 20px 20px 20px;">
-                        
-                        <!-- BARRA DEI TAB AUTOMATICI -->
                         <div class="passive-tabs-container">
                             <div class="passive-tabs">
                                 ${tabsHtml}
                             </div>
                         </div>
-
-                        <!-- BADGE REQUISITI DI SBLOCCO -->
                         <div class="passive-req-container">
                             <span class="passive-req-badge">${initialReq}</span>
                         </div>
-
-                        <!-- BOX DI TESTO DINAMICO CON VALORI -->
                         <div class="passive-desc-box">
                             ${initialDesc}
                         </div>
-
                     </div>
                 </div>
             `;

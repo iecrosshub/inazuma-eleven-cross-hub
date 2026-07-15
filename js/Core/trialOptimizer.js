@@ -1,6 +1,8 @@
-// js/trialOptimizer.js
+// js/Core/trialOptimizer.js
 
-import { characterRegistry, passivesLibrary, techniquesLibrary, calculateTeamDamage, extractPosition, universalManualsKeys } from './utils.js';
+import { characterRegistry, passivesLibrary, techniquesLibrary, universalManualsKeys } from './database.js';
+import { extractPosition } from './parsers.js';
+import { calculateTeamDamage } from './calculator.js';
 
 export class TrialOptimizer {
     constructor(app) {
@@ -34,6 +36,7 @@ export class TrialOptimizer {
 
             [...(charData.myBasicPassivesIds || []), ...(charData.myRarityPassivesIds || [])].forEach(pId => {
                 const pDef = passivesLibrary.find(p => p.id === pId);
+                // NESSUN BLOCCO: Attiviamo tutte le passive per trovare lo score assoluto
                 passiveLevels[pId] = pDef ? pDef.levels.length - 1 : 0;
             });
 
@@ -126,7 +129,7 @@ export class TrialOptimizer {
                 if (!dbEntry || dbEntry.owned === false) continue;
             }
             try {
-                const module = await import(`./Characters/${char.id}.js`);
+                const module = await import(`../Characters/${char.id}.js`);
                 availableChars.push(module.charData);
             } catch (e) { }
         }
@@ -163,8 +166,8 @@ export class TrialOptimizer {
                 }
 
                 const engineFormat = this.createCharEngineFormat(char, move, mode, customConfig);
-                const advBonus = this.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
 
+                const advBonus = this.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
                 if (advBonus > 0) engineFormat.customTechPower[move] = advBonus;
 
                 const dummyTeam = [engineFormat];
@@ -234,7 +237,6 @@ export class TrialOptimizer {
             const row = document.createElement('div');
             row.className = 'bg-white rounded p-3 d-flex justify-content-between align-items-center shadow-sm border border-light mb-3';
 
-            // Titolo (mostra o nasconde lo score in base alla flag)
             let headerText = hideScore
                 ? `Rank #${idx + 1}`
                 : `#${idx + 1} - Score: ${Math.floor(res.score).toLocaleString('it-IT')}`;
@@ -250,7 +252,6 @@ export class TrialOptimizer {
 
                 htmlStr += `<span class="badge ${badgeColor}" title="${techDef.name}"><img src="${techDef.elementIcon}" style="height:12px; margin-right:4px; margin-bottom:2px;">${p.char.name}</span>`;
 
-                // Se è un manuale e siamo nella pagina Meta (hideScore = true), lo annotiamo per la stringa esplicativa
                 if (isManual && hideScore) {
                     manualsToTeach.push(`📕 Insegna <strong>${techDef.name}</strong> a <strong>${p.char.name}</strong>`);
                 }
@@ -258,7 +259,6 @@ export class TrialOptimizer {
 
             htmlStr += `</div>`;
 
-            // Se ci sono manuali da insegnare, crea un box dedicato sotto ai badge
             if (manualsToTeach.length > 0) {
                 htmlStr += `
                 <div class="mt-3 p-2 rounded bg-light border-start border-4 border-danger" style="font-size: 0.9rem;">
@@ -267,7 +267,7 @@ export class TrialOptimizer {
                 </div>`;
             }
 
-            htmlStr += `</div>`; // Chiude il flex column
+            htmlStr += `</div>`;
 
             if (!hideApplyButton) {
                 htmlStr += `<button class="btn btn-success fw-bold text-nowrap px-4 py-2 apply-btn ms-3" data-index="${idx}">APPLICA</button>`;

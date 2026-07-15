@@ -1,6 +1,8 @@
-// js/coaches.js
-import { coachRegistry } from './Coaches/registry.js';
-import { parsePassiveText, fetchCoachData } from './utils.js'; // <-- Importiamo anche fetchCoachData
+// js/Controllers/coaches.js
+
+import { coachRegistry } from '../Coaches/registry.js';
+import { fetchCoachData } from '../Core/database.js';
+import { parsePassiveText } from '../Core/parsers.js';
 
 let currentId = '';
 let currentLevel = 10;
@@ -66,10 +68,8 @@ function renderSidebar() {
 }
 
 async function loadCoachData(id) {
-    // Usiamo l'utility per recuperare i dati!
     activeCoachDb = await fetchCoachData(id);
 
-    // Se il caricamento fallisce, interrompiamo la funzione
     if (!activeCoachDb) return;
 
     const db = activeCoachDb;
@@ -85,7 +85,6 @@ async function loadCoachData(id) {
     portrait.src = db.artwork;
     portrait.style.display = 'block';
 
-    // --- Aggiornamento Condizioni ---
     document.getElementById('conditions-container').innerHTML = db.formationConditions.map(cond => {
         const icons = cond.icons || (cond.icon ? [cond.icon] : []);
         const iconsHtml = icons.map(icon => `<img src="${icon}" onerror="this.src='https://placehold.co/35?text=⚡'">`).join('');
@@ -98,7 +97,6 @@ async function loadCoachData(id) {
         `;
     }).join('');
 
-    // --- IL CAMPETTO TATTICO ---
     const conditionSlots = db.formationConditions.map(c => c.slotCode);
 
     document.getElementById('pitch-container').innerHTML = db.slots.map(slot => {
@@ -111,16 +109,13 @@ async function loadCoachData(id) {
         `;
     }).join('');
 
-    // --- Passiva Formazione ---
     const formIcons = db.formationPassive.icons || [];
     document.getElementById('formation-icons').innerHTML = formIcons.map(icon => `<img src="${icon}" onerror="this.src='https://placehold.co/32'">`).join('');
     document.getElementById('formation-text').innerHTML = db.formationPassive.text;
 
-    // --- Aggiorna i titoli delle passive ---
     document.getElementById('formation-passive-title').textContent = db.formationPassive.title || "Attiva - Formazione";
     document.getElementById('coach-passive-title').textContent = db.coachPassive.title || "Passiva Allenatore";
 
-    // Aggiorna passiva allenatore
     updatePassiveText();
 }
 

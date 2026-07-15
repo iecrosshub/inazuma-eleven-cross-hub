@@ -1,4 +1,4 @@
-// js/navbar.js
+// js/Components/navbar.js
 
 const navbarHTML = `
 <div class="inazuma-nav-container">
