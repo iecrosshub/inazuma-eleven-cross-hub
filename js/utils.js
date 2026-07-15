@@ -7,10 +7,8 @@ import { characterRegistry } from './Characters/registry.js';
 import { techniquesLibrary } from './Techniques/library.js';
 import { passivesLibrary as basePassivesLibrary } from './Passive/library.js';
 
-// IMPORTIAMO LE TUE NUOVE PASSIVE DI REROLL
 import { rerollPassivesByRole } from './Passive/passivesReroll/passivesReroll.js';
 
-// UNIAMO TUTTE LE PASSIVE IN UN UNICO GRANDE DATABASE
 const allRerollPassives = [
     ...(rerollPassivesByRole.FW || []),
     ...(rerollPassivesByRole.MF || []),
@@ -21,7 +19,6 @@ export const passivesLibrary = [...basePassivesLibrary, ...allRerollPassives];
 
 export { characterRegistry, techniquesLibrary, rerollPassivesByRole };
 
-// LISTA COMPLETA DEI 40 MANUALI ESTRATTI DA APPMEDIA ("秘伝書あり")
 export const universalManualsKeys = [
     "ファイアトルネード",   // Tornado di Fuoco
     "ヒートタックル",       // Heat Tackle
@@ -65,7 +62,6 @@ export const universalManualsKeys = [
     "プロファイルゾーン"    // Profile Zone
 ];
 
-
 export function getRarityTier(reqString) {
     if (!reqString) return -1;
     const str = reqString.toLowerCase();
@@ -89,10 +85,6 @@ export function getLevelTier(reqString) {
     return -1;
 }
 
-// ==========================================
-// 1. GESTIONE URL E NAVIGAZIONE
-// ==========================================
-
 export function getUrlParam(paramName) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(paramName);
@@ -109,10 +101,6 @@ export function getAdjacentCharacterId(currentId, registry, direction) {
         return registry[prevIdx].id;
     }
 }
-
-// ==========================================
-// 2. ESTRAZIONE DATI DALLE IMMAGINI
-// ==========================================
 
 export function extractElement(elementUrl) {
     if (!elementUrl) return 'Void';
@@ -144,10 +132,6 @@ export function getStatKeyByIcon(iconUrl) {
     return 'Tiro';
 }
 
-// ==========================================
-// 3. MECCANICHE DI GIOCO E CALCOLI
-// ==========================================
-
 export function checkStab(charElementUrl, techElementUrl) {
     if (!charElementUrl || !techElementUrl) return false;
     const charEl = extractElement(charElementUrl);
@@ -163,9 +147,7 @@ export function getElementalAdvantage(moveElement, opponentElement) {
     return 0;
 }
 
-// ==========================================
-// 4. MOTORE DEL SIMULATORE SINGOLO
-// ==========================================
+const j_floor = (val) => Math.floor(val + 1e-6);
 
 export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, roleMult, adv, passiveSelections, customTechPower = 0) {
     if (!charDb || !techKey || !techniquesLibrary[techKey]) return null;
@@ -228,8 +210,9 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
                 }
                 else if (effect.type === "power") {
                     let isMatch = true;
-                    if (effect.moveKind && moveKindToStatKey[effect.moveKind] !== statKey) isMatch = false;
-                    if (effect.moveElement && effect.moveElement !== techElement) isMatch = false;
+                    // FIX: Aggiunta eccezione "All" per evitare che blocchi le passive universali
+                    if (effect.moveKind && effect.moveKind !== "All" && moveKindToStatKey[effect.moveKind] !== statKey) isMatch = false;
+                    if (effect.moveElement && effect.moveElement !== "All" && effect.moveElement !== techElement) isMatch = false;
 
                     if (isMatch) {
                         passivePowerBuff += amount;
@@ -279,14 +262,13 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
 
     const statFinale = Math.floor((baseStat + passiveStatBuff) * roleMult);
     const potenzaFinale = techPower + passivePowerBuff;
-    const danno = Math.floor(statFinale * (potenzaFinale / 100) * stabMult * adv);
+
+    // MATEMATICA REALE
+    let rawDmg = j_floor(statFinale * potenzaFinale * 0.01 * stabMult * adv);
+    const danno = rawDmg;
 
     return { danno, statKey, baseStat, passiveStatBuff, roleMult, techPower, passivePowerBuff, hasStab, stabMult, adv, passiveData };
 }
-
-// ==========================================
-// 5. UI E FILTRI GALLERIA
-// ==========================================
 
 export function parsePassiveText(template, lvData) {
     if (!template) return "";
@@ -344,10 +326,6 @@ export async function fetchCoachData(id) {
     }
 }
 
-// ==========================================
-// 6. ROSTER MANAGER (Per il 5vs1)
-// ==========================================
-
 export class RosterManager {
     constructor() {
         this.roster = [];
@@ -366,10 +344,6 @@ export class RosterManager {
     removeCharacter(uid) { this.roster = this.roster.filter(c => c.uid !== uid); }
 }
 
-// ==========================================
-// 7. MOTORE SIMULAZIONE SQUADRA (5vs1 & TEAM BUILDER)
-// ==========================================
-
 export function isTargetValid(caster, targetChar, effect) {
     if (effect.target) {
         if (effect.target === "self") return caster.id === targetChar.id;
@@ -378,6 +352,7 @@ export function isTargetValid(caster, targetChar, effect) {
 
         const role = extractPosition(targetChar.position);
         const element = extractElement(targetChar.element);
+        const tags = targetChar.tags ? targetChar.tags.map(t => t.toLowerCase()) : [];
 
         if (effect.target === "team_DF") return role === "DF";
         if (effect.target === "team_FW") return role === "FW";
@@ -394,7 +369,11 @@ export function isTargetValid(caster, targetChar, effect) {
         if (effect.target === "team_FW_Fire") return role === "FW" && element === "Fire";
         if (effect.target === "team_FW_Fire_Forest") return role === "FW" && (element === "Fire" || element === "Forest");
         if (effect.target === "team_MF_Wind") return role === "MF" && element === "Wind";
-        if (effect.target === "team_Raimon_Emperors" || effect.target === "team_teikoku" || effect.target === "team_Raimon") return true;
+
+        if (effect.target === "team_Raimon") return tags.some(t => t.includes('raimon'));
+        if (effect.target === "team_teikoku") return tags.some(t => t.includes('royalacademy') || t.includes('teikoku'));
+        if (effect.target === "team_Raimon_Emperors") return tags.some(t => t.includes('raimon') || t.includes('royalacademy') || t.includes('teikoku'));
+        if (effect.target === "team_InazumaJapan") return tags.some(t => t.includes('inazumajapan'));
 
         return false;
     }
@@ -425,7 +404,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         const caster = casterWrapper.charData;
         const passiveLevelsMap = casterWrapper.passiveLevels || {};
 
-        // RECUPERA TUTTE LE PASSIVE (Incluse quelle di Reroll!)
         const allPassives = Object.keys(passiveLevelsMap);
 
         allPassives.forEach(passiveId => {
@@ -531,10 +509,10 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                                     if (effect.stat === "Potenza_Blocco" && targetStatType === "Blocco") statMatch = true;
                                     if (effect.stat === "Potenza_Parata" && targetStatType === "Parata") statMatch = true;
                                     if (effect.stat === `Potenza_${targetTechElementIt}`) statMatch = true;
-                                    if (effect.stat === `Potenza_Tiro_${targetTechElementIt}` && targetStatType === "Tiro") statMatch = true;
-                                    if (effect.stat === `Potenza_Dribbling_${targetTechElementIt}` && targetStatType === "Tecnica") statMatch = true;
-                                    if (effect.stat === `Potenza_Blocco_${targetTechElementIt}` && targetStatType === "Blocco") statMatch = true;
-                                    if (effect.stat === `Potenza_Parata_${targetTechElementIt}` && targetStatType === "Parata") statMatch = true;
+                                    if (effect.stat === `Potenza_Tiro_${targetTechElementIt}` && statKey === "Tiro") statMatch = true;
+                                    if (effect.stat === `Potenza_Dribbling_${targetTechElementIt}` && statKey === "Tecnica") statMatch = true;
+                                    if (effect.stat === `Potenza_Blocco_${targetTechElementIt}` && statKey === "Blocco") statMatch = true;
+                                    if (effect.stat === `Potenza_Parata_${targetTechElementIt}` && statKey === "Parata") statMatch = true;
                                     if (effect.stat.includes(targetStatType)) statMatch = true;
 
                                     const strippedStat = effect.stat.replace("Potenza_", "");
@@ -585,12 +563,11 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         const statKey = getStatKeyByIcon(tech.icon);
         const nakedBaseStat = slot.customStats[statKey] || 0;
         const rawBase = nakedBaseStat + slotBuffs.statSelf + slotBuffs.statAlly;
-        const totalBase = Math.floor(rawBase * 0.9735); // Correzione del 5,75%
+        const totalBase = Math.floor(rawBase * 0.975);
 
         const userTechLevelIndex = slot.techLevel || 0;
         const nakedPower = tech.power ? (parseInt(tech.power[userTechLevelIndex]) || 0) : 0;
 
-        // customTechPower serve SOLO come vettore per l'advBonus (Vantaggio vs Avversario) gestito da trialOptimizer
         const manualBonusPower = slot.customTechPower ? (slot.customTechPower[slot.moveName] || 0) : 0;
 
         let stageBonus = 0;
@@ -600,7 +577,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         }
 
         const rawPower = nakedPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
-        const totalPower = Math.floor(rawPower * 0.9735);
+        const totalPower = Math.floor(rawPower * 0.975);
 
         let attributeMultiplier = 1.0;
         if (checkStab(char.element, tech.elementIcon)) attributeMultiplier += 0.2;
@@ -616,10 +593,8 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             isChainActive = true;
         }
 
-        const roundOriginal = (val) => Math.floor(val + 1e-6);
-
-        let rawDamage = roundOriginal(totalBase * totalPower * 0.01 * attributeMultiplier);
-        let finalDamage = isChainActive ? roundOriginal(rawDamage * chainMultiplier) : rawDamage;
+        let rawDamage = j_floor(totalBase * (totalPower + 0) * 0.01 * attributeMultiplier);
+        let finalDamage = isChainActive ? j_floor(rawDamage * chainMultiplier) : rawDamage;
 
         totalDamage += finalDamage;
         previousMoveElement = moveElement;
@@ -657,7 +632,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         finalMultiplier = isClear ? 3.6 : 2.4;
     }
 
-    const finalScore = totalDamage * finalMultiplier;
+    const finalScore = j_floor(totalDamage * finalMultiplier);
 
     return {
         slots: results,
@@ -668,9 +643,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
     };
 }
 
-// ==========================================
-// 8. MOTORE CALCOLO ALLENATORI E SQUADRA (TEAM BUILDER)
-// ==========================================
 export function calculateCoachBuffs(charData, coachDb, coachLevel) {
     let statBuffs = { Tiro: 0, Tecnica: 0, Blocco: 0, Parata: 0, Velocità: 0 };
     let powerBuffs = { Tiro: 0, Tecnica: 0, Blocco: 0, Parata: 0 };
