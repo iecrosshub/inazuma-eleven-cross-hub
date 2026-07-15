@@ -1,6 +1,6 @@
 // js/Controllers/collection.js
 
-import { characterRegistry, techniquesLibrary, passivesLibrary, universalManualsKeys, rerollPassivesByRole } from '../core/database.js';
+import { characterRegistry, techniquesLibrary, passivesLibrary, universalManualsKeys, rerollPassivesByRole } from '../Core/database.js';
 import { getRarityTier, getLevelTier, extractPosition } from '../Core/parsers.js';
 import { filterCharacters } from '../Core/roster.js';
 import { AuthManager } from '../Services/auth.js';
