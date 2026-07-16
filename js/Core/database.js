@@ -17,14 +17,16 @@ export const passivesLibrary = [...basePassivesLibrary, ...allRerollPassives];
 export { characterRegistry, techniquesLibrary, rerollPassivesByRole };
 
 export const universalManualsKeys = [
-    // --- PARATA ---
-    "爆熱パンチ",           // Bakunetsu Punch (Pugno di Fuoco)
+    // --- PARATA (4) ---
+    "爆裂パンチ",           // Bakunetsu Punch (Pugno di Fuoco)
     "ゆがむ空間",           // Yugamu Kuukan (Spazio Distorto)
     "ワイルドクロウ",         // Wild Claw (Artiglio Selvaggio)
-    "怨霊",                 // Onryou (Spirito Vendicativo)
-    "裁きの鉄槌",           // Sabaki no Tettsui (Martello del Terrore)
+    "つなみウォール",         // Tsunami Wall (Barriera d'Acqua)
 
-    // --- BLOCCO ---
+    // --- BLOCCO (17) ---
+    "怨霊",                 // Onryou (Palude di Mani)
+    "裁きの鉄槌",           // Sabaki no Tettsui (Piede del Giudizio)
+    "つむじ",               // Tsumuji (Vortice)
     "ザ・ウォール",          // The Wall (Il Muro)
     "スピニングカット",       // Spinning Cut (Taglio Rotante)
     "サイクロン",            // Cyclone (Ciclone)
@@ -34,25 +36,23 @@ export const universalManualsKeys = [
     "真空魔",               // Shinkuuma (Vuoto Oscuro)
     "ボルケイノカット",       // Volcano Cut (Taglio Vulcanico)
     "フレイムダンス",         // Flame Dance (Danza di Fuoco)
-    "つちだるま",            // Tsuchidaruma (Pupazzo di Fango)
     "アステロイドベルト",      // Asteroid Belt (Fascia di Asteroidi)
     "四股踏み",              // Shikofumi (Scossa di Terremoto)
     "スーパー四股踏み",       // Super Shikofumi (Super Scossa di Terremoto)
-    "つなみウォール",         // Tsunami Wall (Muro di Tsunami)
     "プロファイルゾーン",      // Profile Zone (Zona Profilo)
+    "つちだるま",            // Tsuchidaruma (Pupazzo di Fango)
 
-    // --- DRIBBLING ---
+    // --- DRIBBLING (8) ---
     "ヒートタックル",         // Heat Tackle (Tackle di Fuoco)
     "疾風ダッシュ",          // Shippuu Dash (Scatto Ventoso)
     "ジグザグスパーク",       // Zigzag Spark (Scintilla Zigzag)
     "ジャッジスルー",         // Judge Through (Passaggio del Giudizio)
-    "つむじ",               // Tsumuji (Vortice)
     "炎風ダッシュ",          // Enpuu Dash (Scatto Infuocato)
     "五里霧中",              // Gorimuchuu (Nebbia Illusoria)
     "ヘブンズタイム",         // Heaven's Time (Istante Divino)
     "そよかぜステップ",       // Soyokaze Step (Passo del Vento)
 
-    // --- TIRO ---
+    // --- TIRO (12) ---
     "ファイアトルネード",      // Fire Tornado (Tornado di Fuoco)
     "グレネードショット",      // Grenade Shot (Tiro Granata)
     "スピニングシュート",      // Spinning Shoot (Tiro Rotante)
@@ -64,7 +64,7 @@ export const universalManualsKeys = [
     "リフレクトバスター",      // Reflect Buster (Tiro Riflesso)
     "ディバインアロー",       // Divine Arrow (Freccia Divina)
     "デスソード",            // Death Sword (Stoccata Micidiale)
-    "ドラゴンクラッシュ"       // Dragon Crash (Drago Nascente) - AGGIUNTO!
+    "ドラゴンクラッシュ"       // Dragon Crash (Drago Nascente)
 ];
 
 export async function fetchCoachData(id) {

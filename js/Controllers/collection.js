@@ -546,7 +546,7 @@ class CollectionApp {
                 if (tDef) {
                     const sbBadge = tDef.shootBlock ? `<span class="badge bg-danger ms-1 px-1 py-0" style="font-size:0.6rem; flex-shrink:0;" title="Shoot Block">SB</span>` : '';
                     manualOptionsCustomHtml += `
-                        <div data-value="${mKey}" style="display:flex; align-items:center; gap: 4px; padding: 6px 10px; color: #f8f9fa; border-bottom: 1px solid #444; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">
+                        <div data-value="${mKey}" title="${tDef.name}" style="display:flex; align-items:center; gap: 4px; padding: 6px 10px; color: #f8f9fa; border-bottom: 1px solid #444; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">
                             <img src="${tDef.icon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
                             <img src="${tDef.elementIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
                             <span class="text-truncate">${tDef.name}</span>${sbBadge}
