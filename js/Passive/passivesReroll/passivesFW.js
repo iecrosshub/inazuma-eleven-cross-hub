@@ -62,7 +62,7 @@ export const rerollPassivesFW = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -84,7 +84,7 @@ export const rerollPassivesFW = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Mountain"], type: "power", moveKind: "Tiro", moveElement: "Mountain", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Mountain", valueRef: "val" }
         ]
     },
     {
@@ -106,7 +106,7 @@ export const rerollPassivesFW = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -128,7 +128,7 @@ export const rerollPassivesFW = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -165,7 +165,7 @@ export const rerollPassivesFW = [
             { val: 5, req: "Livello 5" },
             { val: 6, req: "Livello 6" },
             { val: 7, req: "Livello 7" },
-            { val: 8, req: "Livello 9" },
+            { val: 8, req: "Livello 8" }, // FIX battitura Livello 9
             { val: 9, req: "Livello 9" },
             { val: 10, req: "Livello 10" }
         ],

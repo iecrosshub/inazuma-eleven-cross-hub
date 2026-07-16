@@ -40,7 +40,7 @@ export const rerollPassivesGK = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "Parata", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Parata", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -62,7 +62,7 @@ export const rerollPassivesGK = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Mountain"], type: "power", moveKind: "Parata", moveElement: "Mountain", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Parata", moveElement: "Mountain", valueRef: "val" }
         ]
     },
     {
@@ -84,7 +84,7 @@ export const rerollPassivesGK = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "Parata", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Parata", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -106,7 +106,7 @@ export const rerollPassivesGK = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "Parata", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Parata", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {

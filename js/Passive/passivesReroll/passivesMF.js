@@ -106,7 +106,7 @@ export const rerollPassivesMF = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "Dribbling", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Dribbling", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -128,7 +128,7 @@ export const rerollPassivesMF = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Mountain"], type: "power", moveKind: "Dribbling", moveElement: "Mountain", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Dribbling", moveElement: "Mountain", valueRef: "val" }
         ]
     },
     {
@@ -150,7 +150,7 @@ export const rerollPassivesMF = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "Dribbling", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Dribbling", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -172,7 +172,7 @@ export const rerollPassivesMF = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "Dribbling", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Dribbling", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {

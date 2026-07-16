@@ -131,7 +131,7 @@ export const alwaysPassives = [
             {
                 targetScope: "self",
                 targetRoles: [],
-                targetElements: [],
+                targetElements: [], // FIX applicato!
                 type: "power",
                 moveKind: "All",
                 moveElement: "Wind",
@@ -146,8 +146,6 @@ export const alwaysPassives = [
             }
         ]
     },
-
-
     {
         title: "Potenza Tiro + (シュートパワー＋)",
         id: "101164001",
@@ -189,7 +187,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -226,7 +224,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Wind"], type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -248,7 +246,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -263,7 +261,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: ["Wind"], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -361,7 +359,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Mountain"], type: "power", moveKind: "Blocco", moveElement: "Mountain", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Blocco", moveElement: "Mountain", valueRef: "val" }
         ]
     },
     {
@@ -421,7 +419,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -465,7 +463,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -777,7 +775,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -814,7 +812,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -872,7 +870,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -930,7 +928,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -944,8 +942,9 @@ export const alwaysPassives = [
         ],
         category: "Always",
         conditions: null,
-        effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Fire", "Forest"], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+        effects: [ // FIX: Sdoppiato per Fuoco e Foresta, senza restrizioni sull'elemento del FW
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -1010,7 +1009,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Fire"], type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -1107,7 +1106,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF", "GK"], targetElements: ["Forest"], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["DF", "GK"], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -1122,7 +1121,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF", "GK"], targetElements: ["Forest"], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["DF", "GK"], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -1239,7 +1238,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: ["Wind"], type: "power", moveKind: "Dribbling", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], /* FIX */ type: "power", moveKind: "Dribbling", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -1254,7 +1253,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: ["Wind"], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -1384,7 +1383,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -1572,7 +1571,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "power" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
@@ -1632,7 +1631,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "power" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
@@ -1671,7 +1670,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -1769,7 +1768,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Wind"], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {

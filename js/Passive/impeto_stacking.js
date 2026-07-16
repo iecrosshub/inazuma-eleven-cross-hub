@@ -463,7 +463,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_success" },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -478,7 +478,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_or_block_success" },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -499,7 +499,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_success" },
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -561,7 +561,7 @@ export const stackingPassives = [
     },
     {
         title: "[Slancio] Potenza Dribbling DF + (【破竹】ＤＦドリブルパワー＋)",
-        id: "101003004",
+        id: "101003004", // Questa era la passiva duplicata nello script originario, la lascio così!
         template: "Quando effettua una tecnica di blocco con successo, aumenta la potenza del dribbling degli alleati DF di {VAL}. <br>Condizione di reset: Gol segnato.",
         levels: [
             { val: 12, req: "Si sblocca a: Advanced Player +" },
@@ -649,7 +649,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_success" },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -670,7 +670,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_success" },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -791,7 +791,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "scored_goal" },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -876,7 +876,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "catch_success" },
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: ["Wind"], type: "power", moveKind: "Dribbling", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], /* FIX */ type: "power", moveKind: "Dribbling", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {

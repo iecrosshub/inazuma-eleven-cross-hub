@@ -266,7 +266,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -539,7 +539,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -596,7 +596,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Fire"], type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -724,7 +724,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresElements: ["Forest"], requiresCount: 3 },
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {

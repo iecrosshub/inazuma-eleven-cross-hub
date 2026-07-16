@@ -1,3 +1,5 @@
+// --- js/Passive/specific_moves.js ---
+
 export const specificMovesPassives = [
     {
         title: "Potenza Richiamo del Lupo + (ウルフレジェンドパワー＋改)",
