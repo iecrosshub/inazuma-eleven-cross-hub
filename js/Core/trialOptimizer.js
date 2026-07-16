@@ -3,7 +3,7 @@
 import { characterRegistry, passivesLibrary, techniquesLibrary, universalManualsKeys } from './database.js';
 import { extractPosition } from './parsers.js';
 import { calculateTeamDamage } from './calculator.js';
-import { calcolaStatisticheEsatte } from './calculator.js'; // AGGIUNTO: Import del calcolatore
+import { calcolaStatisticheEsatte } from './calculator.js';
 
 export class TrialOptimizer {
     constructor(app) {

@@ -197,7 +197,8 @@ class CollectionApp {
         if (btnApplyGlobal) {
             btnApplyGlobal.addEventListener('click', () => {
 
-                const charLevelVal = document.getElementById('global-char-level').value;
+                const globalLevelInput = document.getElementById('global-char-level');
+                const charLevelVal = globalLevelInput ? globalLevelInput.value : 300;
                 if (charLevelVal) localStorage.setItem('collection_char_level', charLevelVal);
 
                 const matrixObj = { FW: {}, MF: {}, DF: {}, GK: {} };

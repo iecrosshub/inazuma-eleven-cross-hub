@@ -47,6 +47,11 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-info pb-2">
             <h5 class="text-info m-0 fw-bold"><i class="fas fa-users"></i> Core Members (Cross Level)</h5>
+            <!-- INPUT AGGIUNTO PER EVITARE IL CRASH -->
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-white">Livello Globale:</span>
+                <input type="number" id="global-char-level" class="form-control form-control-sm bg-dark text-white border-info" value="300" style="width: 70px;">
+            </div>
             <h4 class="text-warning m-0 fw-bold" id="display-cross-level">Cross Level: 300</h4>
         </div>
 
@@ -120,7 +125,6 @@
 
         <div class="row g-3 align-items-end">
             <div class="col-12 col-md-6">
-                <!-- Questo bottone apre la tendina con i 24 slot -->
                 <button class="btn btn-outline-warning btn-sm w-100 fw-bold py-2" type="button" data-bs-toggle="collapse" data-bs-target="#equipMatrixCollapse">
                     <i class="fas fa-cogs"></i> Imposta i 24 Equipaggiamenti
                 </button>
@@ -130,7 +134,6 @@
             </div>
         </div>
 
-        <!-- Matrice Equipaggiamenti (Nascosta di default) -->
         <div class="collapse mt-3" id="equipMatrixCollapse">
             <div class="card card-body bg-dark border-warning p-2">
                 <h6 class="text-warning mb-3 fw-bold text-center"><i class="fas fa-tshirt"></i> Matrice Livelli Equipaggiamenti (Salti di 5)</h6>
@@ -146,7 +149,6 @@
 
     <!-- FILTRI UNIFICATI IN UN SOLO BLOCCO BIANCO -->
     <div class="filters-container mb-4 shadow-sm">
-        <!-- Filtro specifico Collezione -->
         <div class="row g-3 mb-3 border-bottom border-light pb-3">
             <div class="col-12 col-md-6">
                 <div class="filter-group mb-0">
@@ -176,12 +178,10 @@
             </div>
         </div>
 
-        <!-- FILTRI GLOBALI -->
         <script type="module" src="js/Components/filters.js"></script>
         <inazuma-filters></inazuma-filters>
     </div>
 
-    <!-- Griglia Collezione -->
     <div class="row" id="collection-grid">
         <div class="col-12 text-center my-5">
             <div class="spinner-border text-light" role="status"></div>
@@ -190,11 +190,10 @@
     </div>
 </div>
 
-<!-- MODALE AVVISO SALVATAGGIO -->
 <div id="unsaved-modal" class="global-modal-overlay">
     <div class="global-modal-content">
         <div class="global-modal-header"><i class="fas fa-exclamation-triangle"></i> Attenzione!</div>
-        <p class="fw-bold text-secondary">Hai effettuato delle modifiche alla tua collezione senza salvare. Vuoi salvarle prima di cambiare pagina?</p>
+        <p class="fw-bold text-secondary">Hai effettuato delle modifiche alla tua collezione senza salvare.</p>
         <div class="global-modal-actions">
             <button id="btn-modal-save" class="btn btn-success fw-bold"><i class="fas fa-save"></i> Sì, Salva</button>
             <button id="btn-modal-discard" class="btn btn-danger fw-bold"><i class="fas fa-trash"></i> No, Esci</button>
@@ -203,7 +202,6 @@
     </div>
 </div>
 
-<!-- Firebase SDK -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
