@@ -1,7 +1,88 @@
 // js/Core/calculator.js
 
 import { techniquesLibrary, passivesLibrary } from './database.js';
-import { extractElement, extractPosition, getStatKeyByIcon } from './parsers.js';
+import { extractElement, extractPosition, getStatKeyByIcon, parsePassiveText } from './parsers.js';
+import { growth_patterns } from './growthTable.js';
+import { equipmentData } from './equipmentTables.js';
+
+// Tutti i 10 gradi di rarità che hai inserito nell'HTML!
+const awakeningMultipliers = {
+    0: 1.00,  // Normal Player
+    1: 1.10,  // Normal Player +
+    2: 1.20,  // Growing Player
+    3: 1.30,  // Growing Player +
+    4: 1.40,  // Advanced Player
+    5: 1.50,  // Advanced Player +
+    6: 1.60,  // Top Player
+    7: 1.70,  // Top Player +
+    8: 1.85,  // Legendary Player
+    9: 2.00   // Legendary Player +
+};
+
+function getClosestEquipLevel(target) {
+    const levels = [1,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300];
+    let best = 1;
+    for(let l of levels) {
+        if(l <= target) best = l;
+        else break;
+    }
+    return best.toString();
+}
+
+export function calcolaStatisticheEsatte(character, livelloPG, gradoRisveglio, equipMatrixObj) {
+    if (!character || !character.growth_pattern_code) return null;
+
+    const codicePG = character.growth_pattern_code;
+    const statBase = growth_patterns[codicePG] ? growth_patterns[codicePG][livelloPG.toString()] : null;
+
+    if (!statBase) return null;
+
+    const moltiplicatore = awakeningMultipliers[gradoRisveglio] || 1.0;
+
+    let finalStats = {
+        kick: Math.floor(statBase.kick * moltiplicatore),
+        technique: Math.floor(statBase.technique * moltiplicatore),
+        block: Math.floor(statBase.block * moltiplicatore),
+        catch: Math.floor(statBase.catch * moltiplicatore),
+        speed: statBase.speed,
+        tp: statBase.tp
+    };
+
+    let rawRuolo = character.position?.code || character.position || "";
+    const ruolo = extractPosition(rawRuolo);
+
+    if (equipmentData[ruolo]) {
+        Object.keys(equipmentData[ruolo]).forEach(categoria => {
+
+            let targetLvl = 300; // Valore di sicurezza
+
+            // 1. Se abbiamo passato la nuova matrice a 24 slot
+            if (typeof equipMatrixObj === 'object' && equipMatrixObj !== null) {
+                if (equipMatrixObj[ruolo] && equipMatrixObj[ruolo][categoria]) {
+                    targetLvl = equipMatrixObj[ruolo][categoria];
+                }
+            }
+            // 2. Fallback per retrocompatibilità (se passiamo un singolo numero)
+            else if (typeof equipMatrixObj === 'number' || typeof equipMatrixObj === 'string') {
+                targetLvl = parseInt(equipMatrixObj);
+            }
+
+            // Arrotonda in sicurezza al salto di 5 più vicino (come volevi tu)
+            const lvlEqStr = getClosestEquipLevel(targetLvl);
+
+            if (equipmentData[ruolo][categoria][lvlEqStr]) {
+                const bonus = equipmentData[ruolo][categoria][lvlEqStr];
+                finalStats.kick += bonus.kick || 0;
+                finalStats.technique += bonus.technique || 0;
+                finalStats.block += bonus.block || 0;
+                finalStats.catch += bonus.catch || 0;
+                finalStats.speed += bonus.speed || 0;
+            }
+        });
+    }
+
+    return finalStats;
+}
 
 export function checkStab(charElementUrl, techElementUrl) {
     if (!charElementUrl || !techElementUrl) return false;
@@ -127,7 +208,9 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
         }
 
         const descSuffix = stacks > 1 ? `<br><span class="text-primary fw-bold">(Attivata ${stacks} volte)</span>` : '';
-        passiveData.push({ title: p.title, level: sel.lvIndex + 1, active: isAffecting, desc: p.template + descSuffix });
+        // FIX: La stringa {VAL} ora viene esplosa in un numero leggibile tramite il Parser!
+        const parsedDesc = parsePassiveText(p.template, currentLvData);
+        passiveData.push({ title: p.title, level: sel.lvIndex + 1, active: isAffecting, desc: parsedDesc + descSuffix });
     });
 
     const statFinale = Math.floor((baseStat + passiveStatBuff) * roleMult);
@@ -345,7 +428,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
         // RIPRISTINATO IL CEROTTO DEL 0.975 (Correzione globale del ~2.5% sulla base stat)
         const rawBase = nakedBaseStat + slotBuffs.statSelf + slotBuffs.statAlly;
-        const totalBase = Math.floor(rawBase * 0.9712);
+        const totalBase = Math.floor(rawBase * 1);
 
         const userTechLevelIndex = slot.techLevel || 0;
         const nakedPower = tech.power ? (parseInt(tech.power[userTechLevelIndex]) || 0) : 0;
@@ -359,7 +442,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
         // RIPRISTINATO IL CEROTTO DEL 0.975 (Correzione globale del ~2.5% sulla potenza totale)
         const rawPower = nakedPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
-        const totalPower = Math.floor(rawPower * 0.9712);
+        const totalPower = Math.floor(rawPower * 1);
 
         let attributeMultiplier = 1.0;
         if (checkStab(char.element, tech.elementIcon)) attributeMultiplier += 0.2;
@@ -370,7 +453,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
         let chainMultiplier = 1.0;
         let isChainActive = false;
-
         // BLOCCO CATENA PER IL PORTIERE
         const isGKInDefense = (stageConfig.mode === 'defense' && index === 4);
 

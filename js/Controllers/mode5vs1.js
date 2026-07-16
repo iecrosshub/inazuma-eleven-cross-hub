@@ -1,7 +1,7 @@
 // js/Controllers/mode5vs1.js
 
 import { characterRegistry, passivesLibrary, techniquesLibrary } from '../Core/database.js';
-import { extractPosition } from '../Core/parsers.js';
+import { extractPosition, getDailyTrialConfig } from '../Core/parsers.js';
 import { calculateTeamDamage } from '../Core/calculator.js';
 import { AuthManager } from '../Services/auth.js';
 import { TrialOptimizer } from '../Core/trialOptimizer.js';
@@ -22,10 +22,61 @@ class AppController {
     init() {
         this.renderSimSlots();
         this.setupGlobalListeners();
+
+        // Applica automaticamente la prova di oggi come predefinita
+        const todayConfig = getDailyTrialConfig();
+        this.setUISelectValue('simMode', todayConfig.mode);
+        this.setUISelectValue('opponentElement', todayConfig.opp);
+        this.updateStageBonusUI();
+        this.updateMetaLink();
+
         document.getElementById('btn-login').addEventListener('click', () => this.auth.loginWithGoogle());
         document.getElementById('btn-logout').addEventListener('click', () => this.auth.logout());
         document.getElementById('btn-optimize').addEventListener('click', () => this.optimizer.runOptimization());
         this.auth.setAuthStateListener((user) => this.handleAuthState(user));
+    }
+
+    setUISelectValue(selectId, value) {
+        const el = document.getElementById(selectId);
+        if(!el) return;
+        const option = el.querySelector(`.select-items div[data-value="${value}"]`);
+        if(option) {
+            el.dataset.value = value;
+            el.querySelector('.select-selected span').innerHTML = option.innerHTML;
+        }
+    }
+
+    updateMetaLink() {
+        const mode = document.getElementById('simMode').dataset.value;
+        const opp = document.getElementById('opponentElement').dataset.value;
+        const link = document.getElementById('link-to-meta');
+        if (link) {
+            link.href = `meta5vs1.html?mode=${mode}&opp=${opp}`;
+        }
+    }
+
+    updateStageBonusUI() {
+        const val = document.getElementById('simMode').dataset.value;
+        document.getElementById('stageBonusDisplay').textContent = val === 'defense' ? '20' : '10';
+
+        const oppVal = document.getElementById('opponentElement').dataset.value;
+        const stageElSelect = document.getElementById('stageElement');
+        const mapStage = {
+            'None': { val: '', text: 'Nessuno', img: '' },
+            'Wind': { val: 'Forest', text: 'Foresta', img: 'img/Element/Icon_Element_Forest.png' },
+            'Mountain': { val: 'Wind', text: 'Vento', img: 'img/Element/Icon_Element_Wind.png' },
+            'Fire': { val: 'Mountain', text: 'Montagna', img: 'img/Element/Icon_Element_Mountain.png' },
+            'Forest': { val: 'Fire', text: 'Fuoco', img: 'img/Element/Icon_Element_Fire.png' }
+        };
+        const stage = mapStage[oppVal] || mapStage['None'];
+        stageElSelect.dataset.value = stage.val;
+
+        const stageSpan = stageElSelect.querySelector('.select-selected span');
+        if(stage.img) {
+            stageSpan.innerHTML = `<img src="${stage.img}" style="width:20px; vertical-align:middle; margin-right:5px;"> ${stage.text}`;
+        } else {
+            stageSpan.innerHTML = stage.text;
+        }
     }
 
     handleAuthState(user) {
@@ -37,14 +88,17 @@ class AppController {
             loginBtn.style.display = 'none';
             logoutBtn.style.display = 'inline-block';
             greeting.innerHTML = `Collezione collegata: <span class="text-warning">${user.displayName}</span>`;
-            this.loadFromCloud();
+
+            this.loadFromCloud().then(() => {
+                // Opzionale: de-commenta la riga sotto se vuoi che auto-ottimizzi appena loggato
+                // this.optimizer.runOptimization();
+            });
         } else {
-            loginBtn.style.display = 'inline-block';
-            logoutBtn.style.display = 'none';
-            greeting.textContent = "Accedi per usare la tua Collezione";
-            this.collectionData = {};
-            this.updateTechDropdowns();
-            this.updateSimulation();
+            // MOSTRA IL MODALE CUSTOM INVECE DELL'ALERT
+            const warningModal = document.getElementById('loginWarningModal');
+            if (warningModal) {
+                warningModal.style.display = 'flex';
+            }
         }
     }
 
@@ -89,7 +143,6 @@ class AppController {
 
             const charCustomSelect = slotCard.querySelector('.sim-char-select');
 
-            // Uso del componente universale!
             initCustomSelect(charCustomSelect, async (charId) => {
                 const techSelect = slotCard.querySelector('.sim-tech-select');
                 if (!charId) {
@@ -177,35 +230,19 @@ class AppController {
 
     setupGlobalListeners() {
         const simModeSelect = document.getElementById('simMode');
-        const stageElSelect = document.getElementById('stageElement');
         const opponentElSelect = document.getElementById('opponentElement');
 
-        initCustomSelect(simModeSelect, (val) => {
-            const bonus = val === 'defense' ? 20 : 10;
-            document.getElementById('stageBonusDisplay').textContent = bonus;
+        initCustomSelect(simModeSelect, () => {
+            this.updateStageBonusUI();
             this.updateTechDropdowns();
             this.updateSimulation();
+            this.updateMetaLink();
         });
 
-        initCustomSelect(opponentElSelect, (val) => {
-            const mapStage = {
-                'None': { val: '', text: 'Nessuno', img: '' },
-                'Wind': { val: 'Forest', text: 'Foresta', img: 'img/Element/Icon_Element_Forest.png' },
-                'Mountain': { val: 'Wind', text: 'Vento', img: 'img/Element/Icon_Element_Wind.png' },
-                'Fire': { val: 'Mountain', text: 'Montagna', img: 'img/Element/Icon_Element_Mountain.png' },
-                'Forest': { val: 'Fire', text: 'Fuoco', img: 'img/Element/Icon_Element_Fire.png' }
-            };
-            const stage = mapStage[val] || mapStage['None'];
-            stageElSelect.dataset.value = stage.val;
-
-            const stageSpan = stageElSelect.querySelector('.select-selected span');
-            if(stage.img) {
-                stageSpan.innerHTML = `<img src="${stage.img}" style="width:20px; vertical-align:middle; margin-right:5px;"> ${stage.text}`;
-            } else {
-                stageSpan.innerHTML = stage.text;
-            }
-
+        initCustomSelect(opponentElSelect, () => {
+            this.updateStageBonusUI();
             this.updateSimulation();
+            this.updateMetaLink();
         });
 
         setupGlobalSelectClose();

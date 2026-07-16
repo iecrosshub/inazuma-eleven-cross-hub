@@ -1278,21 +1278,7 @@ export const alwaysPassives = [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
-    {
-        title: "Potenza Tiro (Foresta) + (シュートパワー＋〈林〉)",
-        id: "101040004",
-        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro Foresta di {VAL}.",
-        levels: [
-            { val: 46, req: "Si sblocca a: Advanced Player +" },
-            { val: 62, req: "Si sblocca a: Top Player +" },
-            { val: 78, req: "Si sblocca a: Legendary Player +" }
-        ],
-        category: "Always",
-        conditions: null,
-        effects: [
-            { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
-        ]
-    },
+
     {
         title: "Tecnica FW + (ＦＷテクニック＋)",
         id: "101099001",
@@ -1678,9 +1664,9 @@ export const alwaysPassives = [
         id: "101009004",
         template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di tiro di Vento di {VAL}.",
         levels: [
-            { val: 37, req: "Unlocks at: アドバンスドプレイヤー＋" },
-            { val: 49, req: "Unlocks at: トッププレイヤー＋" },
-            { val: 62, req: "Unlocks at: レジェンダリィプレイヤー＋" }
+            { val: 37, req: "Si sblocca a: Advanced Player +" },
+            { val: 49, req: "Si sblocca a: Top Player +" },
+            { val: 62, req: "Si sblocca a: Legendary Player +" }
         ],
         category: "Always",
         conditions: null,

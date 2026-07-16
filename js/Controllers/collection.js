@@ -5,13 +5,179 @@ import { getRarityTier, getLevelTier, extractPosition } from '../Core/parsers.js
 import { filterCharacters } from '../Core/roster.js';
 import { AuthManager } from '../Services/auth.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
+import { calcolaStatisticheEsatte } from '../Core/calculator.js';
 
 class CollectionApp {
     constructor() {
         this.auth = new AuthManager();
         this.collectionData = {};
+        this.loadedCharacters = {};
         this.hasUnsavedChanges = false;
+        this.isGridRendered = false;
         this.init();
+    }
+
+    setupCoreMembers() {
+        const sortedChars = [...characterRegistry].sort((a, b) => a.name.localeCompare(b.name));
+        let options = `<option value="">-- Nessuno --</option>`;
+        sortedChars.forEach(c => {
+            options += `<option value="${c.id}">${c.name}</option>`;
+        });
+
+        document.querySelectorAll('.core-member-select').forEach(sel => {
+            sel.innerHTML = options;
+            sel.addEventListener('change', () => this.updateCrossLevel());
+        });
+
+        document.querySelectorAll('.core-member-level').forEach(inp => {
+            inp.addEventListener('input', () => this.updateCrossLevel());
+        });
+
+        try {
+            const saved = JSON.parse(localStorage.getItem('collection_core_members'));
+            if (saved) {
+                for(let i=1; i<=5; i++) {
+                    if (saved[i]) {
+                        const sel = document.querySelector(`.core-member-select[data-slot="${i}"]`);
+                        const inp = document.querySelector(`.core-member-level[data-slot="${i}"]`);
+                        if (sel) sel.value = saved[i].id || "";
+                        if (inp) inp.value = saved[i].level || 300;
+                    }
+                }
+            }
+        } catch(e) {}
+
+        this.updateCrossLevel();
+    }
+
+    updateCrossLevel() {
+        let levels = [];
+        for(let i=1; i<=5; i++) {
+            const sel = document.querySelector(`.core-member-select[data-slot="${i}"]`);
+            const inp = document.querySelector(`.core-member-level[data-slot="${i}"]`);
+
+            if(sel && inp && sel.value !== "") {
+                const val = parseInt(inp.value);
+                if (!isNaN(val)) levels.push(val);
+            }
+        }
+
+        const fallbackInput = document.getElementById('global-char-level');
+        const fallbackLevel = fallbackInput ? (parseInt(fallbackInput.value) || 300) : 300;
+        const crossLevel = levels.length > 0 ? Math.min(...levels) : fallbackLevel;
+
+        const display = document.getElementById('display-cross-level');
+        if(display) display.textContent = `Cross Level: ${crossLevel}`;
+
+        const toSave = {};
+        for(let i=1; i<=5; i++) {
+            const sel = document.querySelector(`.core-member-select[data-slot="${i}"]`);
+            const inp = document.querySelector(`.core-member-level[data-slot="${i}"]`);
+            if(sel && inp) {
+                toSave[i] = {
+                    id: sel.value,
+                    level: parseInt(inp.value) || 300
+                };
+            }
+        }
+        localStorage.setItem('collection_core_members', JSON.stringify(toSave));
+    }
+
+    getCharLevel(charId) {
+        let specificLevel = null;
+        let levels = [];
+
+        for(let i=1; i<=5; i++) {
+            const sel = document.querySelector(`.core-member-select[data-slot="${i}"]`);
+            const inp = document.querySelector(`.core-member-level[data-slot="${i}"]`);
+
+            if(sel && inp && sel.value !== "") {
+                const lvl = parseInt(inp.value) || 300;
+                levels.push(lvl);
+
+                if(sel.value === charId || charId.includes(sel.value) || sel.value.includes(charId)) {
+                    specificLevel = lvl;
+                }
+            }
+        }
+
+        if (specificLevel !== null) return specificLevel;
+        if (levels.length > 0) return Math.min(...levels);
+
+        const fallbackInput = document.getElementById('global-char-level');
+        return fallbackInput ? (parseInt(fallbackInput.value) || 300) : 300;
+    }
+
+    setupEquipMatrix() {
+        const rolesConfig = [
+            { id: 'FW', name: 'FW', color: '#d32f2f' },
+            { id: 'MF', name: 'MF', color: '#f57c00' },
+            { id: 'DF', name: 'DF', color: '#1976d2' },
+            { id: 'GK', name: 'GK', color: '#0097a7' }
+        ];
+
+        const categories = [
+            { key: 'シューズ', label: '👟 Scarpe' },
+            { key: 'ミサンガ', label: '📿 Bracciale' },
+            { key: 'すね当て', label: '🛡️ Parastinchi' },
+            { key: 'リストバンド', label: '💪 Polsino' },
+            { key: 'グローブ', label: '🧤 Guanti/Accessorio' },
+            { key: 'ペンダント', label: '🏅 Ciondolo' }
+        ];
+
+        let optionsHtml = `<option value="1">Lv 1</option>`;
+        for (let i = 5; i <= 300; i += 5) {
+            optionsHtml += `<option value="${i}">Lv ${i}</option>`;
+        }
+
+        const thead = document.getElementById('equip-matrix-head');
+        const tbody = document.getElementById('equip-matrix-body');
+
+        if (thead && tbody) {
+            let headHtml = `<tr><th style="width: 8%;"></th>`;
+            categories.forEach(c => {
+                headHtml += `<th class="fw-bold" style="width: 15%;">${c.label}</th>`;
+            });
+            headHtml += `</tr>`;
+            thead.innerHTML = headHtml;
+
+            let html = '';
+            rolesConfig.forEach(r => {
+                html += `<tr>
+                    <td class="fw-bold text-white shadow-sm" style="background-color: ${r.color}; font-size: 1.2rem; border-radius: 8px 0 0 8px;">
+                        ${r.name}
+                    </td>`;
+                categories.forEach((c, index) => {
+                    let radius = (index === categories.length - 1) ? '0 8px 8px 0' : '0';
+                    html += `<td style="background-color: #212529; padding: 10px; border-radius: ${radius};">
+                        <select class="form-select form-select-sm bg-dark text-white border-secondary equip-matrix-select mx-auto" style="font-size: 0.8rem; max-width: 90px; text-align: center;" data-role="${r.id}" data-cat="${c.key}">
+                            ${optionsHtml}
+                        </select>
+                    </td>`;
+                });
+                html += `</tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        try {
+            const savedMatrix = JSON.parse(localStorage.getItem('collection_equip_matrix'));
+            if (savedMatrix) {
+                document.querySelectorAll('.equip-matrix-select').forEach(sel => {
+                    const r = sel.dataset.role;
+                    const c = sel.dataset.cat;
+                    if (savedMatrix[r] && savedMatrix[r][c]) {
+                        sel.value = savedMatrix[r][c];
+                    } else {
+                        sel.value = "300";
+                    }
+                });
+            } else {
+                document.querySelectorAll('.equip-matrix-select').forEach(sel => sel.value = "300");
+            }
+        } catch(e) {
+            document.querySelectorAll('.equip-matrix-select').forEach(sel => sel.value = "300");
+        }
     }
 
     init() {
@@ -22,41 +188,68 @@ class CollectionApp {
         this.setupCustomSelects();
         this.restoreFilters();
 
-        const savedGlobalLevel = localStorage.getItem('collection_global_level') || '';
-        const globalInput = document.getElementById('global-level-input');
-        if (globalInput && savedGlobalLevel) globalInput.value = savedGlobalLevel;
+        this.setupEquipMatrix();
+        this.setupCoreMembers();
 
         document.getElementById('search-name').addEventListener('input', () => this.triggerFilter());
 
-        const btnLevel = document.getElementById('btn-apply-level');
-        if (btnLevel) {
-            btnLevel.addEventListener('click', () => {
-                const inputVal = document.getElementById('global-level-input').value;
-                if(!inputVal) return;
+        const btnApplyGlobal = document.getElementById('btn-apply-global');
+        if (btnApplyGlobal) {
+            btnApplyGlobal.addEventListener('click', () => {
 
-                const globalLevel = parseInt(inputVal);
-                localStorage.setItem('collection_global_level', globalLevel);
+                const charLevelVal = document.getElementById('global-char-level').value;
+                if (charLevelVal) localStorage.setItem('collection_char_level', charLevelVal);
 
-                document.querySelectorAll('.pass-lvl-basic').forEach(sel => {
-                    const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
-                    if (pDef) {
-                        let bestIdx = -1;
-                        let hasLevelReq = false;
+                const matrixObj = { FW: {}, MF: {}, DF: {}, GK: {} };
+                document.querySelectorAll('.equip-matrix-select').forEach(sel => {
+                    matrixObj[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || 300;
+                });
+                localStorage.setItem('collection_equip_matrix', JSON.stringify(matrixObj));
 
-                        pDef.levels.forEach((lvl, idx) => {
-                            const reqLv = getLevelTier(lvl.req);
-                            if (reqLv !== -1) {
-                                hasLevelReq = true;
-                                if (globalLevel >= reqLv) bestIdx = idx;
+                this.updateCrossLevel();
+
+                document.querySelectorAll('.collection-item-wrapper').forEach(col => {
+                    const charId = col.dataset.charId;
+
+                    const charLevel = this.getCharLevel(charId);
+
+                    col.querySelectorAll('.pass-lvl-basic').forEach(sel => {
+                        const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
+                        if (pDef) {
+                            let bestIdx = -1;
+                            pDef.levels.forEach((lvl, idx) => {
+                                const reqLv = getLevelTier(lvl.req);
+                                if (reqLv !== -1 && charLevel >= reqLv) bestIdx = idx;
+                            });
+                            if (bestIdx !== -1) {
+                                sel.value = bestIdx;
+                                sel.dispatchEvent(new Event('change'));
+                            }
+                        }
+                    });
+
+                    const raritySel = col.querySelector('.char-rarity');
+                    if (raritySel) {
+                        const valRarity = parseInt(raritySel.value) || 0;
+                        col.querySelectorAll('.pass-lvl-rarity').forEach(sel => {
+                            const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
+                            if (pDef) {
+                                let bestIdx = -1;
+                                pDef.levels.forEach((lvl, idx) => {
+                                    const reqR = getRarityTier(lvl.req);
+                                    if (reqR !== -1 && valRarity >= reqR) bestIdx = idx;
+                                });
+                                if (bestIdx !== -1) {
+                                    sel.value = bestIdx;
+                                    sel.dispatchEvent(new Event('change'));
+                                }
                             }
                         });
-
-                        if (hasLevelReq) {
-                            sel.value = bestIdx;
-                            sel.dispatchEvent(new Event('change'));
-                        }
                     }
+
+                    this.recalculateStats(charId);
                 });
+
                 this.hasUnsavedChanges = true;
             });
         }
@@ -89,6 +282,7 @@ class CollectionApp {
                 };
 
                 setCustomSelect('filter-owned', filters.ownedStatus);
+                setCustomSelect('filter-calc', filters.calcType);
                 setCustomSelect('filter-element', filters.element);
                 setCustomSelect('filter-position', filters.position);
                 setCustomSelect('filter-rarity', filters.rarity);
@@ -157,7 +351,7 @@ class CollectionApp {
 
     setupCustomSelects() {
         document.querySelectorAll('.filters-container .custom-select').forEach(customSelect => {
-            initCustomSelect(customSelect); // Usa il Componente Universale!
+            initCustomSelect(customSelect);
             customSelect.addEventListener('change', () => this.triggerFilter());
         });
         setupGlobalSelectClose();
@@ -185,20 +379,123 @@ class CollectionApp {
         }
     }
 
+    async loadFromCloud() {
+        if (!this.auth.user) return;
+        try {
+            this.collectionData = await this.auth.getUserCollection();
+            if (this.isGridRendered) {
+                this.applySavedDataToUI();
+            }
+        } catch (error) {
+            console.error("Errore nel caricamento dal cloud:", error);
+        }
+    }
+
     async renderCollectionGrid() {
         const grid = document.getElementById('collection-grid');
         grid.innerHTML = '';
 
-        for (const char of characterRegistry) {
+        const promises = characterRegistry.map(async (char) => {
             try {
                 const module = await import(`../Characters/${char.id}.js`);
-                const fullData = module.charData;
-                this.buildPlayerCard(grid, char, fullData);
+                return { baseChar: char, fullData: module.charData };
             } catch (e) {
                 console.error("Errore caricamento giocatore per collezione:", char.id);
+                return null;
+            }
+        });
+
+        const results = await Promise.all(promises);
+
+        results.forEach(res => {
+            if (res) {
+                this.loadedCharacters[res.baseChar.id] = res.fullData;
+                this.buildPlayerCard(grid, res.baseChar, res.fullData);
+            }
+        });
+
+        this.isGridRendered = true;
+        this.applySavedDataToUI();
+    }
+
+    async triggerFilter() {
+        const currentFilters = {
+            name: document.getElementById('search-name').value,
+            element: document.getElementById('filter-element').dataset.value,
+            position: document.getElementById('filter-position').dataset.value,
+            rarity: document.getElementById('filter-rarity').dataset.value,
+            style: document.getElementById('filter-style').dataset.value,
+            team: document.getElementById('filter-team').dataset.value,
+            season: document.getElementById('filter-season').dataset.value,
+            ownedStatus: document.getElementById('filter-owned').dataset.value,
+            calcType: document.getElementById('filter-calc') ? document.getElementById('filter-calc').dataset.value : 'All'
+        };
+
+        localStorage.setItem('collection_filters', JSON.stringify(currentFilters));
+
+        const filteredArray = await filterCharacters(characterRegistry, currentFilters);
+        const allowedIds = filteredArray.map(c => c.id);
+
+        document.querySelectorAll('.collection-item-wrapper').forEach(card => {
+            const charId = card.dataset.charId;
+            const isOwned = card.querySelector('.collection-card').classList.contains('owned');
+
+            const fullData = this.loadedCharacters[charId];
+            const isAuto = !!(fullData && fullData.growth_pattern_code);
+
+            let matchesFilter = allowedIds.includes(charId);
+            let matchesOwned = true;
+            let matchesCalc = true;
+
+            if (currentFilters.ownedStatus === 'owned') matchesOwned = isOwned;
+            if (currentFilters.ownedStatus === 'not-owned') matchesOwned = !isOwned;
+
+            if (currentFilters.calcType === 'auto') matchesCalc = isAuto;
+            if (currentFilters.calcType === 'manual') matchesCalc = !isAuto;
+
+            if (matchesFilter && matchesOwned && matchesCalc) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    recalculateStats(charId) {
+        const fullData = this.loadedCharacters[charId];
+        if (!fullData || !fullData.growth_pattern_code) return;
+
+        const raritySel = document.querySelector(`.char-rarity[data-char="${charId}"]`);
+        if (!raritySel) return;
+
+        const rarity = parseInt(raritySel.value) || 0;
+
+        const charLevel = this.getCharLevel(charId);
+
+        const equipMatrix = { FW: {}, MF: {}, DF: {}, GK: {} };
+        document.querySelectorAll('.equip-matrix-select').forEach(sel => {
+            equipMatrix[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || 300;
+        });
+
+        const newStats = calcolaStatisticheEsatte(fullData, charLevel, rarity, equipMatrix);
+
+        if (newStats) {
+            const statMap = {
+                "Tiro": "kick",
+                "Tecnica": "technique",
+                "Blocco": "block",
+                "Parata": "catch",
+                "Velocità": "speed",
+                "TP": "tp"
+            };
+
+            for (const [itaStat, engKey] of Object.entries(statMap)) {
+                const inp = document.querySelector(`.stat-input[data-char="${charId}"][data-stat="${itaStat}"]`);
+                if (inp) {
+                    inp.value = newStats[engKey];
+                }
             }
         }
-        this.applySavedDataToUI();
     }
 
     buildPlayerCard(container, baseChar, fullData) {
@@ -215,6 +512,8 @@ class CollectionApp {
             "Parata": "img/Status/Icon_Status_Catch.png",
             "Velocità": "img/Status/Icon_Status_Speed.png"
         };
+
+        const hasAutoStats = !!fullData.growth_pattern_code;
 
         let manualOptionsCustomHtml = `<div data-value="" style="display:flex; align-items:center; padding: 6px 10px; color: #f8f9fa; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">-- Nessuna Tecnica Extra --</div>`;
         universalManualsKeys.forEach(mKey => {
@@ -239,6 +538,7 @@ class CollectionApp {
             const elIcon = techDef?.elementIcon || '';
             const sbBadge = techDef?.shootBlock ? `<span class="badge bg-danger ms-1 px-1 py-0" style="font-size:0.65rem; flex-shrink:0;" title="Shoot Block">SB</span>` : '';
 
+            // QUI IL LIVELLO PARTE DA "0" (Lv 1) PER LE MOSSE NATIVE!
             return `
                 <div class="d-flex gap-1 mb-2 align-items-center">
                     <div class="d-flex align-items-center gap-1" style="width: 70%;">
@@ -248,7 +548,7 @@ class CollectionApp {
                         ${sbBadge}
                     </div>
                     <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl" data-char="${baseChar.id}" data-tech="${techKey}" style="width: 30%;">
-                        ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===9 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
+                        ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===0 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
                     </select>
                 </div>
             `;
@@ -300,15 +600,17 @@ class CollectionApp {
                 </div>
                 
                 <div class="card-details">
-                    <h6>Statistiche Nude</h6>
+                    <h6>Statistiche ${hasAutoStats ? '<span class="badge bg-success" style="font-size:0.6rem;">Calcolo Auto</span>' : '<span class="badge bg-warning text-dark" style="font-size:0.6rem;">Manuali</span>'}</h6>
                     <div class="d-flex flex-wrap gap-2 mb-3">
                         ${["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].map(stat => `
                             <div class="input-group input-group-sm" style="width: 48%;">
                                 <span class="input-group-text bg-dark text-light border-secondary" style="font-size: 0.75rem; display: flex; align-items: center; gap: 4px;">
                                     <img src="${statIcons[stat]}" style="width: 14px; height: 14px; object-fit: contain;">${stat}
                                 </span>
-                                <input type="number" class="form-control bg-dark text-white border-secondary stat-input" 
-                                       data-char="${baseChar.id}" data-stat="${stat}" placeholder="${fullData.stats[stat]?.lv300 || 0}">
+                                <input type="number" class="form-control bg-dark text-white border-secondary stat-input ${hasAutoStats ? 'auto-stat' : ''}" 
+                                       data-char="${baseChar.id}" data-stat="${stat}" 
+                                       placeholder="${fullData.stats && fullData.stats[stat] ? fullData.stats[stat].lv300 : 0}"
+                                       ${hasAutoStats ? 'readonly style="background-color: #1a1a1a !important; cursor: not-allowed;" title="Gestito globalmente"' : ''}>
                             </div>
                         `).join('')}
                     </div>
@@ -328,20 +630,23 @@ class CollectionApp {
                             </div>
                         </div>
                         <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl manual-lvl" data-char="${baseChar.id}" data-tech="" style="width: 30%; display: none;">
-                            ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===9 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
+                            ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===0 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
                         </select>
                     </div>
                     
                     <h6 class="text-info mt-3 border-top border-secondary pt-2"><i class="fas fa-star"></i> Rarità Personaggio</h6>
                     <div class="mb-3">
-                        <select class="form-select form-select-sm bg-dark text-info border-secondary char-rarity" data-char="${baseChar.id}">
-                            <option value="0">Inferiore Advanced Player</option>
-                            <option value="1">Advanced Player</option>
-                            <option value="2">Advanced Player +</option>
-                            <option value="3">Top Player</option>
-                            <option value="4">Top Player +</option>
-                            <option value="5">Legendary Player</option>
-                            <option value="6">Legendary Player +</option>
+                        <select class="form-select bg-dark text-info border-info char-rarity fw-bold" style="font-size: 1.05rem; padding-top: 8px; padding-bottom: 8px;" data-char="${baseChar.id}">
+                            <option value="0">Normal Player</option>
+                            <option value="1">Normal Player +</option>
+                            <option value="2">Growing Player</option>
+                            <option value="3">Growing Player +</option>
+                            <option value="4">Advanced Player</option>
+                            <option value="5">Advanced Player +</option>
+                            <option value="6">Top Player</option>
+                            <option value="7">Top Player +</option>
+                            <option value="8">Legendary Player</option>
+                            <option value="9">Legendary Player +</option>
                         </select>
                     </div>
 
@@ -387,7 +692,6 @@ class CollectionApp {
         col.innerHTML = html;
         container.appendChild(col);
 
-        // Usa il componente UI customSelect!
         const manualCustomSelect = col.querySelector('.manual-equip');
         initCustomSelect(manualCustomSelect, (selectedTech) => {
             const manualLvl = col.querySelector('.manual-lvl');
@@ -397,7 +701,7 @@ class CollectionApp {
             } else {
                 manualLvl.dataset.tech = '';
                 manualLvl.style.display = 'none';
-                manualLvl.value = '9';
+                manualLvl.value = '0';
             }
         });
 
@@ -438,6 +742,7 @@ class CollectionApp {
 
         charRarity.addEventListener('change', (e) => {
             const val = parseInt(e.target.value);
+
             col.querySelectorAll('.pass-lvl-rarity').forEach(sel => {
                 const pDef = passivesLibrary.find(p => p.id === sel.dataset.passive);
                 if (pDef && pDef.levels.some(l => l.req && getRarityTier(l.req) !== -1)) {
@@ -450,39 +755,9 @@ class CollectionApp {
                     sel.dispatchEvent(new Event('change'));
                 }
             });
-        });
-    }
 
-    async triggerFilter() {
-        const currentFilters = {
-            name: document.getElementById('search-name').value,
-            element: document.getElementById('filter-element').dataset.value,
-            position: document.getElementById('filter-position').dataset.value,
-            rarity: document.getElementById('filter-rarity').dataset.value,
-            style: document.getElementById('filter-style').dataset.value,
-            team: document.getElementById('filter-team').dataset.value,
-            season: document.getElementById('filter-season').dataset.value,
-            ownedStatus: document.getElementById('filter-owned').dataset.value
-        };
-
-        localStorage.setItem('collection_filters', JSON.stringify(currentFilters));
-
-        const filteredArray = await filterCharacters(characterRegistry, currentFilters);
-        const allowedIds = filteredArray.map(c => c.id);
-
-        document.querySelectorAll('.collection-item-wrapper').forEach(card => {
-            const isOwned = card.querySelector('.collection-card').classList.contains('owned');
-
-            let matchesFilter = allowedIds.includes(card.dataset.charId);
-            let matchesOwned = true;
-
-            if (currentFilters.ownedStatus === 'owned') matchesOwned = isOwned;
-            if (currentFilters.ownedStatus === 'not-owned') matchesOwned = !isOwned;
-
-            if (matchesFilter && matchesOwned) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
+            if (hasAutoStats) {
+                this.recalculateStats(baseChar.id);
             }
         });
     }
@@ -491,6 +766,8 @@ class CollectionApp {
         const payload = {};
         document.querySelectorAll('.toggle-owned').forEach(toggle => {
             const charId = toggle.dataset.charId;
+            const fullData = this.loadedCharacters[charId];
+
             const charData = {
                 owned: toggle.checked,
                 stats: {},
@@ -568,27 +845,11 @@ class CollectionApp {
         }
     }
 
-    async loadFromCloud() {
-        if (!this.auth.user) return;
-        try {
-            const userDocRef = window.dbDoc(window.firebaseDb, "collezione", this.auth.user.uid);
-            const docSnap = await window.dbGet(userDocRef);
-
-            if (docSnap.exists()) {
-                this.collectionData = docSnap.data().characters || {};
-                this.applySavedDataToUI();
-            } else {
-                console.log("Nessun salvataggio trovato.");
-            }
-        } catch (error) {
-            console.error("Errore nel caricamento dal cloud:", error);
-        }
-    }
-
     applySavedDataToUI(resetToDefault = false) {
         document.querySelectorAll('.toggle-owned').forEach(toggle => {
             const charId = toggle.dataset.charId;
             const data = this.collectionData[charId];
+            const fullData = this.loadedCharacters[charId];
 
             if (resetToDefault || !data) {
                 toggle.checked = false;
@@ -597,8 +858,12 @@ class CollectionApp {
             }
             toggle.dispatchEvent(new Event('change'));
 
-            document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => inp.value = '');
-            document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => sel.value = '9');
+            if (!fullData || !fullData.growth_pattern_code) {
+                document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => inp.value = '');
+            }
+
+            // RIPORTA AL LV 1 (VALUE 0) ANCHE QUANDO RIPRISTINA IL DEFAULT
+            document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => sel.value = '0');
 
             document.querySelectorAll(`.reroll-id[data-char="${charId}"]`).forEach(sel => {
                 sel.value = '';
@@ -638,12 +903,13 @@ class CollectionApp {
                     }, 50);
                 }
 
-                if (data.stats) {
+                if (data.stats && (!fullData || !fullData.growth_pattern_code)) {
                     for (const [stat, val] of Object.entries(data.stats)) {
                         const inp = document.querySelector(`.stat-input[data-char="${charId}"][data-stat="${stat}"]`);
                         if (inp) inp.value = val;
                     }
                 }
+
                 if (data.techLevels) {
                     for (const [tech, val] of Object.entries(data.techLevels)) {
                         if (tech === data.equippedManual) continue;
@@ -668,6 +934,10 @@ class CollectionApp {
                         }
                     }
                 }
+            }
+
+            if (fullData && fullData.growth_pattern_code) {
+                this.recalculateStats(charId);
             }
         });
 

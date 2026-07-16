@@ -4,20 +4,16 @@ const baseInfo = characterRegistry.find(char => char.id === "judeSharpInazumaJap
 
 export const charData = {
     ...baseInfo,
+    name: "Jude Sharp InazumaJapan",
+    romanizedName: "Kidō Yūto",
+    japaneseName: "鬼道 有人",
     tags: [
         "img/TagTitle/Icon_Tag_Team_InazumaJapan.png",
         "img/TagTitle/Icon_Tag_Ability_Playmaker.png",
         "img/TagTitle/Icon_Tag_Title_InaEle3.png"
     ],
 
-    stats: {
-        "TP": { lv1: 100, lv300: 100, icon: "img/Status/Icon_Status_TP.png" },
-        "Tiro": { lv1: 43, lv300: 3196, icon: "img/Status/Icon_Status_Kick.png" },
-        "Tecnica": { lv1: 58, lv300: 4518, icon: "img/Status/Icon_Status_Technic.png" },
-        "Blocco": { lv1: 38, lv300: 2742, icon: "img/Status/Icon_Status_Block.png" },
-        "Parata": { lv1: 24, lv300: 1600, icon: "img/Status/Icon_Status_Catch.png" },
-        "Velocità": { lv1: 6, lv300: 6, icon: "img/Status/Icon_Status_Speed.png" }
-    },
+    growth_pattern_code: 204,
 
     zones: [
         { code: 5, rank: 'S' }, 

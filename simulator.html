@@ -12,7 +12,6 @@
 </head>
 <body class="pb-5">
 
-<!-- NAVBAR INIETTATA DINAMICAMENTE -->
 <script type="module" src="js/Components/navbar.js"></script>
 <inazuma-navbar></inazuma-navbar>
 
@@ -46,32 +45,43 @@
                 <h5 class="text-info mb-3">Impostazioni Calcolo</h5>
 
                 <label class="form-label small fw-bold">PERSONAGGIO</label>
-                <select id="sim-char" class="form-select mb-3"></select>
+                <div class="custom-select shadow-sm mb-3" id="sim-char-select" data-value="">
+                    <div class="select-selected"><span>-- Seleziona Personaggio --</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
+                </div>
 
                 <div class="mb-3">
-                    <label class="form-label small fw-bold">STATISTICA BASE </label>
+                    <label class="form-label small fw-bold d-flex align-items-center gap-2">
+                        STATISTICA BASE <img id="stat-base-icon" src="img/Status/Icon_Status_Kick.png" style="height: 18px; display: none;">
+                    </label>
                     <input type="number" id="sim-custom-stat" class="form-control" placeholder="Es. 150" min="0">
                 </div>
 
                 <label class="form-label small fw-bold">MOLTIPLICATORE RUOLO</label>
-                <select id="sim-role" class="form-select mb-3">
-                    <option value="1.00">Nessuno (x1.00)</option>
-                    <option value="1.05">Ruolo B (x1.05)</option>
-                    <option value="1.10">Ruolo A (x1.10)</option>
-                    <option value="1.15" selected>Ruolo S (x1.15)</option>
-                </select>
+                <div class="custom-select shadow-sm mb-3" id="sim-role-select" data-value="1.00">
+                    <div class="select-selected"><span>Nessuno (x1.00)</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="select-items select-hide">
+                        <div data-value="1.00">Nessuno (x1.00)</div>
+                        <div data-value="1.05">Ruolo B (x1.05)</div>
+                        <div data-value="1.10">Ruolo A (x1.10)</div>
+                        <div data-value="1.15">Ruolo S (x1.15)</div>
+                    </div>
+                </div>
 
+                <!-- CUSTOM SELECT TECNICA -->
                 <label class="form-label small fw-bold">TECNICA E LIVELLO MOSSA</label>
-                <div class="row g-2 mb-3">
-                    <div class="col-6">
-                        <select id="sim-tech" class="form-select"></select>
+                <div class="row g-2 mb-3 align-items-center">
+                    <div class="col-8">
+                        <div class="custom-select shadow-sm" id="sim-tech-select" data-value="">
+                            <div class="select-selected"><span>-- Nessuna Tecnica --</span> <i class="fas fa-chevron-down"></i></div>
+                            <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
+                        </div>
                     </div>
-                    <div class="col-3">
-                        <select id="sim-tech-lvl" class="form-select"></select>
-                    </div>
-                    <!-- AGGIUNTO CAMPO PER POTENZA EXTRA -->
-                    <div class="col-3">
-                        <input type="number" id="sim-tech-pwr" class="form-control" placeholder="+Pwr" min="0">
+                    <div class="col-4">
+                        <div class="custom-select shadow-sm" id="sim-tech-lvl-select" data-value="10">
+                            <div class="select-selected"><span>Lv. 10</span> <i class="fas fa-chevron-down"></i></div>
+                            <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -81,11 +91,14 @@
                 </div>
 
                 <label class="form-label small fw-bold">VANTAGGIO DI TIPO</label>
-                <select id="sim-advantage" class="form-select">
-                    <option value="1.0" selected>Neutro (x1.00)</option>
-                    <option value="1.2">Vantaggio (+20%)</option>
-                    <option value="0.8">Svantaggio (-20%)</option>
-                </select>
+                <div class="custom-select shadow-sm mb-3" id="sim-advantage-select" data-value="1.0">
+                    <div class="select-selected"><span>Neutro (x1.00)</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="select-items select-hide">
+                        <div data-value="1.0">Neutro (x1.00)</div>
+                        <div data-value="1.2" class="text-success fw-bold"><i class="fas fa-arrow-up text-success"></i> Vantaggio (+20%)</div>
+                        <div data-value="0.8" class="text-danger fw-bold"><i class="fas fa-arrow-down text-danger"></i> Svantaggio (-20%)</div>
+                    </div>
+                </div>
             </div>
 
             <div class="card p-4 shadow">

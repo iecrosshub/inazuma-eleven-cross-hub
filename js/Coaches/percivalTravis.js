@@ -26,22 +26,22 @@ export const coachData = {
         id: "coach_passive_travis",
         title: "Inazuma Japan Boost Potenza (イナズマジャパンパワーブースト)",
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
-        template: "All'inizio della partita:<br>Per gli alleati con tag <strong>Inazuma Japan</strong>:<br><strong>Alleati FW consigliati:</strong> potenza delle tecniche di tiro +{VAL}<br><strong>Alleati MF consigliati:</strong> potenza delle tecniche di dribbling +{VAL}",
+        template: "All'inizio della partita:<br>Per gli alleati con tag <strong>Inazuma Japan</strong>:<br><strong>Alleati FW consigliati:</strong> potenza delle tecniche di tiro +{VAL}<br><strong>Alleati MF consigliati:</strong> potenza delle tecniche di dribbling +{VAL2}",
         levels: [
-            { val: 8, req: "Niv.1" },
-            { val: 17, req: "Niv.2" },
-            { val: 26, req: "Niv.3" },
-            { val: 34, req: "Niv.4" },
-            { val: 43, req: "Niv.5" },
-            { val: 52, req: "Niv.6" },
-            { val: 60, req: "Niv.7" },
-            { val: 69, req: "Niv.8" },
-            { val: 78, req: "Niv.9" },
-            { val: 87, req: "Niv.10" }
+            { val: 8, val2: 8, req: "Niv.1" },
+            { val: 17, val2: 17, req: "Niv.2" },
+            { val: 26, val2: 26, req: "Niv.3" },
+            { val: 34, val2: 34, req: "Niv.4" },
+            { val: 43, val2: 43, req: "Niv.5" },
+            { val: 52, val2: 52, req: "Niv.6" },
+            { val: 60, val2: 60, req: "Niv.7" },
+            { val: 69, val2: 69, req: "Niv.8" },
+            { val: 78, val2: 78, req: "Niv.9" },
+            { val: 87, val2: 87, req: "Niv.10" }
         ],
         actions: [
             { target: "team_InazumaJapan_recommended_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "always" },
-            { target: "team_InazumaJapan_recommended_MF", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL}", condition: "always" }
+            { target: "team_InazumaJapan_recommended_MF", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [

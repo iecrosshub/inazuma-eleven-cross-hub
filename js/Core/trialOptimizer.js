@@ -3,6 +3,7 @@
 import { characterRegistry, passivesLibrary, techniquesLibrary, universalManualsKeys } from './database.js';
 import { extractPosition } from './parsers.js';
 import { calculateTeamDamage } from './calculator.js';
+import { calcolaStatisticheEsatte } from './calculator.js'; // AGGIUNTO: Import del calcolatore
 
 export class TrialOptimizer {
     constructor(app) {
@@ -15,6 +16,21 @@ export class TrialOptimizer {
         const customTechPower = {};
         const passiveLevels = {};
 
+        // --- FIX: CONTROLLO STATISTICHE ---
+        // Se mancano le stats (PG Autocalcolati), le calcoliamo qui al volo
+        let statsSource = charData.stats;
+        if (!statsSource && charData.growth_pattern_code) {
+            const calced = calcolaStatisticheEsatte(charData, 300, 9, 300);
+            statsSource = {
+                "Tiro": { lv300: calced.kick },
+                "Tecnica": { lv300: calced.technique },
+                "Blocco": { lv300: calced.block },
+                "Parata": { lv300: calced.catch },
+                "Velocità": { lv300: calced.speed }
+            };
+        }
+        // ----------------------------------
+
         const collData = this.app.collectionData[charData.id] || {};
         let allValidMoves = [...charData.myTechniques];
         if (collData.equippedManual && !allValidMoves.includes(collData.equippedManual)) {
@@ -26,7 +42,8 @@ export class TrialOptimizer {
         const ignoreRerolls = customConfig ? customConfig.ignoreRerolls : false;
 
         if (mode === 'max') {
-            ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = charData.stats[s]?.lv300 || 0);
+            // Usiamo statsSource invece di charData.stats
+            ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = statsSource[s]?.lv300 || 0);
             allValidMoves.forEach(t => { techLevels[t] = 9; customTechPower[t] = 0; });
 
             if (isTaughtMove) {
@@ -36,7 +53,6 @@ export class TrialOptimizer {
 
             [...(charData.myBasicPassivesIds || []), ...(charData.myRarityPassivesIds || [])].forEach(pId => {
                 const pDef = passivesLibrary.find(p => p.id === pId);
-                // NESSUN BLOCCO: Attiviamo tutte le passive per trovare lo score assoluto
                 passiveLevels[pId] = pDef ? pDef.levels.length - 1 : 0;
             });
 
@@ -51,7 +67,7 @@ export class TrialOptimizer {
             const cTechs = collData.techLevels || {};
             const cPass = collData.passives || {};
 
-            ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = cStats[s] || 0);
+            ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = cStats[s] || statsSource[s]?.lv300 || 0);
             allValidMoves.forEach(t => { techLevels[t] = cTechs[t] || 0; customTechPower[t] = 0; });
 
             if (isTaughtMove) {

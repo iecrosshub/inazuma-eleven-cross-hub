@@ -4,42 +4,91 @@ import { characterRegistry, techniquesLibrary, passivesLibrary, universalManuals
 import { getStatKeyByIcon } from '../Core/parsers.js';
 import { calculateDamageData } from '../Core/calculator.js';
 import { AuthManager } from '../Services/auth.js';
+import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 let currentDb = null;
 let collectionData = {};
 const auth = new AuthManager();
 
+// Helper per forzare l'HTML nel custom select da codice
+function setCustomSelectValue(el, value, innerHtml) {
+    if (!el) return;
+    if (typeof el === 'string') el = document.getElementById(el);
+    if (!el) return;
+    el.dataset.value = value;
+    const span = el.querySelector('.select-selected span');
+    if (span) span.innerHTML = innerHtml;
+}
+
+// Helper per creare la riga tecnica (Nome Ita + SB + Nome Jap + Tooltip)
+function formatTechNameHTML(tDef, isManual = false) {
+    let itaName = tDef.name;
+    let jpName = "";
+
+    // Separa il nome italiano da quello giapponese cercando la parentesi
+    const splitIdx = tDef.name.indexOf(' (');
+    if (splitIdx !== -1) {
+        itaName = tDef.name.substring(0, splitIdx);
+        jpName = tDef.name.substring(splitIdx);
+    }
+
+    const sbBadge = tDef.shootBlock ? `<span class="badge bg-danger mx-1 py-0" style="font-size:0.65rem; vertical-align: middle;" title="Shoot Block">SB</span>` : '';
+    const manualIcon = isManual ? "📕 " : "";
+    const fullText = isManual ? `📕 ${tDef.name}` : tDef.name;
+
+    // L'attributo "title" genera il Tooltip automatico al passaggio del mouse
+    return `<img src="${tDef.icon}" style="width:16px; margin-right:4px; flex-shrink:0;">
+            <img src="${tDef.elementIcon}" style="width:16px; margin-right:6px; flex-shrink:0;">
+            <span class="text-truncate" style="flex-grow:1; display:inline-block; vertical-align: middle; min-width:0;" title="${fullText}">
+                ${manualIcon}${itaName}${sbBadge}${jpName}
+            </span>`;
+}
+
 async function init() {
-    const charSelect = document.getElementById('sim-char');
-    if (!charSelect) return;
+    // 1. Popola i Personaggi con le Thumbnail
+    let charHtml = `<div data-value="generic">--- PERSONAGGIO GENERICO ---</div>`;
+    characterRegistry.forEach(c => {
+        charHtml += `<div data-value="${c.id}"><img src="${c.thumb}" style="width:24px; height:24px; border-radius:50%; margin-right:8px; vertical-align:middle;"> ${c.name} (${c.romanizedName})</div>`;
+    });
 
-    charSelect.innerHTML = `<option value="generic">--- PERSONAGGIO GENERICO ---</option>` +
-        characterRegistry.map(c => `<option value="${c.id}">${c.name} (${c.romanizedName})</option>`).join('');
+    const charSelectItems = document.querySelector('#sim-char-select .select-items');
+    if (charSelectItems) charSelectItems.innerHTML = charHtml;
 
+    initCustomSelect(document.getElementById('sim-char-select'), (val) => loadCharacter(val));
+
+    // Inizializza i menu a tendina custom (Ruolo e Vantaggio e Livello)
+    initCustomSelect(document.getElementById('sim-role-select'), () => runSimulation());
+    initCustomSelect(document.getElementById('sim-advantage-select'), () => runSimulation());
+
+    const techLvlContainer = document.querySelector('#sim-tech-lvl-select .select-items');
+    if (techLvlContainer) {
+        techLvlContainer.innerHTML = Array.from({length: 10}, (_, i) => `<div data-value="${i+1}">Lv. ${i+1}</div>`).join('');
+    }
+    initCustomSelect(document.getElementById('sim-tech-lvl-select'), () => runSimulation());
+
+    setupGlobalSelectClose();
+
+    // Identifica e pre-carica il personaggio passato dall'URL o cache
     const urlParams = new URLSearchParams(window.location.search);
     let charParam = urlParams.get('char') || localStorage.getItem('selectedChar');
 
-    if (charParam && charSelect.querySelector(`option[value="${charParam}"]`)) {
-        charSelect.value = charParam;
+    if (charParam && document.querySelector(`#sim-char-select .select-items div[data-value="${charParam}"]`)) {
+        const opt = document.querySelector(`#sim-char-select .select-items div[data-value="${charParam}"]`);
+        setCustomSelectValue('sim-char-select', charParam, opt.innerHTML);
+    } else {
+        setCustomSelectValue('sim-char-select', 'generic', '--- PERSONAGGIO GENERICO ---');
     }
 
-    const techLvlSelect = document.getElementById('sim-tech-lvl');
-    if (techLvlSelect) {
-        techLvlSelect.innerHTML = Array.from({length: 10}, (_, i) => `<option value="${i+1}">Lv. ${i+1}</option>`).join('');
-    }
-
-    charSelect.addEventListener('change', loadCharacter);
-
+    // Ascoltatori generici per radio buttons e campi numerici
     document.addEventListener('change', (e) => {
         if (e.target.name === 'dataSource') applyPresets();
-        if (e.target.id === 'sim-tech') applyPresets();
-        if (e.target.matches('select, input[type="checkbox"]')) runSimulation();
     });
 
     document.addEventListener('input', (e) => {
         if (e.target.matches('input[type="number"]')) runSimulation();
     });
 
+    // Login/Logout
     document.getElementById('btn-login').addEventListener('click', () => auth.loginWithGoogle());
     document.getElementById('btn-logout').addEventListener('click', () => auth.logout());
 
@@ -65,8 +114,32 @@ async function init() {
     await loadCharacter();
 }
 
-async function loadCharacter() {
-    const id = document.getElementById('sim-char').value;
+function updateStatIcon(techKey) {
+    const iconEl = document.getElementById('stat-base-icon');
+    if (!techKey || !techniquesLibrary[techKey]) {
+        iconEl.style.display = 'none';
+        return;
+    }
+    const tech = techniquesLibrary[techKey];
+    const statKey = getStatKeyByIcon(tech.icon);
+
+    const mapIcons = {
+        "Tiro": "img/Status/Icon_Status_Kick.png",
+        "Tecnica": "img/Status/Icon_Status_Technic.png",
+        "Blocco": "img/Status/Icon_Status_Block.png",
+        "Parata": "img/Status/Icon_Status_Catch.png"
+    };
+
+    if (mapIcons[statKey]) {
+        iconEl.src = mapIcons[statKey];
+        iconEl.style.display = 'inline-block';
+    } else {
+        iconEl.style.display = 'none';
+    }
+}
+
+async function loadCharacter(idStr) {
+    const id = idStr || document.getElementById('sim-char-select').dataset.value;
     try {
         if (id === 'generic') {
             currentDb = {
@@ -84,28 +157,49 @@ async function loadCharacter() {
             currentDb = module.charData;
         }
 
-        const techSelect = document.getElementById('sim-tech');
-        if (techSelect) {
+        const techSelectEl = document.getElementById('sim-tech-select');
+        if (techSelectEl) {
             let optionsHtml = '';
 
             currentDb.myTechniques.forEach(tKey => {
-                if (techniquesLibrary[tKey]) {
-                    optionsHtml += `<option value="${tKey}">${techniquesLibrary[tKey].name}</option>`;
+                const tDef = techniquesLibrary[tKey];
+                if (tDef) {
+                    optionsHtml += `<div data-value="${tKey}" style="display:flex; align-items:center; overflow:hidden;">${formatTechNameHTML(tDef)}</div>`;
                 }
             });
 
             const availableManuals = universalManualsKeys.filter(m => !currentDb.myTechniques.includes(m));
             if (availableManuals.length > 0) {
-                optionsHtml += `<optgroup label="Manuali (Shop)">`;
-                availableManuals.forEach(tKey => {
-                    if (techniquesLibrary[tKey]) {
-                        optionsHtml += `<option value="${tKey}">📕 ${techniquesLibrary[tKey].name}</option>`;
+                optionsHtml += `<div class="fw-bold text-warning" style="pointer-events:none; padding: 4px 10px; font-size:0.8rem; background:#343a40;">MANUALI (SHOP)</div>`;
+                availableManuals.forEach(mKey => {
+                    const tDef = techniquesLibrary[mKey];
+                    if (tDef) {
+                        optionsHtml += `<div data-value="${mKey}" style="display:flex; align-items:center; overflow:hidden;">${formatTechNameHTML(tDef, true)}</div>`;
                     }
                 });
-                optionsHtml += `</optgroup>`;
             }
 
-            techSelect.innerHTML = optionsHtml;
+            techSelectEl.querySelector('.select-items').innerHTML = optionsHtml;
+
+            if (currentDb.myTechniques.length > 0) {
+                const firstT = techniquesLibrary[currentDb.myTechniques[0]];
+                setCustomSelectValue('sim-tech-select', currentDb.myTechniques[0], formatTechNameHTML(firstT));
+            } else {
+                setCustomSelectValue('sim-tech-select', '', '-- Nessuna Tecnica --');
+            }
+
+            initCustomSelect(techSelectEl, (val) => {
+                // Aggiorna visivamente il testo nel box selezionato con la stessa formattazione
+                const tDef = techniquesLibrary[val];
+                if(tDef) {
+                    const isManual = availableManuals.includes(val);
+                    setCustomSelectValue('sim-tech-select', val, formatTechNameHTML(tDef, isManual));
+                }
+                updateStatIcon(val);
+                applyPresets();
+            });
+
+            updateStatIcon(techSelectEl.dataset.value);
         }
 
         const container = document.getElementById('dynamic-passives-container');
@@ -113,8 +207,8 @@ async function loadCharacter() {
             container.innerHTML = [...(currentDb.myBasicPassivesIds || []), ...(currentDb.myRarityPassivesIds || [])].map(pId => {
                 const p = passivesLibrary.find(x => x.id === pId);
                 if (!p) return '';
-                let opts = '<option value="disabled">Bloccata</option>';
-                p.levels.forEach((_, idx) => opts += `<option value="${idx}">Lv. ${idx + 1}</option>`);
+                let opts = '<div data-value="disabled">Bloccata</div>';
+                p.levels.forEach((_, idx) => opts += `<div data-value="${idx}">Lv. ${idx + 1}</div>`);
 
                 const isCumulative = p.title.includes('累') || p.template.includes('Ogni volta che');
                 let stackHtml = '';
@@ -134,11 +228,21 @@ async function loadCharacter() {
                         ${p.title}
                     </div>
                     <div class="col-${isCumulative ? '4' : '5'}">
-                        <select class="form-select form-select-sm sim-passive-lvl-select" data-passive-id="${p.id}">${opts}</select>
+                        <div class="custom-select shadow-sm sim-passive-lvl-select" data-passive-id="${p.id}" data-value="disabled">
+                            <div class="select-selected"><span style="font-size: 0.85rem;">Bloccata</span> <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></div>
+                            <div class="select-items select-hide" style="max-height: 200px; overflow-y: auto; font-size: 0.85rem;">
+                                ${opts}
+                            </div>
+                        </div>
                     </div>
                     ${stackHtml}
                 </div>`;
             }).join('');
+
+            // Inizializza i Custom Select delle Passive
+            document.querySelectorAll('.sim-passive-lvl-select').forEach(sel => {
+                initCustomSelect(sel, () => runSimulation());
+            });
         }
 
         applyPresets();
@@ -150,18 +254,16 @@ function applyPresets() {
     if (!currentDb) return;
 
     const mode = document.querySelector('input[name="dataSource"]:checked').value;
-    const techKey = document.getElementById('sim-tech').value;
+    const techKey = document.getElementById('sim-tech-select').dataset.value;
     const statKey = techKey && techniquesLibrary[techKey] ? getStatKeyByIcon(techniquesLibrary[techKey].icon) : 'Tiro';
 
     let statVal = 0;
     let techLvIndex = 9;
-    let techPwrVal = 0;
     let passivesConfig = {};
 
     if (mode === 'max') {
         statVal = currentDb.stats[statKey] ? currentDb.stats[statKey]['lv300'] : 0;
         techLvIndex = 9;
-        techPwrVal = 0;
         [...(currentDb.myBasicPassivesIds || []), ...(currentDb.myRarityPassivesIds || [])].forEach(pId => {
             const pDef = passivesLibrary.find(p => p.id === pId);
             passivesConfig[pId] = pDef ? pDef.levels.length - 1 : 0;
@@ -170,7 +272,6 @@ function applyPresets() {
         const coll = collectionData[currentDb.id] || {};
         statVal = coll.stats ? (coll.stats[statKey] || 0) : 0;
         techLvIndex = coll.techLevels ? (coll.techLevels[techKey] || 0) : 0;
-        techPwrVal = coll.techCustomPower ? (coll.techCustomPower[techKey] || 0) : 0;
 
         const cPass = coll.passives || {};
         [...(currentDb.myBasicPassivesIds || []), ...(currentDb.myRarityPassivesIds || [])].forEach(pId => {
@@ -180,15 +281,13 @@ function applyPresets() {
 
     document.getElementById('sim-custom-stat').value = statVal;
 
-    const techSelect = document.getElementById('sim-tech-lvl');
-    if (techSelect) techSelect.value = techLvIndex + 1;
-
-    const pwrInput = document.getElementById('sim-tech-pwr');
-    if (pwrInput) pwrInput.value = techPwrVal > 0 ? techPwrVal : '';
+    setCustomSelectValue('sim-tech-lvl-select', techLvIndex + 1, `Lv. ${techLvIndex + 1}`);
 
     document.querySelectorAll('.sim-passive-lvl-select').forEach(sel => {
         const pid = sel.dataset.passiveId;
-        sel.value = passivesConfig[pid] === -1 ? 'disabled' : passivesConfig[pid];
+        const targetVal = passivesConfig[pid] === -1 ? 'disabled' : passivesConfig[pid];
+        const targetHtml = targetVal === 'disabled' ? 'Bloccata' : `Lv. ${targetVal + 1}`;
+        setCustomSelectValue(sel, targetVal, targetHtml);
     });
 
     runSimulation();
@@ -197,22 +296,21 @@ function applyPresets() {
 function runSimulation() {
     if (!currentDb) return;
 
-    const techKey = document.getElementById('sim-tech').value;
-    const techLvlIndex = parseInt(document.getElementById('sim-tech-lvl').value) - 1;
-    const customTechPwr = parseInt(document.getElementById('sim-tech-pwr').value) || 0;
-    const roleMult = parseFloat(document.getElementById('sim-role').value);
-    const adv = parseFloat(document.getElementById('sim-advantage').value);
+    const techKey = document.getElementById('sim-tech-select').dataset.value;
+    const techLvlIndex = parseInt(document.getElementById('sim-tech-lvl-select').dataset.value) - 1;
+    const roleMult = parseFloat(document.getElementById('sim-role-select').dataset.value);
+    const adv = parseFloat(document.getElementById('sim-advantage-select').dataset.value);
     const customStatVal = document.getElementById('sim-custom-stat').value;
 
     const passiveSelections = Array.from(document.querySelectorAll('.sim-passive-lvl-select'))
-        .filter(s => s.value !== 'disabled')
+        .filter(s => s.dataset.value !== 'disabled')
         .map(s => {
             const id = s.dataset.passiveId;
             const stackInput = document.querySelector(`.sim-passive-stacks[data-passive-id="${id}"]`);
-            return { id, lvIndex: parseInt(s.value), stacks: stackInput ? (parseInt(stackInput.value) || 1) : 1 };
+            return { id, lvIndex: parseInt(s.dataset.value), stacks: stackInput ? (parseInt(stackInput.value) || 1) : 1 };
         });
 
-    const data = calculateDamageData(currentDb, techKey, techLvlIndex, customStatVal, roleMult, adv, passiveSelections, customTechPwr);
+    const data = calculateDamageData(currentDb, techKey, techLvlIndex, customStatVal, roleMult, adv, passiveSelections, 0);
 
     if (!data) return;
 

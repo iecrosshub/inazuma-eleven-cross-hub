@@ -169,3 +169,62 @@ body {
     text-overflow: ellipsis;
     padding-right: 25px;
 }
+
+/* =========================================
+   COMPONENTE GLOBALE: CUSTOM SELECT
+   ========================================= */
+.custom-select {
+    position: relative;
+    background-color: #ffffff;
+    border: 1px solid #d4e1f1;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-select .select-selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    color: #102247;
+    font-weight: bold;
+}
+
+.custom-select .select-items {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #d4e1f1;
+    border-radius: 6px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 999; /* Questo lo fa fluttuare SOPRA agli altri elementi */
+    max-height: 250px; /* Se ci sono troppi elementi, crea la barra di scorrimento */
+    overflow-y: auto;
+}
+
+.custom-select .select-items div {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #506482;
+    border-bottom: 1px solid #f4f7fb;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.custom-select .select-items div:last-child {
+    border-bottom: none;
+}
+
+.custom-select .select-items div:hover {
+    background-color: #f4f7fb;
+    color: #1269e8;
+    font-weight: bold;
+}
+
+.select-hide {
+    display: none !important; /* Questo nasconde la tendina quando è chiusa */
+}

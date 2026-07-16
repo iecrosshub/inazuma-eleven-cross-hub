@@ -2,6 +2,7 @@
 
 import { characterRegistry, getPopulatedCharacter } from '../Core/database.js';
 import { getUrlParam, getAdjacentCharacterId, parsePassiveText } from '../Core/parsers.js';
+import { calcolaStatisticheEsatte } from '../Core/calculator.js'; // IMPORTIAMO IL CALCOLATORE!
 
 let db = {};
 let currentId = '';
@@ -17,8 +18,23 @@ async function init() {
     try {
         const module = await import(`../Characters/${currentId}.js`);
 
-        // Uso della nuova funzione ottimizzata dal Core Database!
+        // Uso della nuova funzione ottimizzata dal Core Database
         db = getPopulatedCharacter(module.charData);
+
+        // IL FIX: Se il pg ha il codice di crescita automatico ma NON ha le stats scritte a mano, le generiamo al volo!
+        if (db.growth_pattern_code && !db.stats) {
+            // Calcola i valori di Lv1 e Lv300 passando "1" come livello di equipaggiamento (equip base)
+            const stats1 = calcolaStatisticheEsatte(db, 1, db.stars, 1);
+            const stats300 = calcolaStatisticheEsatte(db, 300, db.stars, 1);
+
+            db.stats = {
+                "Tiro": { icon: "img/Status/Icon_Status_Kick.png", lv1: stats1.kick, lv300: stats300.kick },
+                "Tecnica": { icon: "img/Status/Icon_Status_Technic.png", lv1: stats1.technique, lv300: stats300.technique },
+                "Blocco": { icon: "img/Status/Icon_Status_Block.png", lv1: stats1.block, lv300: stats300.block },
+                "Parata": { icon: "img/Status/Icon_Status_Catch.png", lv1: stats1.catch, lv300: stats300.catch },
+                "Velocità": { icon: "img/Status/Icon_Status_Speed.png", lv1: stats1.speed, lv300: stats300.speed }
+            };
+        }
 
         // Aggiornamento UI Base
         document.getElementById('char-name-main').textContent = `${db.name} (${db.romanizedName})`;

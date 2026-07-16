@@ -89,7 +89,7 @@ export const characterRegistry = [
 
     {
         id: "shawnFrosteInazumaJapan",
-        name: "Shawn Froste",
+        name: "Shawn Froste InazumaJapan",
         romanizedName: "Shirō Fubuki",
         japaneseName: "吹雪 士郎",
         thumb: "img/Characters/ShawnFrosteInazumaJapan.png",
@@ -855,11 +855,11 @@ export const characterRegistry = [
     },
 
     {
-        id: "burtWolfOccult",
-        name: "Burt Wolf",
+        id: "nathanJonesOccult",
+        name: "Nathan Jones",
         romanizedName: "Nata Juzou",
         japaneseName: "鉈 十三",
-        thumb: "img/Characters/BurtWolfOccult.png",
+        thumb: "img/Characters/NathanJonesOccult.png",
         element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_GK.png",
         stars: 1,

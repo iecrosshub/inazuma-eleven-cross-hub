@@ -14,14 +14,8 @@ export const charData = {
         "img/TagTitle/Icon_Tag_Title_InaEle3.png"
     ],
 
-    stats: {
-        "TP": { lv1: 100, lv300: 100, icon: "img/Status/Icon_Status_TP.png" },
-        "Tiro": { lv1: 24, lv300: 1542, icon: "img/Status/Icon_Status_Kick.png" },
-        "Tecnica": { lv1: 43, lv300: 3232, icon: "img/Status/Icon_Status_Technic.png" },
-        "Blocco": { lv1: 57, lv300: 4422, icon: "img/Status/Icon_Status_Block.png" },
-        "Parata": { lv1: 41, lv300: 3060, icon: "img/Status/Icon_Status_Catch.png" },
-        "Velocità": { lv1: 4, lv300: 4, icon: "img/Status/Icon_Status_Speed.png" }
-    },
+    growth_pattern_code: 302,
+
 
     zones: [
         { code: 8, rank: 'S' }, 
