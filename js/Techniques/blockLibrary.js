@@ -185,7 +185,7 @@ export const blockLibrary = {
         shootBlock: false
     },
     "裁きの鉄槌": {
-        name: "Martello del Giudizio (裁きの鉄槌)",
+        name: "Piede del Giudizio (裁きの鉄槌)",
         icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
         elementIcon: "img/Element/Icon_Element_Fire.png",
         kind: "Blocco",
