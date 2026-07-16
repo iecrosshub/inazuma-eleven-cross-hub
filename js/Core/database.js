@@ -17,14 +17,54 @@ export const passivesLibrary = [...basePassivesLibrary, ...allRerollPassives];
 export { characterRegistry, techniquesLibrary, rerollPassivesByRole };
 
 export const universalManualsKeys = [
-    "ファイアトルネード", "ヒートタックル", "爆熱パンチ", "疾風ダッシュ", "ザ・ウォール",
-    "ジグザグスパーク", "スピニングカット", "サイクロン", "グレネードショット", "スピニングシュート",
-    "アースクエイク", "ジャッジスルー", "ザ・マウンテン", "旋風陣", "真空魔",
-    "エターナルブリザード", "ボルケイノカット", "ターザンキック", "つむじ", "ゆがむ空間",
-    "炎風ダッシュ", "フレイムダンス", "つちだるま", "五里霧中", "ワイルドクロウ",
-    "バックトルネード", "アステロイドベルト", "ファントムシュート", "四股踏み", "スーパー四股踏み",
-    "怨霊", "流星ブレード", "ヘブンズタイム", "リフレクトバスター", "つなみウォール",
-    "裁きの鉄槌", "ディバインアロー", "そよかぜステップ", "デスソード", "プロファイルゾーン"
+    // --- PARATA ---
+    "爆熱パンチ",           // Bakunetsu Punch (Pugno di Fuoco)
+    "ゆがむ空間",           // Yugamu Kuukan (Spazio Distorto)
+    "ワイルドクロウ",         // Wild Claw (Artiglio Selvaggio)
+    "怨霊",                 // Onryou (Spirito Vendicativo)
+    "裁きの鉄槌",           // Sabaki no Tettsui (Martello del Terrore)
+
+    // --- BLOCCO ---
+    "ザ・ウォール",          // The Wall (Il Muro)
+    "スピニングカット",       // Spinning Cut (Taglio Rotante)
+    "サイクロン",            // Cyclone (Ciclone)
+    "アースクエイク",         // Earthquake (Terremoto)
+    "ザ・マウンテン",         // The Mountain (La Montagna)
+    "旋風陣",               // Senpuujin (Turbine)
+    "真空魔",               // Shinkuuma (Vuoto Oscuro)
+    "ボルケイノカット",       // Volcano Cut (Taglio Vulcanico)
+    "フレイムダンス",         // Flame Dance (Danza di Fuoco)
+    "つちだるま",            // Tsuchidaruma (Pupazzo di Fango)
+    "アステロイドベルト",      // Asteroid Belt (Fascia di Asteroidi)
+    "四股踏み",              // Shikofumi (Scossa di Terremoto)
+    "スーパー四股踏み",       // Super Shikofumi (Super Scossa di Terremoto)
+    "つなみウォール",         // Tsunami Wall (Muro di Tsunami)
+    "プロファイルゾーン",      // Profile Zone (Zona Profilo)
+
+    // --- DRIBBLING ---
+    "ヒートタックル",         // Heat Tackle (Tackle di Fuoco)
+    "疾風ダッシュ",          // Shippuu Dash (Scatto Ventoso)
+    "ジグザグスパーク",       // Zigzag Spark (Scintilla Zigzag)
+    "ジャッジスルー",         // Judge Through (Passaggio del Giudizio)
+    "つむじ",               // Tsumuji (Vortice)
+    "炎風ダッシュ",          // Enpuu Dash (Scatto Infuocato)
+    "五里霧中",              // Gorimuchuu (Nebbia Illusoria)
+    "ヘブンズタイム",         // Heaven's Time (Istante Divino)
+    "そよかぜステップ",       // Soyokaze Step (Passo del Vento)
+
+    // --- TIRO ---
+    "ファイアトルネード",      // Fire Tornado (Tornado di Fuoco)
+    "グレネードショット",      // Grenade Shot (Tiro Granata)
+    "スピニングシュート",      // Spinning Shoot (Tiro Rotante)
+    "エターナルブリザード",    // Eternal Blizzard (Tormenta Glaciale)
+    "ターザンキック",         // Tarzan Kick (Calcio di Tarzan)
+    "バックトルネード",       // Back Tornado (Tornado Inverso)
+    "ファントムシュート",      // Phantom Shoot (Tiro Fantasma)
+    "流星ブレード",          // Ryuusei Blade (Meteora Dirompente)
+    "リフレクトバスター",      // Reflect Buster (Tiro Riflesso)
+    "ディバインアロー",       // Divine Arrow (Freccia Divina)
+    "デスソード",            // Death Sword (Stoccata Micidiale)
+    "ドラゴンクラッシュ"       // Dragon Crash (Drago Nascente) - AGGIUNTO!
 ];
 
 export async function fetchCoachData(id) {
