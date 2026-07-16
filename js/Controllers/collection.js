@@ -11,9 +11,9 @@ class CollectionApp {
     constructor() {
         this.auth = new AuthManager();
         this.collectionData = {};
-        this.loadedCharacters = {};
         this.hasUnsavedChanges = false;
         this.isGridRendered = false;
+        this.loadedCharacters = {};
         this.init();
     }
 
@@ -383,7 +383,30 @@ class CollectionApp {
     async loadFromCloud() {
         if (!this.auth.user) return;
         try {
-            this.collectionData = await this.auth.getUserCollection();
+            // FIX: Ora andiamo a leggere DIRETTAMENTE da Firebase tutto il documento,
+            // inclusi i settaggi globali che prima andavano persi su GitHub!
+            const userDocRef = window.dbDoc(window.firebaseDb, "collezione", this.auth.user.uid);
+            const docSnap = await window.dbGet(userDocRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                this.collectionData = data.characters || {};
+
+                // Salviamo le impostazioni globali dal Cloud alla Memoria del Browser
+                if (data.coreMembers) localStorage.setItem('collection_core_members', JSON.stringify(data.coreMembers));
+                if (data.equipMatrix) localStorage.setItem('collection_equip_matrix', JSON.stringify(data.equipMatrix));
+                if (data.globalLevel) localStorage.setItem('collection_char_level', data.globalLevel);
+
+                const globalInput = document.getElementById('global-char-level');
+                if (globalInput && data.globalLevel) globalInput.value = data.globalLevel;
+
+                // Aggiorniamo la UI dei setting globali
+                this.setupCoreMembers();
+                this.setupEquipMatrix();
+            } else {
+                this.collectionData = {};
+            }
+
             if (this.isGridRendered) {
                 this.applySavedDataToUI();
             }
@@ -539,7 +562,6 @@ class CollectionApp {
             const elIcon = techDef?.elementIcon || '';
             const sbBadge = techDef?.shootBlock ? `<span class="badge bg-danger ms-1 px-1 py-0" style="font-size:0.65rem; flex-shrink:0;" title="Shoot Block">SB</span>` : '';
 
-            // QUI IL LIVELLO PARTE DA "0" (Lv 1) PER LE MOSSE NATIVE!
             return `
                 <div class="d-flex gap-1 mb-2 align-items-center">
                     <div class="d-flex align-items-center gap-1" style="width: 70%;">
@@ -576,6 +598,7 @@ class CollectionApp {
             `;
         }
 
+        // FIX: Modificata la UI. Rimosso readonly e modificata l'etichetta per permettere la scrittura.
         let html = `
             <div class="collection-card owned" id="card-${baseChar.id}">
                 
@@ -601,7 +624,7 @@ class CollectionApp {
                 </div>
                 
                 <div class="card-details">
-                    <h6>Statistiche ${hasAutoStats ? '<span class="badge bg-success" style="font-size:0.6rem;">Calcolo Auto</span>' : '<span class="badge bg-warning text-dark" style="font-size:0.6rem;">Manuali</span>'}</h6>
+                    <h6>Statistiche ${hasAutoStats ? '<span class="badge bg-success" style="font-size:0.6rem;" title="Il calcolo è automatico, ma puoi modificare i valori a mano!">Calcolo Auto (Modificabile)</span>' : '<span class="badge bg-warning text-dark" style="font-size:0.6rem;">Manuali</span>'}</h6>
                     <div class="d-flex flex-wrap gap-2 mb-3">
                         ${["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].map(stat => `
                             <div class="input-group input-group-sm" style="width: 48%;">
@@ -610,8 +633,7 @@ class CollectionApp {
                                 </span>
                                 <input type="number" class="form-control bg-dark text-white border-secondary stat-input ${hasAutoStats ? 'auto-stat' : ''}" 
                                        data-char="${baseChar.id}" data-stat="${stat}" 
-                                       placeholder="${fullData.stats && fullData.stats[stat] ? fullData.stats[stat].lv300 : 0}"
-                                       ${hasAutoStats ? 'readonly style="background-color: #1a1a1a !important; cursor: not-allowed;" title="Gestito globalmente"' : ''}>
+                                       placeholder="${fullData.stats && fullData.stats[stat] ? fullData.stats[stat].lv300 : 0}">
                             </div>
                         `).join('')}
                     </div>
@@ -709,9 +731,10 @@ class CollectionApp {
         const rerollIdSelects = col.querySelectorAll('.reroll-id');
         rerollIdSelects.forEach(selectEl => {
             selectEl.addEventListener('change', (e) => {
-                const slot = e.target.dataset.slot;
+                const slot = e.target.slot;
+                const slotNum = e.target.dataset.slot;
                 const pId = e.target.value;
-                const lvlSelect = col.querySelector(`.reroll-lvl[data-slot="${slot}"]`);
+                const lvlSelect = col.querySelector(`.reroll-lvl[data-slot="${slotNum}"]`);
 
                 if (!pId) {
                     lvlSelect.innerHTML = `<option value="0">Lv 1</option>`;
@@ -827,9 +850,21 @@ class CollectionApp {
 
         try {
             const dataToSave = this.extractDataFromUI();
+
+            // FIX: Prepariamo TUTTI i dati globali per spedirli sul cloud
+            const coreMembers = JSON.parse(localStorage.getItem('collection_core_members') || '{}');
+            const equipMatrix = JSON.parse(localStorage.getItem('collection_equip_matrix') || '{}');
+            const globalLevel = localStorage.getItem('collection_char_level') || '300';
+
             const userDocRef = window.dbDoc(window.firebaseDb, "collezione", this.auth.user.uid);
 
-            await window.dbSet(userDocRef, { characters: dataToSave }, { merge: true });
+            // Carichiamo tutto nell'unico documento!
+            await window.dbSet(userDocRef, {
+                characters: dataToSave,
+                coreMembers: coreMembers,
+                equipMatrix: equipMatrix,
+                globalLevel: globalLevel
+            }, { merge: true });
 
             this.hasUnsavedChanges = false;
             modal.style.display = 'none';
@@ -863,7 +898,6 @@ class CollectionApp {
                 document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => inp.value = '');
             }
 
-            // RIPORTA AL LV 1 (VALUE 0) ANCHE QUANDO RIPRISTINA IL DEFAULT
             document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => sel.value = '0');
 
             document.querySelectorAll(`.reroll-id[data-char="${charId}"]`).forEach(sel => {
@@ -904,13 +938,6 @@ class CollectionApp {
                     }, 50);
                 }
 
-                if (data.stats && (!fullData || !fullData.growth_pattern_code)) {
-                    for (const [stat, val] of Object.entries(data.stats)) {
-                        const inp = document.querySelector(`.stat-input[data-char="${charId}"][data-stat="${stat}"]`);
-                        if (inp) inp.value = val;
-                    }
-                }
-
                 if (data.techLevels) {
                     for (const [tech, val] of Object.entries(data.techLevels)) {
                         if (tech === data.equippedManual) continue;
@@ -918,12 +945,14 @@ class CollectionApp {
                         if (sel) sel.value = val;
                     }
                 }
+
                 if (data.passives) {
                     for (const [passive, val] of Object.entries(data.passives)) {
                         const sel = document.querySelector(`.pass-lvl[data-char="${charId}"][data-passive="${passive}"]`);
                         if (sel) sel.value = val;
                     }
                 }
+
                 if (data.rerollSlots) {
                     for (const [slot, rData] of Object.entries(data.rerollSlots)) {
                         const idSel = document.querySelector(`.reroll-id[data-char="${charId}"][data-slot="${slot}"]`);
@@ -937,8 +966,17 @@ class CollectionApp {
                 }
             }
 
+            // FIX: 1. Prima calcoliamo le stats automatiche usando equipaggiamenti e rarità attuali
             if (fullData && fullData.growth_pattern_code) {
                 this.recalculateStats(charId);
+            }
+
+            // FIX: 2. POI ripristiniamo le modifiche fatte a mano, così non vengono più spazzate via!
+            if (data && data.owned && data.stats) {
+                for (const [stat, val] of Object.entries(data.stats)) {
+                    const inp = document.querySelector(`.stat-input[data-char="${charId}"][data-stat="${stat}"]`);
+                    if (inp) inp.value = val;
+                }
             }
         });
 
