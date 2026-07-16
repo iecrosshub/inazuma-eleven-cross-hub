@@ -36,7 +36,14 @@ export const coachRegistry = [
 
     {
         id: "rayDark",
-        name: "Ray Dark",
+        name: "Ray Dark RoyalAcademy",
+        japaneseName: "影山 零治",
+        thumb: "img/Coaches/RayDark.png"
+    },
+
+    {
+        id: "rayDarkZeus",
+        name: "Ray Dark Zeus",
         japaneseName: "影山 零治",
         thumb: "img/Coaches/RayDark.png"
     },
