@@ -5,7 +5,8 @@ const navbarHTML = `
     <div class="inazuma-nav">
         <a href="index.html" class="inazuma-nav-item">Giocatori</a>
         
-        <div class="nav-dropdown">
+        <!-- Aggiunto ID per il Tutorial -->
+        <div class="nav-dropdown" id="tour-simulators">
             <button class="dropbtn">Simulatori <i class="fas fa-caret-down"></i></button>
             <div class="dropdown-content">
                 <a href="teamBuilder.html"><i class="fas fa-users me-1"></i> Team Builder</a>
@@ -14,7 +15,8 @@ const navbarHTML = `
             </div>
         </div>
 
-        <div class="nav-dropdown">
+        <!-- Aggiunto ID per il Tutorial -->
+        <div class="nav-dropdown" id="tour-info">
             <button class="dropbtn">Info & Utility <i class="fas fa-caret-down"></i></button>
             <div class="dropdown-content">
                 <a href="meta5vs1.html"><i class="fas fa-crown me-1"></i> Meta Formazioni 5vs1</a>
@@ -26,7 +28,8 @@ const navbarHTML = `
             </div>
         </div>
 
-        <a href="collection.html" class="inazuma-nav-item">Collezione</a>
+        <!-- Aggiunto ID per il Tutorial -->
+        <a href="collection.html" class="inazuma-nav-item" id="tour-collection">Collezione</a>
     </div>
 </div>
 `;

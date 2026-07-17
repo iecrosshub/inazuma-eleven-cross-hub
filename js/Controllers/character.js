@@ -1,8 +1,8 @@
 // js/Controllers/character.js
 
-import { characterRegistry, getPopulatedCharacter } from '../Core/database.js';
-import { getUrlParam, getAdjacentCharacterId, parsePassiveText } from '../Core/parsers.js';
-import { calcolaStatisticheEsatte } from '../Core/calculator.js'; // IMPORTIAMO IL CALCOLATORE!
+import { characterRegistry, getPopulatedCharacter, rerollPassivesByRole } from '../Core/database.js';
+import { getUrlParam, getAdjacentCharacterId, parsePassiveText, extractPosition } from '../Core/parsers.js';
+import { calcolaStatisticheEsatte } from '../Core/calculator.js';
 
 let db = {};
 let currentId = '';
@@ -18,25 +18,37 @@ async function init() {
     try {
         const module = await import(`../Characters/${currentId}.js`);
 
-        // Uso della nuova funzione ottimizzata dal Core Database
         db = getPopulatedCharacter(module.charData);
 
-        // IL FIX: Se il pg ha il codice di crescita automatico ma NON ha le stats scritte a mano, le generiamo al volo!
-        if (db.growth_pattern_code && !db.stats) {
-            // Calcola i valori di Lv1 e Lv300 passando "1" come livello di equipaggiamento (equip base)
-            const stats1 = calcolaStatisticheEsatte(db, 1, db.stars, 1);
-            const stats300 = calcolaStatisticheEsatte(db, 300, db.stars, 1);
+        // 1. Calcolo per personaggi con formula automatica
+        if (db.growth_pattern_code) {
+            const stats1 = calcolaStatisticheEsatte(db, 1, 9, 1);
+            const stats300 = calcolaStatisticheEsatte(db, 300, 9, 1);
 
+            if (stats1 && stats300) {
+                db.stats = {
+                    "TP": { lv1: stats1.tp || 100, lv300: stats300.tp || 100 },
+                    "Tiro": { lv1: stats1.kick, lv300: stats300.kick },
+                    "Tecnica": { lv1: stats1.technique, lv300: stats300.technique },
+                    "Blocco": { lv1: stats1.block, lv300: stats300.block },
+                    "Parata": { lv1: stats1.catch, lv300: stats300.catch },
+                    "Velocità": { lv1: stats1.speed, lv300: stats300.speed }
+                };
+            }
+        }
+
+        // 2. Fallback per personaggi manuali senza stats (se l'oggetto non esiste o è vuoto)
+        if (!db.stats || Object.keys(db.stats).length === 0) {
             db.stats = {
-                "Tiro": { icon: "img/Status/Icon_Status_Kick.png", lv1: stats1.kick, lv300: stats300.kick },
-                "Tecnica": { icon: "img/Status/Icon_Status_Technic.png", lv1: stats1.technique, lv300: stats300.technique },
-                "Blocco": { icon: "img/Status/Icon_Status_Block.png", lv1: stats1.block, lv300: stats300.block },
-                "Parata": { icon: "img/Status/Icon_Status_Catch.png", lv1: stats1.catch, lv300: stats300.catch },
-                "Velocità": { icon: "img/Status/Icon_Status_Speed.png", lv1: stats1.speed, lv300: stats300.speed }
+                "TP": { lv1: 100, lv300: 100 },
+                "Tiro": { lv1: 100, lv300: 100 },
+                "Tecnica": { lv1: 100, lv300: 100 },
+                "Blocco": { lv1: 100, lv300: 100 },
+                "Parata": { lv1: 100, lv300: 100 },
+                "Velocità": { lv1: 100, lv300: 100 }
             };
         }
 
-        // Aggiornamento UI Base
         document.getElementById('char-name-main').textContent = `${db.name} (${db.romanizedName})`;
         document.getElementById('char-name-jp').textContent = db.japaneseName;
         document.getElementById('char-img').src = db.characterImg || db.thumb;
@@ -48,7 +60,6 @@ async function init() {
             tagsContainer.innerHTML = db.tags.map(t => `<img src="${t}" style="height: 38px;">`).join('');
         }
 
-        // Eventi bottoni livello
         const btnLv1 = document.getElementById('btn-lv1');
         const btnLv300 = document.getElementById('btn-lv300');
         if (btnLv1) btnLv1.onclick = () => renderStats(db, 'lv1');
@@ -97,11 +108,23 @@ function renderStats(db, level) {
     document.getElementById('btn-lv1').classList.toggle('active', level === 'lv1');
     document.getElementById('btn-lv300').classList.toggle('active', level === 'lv300');
 
+    const icons = {
+        "TP": "img/Status/Icon_Status_TP.png",
+        "Tiro": "img/Status/Icon_Status_Kick.png",
+        "Tecnica": "img/Status/Icon_Status_Technic.png",
+        "Blocco": "img/Status/Icon_Status_Block.png",
+        "Parata": "img/Status/Icon_Status_Catch.png",
+        "Velocità": "img/Status/Icon_Status_Speed.png"
+    };
+
     Object.entries(db.stats).forEach(([key, data]) => {
+        // Se c'è un'icona definita direttamente nel data.icon (vecchio formato), la usiamo, altrimenti usiamo la mappa
+        const iconSrc = icons[key] || data.icon || '';
+
         statsList.innerHTML += `
             <li>
                 <span class="d-flex align-items-center gap-2">
-                    <img src="${data.icon}" style="height: 24px;" alt="${key}">
+                    <img src="${iconSrc}" style="height: 24px;" alt="${key}">
                     ${key}
                 </span>
                 <span>${data[level]}</span>
@@ -175,6 +198,7 @@ function renderPassives(db) {
     if (!passContainer) return;
     passContainer.innerHTML = '';
 
+    // --- 1. RENDER PASSIVE BASE E RISVEGLIO ---
     const drawGroup = (title, passiveList) => {
         if (passiveList.length === 0) return;
         passContainer.innerHTML += `<h3 class="mb-4 mt-5 text-info">${title}</h3>`;
@@ -191,7 +215,7 @@ function renderPassives(db) {
                 content += `
                     <div class="tab-pane fade ${lvIdx === 0 ? 'show active' : ''}" id="${tabId}">
                         <div class="mb-2 mt-2">
-                            <span class="badge border border-info" style="background-color: #102247; color: #0dcaf0;">${lv.req}</span>
+                            <span class="badge border border-info" style="background-color: #102247; color: #0dcaf0;">${lv.req || 'Nessun requisito'}</span>
                         </div>
                         <div class="bg-light">
                             <p class="mb-0" style="font-size: 1.05rem; line-height: 1.5;">${descrizione}</p>
@@ -214,6 +238,100 @@ function renderPassives(db) {
 
     drawGroup("Passive di Livello", db.basicPassives);
     drawGroup("Passive di Risveglio", db.rarityPassives);
+
+    // --- 2. RENDER SLOT PASSIVE DI REROLL ---
+    const role = extractPosition(db.position);
+    const availableRerolls = rerollPassivesByRole[role] || [];
+
+    if (availableRerolls.length > 0) {
+        passContainer.innerHTML += `
+            <h3 class="mb-4 mt-5 text-info d-flex align-items-center gap-2">
+                <i class="fas fa-dice text-warning"></i> Simulatore Passive di Reroll [Pool: ${role}]
+            </h3>
+        `;
+
+        let optionsHtml = `<option value="">-- Seleziona una passiva da equipaggiare --</option>`;
+        availableRerolls.forEach(p => {
+            optionsHtml += `<option value="${p.id}">${p.title}</option>`;
+        });
+
+        // Creazione dei 3 slot
+        for (let i = 1; i <= 3; i++) {
+            passContainer.innerHTML += `
+                <div class="card border-secondary mb-4 shadow reroll-slot-card" data-slot="${i}">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge border border-info" style="background-color: #0b1a42; color: #0dcaf0; font-size: 0.9rem;">Slot ${i}</span>
+                            <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-select fw-bold" style="min-width: 280px; cursor: pointer;">
+                                ${optionsHtml}
+                            </select>
+                        </div>
+                        <small class="opacity-75 text-white reroll-id-display"></small>
+                    </div>
+                    <div class="card-body reroll-content" style="display: none;">
+                        <!-- Il contenuto dei tab verrà caricato qui via JS -->
+                    </div>
+                    <div class="card-body reroll-placeholder text-center py-4">
+                        <span style="color: #102247; font-weight: bold; font-size: 0.95rem;">
+                            Seleziona una passiva dal menu per visualizzarne i dettagli.
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Event listener
+        document.querySelectorAll('.reroll-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                const card = e.target.closest('.reroll-slot-card');
+                const contentContainer = card.querySelector('.reroll-content');
+                const placeholder = card.querySelector('.reroll-placeholder');
+                const idDisplay = card.querySelector('.reroll-id-display');
+                const selectedId = e.target.value;
+
+                if (!selectedId) {
+                    contentContainer.style.display = 'none';
+                    placeholder.style.display = 'block';
+                    idDisplay.textContent = '';
+                    contentContainer.innerHTML = '';
+                    return;
+                }
+
+                const p = availableRerolls.find(x => x.id === selectedId);
+                if (p) {
+                    idDisplay.textContent = `ID: ${p.id}`; // Inserisce l'ID nell'header a destra
+
+                    let tabs = '', content = '';
+                    p.levels.forEach((lv, lvIdx) => {
+                        const active = lvIdx === 0 ? 'active' : '';
+                        const tabId = `r-${p.id}-slot${card.dataset.slot}-${lvIdx}`;
+                        const descrizione = parsePassiveText(p.template, lv);
+
+                        tabs += `<li class="nav-item"><button class="nav-link ${active}" data-bs-toggle="tab" data-bs-target="#${tabId}">Lv. ${lvIdx + 1}</button></li>`;
+
+                        content += `
+                            <div class="tab-pane fade ${lvIdx === 0 ? 'show active' : ''}" id="${tabId}">
+                                <div class="mb-2 mt-2">
+                                    <span class="badge border border-info" style="background-color: #102247; color: #0dcaf0;">${lv.req || 'Nessun requisito'}</span>
+                                </div>
+                                <div class="bg-light">
+                                    <p class="mb-0" style="font-size: 1.05rem; line-height: 1.5;">${descrizione}</p>
+                                </div>
+                            </div>`;
+                    });
+
+                    // Costruisce SOLO i tab e il box chiaro nel card-body (niente titolo ripetuto)
+                    contentContainer.innerHTML = `
+                        <ul class="nav nav-tabs border-secondary mb-3">${tabs}</ul>
+                        <div class="tab-content">${content}</div>
+                    `;
+
+                    placeholder.style.display = 'none';
+                    contentContainer.style.display = 'block';
+                }
+            });
+        });
+    }
 }
 
 function createZonesGrid(playerZones) {
