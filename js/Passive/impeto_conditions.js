@@ -53,7 +53,7 @@ export const conditionPassives = [
         },
         effects: [
             {
-                targetScope: "team",
+                targetScope: "allies",
                 targetRoles: ["MF"],
                 targetElements: [],
                 type: "power",
@@ -78,7 +78,7 @@ export const conditionPassives = [
         },
         effects: [
             {
-                targetScope: "team",
+                targetScope: "allies",
                 targetRoles: ["DF"],
                 targetElements: [],
                 type: "stat",
@@ -105,7 +105,7 @@ export const conditionPassives = [
         category: "Condition",
         conditions: { matchState: "losing" },
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {

@@ -15,6 +15,11 @@ class CollectionApp {
         this.isGridRendered = false;
         this.loadedCharacters = {};
         this.init();
+
+        // Controllo se è la prima volta che l'utente entra nella Collezione
+        if (!localStorage.getItem('tutorial_collection_seen')) {
+            setTimeout(() => this.startTutorial(), 500);
+        }
     }
 
     setupCoreMembers() {
@@ -62,8 +67,7 @@ class CollectionApp {
             }
         }
 
-        const fallbackInput = document.getElementById('global-char-level');
-        const fallbackLevel = fallbackInput ? (parseInt(fallbackInput.value) || 300) : 300;
+        const fallbackLevel = 300;
         const crossLevel = levels.length > 0 ? Math.min(...levels) : fallbackLevel;
 
         const display = document.getElementById('display-cross-level');
@@ -104,8 +108,7 @@ class CollectionApp {
         if (specificLevel !== null) return specificLevel;
         if (levels.length > 0) return Math.min(...levels);
 
-        const fallbackInput = document.getElementById('global-char-level');
-        return fallbackInput ? (parseInt(fallbackInput.value) || 300) : 300;
+        return 300;
     }
 
     setupEquipMatrix() {
@@ -124,11 +127,6 @@ class CollectionApp {
             { key: 'グローブ', label: '🧤 Guanti/Accessorio' },
             { key: 'ペンダント', label: '🏅 Ciondolo' }
         ];
-
-        let optionsHtml = `<option value="1">Lv 1</option>`;
-        for (let i = 5; i <= 300; i += 5) {
-            optionsHtml += `<option value="${i}">Lv ${i}</option>`;
-        }
 
         const thead = document.getElementById('equip-matrix-head');
         const tbody = document.getElementById('equip-matrix-body');
@@ -150,14 +148,23 @@ class CollectionApp {
                 categories.forEach((c, index) => {
                     let radius = (index === categories.length - 1) ? '0 8px 8px 0' : '0';
                     html += `<td style="background-color: #212529; padding: 10px; border-radius: ${radius};">
-                        <select class="form-select form-select-sm bg-dark text-white border-secondary equip-matrix-select mx-auto" style="font-size: 0.8rem; max-width: 90px; text-align: center;" data-role="${r.id}" data-cat="${c.key}">
-                            ${optionsHtml}
-                        </select>
+                        <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary equip-matrix-select mx-auto" 
+                               style="font-size: 0.95rem; max-width: 80px; text-align: center; font-weight: bold;" 
+                               data-role="${r.id}" data-cat="${c.key}" 
+                               min="0" max="300" step="5" value="300">
                     </td>`;
                 });
                 html += `</tr>`;
             });
             tbody.innerHTML = html;
+
+            document.querySelectorAll('.equip-matrix-select').forEach(inp => {
+                inp.addEventListener('change', (e) => {
+                    let v = parseInt(e.target.value);
+                    if (isNaN(v) || v <= 0) e.target.value = 1;
+                    else if (v > 300) e.target.value = 300;
+                });
+            });
         }
 
         try {
@@ -184,6 +191,7 @@ class CollectionApp {
         document.getElementById('btn-login').addEventListener('click', () => this.auth.loginWithGoogle());
         document.getElementById('btn-logout').addEventListener('click', () => this.auth.logout());
         document.getElementById('btn-save-cloud').addEventListener('click', () => this.saveToCloud());
+        document.getElementById('btn-tutorial').addEventListener('click', () => this.startTutorial());
 
         this.setupCustomSelects();
         this.restoreFilters();
@@ -197,10 +205,6 @@ class CollectionApp {
         if (btnApplyGlobal) {
             btnApplyGlobal.addEventListener('click', () => {
 
-                const globalLevelInput = document.getElementById('global-char-level');
-                const charLevelVal = globalLevelInput ? globalLevelInput.value : 300;
-                if (charLevelVal) localStorage.setItem('collection_char_level', charLevelVal);
-
                 const matrixObj = { FW: {}, MF: {}, DF: {}, GK: {} };
                 document.querySelectorAll('.equip-matrix-select').forEach(sel => {
                     matrixObj[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || 300;
@@ -211,7 +215,6 @@ class CollectionApp {
 
                 document.querySelectorAll('.collection-item-wrapper').forEach(col => {
                     const charId = col.dataset.charId;
-
                     const charLevel = this.getCharLevel(charId);
 
                     col.querySelectorAll('.pass-lvl-basic').forEach(sel => {
@@ -383,24 +386,27 @@ class CollectionApp {
     async loadFromCloud() {
         if (!this.auth.user) return;
         try {
-            // FIX: Ora andiamo a leggere DIRETTAMENTE da Firebase tutto il documento,
-            // inclusi i settaggi globali che prima andavano persi su GitHub!
             const userDocRef = window.dbDoc(window.firebaseDb, "collezione", this.auth.user.uid);
             const docSnap = await window.dbGet(userDocRef);
 
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                this.collectionData = data.characters || {};
 
-                // Salviamo le impostazioni globali dal Cloud alla Memoria del Browser
+                const { characters, coreMembers, equipMatrix, globalLevel, ...oldCharsData } = data;
+
+                if (data.characters && Object.keys(data.characters).length > 0) {
+                    this.collectionData = data.characters;
+                }
+                else if (Object.keys(oldCharsData).length > 0) {
+                    this.collectionData = oldCharsData;
+                }
+                else {
+                    this.collectionData = {};
+                }
+
                 if (data.coreMembers) localStorage.setItem('collection_core_members', JSON.stringify(data.coreMembers));
                 if (data.equipMatrix) localStorage.setItem('collection_equip_matrix', JSON.stringify(data.equipMatrix));
-                if (data.globalLevel) localStorage.setItem('collection_char_level', data.globalLevel);
 
-                const globalInput = document.getElementById('global-char-level');
-                if (globalInput && data.globalLevel) globalInput.value = data.globalLevel;
-
-                // Aggiorniamo la UI dei setting globali
                 this.setupCoreMembers();
                 this.setupEquipMatrix();
             } else {
@@ -598,7 +604,6 @@ class CollectionApp {
             `;
         }
 
-        // FIX: Modificata la UI. Rimosso readonly e modificata l'etichetta per permettere la scrittura.
         let html = `
             <div class="collection-card owned" id="card-${baseChar.id}">
                 
@@ -851,19 +856,15 @@ class CollectionApp {
         try {
             const dataToSave = this.extractDataFromUI();
 
-            // FIX: Prepariamo TUTTI i dati globali per spedirli sul cloud
             const coreMembers = JSON.parse(localStorage.getItem('collection_core_members') || '{}');
             const equipMatrix = JSON.parse(localStorage.getItem('collection_equip_matrix') || '{}');
-            const globalLevel = localStorage.getItem('collection_char_level') || '300';
 
             const userDocRef = window.dbDoc(window.firebaseDb, "collezione", this.auth.user.uid);
 
-            // Carichiamo tutto nell'unico documento!
             await window.dbSet(userDocRef, {
                 characters: dataToSave,
                 coreMembers: coreMembers,
-                equipMatrix: equipMatrix,
-                globalLevel: globalLevel
+                equipMatrix: equipMatrix
             }, { merge: true });
 
             this.hasUnsavedChanges = false;
@@ -886,6 +887,10 @@ class CollectionApp {
             const charId = toggle.dataset.charId;
             const data = this.collectionData[charId];
             const fullData = this.loadedCharacters[charId];
+            const baseChar = characterRegistry.find(c => c.id === charId);
+
+            // Calcolo della rarità di default basata sulle stelle (1, 2 = 0; 3 = 2)
+            const defaultRarity = (baseChar && baseChar.stars === 3) ? 2 : 0;
 
             if (resetToDefault || !data) {
                 toggle.checked = false;
@@ -917,7 +922,8 @@ class CollectionApp {
             });
 
             const raritySel = document.querySelector(`.char-rarity[data-char="${charId}"]`);
-            if (raritySel) raritySel.value = 0;
+            // Imposta la rarità di default corretta invece di forzare 0
+            if (raritySel) raritySel.value = defaultRarity;
 
             if (data && data.owned) {
                 if (data.rarity !== undefined && raritySel) {
@@ -966,12 +972,10 @@ class CollectionApp {
                 }
             }
 
-            // FIX: 1. Prima calcoliamo le stats automatiche usando equipaggiamenti e rarità attuali
             if (fullData && fullData.growth_pattern_code) {
                 this.recalculateStats(charId);
             }
 
-            // FIX: 2. POI ripristiniamo le modifiche fatte a mano, così non vengono più spazzate via!
             if (data && data.owned && data.stats) {
                 for (const [stat, val] of Object.entries(data.stats)) {
                     const inp = document.querySelector(`.stat-input[data-char="${charId}"][data-stat="${stat}"]`);
@@ -985,6 +989,53 @@ class CollectionApp {
         setTimeout(() => {
             this.hasUnsavedChanges = false;
         }, 100);
+    }
+
+    startTutorial() {
+        // Segniamo che il tutorial è stato visto per non riaprirlo più in automatico
+        localStorage.setItem('tutorial_collection_seen', 'true');
+
+        introJs().setOptions({
+            nextLabel: 'Avanti →',
+            prevLabel: '← Indietro',
+            doneLabel: 'Ho capito!',
+            showStepNumbers: true,
+            showBullets: false,
+            overlayOpacity: 0.7,
+            steps: [
+                {
+                    intro: "👋 <strong>Benvenuto nella tua Collezione!</strong><br><br>Qui puoi tenere traccia dei tuoi giocatori, dei loro livelli e delle loro statistiche per calcolare il vero Meta. Facciamo un giro veloce!"
+                },
+                {
+                    element: document.querySelector('.global-settings-bar'),
+                    intro: "⚙️ <strong>Impostazioni Globali</strong><br>Questa è l'area più importante per i calcoli automatici. Tutto quello che imposti qui si applicherà di default a tutti i giocatori."
+                },
+                {
+                    element: document.getElementById('core-members-container'),
+                    intro: "👥 <strong>Membri Principali (Cross Level)</strong><br>Inserisci qui i tuoi 5 giocatori principali. Il sistema calcolerà il tuo <strong>Cross Level</strong> automatico per livellare il resto della tua collezione!"
+                },
+                {
+                    element: document.querySelector('[data-bs-target="#equipMatrixCollapse"]'),
+                    intro: "👕 <strong>Matrice Equipaggiamenti</strong><br>Clicca qui per aprire la sezione per gli Equipaggiamenti. Inserisci i livelli degli accessori per ogni ruolo e categoria. Tutti i giocatori prenderanno le statistiche da questa tabella in automatico!"
+                },
+                {
+                    element: document.getElementById('btn-apply-global'),
+                    intro: "🔄 <strong>Applica Modifiche</strong><br>Hai cambiato il Cross Level o gli equipaggiamenti? Clicca questo tasto per forzare il ricalcolo delle statistiche su tutto il tuo database in un colpo solo."
+                },
+                {
+                    element: document.getElementById('collection-grid'),
+                    intro: "📋 <strong>I Tuoi Giocatori</strong><br>Attiva la levetta 'POSSEDUTO' per sbloccare le modifiche di un giocatore. Puoi assegnare la Rarità, le Mosse Insegnate e le Passive, e il sistema calcolerà i valori finali per il Simulatore."
+                },
+                {
+                    element: document.getElementById('filter-calc'),
+                    intro: "⚠️ <strong>Giocatori Manuali</strong><br>Ti consiglio di utilizzare questo filtro per isolare i giocatori a <strong>Impostazione Manuale</strong>. Purtroppo non ho ancora trovato i codici per il calcolo automatico dei nuovi personaggi, quindi per loro le statistiche andranno inserite a mano!"
+                },
+                {
+                    element: document.getElementById('btn-save-cloud'),
+                    intro: "☁️ <strong>Salvataggio in Cloud</strong><br>Quando hai finito di sistemare i tuoi giocatori, ricordati SEMPRE di salvare sul Cloud per non perdere i progressi. Buon divertimento!"
+                }
+            ]
+        }).start();
     }
 }
 

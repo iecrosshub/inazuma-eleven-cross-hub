@@ -17,13 +17,17 @@ class AppController {
 
         this.optimizer = new TrialOptimizer(this);
         this.init();
+
+        // Controllo se è la prima volta che l'utente entra nel Simulatore
+        if (!localStorage.getItem('tutorial_sim_seen')) {
+            setTimeout(() => this.startTutorial(), 500);
+        }
     }
 
     init() {
         this.renderSimSlots();
         this.setupGlobalListeners();
 
-        // Applica automaticamente la prova di oggi come predefinita
         const todayConfig = getDailyTrialConfig();
         this.setUISelectValue('simMode', todayConfig.mode);
         this.setUISelectValue('opponentElement', todayConfig.opp);
@@ -33,6 +37,11 @@ class AppController {
         document.getElementById('btn-login').addEventListener('click', () => this.auth.loginWithGoogle());
         document.getElementById('btn-logout').addEventListener('click', () => this.auth.logout());
         document.getElementById('btn-optimize').addEventListener('click', () => this.optimizer.runOptimization());
+
+        // Aggiunto l'evento per il tasto "Guida"
+        const tutorialBtn = document.getElementById('btn-tutorial');
+        if (tutorialBtn) tutorialBtn.addEventListener('click', () => this.startTutorial());
+
         this.auth.setAuthStateListener((user) => this.handleAuthState(user));
     }
 
@@ -89,12 +98,8 @@ class AppController {
             logoutBtn.style.display = 'inline-block';
             greeting.innerHTML = `Collezione collegata: <span class="text-warning">${user.displayName}</span>`;
 
-            this.loadFromCloud().then(() => {
-                // Opzionale: de-commenta la riga sotto se vuoi che auto-ottimizzi appena loggato
-                // this.optimizer.runOptimization();
-            });
+            this.loadFromCloud();
         } else {
-            // MOSTRA IL MODALE CUSTOM INVECE DELL'ALERT
             const warningModal = document.getElementById('loginWarningModal');
             if (warningModal) {
                 warningModal.style.display = 'flex';
@@ -171,7 +176,6 @@ class AppController {
         const techSelect = slotCard.querySelector('.sim-tech-select');
         const simMode = document.getElementById('simMode').dataset.value;
         const mode = 'collection';
-        const allowManuals = false;
 
         if (!charData) return;
 
@@ -272,6 +276,8 @@ class AppController {
                 const advBonus = this.optimizer.getAdvantageBonus(techDef.element, stageConfig.opponent, techDef.kind, stageConfig.mode);
                 if (advBonus > 0) {
                     engineFormat._hasAdvantageBonus = advBonus;
+                    if (!engineFormat.customTechPower) engineFormat.customTechPower = {};
+                    engineFormat.customTechPower[moveName] = advBonus;
                 }
 
                 teamDataForEngine.push(engineFormat);
@@ -329,7 +335,7 @@ class AppController {
             <div>Moltiplicatore (STAB + Affinità): x${calc.multipliers.attribute}</div>
             <div>Moltiplicatore Catena: x${calc.multipliers.chain}</div>
             <div style="color:#1269e8; font-size:1.2rem; margin-top: 15px; border-top: 2px solid #d4e1f1; padding-top: 10px;">
-                Equazione Reale Gioco:<br>⌊ ⌊ ${calc.base.total.toLocaleString('it-IT')} × ${calc.power.total}% ⌋ × ${calc.multipliers.attribute} ⌋ × ${calc.multipliers.chain} = <strong>${Math.floor(calc.damage).toLocaleString('it-IT')}</strong>
+                Equazione Reale Gioco:<br>⌊ ⌊ ⌊ ${calc.base.total.toLocaleString('it-IT')} × ${calc.power.total}% ⌋ × ${calc.multipliers.attribute} ⌋ × ${calc.multipliers.chain} ⌋ = <strong>${Math.floor(calc.damage).toLocaleString('it-IT')}</strong>
             </div>
         `;
 
@@ -418,6 +424,41 @@ class AppController {
         document.getElementById('totalScore').textContent = "0";
         document.getElementById('defenseClearCheck').textContent = "";
         this.lastResult = null;
+    }
+
+    startTutorial() {
+        // Segniamo che il tutorial è stato visto
+        localStorage.setItem('tutorial_sim_seen', 'true');
+
+        introJs().setOptions({
+            nextLabel: 'Avanti →',
+            prevLabel: '← Indietro',
+            doneLabel: 'Ho capito!',
+            showStepNumbers: true,
+            showBullets: false,
+            overlayOpacity: 0.7,
+            steps: [
+                {
+                    intro: "⚔️ <strong>Benvenuto nel Simulatore 5vs1!</strong><br><br>Qui puoi testare i danni della tua squadra contro i Boss Evento, usando i giocatori della tua Collezione."
+                },
+                {
+                    element: document.querySelector('.stage-config'),
+                    intro: "⚙️ <strong>Impostazioni Sfida</strong><br>Scegli la modalità (Attacco/Difesa) e l'elemento dell'Avversario. Il sistema calcolerà automaticamente i vantaggi elementali e le soglie di vittoria!"
+                },
+                {
+                    element: document.getElementById('btn-optimize'),
+                    intro: "⚡ <strong>Auto-Ottimizza</strong><br>Non sai chi schierare? Clicca qui e il sistema analizzerà tutta la tua Collezione per trovarti matematicamente le 5 migliori formazioni possibili!"
+                },
+                {
+                    element: document.getElementById('teamGrid'),
+                    intro: "⚽ <strong>La tua Squadra</strong><br>Seleziona manualmente i tuoi giocatori in questi slot. Il sistema applicherà in automatico i livelli, le mosse e le passive che hai salvato in Collezione."
+                },
+                {
+                    element: document.querySelector('.global-results'),
+                    intro: "📊 <strong>Risultato Finale</strong><br>Qui vedrai il Danno Combinato totale e lo Score Finale con i moltiplicatori applicati se hai superato la soglia di vittoria. Clicca sulle i vicino ai danni dei singoli per vedere i calcoli dettagliati!"
+                }
+            ]
+        }).start();
     }
 }
 

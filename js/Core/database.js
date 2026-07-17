@@ -33,7 +33,6 @@ export const universalManualsKeys = [
     "アースクエイク",         // Earthquake (Terremoto)
     "ザ・マウンテン",         // The Mountain (La Montagna)
     "旋風陣",               // Senpuujin (Turbine)
-    "真空魔",               // Shinkuuma (Vuoto Oscuro)
     "ボルケイノカット",       // Volcano Cut (Taglio Vulcanico)
     "フレイムダンス",         // Flame Dance (Danza di Fuoco)
     "アステロイドベルト",      // Asteroid Belt (Fascia di Asteroidi)

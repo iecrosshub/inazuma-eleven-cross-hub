@@ -2,7 +2,7 @@
 
 import { characterRegistry, techniquesLibrary, passivesLibrary, universalManualsKeys } from '../Core/database.js';
 import { getStatKeyByIcon } from '../Core/parsers.js';
-import { calculateDamageData } from '../Core/calculator.js';
+import { calculateDamageData, calcolaStatisticheEsatte } from '../Core/calculator.js'; // IMPORT AGGIUNTO
 import { AuthManager } from '../Services/auth.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
@@ -45,16 +45,49 @@ function formatTechNameHTML(tDef, isManual = false) {
 }
 
 async function init() {
-    // 1. Popola i Personaggi con le Thumbnail
-    let charHtml = `<div data-value="generic">--- PERSONAGGIO GENERICO ---</div>`;
+    // 1. Popola i Personaggi SOLO con le opzioni valide (niente barra per ora)
+    let charHtml = `<div data-value="generic" class="char-opt">--- PERSONAGGIO GENERICO ---</div>`;
     characterRegistry.forEach(c => {
-        charHtml += `<div data-value="${c.id}"><img src="${c.thumb}" style="width:24px; height:24px; border-radius:50%; margin-right:8px; vertical-align:middle;"> ${c.name} (${c.romanizedName})</div>`;
+        charHtml += `<div data-value="${c.id}" class="char-opt"><img src="${c.thumb}" style="width:24px; height:24px; border-radius:50%; margin-right:8px; vertical-align:middle;"> ${c.name} (${c.romanizedName})</div>`;
     });
 
     const charSelectItems = document.querySelector('#sim-char-select .select-items');
     if (charSelectItems) charSelectItems.innerHTML = charHtml;
 
-    initCustomSelect(document.getElementById('sim-char-select'), (val) => loadCharacter(val));
+    // 2. Inizializza PRIMA il custom select (così lega il click solo ai personaggi)
+    initCustomSelect(document.getElementById('sim-char-select'), (val) => {
+        const searchInput = document.getElementById('sim-char-search');
+        if (searchInput) {
+            searchInput.value = '';
+            document.querySelectorAll('#sim-char-select .char-opt').forEach(opt => opt.style.display = "");
+        }
+        loadCharacter(val);
+    });
+
+    // 3. INSERISCI LA BARRA DI RICERCA DOPO l'inizializzazione (così è immune al click "seleziona opzione")
+    if (charSelectItems) {
+        const searchContainer = document.createElement('div');
+        searchContainer.className = "p-2 sticky-top bg-white border-bottom";
+        searchContainer.style.zIndex = "10";
+        searchContainer.innerHTML = `<input type="text" id="sim-char-search" class="form-control form-control-sm shadow-none border-primary" placeholder="🔍 Cerca personaggio..." autocomplete="off">`;
+
+        // Blocca il click per non far chiudere la tendina quando si clicca nella barra
+        searchContainer.addEventListener('click', (e) => e.stopPropagation());
+
+        // Filtro di Ricerca in tempo reale
+        const searchInput = searchContainer.querySelector('#sim-char-search');
+        searchInput.addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const options = charSelectItems.querySelectorAll('.char-opt');
+            options.forEach(opt => {
+                const text = opt.textContent || opt.innerText;
+                opt.style.display = text.toLowerCase().includes(term) ? "" : "none";
+            });
+        });
+
+        // Prependi la barra in cima alla lista delle opzioni
+        charSelectItems.prepend(searchContainer);
+    }
 
     // Inizializza i menu a tendina custom (Ruolo e Vantaggio e Livello)
     initCustomSelect(document.getElementById('sim-role-select'), () => runSimulation());
@@ -155,6 +188,23 @@ async function loadCharacter(idStr) {
         } else {
             const module = await import(`../Characters/${id}.js`);
             currentDb = module.charData;
+
+            // --- FIX: Se il pg ha il calcolo automatico, generiamo le stats per il livello "MAX" ---
+            if (currentDb.growth_pattern_code) {
+                const stats300 = calcolaStatisticheEsatte(currentDb, 300, 9, 1);
+                if (stats300) {
+                    currentDb.stats = {
+                        "Tiro": { lv300: stats300.kick },
+                        "Tecnica": { lv300: stats300.technique },
+                        "Blocco": { lv300: stats300.block },
+                        "Parata": { lv300: stats300.catch },
+                        "Velocità": { lv300: stats300.speed }
+                    };
+                }
+            } else if (!currentDb.stats) {
+                // Fallback di sicurezza per evitare errori
+                currentDb.stats = { "Tiro": { lv300: 0 }, "Tecnica": { lv300: 0 }, "Blocco": { lv300: 0 }, "Parata": { lv300: 0 }, "Velocità": { lv300: 0 } };
+            }
         }
 
         const techSelectEl = document.getElementById('sim-tech-select');
@@ -189,7 +239,6 @@ async function loadCharacter(idStr) {
             }
 
             initCustomSelect(techSelectEl, (val) => {
-                // Aggiorna visivamente il testo nel box selezionato con la stessa formattazione
                 const tDef = techniquesLibrary[val];
                 if(tDef) {
                     const isManual = availableManuals.includes(val);
@@ -239,7 +288,6 @@ async function loadCharacter(idStr) {
                 </div>`;
             }).join('');
 
-            // Inizializza i Custom Select delle Passive
             document.querySelectorAll('.sim-passive-lvl-select').forEach(sel => {
                 initCustomSelect(sel, () => runSimulation());
             });
@@ -262,7 +310,8 @@ function applyPresets() {
     let passivesConfig = {};
 
     if (mode === 'max') {
-        statVal = currentDb.stats[statKey] ? currentDb.stats[statKey]['lv300'] : 0;
+        // Ora currentDb.stats è sempre popolato, sia che sia manuale sia che sia calcolato
+        statVal = currentDb.stats && currentDb.stats[statKey] ? currentDb.stats[statKey]['lv300'] : 0;
         techLvIndex = 9;
         [...(currentDb.myBasicPassivesIds || []), ...(currentDb.myRarityPassivesIds || [])].forEach(pId => {
             const pDef = passivesLibrary.find(p => p.id === pId);
@@ -314,7 +363,8 @@ function runSimulation() {
 
     if (!data) return;
 
-    const formulaStr = `<span style="color:#1269e8; font-weight:900;">Equazione:</span><br>[(${data.baseStat} + ${data.passiveStatBuff}) &times; ${data.roleMult.toFixed(2)}] &times; ((${data.techPower} + ${data.passivePowerBuff}) / 100) &times; ${data.stabMult} &times; ${data.adv}`;
+    // Anche qui applichiamo la grafica corretta del troncamento a cascata
+    const formulaStr = `<span style="color:#1269e8; font-weight:900;">Equazione:</span><br>⌊ ⌊ ⌊ (${data.baseStat} + ${data.passiveStatBuff}) &times; ${data.roleMult.toFixed(2)} ⌋ &times; ((${data.techPower} + ${data.passivePowerBuff}) / 100) ⌋ &times; ${data.stabMult} ⌋ &times; ${data.adv}`;
 
     document.getElementById('damage-result').textContent = data.danno.toLocaleString('it-IT');
     document.getElementById('damage-formula').innerHTML = formulaStr;

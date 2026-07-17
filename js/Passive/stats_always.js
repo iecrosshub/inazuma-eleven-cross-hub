@@ -131,7 +131,7 @@ export const alwaysPassives = [
             {
                 targetScope: "self",
                 targetRoles: [],
-                targetElements: [], // FIX applicato!
+                targetElements: [],
                 type: "power",
                 moveKind: "All",
                 moveElement: "Wind",
@@ -171,7 +171,7 @@ export const alwaysPassives = [
     {
         title: "Potenza Tiro (Fuoco) + (シュートパワー＋〈火〉)",
         id: "103018001",
-        template: "All'inizio della partita, aumenta la Potenza delle Tecniche di Tiro Fuoco di {VAL}.",
+        template: "All'inizio della partita, aumenta la Potenza delle proprie Tecniche di Tiro Fuoco di {VAL}.",
         levels: [
             { val: 3, req: "Si sblocca con personaggio Lv. 1" },
             { val: 6, req: "Si sblocca con personaggio Lv. 21" },
@@ -187,7 +187,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -224,7 +224,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -246,7 +246,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -261,7 +261,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -359,7 +359,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Blocco", moveElement: "Mountain", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: "Mountain", valueRef: "val" }
         ]
     },
     {
@@ -419,7 +419,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -444,7 +444,6 @@ export const alwaysPassives = [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
         ]
     },
-
     {
         title: "Potenza + (Foresta) (パワー＋〈林〉)",
         id: "103020003",
@@ -463,7 +462,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -485,7 +484,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Parata", valueRef: "val2" }
         ]
     },
@@ -530,7 +529,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -551,8 +550,8 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
-            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val2" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "allies", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val2" }
         ]
     },
     {
@@ -574,8 +573,8 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF", "GK"], targetElements: ["Forest"], type: "stat", statName: "Blocco", valueRef: "val" },
-            { targetScope: "team", targetRoles: ["DF", "GK"], targetElements: ["Forest"], type: "stat", statName: "Parata", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF", "GK"], targetElements: ["Forest"], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "allies", targetRoles: ["DF", "GK"], targetElements: ["Forest"], type: "stat", statName: "Parata", valueRef: "val" }
         ]
     },
     {
@@ -597,7 +596,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -612,7 +611,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: ["Wind", "Fire"], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: ["Wind", "Fire"], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -656,7 +655,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -672,7 +671,7 @@ export const alwaysPassives = [
         conditions: null,
         effects: [
             {
-                targetScope: "team",
+                targetScope: "allies",
                 targetRoles: [],
                 targetElements: [],
                 targetTags: ["Icon_Tag_Team_Raimon", "Icon_Tag_Team_Emperors"],
@@ -681,7 +680,7 @@ export const alwaysPassives = [
                 valueRef: "val"
             },
             {
-                targetScope: "team",
+                targetScope: "allies",
                 targetRoles: [],
                 targetElements: [],
                 targetTags: ["Icon_Tag_Team_Raimon", "Icon_Tag_Team_Emperors"],
@@ -731,7 +730,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["MF", "DF"], targetElements: [], type: "power", moveKind: "All", moveElement: null, valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF", "DF"], targetElements: [], type: "power", moveKind: "All", moveElement: null, valueRef: "val" }
         ]
     },
     {
@@ -775,7 +774,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -812,7 +811,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -834,7 +833,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: ["Icon_Tag_Team_Raimon"], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: [], targetTags: ["Icon_Tag_Team_Raimon"], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -855,7 +854,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -870,7 +869,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -928,7 +927,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -942,9 +941,9 @@ export const alwaysPassives = [
         ],
         category: "Always",
         conditions: null,
-        effects: [ // FIX: Sdoppiato per Fuoco e Foresta, senza restrizioni sull'elemento del FW
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" },
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+        effects: [
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" },
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -988,7 +987,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -1009,7 +1008,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -1031,7 +1030,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -1053,7 +1052,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Parata", valueRef: "val2" }
         ]
     },
@@ -1069,7 +1068,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
     },
     {
@@ -1091,7 +1090,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -1106,7 +1105,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF", "GK"], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF", "GK"], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -1121,7 +1120,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF", "GK"], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF", "GK"], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -1143,7 +1142,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -1158,7 +1157,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
     },
     {
@@ -1179,7 +1178,7 @@ export const alwaysPassives = [
     {
         title: "Tiro Team + (チームキック＋)",
         id: "101008001",
-        template: "All'inizio della partita, aumenta il Tiro degli alleati di {VAL}.",
+        template: "All'inizio della partita, aumenta il Tiro di tutti gli alleati di {VAL}.", // Per le 'Team Kick +' che parlano di squadra intera
         levels: [
             { val: 8, req: "Si sblocca con personaggio Lv. 1" },
             { val: 16, req: "Si sblocca con personaggio Lv. 21" },
@@ -1195,29 +1194,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
-        ]
-    },
-    {
-        title: "Tiro Team + (チームキック＋)",
-        id: "101006001",
-        template: "All'inizio della partita, aumenta il Tiro di tutti gli alleati di {VAL}.",
-        levels: [
-            { val: 8, req: "Si sblocca con personaggio Lv. 1" },
-            { val: 16, req: "Si sblocca con personaggio Lv. 21" },
-            { val: 25, req: "Si sblocca con personaggio Lv. 71" },
-            { val: 33, req: "Si sblocca con personaggio Lv. 101" },
-            { val: 50, req: "Si sblocca con personaggio Lv. 131" },
-            { val: 67, req: "Si sblocca con personaggio Lv. 161" },
-            { val: 84, req: "Si sblocca con personaggio Lv. 191" },
-            { val: 100, req: "Si sblocca con personaggio Lv. 221" },
-            { val: 134, req: "Si sblocca con personaggio Lv. 251" },
-            { val: 168, req: "Si sblocca con personaggio Lv. 281" }
-        ],
-        category: "Always",
-        conditions: null,
-        effects: [
-            { targetScope: "team", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -1238,7 +1215,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], /* FIX */ type: "power", moveKind: "Dribbling", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -1253,7 +1230,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -1274,7 +1251,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
 
@@ -1297,7 +1274,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -1340,7 +1317,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -1362,7 +1339,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -1383,7 +1360,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -1398,7 +1375,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
         ]
     },
     {
@@ -1420,7 +1397,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: ["Wind"], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF"], targetElements: ["Wind"], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -1442,7 +1419,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: ["Icon_Tag_Team_Emperors"], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: [], targetTags: ["Icon_Tag_Team_Emperors"], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -1479,7 +1456,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -1501,7 +1478,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -1539,8 +1516,8 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" },
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" },
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -1571,7 +1548,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "power" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
@@ -1631,7 +1608,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "power" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
@@ -1655,7 +1632,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: ["Wind"], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: ["Wind"], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -1670,12 +1647,12 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
         title: "Potenza Blocco + (ブロックパワー＋)",
-        id: "101158004", // Inserire ID reale se disponibile
+        id: "101158004",
         template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Blocco di {VAL}.",
         levels: [
             { val: 31, req: "Si sblocca a: Advanced Player +" },
@@ -1713,7 +1690,7 @@ export const alwaysPassives = [
 
     {
         title: "Tecnica DF + (ＤＦテクニック＋)",
-        id: "101156001", // Sostituire con l'ID reale
+        id: "101156001",
         template: "All'inizio della partita, aumenta la Tecnica dei compagni DF di {VAL}.",
         levels: [
             { val: 22, req: "Si sblocca con personaggio Lv. 1" },
@@ -1730,7 +1707,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -1752,7 +1729,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
 
@@ -1768,7 +1745,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -1790,7 +1767,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -1817,7 +1794,7 @@ export const alwaysPassives = [
     },
     {
         title: "Tiro + (キック＋)",
-        id: "101165001", // Sostituire con l'ID reale
+        id: "101165001",
         template: "All'inizio della partita, aumenta il proprio Tiro di {VAL}.",
         levels: [
             { val: 80, req: "Si sblocca con personaggio Lv. 1" },
@@ -1837,5 +1814,4 @@ export const alwaysPassives = [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     }
-
 ];

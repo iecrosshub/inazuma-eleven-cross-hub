@@ -9,6 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+    <!-- LIBRERIA INTRO.JS PER IL TUTORIAL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/styleTeamBuilder.css">
     <link rel="stylesheet" href="css/styleCollection.css">
@@ -22,8 +25,23 @@
             background-color: #343a40 !important;
             color: #ffca28 !important;
         }
+        /* Personalizzazione del fumetto del tutorial */
+        .introjs-tooltip {
+            color: #0b1a42;
+            font-family: inherit;
+            border: 2px solid #ffca28;
+            border-radius: 8px;
+        }
+        .introjs-button {
+            background-color: #0b1a42;
+            color: white;
+            text-shadow: none;
+            border: 1px solid #ffca28;
+        }
+        .introjs-button:hover { background-color: #102247; color: #ffca28; }
     </style>
 </head>
+
 <body class="pb-5">
 
 <script type="module" src="js/Components/navbar.js"></script>
@@ -36,6 +54,9 @@
             <h4 class="m-0 text-white fw-bold" id="user-greeting">Accedi per salvare la tua collezione</h4>
         </div>
         <div>
+            <!-- BOTTONE TUTORIAL AGGIUNTO QUI -->
+            <button id="btn-tutorial" class="btn btn-info px-3 fw-bold me-2"><i class="fas fa-question-circle"></i> Guida</button>
+
             <button id="btn-login" class="btn btn-light px-4 fw-bold text-dark"><i class="fab fa-google me-2 text-danger"></i> Accedi con Google</button>
             <button id="btn-logout" class="btn btn-outline-light px-4 fw-bold" style="display: none;">Esci</button>
             <button id="btn-save-cloud" class="btn btn-warning px-4 ms-2 fw-bold" style="display: none;"><i class="fas fa-cloud-upload-alt me-2"></i> Salva nel Cloud</button>
@@ -46,12 +67,7 @@
     <div class="global-settings-bar mb-5 p-3 rounded shadow-sm border border-info" style="background: #0b1a42;">
 
         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-info pb-2">
-            <h5 class="text-info m-0 fw-bold"><i class="fas fa-users"></i> Core Members (Cross Level)</h5>
-            <!-- INPUT AGGIUNTO PER EVITARE IL CRASH -->
-            <div class="d-flex align-items-center gap-2">
-                <span class="text-white">Livello Globale:</span>
-                <input type="number" id="global-char-level" class="form-control form-control-sm bg-dark text-white border-info" value="300" style="width: 70px;">
-            </div>
+            <h5 class="text-info m-0 fw-bold"><i class="fas fa-users"></i> Membri Principali (Cross Level)</h5>
             <h4 class="text-warning m-0 fw-bold" id="display-cross-level">Cross Level: 300</h4>
         </div>
 
@@ -229,6 +245,7 @@
     window.dbGet = getDoc;
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module" src="js/Controllers/collection.js"></script>
 

@@ -98,7 +98,7 @@ export const bondPassives = [
             requiresCount: 3
         },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -122,7 +122,7 @@ export const bondPassives = [
             requiresCount: 3
         },
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
     },
     {
@@ -146,7 +146,7 @@ export const bondPassives = [
             requiresCount: 3
         },
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -171,8 +171,8 @@ export const bondPassives = [
             requiresCount: 3
         },
         effects: [
-            { targetScope: "team", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Blocco", valueRef: "val" },
-            { targetScope: "team", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "allies", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -193,7 +193,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -214,7 +214,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -251,7 +251,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -266,7 +266,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -288,7 +288,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresElements: ["Forest"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -332,7 +332,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -460,7 +460,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -482,7 +482,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -524,7 +524,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -539,7 +539,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], /* FIX */ type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -560,7 +560,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -596,7 +596,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -677,7 +677,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -724,7 +724,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresElements: ["Forest"], requiresCount: 3 },
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {
@@ -745,7 +745,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Emperors"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["MF", "DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF", "DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -766,7 +766,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Emperors"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: ["Wind"], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF"], targetElements: ["Wind"], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -787,12 +787,12 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
         title: "[Legame] Potenza Parata GK + (【結束】ＧＫキーパーパワー＋)",
-        id: "101158003", // Inserire ID reale se disponibile
+        id: "101158003",
         template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Zeus, aumenta la potenza delle tecniche di parata dei GK alleati di {VAL}.",
         levels: [
             { val: 5, req: "Si sblocca con personaggio Lv. 41" },
@@ -811,7 +811,7 @@ export const bondPassives = [
             requiresCount: 3
         },
         effects: [
-            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
     },
     {
@@ -849,7 +849,7 @@ export const bondPassives = [
     },
     {
         title: "[Legame] Potenza Blocco MF + (【結束】ＭＦブロックパワー＋)",
-        id: "101161001", // Sostituire con l'ID reale
+        id: "101161001",
         template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Zeus, aumenta la potenza delle tecniche di blocco dei compagni MF di {VAL}.",
         levels: [
             { val: 3, req: "Si sblocca con personaggio Lv. 41" },
@@ -865,7 +865,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresTags: ["Icon_Tag_Team_Zeus"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+            { targetScope: "allies", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
     },
     {

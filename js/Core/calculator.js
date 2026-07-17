@@ -5,7 +5,7 @@ import { extractElement, extractPosition, getStatKeyByIcon, parsePassiveText } f
 import { growth_patterns } from './growthTable.js';
 import { equipmentData } from './equipmentTables.js';
 
-// Tutti i 10 gradi di rarità che hai inserito nell'HTML!
+// Tutti i 10 gradi di rarità
 const awakeningMultipliers = {
     0: 1.00,  // Normal Player
     1: 1.10,  // Normal Player +
@@ -54,20 +54,17 @@ export function calcolaStatisticheEsatte(character, livelloPG, gradoRisveglio, e
     if (equipmentData[ruolo]) {
         Object.keys(equipmentData[ruolo]).forEach(categoria => {
 
-            let targetLvl = 300; // Valore di sicurezza
+            let targetLvl = 300;
 
-            // 1. Se abbiamo passato la nuova matrice a 24 slot
             if (typeof equipMatrixObj === 'object' && equipMatrixObj !== null) {
                 if (equipMatrixObj[ruolo] && equipMatrixObj[ruolo][categoria]) {
                     targetLvl = equipMatrixObj[ruolo][categoria];
                 }
             }
-            // 2. Fallback per retrocompatibilità (se passiamo un singolo numero)
             else if (typeof equipMatrixObj === 'number' || typeof equipMatrixObj === 'string') {
                 targetLvl = parseInt(equipMatrixObj);
             }
 
-            // Arrotonda in sicurezza al salto di 5 più vicino (come volevi tu)
             const lvlEqStr = getClosestEquipLevel(targetLvl);
 
             if (equipmentData[ruolo][categoria][lvlEqStr]) {
@@ -98,8 +95,6 @@ export function getElementalAdvantage(moveElement, opponentElement) {
     if (advantages[opponentElement] === moveElement) return -0.1;
     return 0;
 }
-
-const j_floor = (val) => Math.floor(val + 1e-6);
 
 export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, roleMult, adv, passiveSelections, customTechPower = 0) {
     if (!charDb || !techKey || !techniquesLibrary[techKey]) return null;
@@ -208,7 +203,6 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
         }
 
         const descSuffix = stacks > 1 ? `<br><span class="text-primary fw-bold">(Attivata ${stacks} volte)</span>` : '';
-        // FIX: La stringa {VAL} ora viene esplosa in un numero leggibile tramite il Parser!
         const parsedDesc = parsePassiveText(p.template, currentLvData);
         passiveData.push({ title: p.title, level: sel.lvIndex + 1, active: isAffecting, desc: parsedDesc + descSuffix });
     });
@@ -216,16 +210,30 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
     const statFinale = Math.floor((baseStat + passiveStatBuff) * roleMult);
     const potenzaFinale = techPower + passivePowerBuff;
 
-    let rawDmg = j_floor(statFinale * potenzaFinale * 0.01 * stabMult * adv);
+    // --- NUOVA LOGICA TRONCAMENTO PER DIFETTO (MATH.FLOOR) IN OGNI STEP ---
+    let step1 = Math.floor(statFinale * potenzaFinale * 0.01);
+    let step2 = Math.floor(step1 * stabMult);
+    let rawDmg = Math.floor(step2 * adv);
+    // ---------------------------------------------------------------------
     const danno = rawDmg;
 
     return { danno, statKey, baseStat, passiveStatBuff, roleMult, techPower, passivePowerBuff, hasStab, stabMult, adv, passiveData };
 }
 
 export function isTargetValid(caster, targetChar, effect) {
+    // --- [NOVITÀ] CONTROLLO "ALLIES" ---
+    // Se il targetScope è "allies" (alleati/compagni), IL CASTER DEVE ESSERE ESCLUSO!
+    if (effect.targetScope === "allies" && caster.id === targetChar.id) {
+        return false;
+    }
+    // -----------------------------------
+
     if (effect.target) {
         if (effect.target === "self") return caster.id === targetChar.id;
-        if (effect.target === "team" || effect.target.includes("allies")) return true;
+        if (effect.target === "team" || effect.target.includes("allies")) {
+            if (effect.target.includes("allies") && caster.id === targetChar.id) return false;
+            return true;
+        }
         if (effect.target.startsWith("enemy")) return false;
 
         const role = extractPosition(targetChar.position);
@@ -252,6 +260,7 @@ export function isTargetValid(caster, targetChar, effect) {
         if (effect.target === "team_teikoku") return tags.some(t => t.includes('royalacademy') || t.includes('teikoku'));
         if (effect.target === "team_Raimon_Emperors") return tags.some(t => t.includes('raimon') || t.includes('royalacademy') || t.includes('teikoku'));
         if (effect.target === "team_InazumaJapan") return tags.some(t => t.includes('inazumajapan'));
+        if (effect.target === "team_zeus") return tags.some(t => t.includes('zeus'));
 
         return false;
     }
@@ -261,9 +270,18 @@ export function isTargetValid(caster, targetChar, effect) {
 
     const role = extractPosition(targetChar.position);
     const element = extractElement(targetChar.element);
+    const tags = targetChar.tags ? targetChar.tags.map(t => t.toLowerCase()) : [];
 
     if (effect.targetRoles && effect.targetRoles.length > 0 && !effect.targetRoles.includes(role)) return false;
     if (effect.targetElements && effect.targetElements.length > 0 && !effect.targetElements.includes(element)) return false;
+
+    if (effect.targetTags && effect.targetTags.length > 0) {
+        const hasRequiredTag = effect.targetTags.some(reqTag => {
+            const cleanReq = reqTag.toLowerCase().replace('.png', '').split('/').pop();
+            return tags.some(charTag => charTag.includes(cleanReq));
+        });
+        if (!hasRequiredTag) return false;
+    }
 
     return true;
 }
@@ -301,8 +319,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                 const isStat = effect.type === 'base_stat' || effect.type === 'stat';
 
                 if (!isPower && !isStat) return;
-
-                // NESSUN BLOCCO SULLE CONDIZIONI: Prendiamo tutto come avevi testato tu!
 
                 let actualValue = 0;
                 if (effect.valueRef) {
@@ -426,7 +442,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         const statKey = getStatKeyByIcon(tech.icon);
         const nakedBaseStat = slot.customStats[statKey] || 0;
 
-        // RIPRISTINATO IL CEROTTO DEL 0.975 (Correzione globale del ~2.5% sulla base stat)
         const rawBase = nakedBaseStat + slotBuffs.statSelf + slotBuffs.statAlly;
         const totalBase = Math.floor(rawBase * 1);
 
@@ -440,8 +455,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             stageBonus = stageConfig.bonus;
         }
 
-        // RIPRISTINATO IL CEROTTO DEL 0.975 (Correzione globale del ~2.5% sulla potenza totale)
-        const rawPower = nakedPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
+        const rawPower = nakedPower + manualBonusPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
         const totalPower = Math.floor(rawPower * 1);
 
         let attributeMultiplier = 1.0;
@@ -453,7 +467,6 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 
         let chainMultiplier = 1.0;
         let isChainActive = false;
-        // BLOCCO CATENA PER IL PORTIERE
         const isGKInDefense = (stageConfig.mode === 'defense' && index === 4);
 
         if (index > 0 && previousMoveElement === moveElement && !isGKInDefense) {
@@ -461,8 +474,11 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
             isChainActive = true;
         }
 
-        let rawDamage = j_floor(totalBase * (totalPower + 0) * 0.01 * attributeMultiplier);
-        let finalDamage = isChainActive ? j_floor(rawDamage * chainMultiplier) : rawDamage;
+        // --- NUOVA LOGICA TRONCAMENTO PER DIFETTO DOPO OGNI MOLTIPLICAZIONE (MATH.FLOOR) ---
+        let baseDmg = Math.floor(totalBase * totalPower * 0.01);
+        let attrDmg = Math.floor(baseDmg * attributeMultiplier);
+        let finalDamage = isChainActive ? Math.floor(attrDmg * chainMultiplier) : attrDmg;
+        // -----------------------------------------------------------------------------------
 
         totalDamage += finalDamage;
         previousMoveElement = moveElement;
@@ -500,7 +516,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         finalMultiplier = isClear ? 3.6 : 2.4;
     }
 
-    const finalScore = j_floor(totalDamage * finalMultiplier);
+    const finalScore = Math.floor(totalDamage * finalMultiplier);
 
     return {
         slots: results,

@@ -2,8 +2,7 @@
 
 import { characterRegistry, passivesLibrary, techniquesLibrary, universalManualsKeys } from './database.js';
 import { extractPosition } from './parsers.js';
-import { calculateTeamDamage } from './calculator.js';
-import { calcolaStatisticheEsatte } from './calculator.js';
+import { calculateTeamDamage, calcolaStatisticheEsatte } from './calculator.js';
 
 export class TrialOptimizer {
     constructor(app) {
@@ -16,8 +15,8 @@ export class TrialOptimizer {
         const customTechPower = {};
         const passiveLevels = {};
 
-        // --- FIX: CONTROLLO STATISTICHE ---
-        // Se mancano le stats (PG Autocalcolati), le calcoliamo qui al volo
+        // --- LOGICA ORIGINALE RIPRISTINATA ---
+        // (Usata come fallback SOLO per la Collezione, come prima)
         let statsSource = charData.stats;
         if (!statsSource && charData.growth_pattern_code) {
             const calced = calcolaStatisticheEsatte(charData, 300, 9, 300);
@@ -29,7 +28,6 @@ export class TrialOptimizer {
                 "Velocità": { lv300: calced.speed }
             };
         }
-        // ----------------------------------
 
         const collData = this.app.collectionData[charData.id] || {};
         let allValidMoves = [...charData.myTechniques];
@@ -42,8 +40,27 @@ export class TrialOptimizer {
         const ignoreRerolls = customConfig ? customConfig.ignoreRerolls : false;
 
         if (mode === 'max') {
-            // Usiamo statsSource invece di charData.stats
-            ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = statsSource[s]?.lv300 || 0);
+            // --- NUOVA LOGICA: SOLO PER L'OTTIMIZZATORE META ---
+            // Livello 300, Grado 9 (Legendary+), Equipaggiamenti a 1 (base pura)
+            let maxStats = {};
+            if (charData.growth_pattern_code) {
+                const calcedMax = calcolaStatisticheEsatte(charData, 300, 9, 1);
+                if (calcedMax) {
+                    maxStats = { "Tiro": calcedMax.kick, "Tecnica": calcedMax.technique, "Blocco": calcedMax.block, "Parata": calcedMax.catch, "Velocità": calcedMax.speed };
+                }
+            } else if (charData.stats) {
+                // Fallback per PG inseriti manualmente senza growth_pattern
+                maxStats = {
+                    "Tiro": charData.stats.Tiro?.lv300 || 0,
+                    "Tecnica": charData.stats.Tecnica?.lv300 || 0,
+                    "Blocco": charData.stats.Blocco?.lv300 || 0,
+                    "Parata": charData.stats.Parata?.lv300 || 0,
+                    "Velocità": charData.stats.Velocità?.lv300 || 0
+                };
+            }
+
+            ["Tiro", "Tecnica", "Blocco", "Parata", "Velocità"].forEach(s => customStats[s] = maxStats[s] || 0);
+
             allValidMoves.forEach(t => { techLevels[t] = 9; customTechPower[t] = 0; });
 
             if (isTaughtMove) {
@@ -63,6 +80,7 @@ export class TrialOptimizer {
             }
 
         } else {
+            // --- LOGICA ORIGINALE: LA TUA COLLEZIONE ---
             const cStats = collData.stats || {};
             const cTechs = collData.techLevels || {};
             const cPass = collData.passives || {};
@@ -120,7 +138,7 @@ export class TrialOptimizer {
         const container = document.getElementById(containerId);
 
         if (modal) modal.style.display = 'flex';
-        container.innerHTML = '<div class="text-center text-secondary py-5"><i class="fas fa-spinner fa-spin fa-3x mb-3"></i><br>Elaborazione formazioni in corso...</div>';
+        if (container) container.innerHTML = '<div class="text-center text-secondary py-5"><i class="fas fa-spinner fa-spin fa-3x mb-3"></i><br>Elaborazione formazioni in corso...</div>';
 
         await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -243,9 +261,9 @@ export class TrialOptimizer {
             if (top5.length === 10) break;
         }
 
-        container.innerHTML = '';
+        if (container) container.innerHTML = '';
         if (top5.length === 0) {
-            container.innerHTML = '<div class="text-danger fw-bold text-center">Nessuna formazione trovata.</div>';
+            if (container) container.innerHTML = '<div class="text-danger fw-bold text-center">Nessuna formazione trovata.</div>';
             return;
         }
 
@@ -290,11 +308,11 @@ export class TrialOptimizer {
             }
 
             row.innerHTML = htmlStr;
-            container.appendChild(row);
+            if (container) container.appendChild(row);
         });
 
         if (!hideApplyButton) {
-            container.querySelectorAll('.apply-btn').forEach(btn => {
+            if (container) container.querySelectorAll('.apply-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     const idx = e.target.dataset.index;
                     const bestTeam = top5[idx].team;
