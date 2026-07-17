@@ -99,27 +99,28 @@
 
 /* Personalizzazione del fumetto del tutorial */
 .introjs-tooltip {
-    min-width: 450px !important; /* Allarga il fumetto */
-    max-width: 500px !important;
-    color: #0b1a42;
-    font-family: inherit;
-    border: 2px solid #ffca28;
-    border-radius: 8px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    min-width: 500px !important; /* Ancora più largo */
+    max-width: 600px !important;
+    color: #0b1a42 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    border: 3px solid #ffca28 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
+    padding: 20px !important;
 }
 .introjs-tooltiptext {
-    font-size: 1.05rem; /* Testo leggermente più grande e leggibile */
-    line-height: 1.5;
+    font-size: 1.2rem !important; /* Testo più grande */
+    line-height: 1.6 !important;
 }
 .introjs-button {
-    background-color: #0b1a42;
-    color: white;
-    text-shadow: none;
-    border: 1px solid #ffca28;
-    padding: 8px 16px;
-    font-weight: bold;
+    background-color: #0b1a42 !important;
+    color: white !important;
+    border: 2px solid #ffca28 !important;
+    padding: 10px 20px !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
 }
 .introjs-button:hover {
-    background-color: #102247;
-    color: #ffca28;
+    background-color: #102247 !important;
+    color: #ffca28 !important;
 }

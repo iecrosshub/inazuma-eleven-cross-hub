@@ -18,7 +18,7 @@ export const coachData = {
     formationPassive: {
         title: "Attiva F-Inazuma KFC (アクティブ・F-イナズマKFC)",
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
-        text: "All'inizio della partita:<br><strong>Alleati elemento Bosco:</strong> potenza tecniche di tiro +22<br><strong>Alleati elemento Montagna:</strong> potenza tecniche di blocco +20",
+        text: "All'inizio della partita:<br><strong>Alleati elemento Foresta:</strong> potenza tecniche di tiro +22<br><strong>Alleati elemento Montagna:</strong> potenza tecniche di blocco +20",
         actions: [
             { target: "team_Wood", stat: "Potenza_Tiro", type: "move_power", amount: 22, condition: "always" },
             { target: "team_Mountain", stat: "Potenza_Blocco", type: "move_power", amount: 20, condition: "always" }

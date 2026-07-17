@@ -88,9 +88,9 @@ export const rerollPassivesGK = [
         ]
     },
     {
-        title: "Potenza di Cattura + (Bosco) [キャッチパワー＋〈林〉]",
+        title: "Potenza di Cattura + (Foresta) [キャッチパワー＋〈林〉]",
         id: "REROLL_GK_CATCH_POWER_FOREST",
-        template: "Aumenta la potenza delle tecniche di Parata di elemento Bosco di {VAL}.",
+        template: "Aumenta la potenza delle tecniche di Parata di elemento Foresta di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
             { val: 5, req: "Livello 2" },

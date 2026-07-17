@@ -154,9 +154,9 @@ export const rerollPassivesDF = [
         ]
     },
     {
-        title: "Potenza di Blocco + (Bosco) [ブロックパワー＋〈林〉]",
+        title: "Potenza di Blocco + (Foresta) [ブロックパワー＋〈林〉]",
         id: "REROLL_DF_BLOCK_POWER_FOREST",
-        template: "Aumenta la potenza delle tecniche di Blocco di elemento Bosco di {VAL}.",
+        template: "Aumenta la potenza delle tecniche di Blocco di elemento Foresta di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
             { val: 5, req: "Livello 2" },

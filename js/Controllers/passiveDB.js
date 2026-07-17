@@ -1,6 +1,7 @@
 // js/Controllers/passiveDB.js
 
-import { passivesLibrary } from '../Core/database.js';
+// Aggiunto l'import di rerollPassivesByRole
+import { passivesLibrary, rerollPassivesByRole } from '../Core/database.js';
 import { parsePassiveText } from '../Core/parsers.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
@@ -63,24 +64,64 @@ class PassiveDatabase {
     }
 
     applyFilters() {
+        const categoryVal = document.getElementById('filter-category').dataset.value;
+
+        // Gestione dinamica visibilità del filtro "Ruolo" e dimensioni griglia
+        const colCategory = document.getElementById('col-category');
+        const colRole = document.getElementById('col-role');
+        const colStat = document.getElementById('col-stat');
+        const colPower = document.getElementById('col-power');
+
+        if (categoryVal === 'Reroll') {
+            colRole.style.display = 'block';
+            // Restringe le colonne a un quarto di pagina (col-md-3) per farcene stare 4 in riga
+            [colCategory, colStat, colPower].forEach(el => {
+                el.classList.remove('col-md-4');
+                el.classList.add('col-md-3');
+            });
+        } else {
+            colRole.style.display = 'none';
+            // Riporta le colonne a un terzo di pagina (col-md-4) visto che sono solo 3
+            [colCategory, colStat, colPower].forEach(el => {
+                el.classList.remove('col-md-3');
+                el.classList.add('col-md-4');
+            });
+        }
+
         const filters = {
             name: document.getElementById('search-name').value.toLowerCase(),
-            category: document.getElementById('filter-category').dataset.value,
+            category: categoryVal,
+            role: document.getElementById('filter-role').dataset.value, // Estrapolo il ruolo
             stat: document.getElementById('filter-stat').dataset.value,
             power: document.getElementById('filter-power').dataset.value
         };
 
         const filtered = this.allPassive.filter(p => {
+            // Filtro Nome
             if (filters.name && !p.title.toLowerCase().includes(filters.name) && !p.template.toLowerCase().includes(filters.name)) return false;
-            if (filters.category !== 'All' && this.getCategory(p) !== filters.category) return false;
+
+            // Filtro Categoria
+            const cat = this.getCategory(p);
+            if (filters.category !== 'All' && cat !== filters.category) return false;
+
+            // NUOVO: Filtro Ruolo (Applicato SOLO se la categoria è Reroll e il ruolo non è 'All')
+            if (filters.category === 'Reroll' && filters.role !== 'All') {
+                const rolePassivesArray = rerollPassivesByRole[filters.role] || [];
+                // Se l'ID di questa passiva NON è presente nell'array di quel ruolo, escludila
+                if (!rolePassivesArray.some(rp => rp.id === p.id)) {
+                    return false;
+                }
+            }
 
             const effects = p.effects || p.actions || [];
 
+            // Filtro Statistica
             if (filters.stat !== 'All') {
                 const hasStat = effects.some(e => (e.type === 'stat' || e.type === 'base_stat') && e.statName === filters.stat);
                 if (!hasStat) return false;
             }
 
+            // Filtro Potenza
             if (filters.power !== 'All') {
                 const hasPower = effects.some(e => (e.type === 'power' || e.type === 'move_power') && (e.moveKind === filters.power || e.stat?.includes(filters.power)));
                 if (!hasPower) return false;

@@ -154,9 +154,9 @@ export const rerollPassivesMF = [
         ]
     },
     {
-        title: "Potenza di Dribbling + (Bosco) [ドリブルパワー＋〈林〉]",
+        title: "Potenza di Dribbling + (Foresta) [ドリブルパワー＋〈林〉]",
         id: "REROLL_MF_DRIBBLE_POWER_FOREST",
-        template: "Aumenta la potenza delle tecniche di Dribbling di elemento Bosco di {VAL}.",
+        template: "Aumenta la potenza delle tecniche di Dribbling di elemento Foresta di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
             { val: 5, req: "Livello 2" },

@@ -32,7 +32,7 @@
                 </div>
             </div>
             <!-- Filtro Categoria -->
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-4" id="col-category">
                 <div class="filter-group">
                     <label>Categoria</label>
                     <div class="custom-select" id="filter-category" data-value="All">
@@ -46,8 +46,24 @@
                     </div>
                 </div>
             </div>
+            <!-- NUOVO: Filtro Ruolo (Nascosto di Default) -->
+            <div class="col-12 col-md-3" id="col-role" style="display: none;">
+                <div class="filter-group">
+                    <label>Ruolo Reroll</label>
+                    <div class="custom-select" id="filter-role" data-value="All">
+                        <div class="select-selected"><span>Tutti i Ruoli</span> <i class="fas fa-chevron-down"></i></div>
+                        <div class="select-items select-hide">
+                            <div data-value="All">Tutti i Ruoli</div>
+                            <div data-value="FW"><img src="img/Position/Icon_Position_FW.png" style="width: 16px; margin-right: 6px; vertical-align: middle;"> Attaccante</div>
+                            <div data-value="MF"><img src="img/Position/Icon_Position_MF.png" style="width: 16px; margin-right: 6px; vertical-align: middle;"> Centrocampista</div>
+                            <div data-value="DF"><img src="img/Position/Icon_Position_DF.png" style="width: 16px; margin-right: 6px; vertical-align: middle;"> Difensore</div>
+                            <div data-value="GK"><img src="img/Position/Icon_Position_GK.png" style="width: 16px; margin-right: 6px; vertical-align: middle;"> Portiere</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Filtro Statistica -->
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-4" id="col-stat">
                 <div class="filter-group">
                     <label>Statistica Modificata</label>
                     <div class="custom-select" id="filter-stat" data-value="All">
@@ -64,7 +80,7 @@
                 </div>
             </div>
             <!-- Filtro Potenza Tecnica -->
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-4" id="col-power">
                 <div class="filter-group">
                     <label>Potenza Tecnica (Buff)</label>
                     <div class="custom-select" id="filter-power" data-value="All">

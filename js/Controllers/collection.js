@@ -446,6 +446,11 @@ class CollectionApp {
 
         this.isGridRendered = true;
         this.applySavedDataToUI();
+
+        // --- AGGIUNTA: Avvia il tutorial solo ORA che le card esistono ---
+        if (!localStorage.getItem('tutorial_collection_seen')) {
+            this.startTutorial();
+        }
     }
 
     async triggerFilter() {
@@ -1002,6 +1007,7 @@ class CollectionApp {
             showStepNumbers: true,
             showBullets: false,
             overlayOpacity: 0.7,
+            scrollTo: 'tooltip',
             steps: [
                 {
                     intro: "👋 <strong>Benvenuto nella tua Collezione!</strong><br><br>Qui puoi tenere traccia dei tuoi giocatori, dei loro livelli e delle loro statistiche per calcolare il vero Meta. Facciamo un giro veloce!"
@@ -1024,7 +1030,8 @@ class CollectionApp {
                 },
                 {
                     element: document.getElementById('collection-grid'),
-                    intro: "📋 <strong>I Tuoi Giocatori</strong><br>Attiva la levetta 'POSSEDUTO' per sbloccare le modifiche di un giocatore. Puoi assegnare la Rarità, le Mosse Insegnate e le Passive, e il sistema calcolerà i valori finali per il Simulatore."
+                    intro: "📋 <strong>I Tuoi Giocatori</strong><br>Attiva la levetta 'POSSEDUTO' per sbloccare le modifiche di un giocatore che hai trovato. Puoi impostare il Giocatore come quello che hai in gioco, e il sistema calcolerà i valori finali per il Simulatore.",
+                    position: 'top'
                 },
                 {
                     element: document.getElementById('filter-calc'),
