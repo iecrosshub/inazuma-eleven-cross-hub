@@ -25,20 +25,33 @@
             background-color: #343a40 !important;
             color: #ffca28 !important;
         }
-        /* Personalizzazione del fumetto del tutorial */
+
+        /* Personalizzazione del fumetto del tutorial (Stile Nuovo Centrato) */
         .introjs-tooltip {
+            min-width: 450px !important;
+            max-width: 500px !important;
             color: #0b1a42;
             font-family: inherit;
-            border: 2px solid #ffca28;
+            border: 2px solid #1a73e8; /* Bordo blu stile nuovo */
             border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .introjs-tooltiptext {
+            font-size: 1.05rem;
+            line-height: 1.5;
         }
         .introjs-button {
-            background-color: #0b1a42;
+            background-color: #1a73e8;
             color: white;
             text-shadow: none;
-            border: 1px solid #ffca28;
+            border: none;
+            font-weight: bold;
+            padding: 8px 16px;
         }
-        .introjs-button:hover { background-color: #102247; color: #ffca28; }
+        .introjs-button:hover {
+            background-color: #1557b0;
+            color: #ffffff;
+        }
     </style>
 </head>
 
@@ -55,11 +68,11 @@
         </div>
         <div>
             <!-- BOTTONE TUTORIAL AGGIUNTO QUI -->
-            <button id="btn-tutorial" class="btn btn-info px-3 fw-bold me-2"><i class="fas fa-question-circle"></i> Guida</button>
+            <button id="btn-tutorial" class="btn btn-info px-3 fw-bold me-2 text-dark"><i class="fas fa-question-circle"></i> Guida</button>
 
             <button id="btn-login" class="btn btn-light px-4 fw-bold text-dark"><i class="fab fa-google me-2 text-danger"></i> Accedi con Google</button>
             <button id="btn-logout" class="btn btn-outline-light px-4 fw-bold" style="display: none;">Esci</button>
-            <button id="btn-save-cloud" class="btn btn-warning px-4 ms-2 fw-bold" style="display: none;"><i class="fas fa-cloud-upload-alt me-2"></i> Salva nel Cloud</button>
+            <button id="btn-save-cloud" class="btn btn-warning px-4 ms-2 fw-bold text-dark" style="display: none;"><i class="fas fa-cloud-upload-alt me-2"></i> Salva nel Cloud</button>
         </div>
     </div>
 

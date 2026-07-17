@@ -627,9 +627,13 @@ class CollectionApp {
                     <div style="flex-grow: 1;">
                         <strong style="color: #ffca28; font-size: 1.1rem;">${baseChar.name}</strong><br>
                         <img src="${fullData.position}" style="height: 18px; margin-top: 2px;">
-                        <div class="d-flex flex-wrap gap-1 mt-2">
+                        <div class="d-flex flex-wrap gap-1 mt-2 mb-2">
                             ${tagsHtml}
                         </div>
+                        <!-- TASTO AGGIUNTO PER LA SCHEDA DEL SINGOLO GIOCATORE -->
+                        <a href="#" onclick="event.preventDefault(); window.location.href = (window.location.pathname.includes('.html') ? 'character.html' : 'character') + '?id=${baseChar.id}';" class="btn btn-sm btn-outline-info w-100 fw-bold tutorial-detail-btn" style="font-size: 0.8rem; text-transform: uppercase;">
+                            <i class="fas fa-id-card me-1"></i> Scheda Dettagliata
+                        </a>
                     </div>
                 </div>
                 
@@ -927,7 +931,6 @@ class CollectionApp {
             });
 
             const raritySel = document.querySelector(`.char-rarity[data-char="${charId}"]`);
-            // Imposta la rarità di default corretta invece di forzare 0
             if (raritySel) raritySel.value = defaultRarity;
 
             if (data && data.owned) {
@@ -996,50 +999,52 @@ class CollectionApp {
         }, 100);
     }
 
+    // ==========================================
+    // TUTORIAL INTRO.JS (NUOVO STILE CENTRATO)
+    // ==========================================
+    // ==========================================
+    // TUTORIAL INTRO.JS (GUIDA INTERATTIVA + STILE NUOVO)
+    // ==========================================
     startTutorial() {
-        // Segniamo che il tutorial è stato visto per non riaprirlo più in automatico
         localStorage.setItem('tutorial_collection_seen', 'true');
 
         introJs().setOptions({
             nextLabel: 'Avanti →',
             prevLabel: '← Indietro',
-            doneLabel: 'Ho capito!',
+            doneLabel: 'Ho capito! 🚀',
             showStepNumbers: true,
-            showBullets: false,
-            overlayOpacity: 0.7,
+            showBullets: true,
+            overlayOpacity: 0.8,
             scrollTo: 'tooltip',
             steps: [
                 {
-                    intro: "👋 <strong>Benvenuto nella tua Collezione!</strong><br><br>Qui puoi tenere traccia dei tuoi giocatori, dei loro livelli e delle loro statistiche per calcolare il vero Meta. Facciamo un giro veloce!"
+                    // Nessun elemento, appare al centro per dare il benvenuto
+                    intro: "<div style='text-align: center;'><h4 class='text-primary fw-bold mb-3' style='text-transform: uppercase; letter-spacing: 1px;'>🎒 La Tua Collezione</h4><p>Benvenuto nel cuore del tuo account!<br><br>Qui puoi registrare i giocatori che hai sbloccato nel gioco, impostare i loro livelli e preparare il tuo roster per i simulatori.</p></div>"
                 },
                 {
                     element: document.querySelector('.global-settings-bar'),
-                    intro: "⚙️ <strong>Impostazioni Globali</strong><br>Questa è l'area più importante per i calcoli automatici. Tutto quello che imposti qui si applicherà di default a tutti i giocatori."
-                },
-                {
-                    element: document.getElementById('core-members-container'),
-                    intro: "👥 <strong>Membri Principali (Cross Level)</strong><br>Inserisci qui i tuoi 5 giocatori principali. Il sistema calcolerà il tuo <strong>Cross Level</strong> automatico per livellare il resto della tua collezione!"
-                },
-                {
-                    element: document.querySelector('[data-bs-target="#equipMatrixCollapse"]'),
-                    intro: "👕 <strong>Matrice Equipaggiamenti</strong><br>Clicca qui per aprire la sezione per gli Equipaggiamenti. Inserisci i livelli degli accessori per ogni ruolo e categoria. Tutti i giocatori prenderanno le statistiche da questa tabella in automatico!"
+                    intro: "<div><h5 class='text-warning fw-bold mb-2' style='text-transform: uppercase;'>⚙️ Impostazioni Globali</h5><p class='mb-0'>Qui trovi la <strong>cabina di regia</strong>.<br>Inserisci i tuoi 5 giocatori principali (Cross Level) e definisci la tua griglia di Equipaggiamenti base.</p></div>",
+                    position: 'bottom'
                 },
                 {
                     element: document.getElementById('btn-apply-global'),
-                    intro: "🔄 <strong>Applica Modifiche</strong><br>Hai cambiato il Cross Level o gli equipaggiamenti? Clicca questo tasto per forzare il ricalcolo delle statistiche su tutto il tuo database in un colpo solo."
+                    intro: "<div><h5 class='text-success fw-bold mb-2' style='text-transform: uppercase;'>🔄 Applica Modifiche</h5><p class='mb-0'>Cliccando su questo pulsante, l'intero database si aggiornerà in un lampo ricalcolando le statistiche di tutti in base al tuo Cross Level!</p></div>",
+                    position: 'top'
                 },
                 {
                     element: document.getElementById('collection-grid'),
-                    intro: "📋 <strong>I Tuoi Giocatori</strong><br>Attiva la levetta 'POSSEDUTO' per sbloccare le modifiche di un giocatore che hai trovato. Puoi impostare il Giocatore come quello che hai in gioco, e il sistema calcolerà i valori finali per il Simulatore.",
+                    intro: "<div><h5 class='text-info fw-bold mb-2' style='text-transform: uppercase;'>📋 Le Carte Giocatore</h5><p class='mb-0'>Usa l'interruttore <strong style='color: #0b1a42;'>POSSEDUTO</strong> per sbloccare la scheda di un giocatore.<br>Potrai insegnargli i manuali, alzare il livello delle mosse, modificare la Rarità e assegnare le <strong>Passive di Reroll</strong>!</p></div>",
                     position: 'top'
                 },
                 {
                     element: document.getElementById('filter-calc'),
-                    intro: "⚠️ <strong>Giocatori Manuali</strong><br>Ti consiglio di utilizzare questo filtro per isolare i giocatori a <strong>Impostazione Manuale</strong>. Purtroppo non ho ancora trovato i codici per il calcolo automatico dei nuovi personaggi, quindi per loro le statistiche andranno inserite a mano!"
+                    intro: "<div><h5 class='text-warning fw-bold mb-2' style='text-transform: uppercase;'>⚠️ Giocatori Manuali</h5><p class='mb-0'>Usa questo filtro per isolare i giocatori senza calcolo automatico. Per loro dovrai trascrivere le statistiche a mano leggendole direttamente dal gioco!</p></div>",
+                    position: 'bottom'
                 },
                 {
                     element: document.getElementById('btn-save-cloud'),
-                    intro: "☁️ <strong>Salvataggio in Cloud</strong><br>Quando hai finito di sistemare i tuoi giocatori, ricordati SEMPRE di salvare sul Cloud per non perdere i progressi. Buon divertimento!"
+                    intro: "<div><h5 class='text-danger fw-bold mb-2' style='text-transform: uppercase;'>☁️ Salvataggio in Cloud</h5><p class='mb-0'>Quando hai finito di sistemare i tuoi giocatori, ricordati <strong>SEMPRE</strong> di premere questo tasto per non perdere i progressi sul tuo account Google.</p></div>",
+                    position: 'left'
                 }
             ]
         }).start();

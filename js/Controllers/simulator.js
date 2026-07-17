@@ -2,7 +2,7 @@
 
 import { characterRegistry, techniquesLibrary, passivesLibrary, universalManualsKeys } from '../Core/database.js';
 import { getStatKeyByIcon } from '../Core/parsers.js';
-import { calculateDamageData, calcolaStatisticheEsatte } from '../Core/calculator.js'; // IMPORT AGGIUNTO
+import { calculateDamageData, calcolaStatisticheEsatte } from '../Core/calculator.js';
 import { AuthManager } from '../Services/auth.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
@@ -25,7 +25,6 @@ function formatTechNameHTML(tDef, isManual = false) {
     let itaName = tDef.name;
     let jpName = "";
 
-    // Separa il nome italiano da quello giapponese cercando la parentesi
     const splitIdx = tDef.name.indexOf(' (');
     if (splitIdx !== -1) {
         itaName = tDef.name.substring(0, splitIdx);
@@ -36,7 +35,6 @@ function formatTechNameHTML(tDef, isManual = false) {
     const manualIcon = isManual ? "📕 " : "";
     const fullText = isManual ? `📕 ${tDef.name}` : tDef.name;
 
-    // L'attributo "title" genera il Tooltip automatico al passaggio del mouse
     return `<img src="${tDef.icon}" style="width:16px; margin-right:4px; flex-shrink:0;">
             <img src="${tDef.elementIcon}" style="width:16px; margin-right:6px; flex-shrink:0;">
             <span class="text-truncate" style="flex-grow:1; display:inline-block; vertical-align: middle; min-width:0;" title="${fullText}">
@@ -45,7 +43,6 @@ function formatTechNameHTML(tDef, isManual = false) {
 }
 
 async function init() {
-    // 1. Popola i Personaggi SOLO con le opzioni valide (niente barra per ora)
     let charHtml = `<div data-value="generic" class="char-opt">--- PERSONAGGIO GENERICO ---</div>`;
     characterRegistry.forEach(c => {
         charHtml += `<div data-value="${c.id}" class="char-opt"><img src="${c.thumb}" style="width:24px; height:24px; border-radius:50%; margin-right:8px; vertical-align:middle;"> ${c.name} (${c.romanizedName})</div>`;
@@ -54,7 +51,6 @@ async function init() {
     const charSelectItems = document.querySelector('#sim-char-select .select-items');
     if (charSelectItems) charSelectItems.innerHTML = charHtml;
 
-    // 2. Inizializza PRIMA il custom select (così lega il click solo ai personaggi)
     initCustomSelect(document.getElementById('sim-char-select'), (val) => {
         const searchInput = document.getElementById('sim-char-search');
         if (searchInput) {
@@ -64,17 +60,14 @@ async function init() {
         loadCharacter(val);
     });
 
-    // 3. INSERISCI LA BARRA DI RICERCA DOPO l'inizializzazione (così è immune al click "seleziona opzione")
     if (charSelectItems) {
         const searchContainer = document.createElement('div');
         searchContainer.className = "p-2 sticky-top bg-white border-bottom";
         searchContainer.style.zIndex = "10";
         searchContainer.innerHTML = `<input type="text" id="sim-char-search" class="form-control form-control-sm shadow-none border-primary" placeholder="🔍 Cerca personaggio..." autocomplete="off">`;
 
-        // Blocca il click per non far chiudere la tendina quando si clicca nella barra
         searchContainer.addEventListener('click', (e) => e.stopPropagation());
 
-        // Filtro di Ricerca in tempo reale
         const searchInput = searchContainer.querySelector('#sim-char-search');
         searchInput.addEventListener('input', function(e) {
             const term = e.target.value.toLowerCase();
@@ -85,11 +78,9 @@ async function init() {
             });
         });
 
-        // Prependi la barra in cima alla lista delle opzioni
         charSelectItems.prepend(searchContainer);
     }
 
-    // Inizializza i menu a tendina custom (Ruolo e Vantaggio e Livello)
     initCustomSelect(document.getElementById('sim-role-select'), () => runSimulation());
     initCustomSelect(document.getElementById('sim-advantage-select'), () => runSimulation());
 
@@ -101,7 +92,6 @@ async function init() {
 
     setupGlobalSelectClose();
 
-    // Identifica e pre-carica il personaggio passato dall'URL o cache
     const urlParams = new URLSearchParams(window.location.search);
     let charParam = urlParams.get('char') || localStorage.getItem('selectedChar');
 
@@ -112,7 +102,6 @@ async function init() {
         setCustomSelectValue('sim-char-select', 'generic', '--- PERSONAGGIO GENERICO ---');
     }
 
-    // Ascoltatori generici per radio buttons e campi numerici
     document.addEventListener('change', (e) => {
         if (e.target.name === 'dataSource') applyPresets();
     });
@@ -121,9 +110,11 @@ async function init() {
         if (e.target.matches('input[type="number"]')) runSimulation();
     });
 
-    // Login/Logout
     document.getElementById('btn-login').addEventListener('click', () => auth.loginWithGoogle());
     document.getElementById('btn-logout').addEventListener('click', () => auth.logout());
+
+    // Tutorial Listener
+    document.getElementById('btn-tutorial').addEventListener('click', startTutorial);
 
     auth.setAuthStateListener(async (user) => {
         const loginBtn = document.getElementById('btn-login');
@@ -145,6 +136,11 @@ async function init() {
     });
 
     await loadCharacter();
+
+    // Avvio tutorial automatico
+    if (!localStorage.getItem('tutorial_simulator_seen')) {
+        setTimeout(startTutorial, 800);
+    }
 }
 
 function updateStatIcon(techKey) {
@@ -189,7 +185,6 @@ async function loadCharacter(idStr) {
             const module = await import(`../Characters/${id}.js`);
             currentDb = module.charData;
 
-            // --- FIX: Se il pg ha il calcolo automatico, generiamo le stats per il livello "MAX" ---
             if (currentDb.growth_pattern_code) {
                 const stats300 = calcolaStatisticheEsatte(currentDb, 300, 9, 1);
                 if (stats300) {
@@ -202,7 +197,6 @@ async function loadCharacter(idStr) {
                     };
                 }
             } else if (!currentDb.stats) {
-                // Fallback di sicurezza per evitare errori
                 currentDb.stats = { "Tiro": { lv300: 0 }, "Tecnica": { lv300: 0 }, "Blocco": { lv300: 0 }, "Parata": { lv300: 0 }, "Velocità": { lv300: 0 } };
             }
         }
@@ -310,7 +304,6 @@ function applyPresets() {
     let passivesConfig = {};
 
     if (mode === 'max') {
-        // Ora currentDb.stats è sempre popolato, sia che sia manuale sia che sia calcolato
         statVal = currentDb.stats && currentDb.stats[statKey] ? currentDb.stats[statKey]['lv300'] : 0;
         techLvIndex = 9;
         [...(currentDb.myBasicPassivesIds || []), ...(currentDb.myRarityPassivesIds || [])].forEach(pId => {
@@ -363,7 +356,6 @@ function runSimulation() {
 
     if (!data) return;
 
-    // Anche qui applichiamo la grafica corretta del troncamento a cascata
     const formulaStr = `<span style="color:#1269e8; font-weight:900;">Equazione:</span><br>⌊ ⌊ ⌊ (${data.baseStat} + ${data.passiveStatBuff}) &times; ${data.roleMult.toFixed(2)} ⌋ &times; ((${data.techPower} + ${data.passivePowerBuff}) / 100) ⌋ &times; ${data.stabMult} ⌋ &times; ${data.adv}`;
 
     document.getElementById('damage-result').textContent = data.danno.toLocaleString('it-IT');
@@ -394,6 +386,62 @@ function runSimulation() {
             ? data.passiveData.map(p => `<li><span class="text-info">${p.active ? "🟢" : "⚪"} ${p.title} (Lv. ${p.level}):</span> <span class="text-secondary ms-1 fw-normal">${p.desc}</span></li>`).join('')
             : '<li><span class="text-secondary fw-normal">Nessuna passiva.</span></li>';
     }
+}
+
+// ==========================================
+// TUTORIAL INTRO.JS
+// ==========================================
+function startTutorial() {
+    localStorage.setItem('tutorial_simulator_seen', 'true');
+
+    introJs().setOptions({
+        nextLabel: 'Avanti →',
+        prevLabel: '← Indietro',
+        doneLabel: 'Al calcolo! 🧮',
+        showStepNumbers: true,
+        showBullets: true,
+        overlayOpacity: 0.8,
+        scrollTo: 'tooltip',
+        steps: [
+            {
+                intro: "<div style='text-align: center;'>" +
+                    "<h4 class='text-primary fw-bold mb-3' style='text-transform: uppercase; letter-spacing: 1px;'>⚡ Simulatore 1vs1</h4>" +
+                    "<p>Benvenuto nel laboratorio di calcolo!<br><br>" +
+                    "Qui puoi analizzare matematicamente ogni singola mossa del gioco per scoprire esattamente quanti danni infliggerà in uno scontro diretto.</p>" +
+                    "</div>"
+            },
+            {
+                element: document.getElementById('tour-datasource'),
+                intro: "<div style='text-align: center;'>" +
+                    "<h5 class='text-warning fw-bold mb-3' style='text-transform: uppercase;'>⚖️ La Regola d'Oro</h5>" +
+                    "<p>Questa scelta cambierà totalmente i risultati:<br><br>" +
+                    "🎒 <strong>Collezione:</strong> I danni sono altissimi perché includono le statistiche fornite dai tuoi <strong>Equipaggiamenti</strong>.<br><br>" +
+                    "🔥 <strong>MAX:</strong> Porta le mosse al massimo (Lv.10), ma usa le statistiche base del personaggio <strong>nude, senza equipaggiamenti</strong>.</p>" +
+                    "<p style='font-size:0.9rem; color:#d32f2f; margin-top:10px;'><em>Perché i danni MAX sono più bassi? Perché serve appositamente per confrontare le abilità assolute delle mosse in modo pulito e imparziale, per studiare chi vince i vari matchup!</em></p>" +
+                    "</div>",
+                position: 'bottom'
+            },
+            {
+                element: document.getElementById('tour-settings'),
+                intro: "<div style='text-align: center;'>" +
+                    "<h5 class='text-info fw-bold mb-3' style='text-transform: uppercase;'>⚙️ Imposta lo Scontro</h5>" +
+                    "<p>Seleziona un personaggio e una tecnica.<br><br>" +
+                    "Puoi variare il livello della mossa, simulare il <strong>Moltiplicatore Ruolo</strong> del personaggio (S, A, B) e impostare il <strong>Vantaggio di Tipo</strong> elementale per simulare condizioni specifiche in campo.</p>" +
+                    "</div>",
+                position: 'right'
+            },
+            {
+                element: document.getElementById('tour-results'),
+                intro: "<div style='text-align: center;'>" +
+                    "<h5 class='text-success fw-bold mb-3' style='text-transform: uppercase;'>📊 La Matematica</h5>" +
+                    "<p>In questa colonna avviene la magia!<br><br>" +
+                    "Il sistema ti mostrerà il <strong>Danno Finale Stimato</strong> ricreando l'esatta equazione che usa il gioco, rispettando tutti i troncamenti algebrici intermedi.<br><br>" +
+                    "Più sotto, potrai analizzare pezzo per pezzo quali passive si sono attivate. Buono studio!</p>" +
+                    "</div>",
+                position: 'left'
+            }
+        ]
+    }).start();
 }
 
 document.addEventListener('DOMContentLoaded', init);

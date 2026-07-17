@@ -24,7 +24,7 @@ const navbarHTML = `
                 <a href="stats.html"><i class="fas fa-chart-bar me-1"></i> Database Statistiche</a>
                 <a href="passive.html"><i class="fas fa-book-open me-1"></i> Database Passive</a>
                 <a href="techniques.html"><i class="fas fa-fire me-1"></i> Database Tecniche</a>
-                <a href="coaches.html"><i class="fas fa-user-tie me-1"></i> Allenatori</a>
+                <a href="coaches.html"><i class="fas fa-user-tie me-1"></i> Database Allenatori</a>
             </div>
         </div>
 

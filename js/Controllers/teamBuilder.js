@@ -83,11 +83,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('btn-remove-player').addEventListener('click', removePlayerFromSlot);
 
+        // Collegamento tasto Tutorial
+        const btnTutorial = document.getElementById('btn-tutorial');
+        if (btnTutorial) btnTutorial.addEventListener('click', startTutorial);
+
         if (!currentCoachId || !coachRegistry.some(c => c.id === currentCoachId)) {
             currentCoachId = 'percivalTravis';
         }
         await selectCoach(currentCoachId);
         applyFilters();
+
+        // Avvio tutorial automatico
+        if (!localStorage.getItem('tutorial_teambuilder_seen')) {
+            setTimeout(startTutorial, 800);
+        }
     }, 100);
 });
 
@@ -194,7 +203,7 @@ async function selectCoach(id) {
 }
 
 // ==========================================
-// INTERAZIONE CAMPO
+// INTERAZIONE CAMPO E GIOCATORI
 // ==========================================
 function renderPitch() {
     const pitchContainer = document.getElementById('pitch-container');
@@ -325,4 +334,57 @@ function removePlayerFromSlot() {
         renderPlayerGrid(lastFilteredList);
         toggleRemoveButton();
     }
+}
+
+// ==========================================
+// TUTORIAL INTRO.JS
+// ==========================================
+function startTutorial() {
+    localStorage.setItem('tutorial_teambuilder_seen', 'true');
+
+    introJs().setOptions({
+        nextLabel: 'Avanti →',
+        prevLabel: '← Indietro',
+        doneLabel: 'Costruiamo! ⚽',
+        showStepNumbers: true,
+        showBullets: true,
+        overlayOpacity: 0.8,
+        scrollTo: 'tooltip',
+        steps: [
+            {
+                intro: "<div style='text-align: center;'>" +
+                    "<h4 class='text-primary fw-bold mb-3' style='text-transform: uppercase; letter-spacing: 1px;'>📋 Team Builder</h4>" +
+                    "<p>Benvenuto nel creatore di formazioni!<br><br>" +
+                    "Qui puoi costruire il tuo <strong>Team</strong>, verificare le sinergie visive e studiare i requisiti dell'allenatore.</p>" +
+                    "</div>"
+            },
+            {
+                element: document.querySelector('.sidebar-left'),
+                intro: "<div style='text-align: center;'>" +
+                    "<h5 class='text-info fw-bold mb-3' style='text-transform: uppercase;'>👔 Scegli l'Allenatore</h5>" +
+                    "<p>Tutto parte da qui!<br><br>Seleziona un allenatore per caricare immediatamente la sua <strong>formazione base</strong> sul campo centrale.</p>" +
+                    "</div>",
+                position: 'right'
+            },
+            {
+                element: document.querySelector('.sidebar-right'),
+                intro: "<div style='text-align: center;'>" +
+                    "<h5 class='text-warning fw-bold mb-3' style='text-transform: uppercase;'>🔍 Trova i Giocatori</h5>" +
+                    "<p>Usa i filtri o la barra di ricerca per trovare i giocatori perfetti per la tua strategia.<br><br>Fai molta attenzione al riquadro scuro delle <strong>Condizioni Allenatore</strong> se vuoi massimizzare le passive!</p>" +
+                    "</div>",
+                position: 'left'
+            },
+            {
+                element: document.querySelector('.pitch-container-wrapper'),
+                intro: "<div style='text-align: center;'>" +
+                    "<h5 class='text-success fw-bold mb-3' style='text-transform: uppercase;'>⚽ Schiera la Squadra</h5>" +
+                    "<p>Il sistema di assegnazione è semplicissimo:<br><br>" +
+                    "1️⃣ Clicca su un <strong>giocatore</strong> a destra.<br>" +
+                    "2️⃣ Clicca su uno <strong>slot vuoto</strong> sul campo per posizionarlo.<br><br>" +
+                    "Vuoi scambiare due giocatori in campo? Ti basta <strong>cliccare prima l'uno e poi l'altro!</strong></p>" +
+                    "</div>",
+                position: 'top'
+            }
+        ]
+    }).start();
 }

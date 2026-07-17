@@ -426,36 +426,42 @@ class AppController {
         this.lastResult = null;
     }
 
+    // ==========================================
+    // TUTORIAL INTRO.JS (GUIDA INTERATTIVA + STILE NUOVO)
+    // ==========================================
     startTutorial() {
-        // Segniamo che il tutorial è stato visto
         localStorage.setItem('tutorial_sim_seen', 'true');
 
         introJs().setOptions({
             nextLabel: 'Avanti →',
             prevLabel: '← Indietro',
-            doneLabel: 'Ho capito!',
+            doneLabel: 'Ho capito! 🚀',
             showStepNumbers: true,
-            showBullets: false,
-            overlayOpacity: 0.7,
+            showBullets: true,
+            overlayOpacity: 0.8,
             steps: [
                 {
-                    intro: "⚔️ <strong>Benvenuto nel Simulatore 5vs1!</strong><br><br>Qui puoi testare i danni della tua squadra contro i Boss Evento, usando i giocatori della tua Collezione."
+                    intro: "<div style='text-align: center;'><h4 class='text-primary fw-bold mb-3' style='text-transform: uppercase; letter-spacing: 1px;'>⚡ Simulatore 5vs1</h4><p>Benvenuto nella modalità <strong>Chain Simulator</strong>!<br><br>Qui puoi testare i danni della tua squadra contro i Boss Evento, usando direttamente i giocatori salvati nella tua <strong>Collezione</strong>.</p></div>"
                 },
                 {
                     element: document.querySelector('.stage-config'),
-                    intro: "⚙️ <strong>Impostazioni Sfida</strong><br>Scegli la modalità (Attacco/Difesa) e l'elemento dell'Avversario. Il sistema calcolerà automaticamente i vantaggi elementali e le soglie di vittoria!"
+                    intro: "<div><h5 class='text-warning fw-bold mb-2' style='text-transform: uppercase;'>⚙️ Impostazioni Sfida</h5><p class='mb-0'>Scegli la fase (Attacco/Difesa) e l'elemento dell'Avversario.<br>Il sistema calcolerà in automatico i <strong>vantaggi elementali</strong> e i bonus dello stage per la mappa!</p></div>",
+                    position: 'bottom'
                 },
                 {
                     element: document.getElementById('btn-optimize'),
-                    intro: "⚡ <strong>Auto-Ottimizza</strong><br>Non sai chi schierare? Clicca qui e il sistema analizzerà tutta la tua Collezione per trovarti matematicamente le 5 migliori formazioni possibili!"
+                    intro: "<div><h5 class='text-success fw-bold mb-2' style='text-transform: uppercase;'>🤖 Auto-Ottimizza</h5><p class='mb-0'>Non sai chi schierare?<br>Premi questo pulsante e l'algoritmo analizzerà tutta la tua Collezione per scovare matematicamente le <strong>5 migliori formazioni possibili</strong> in base alle sinergie!</p></div>",
+                    position: 'bottom'
                 },
                 {
                     element: document.getElementById('teamGrid'),
-                    intro: "⚽ <strong>La tua Squadra</strong><br>Seleziona manualmente i tuoi giocatori in questi slot. Il sistema applicherà in automatico i livelli, le mosse e le passive che hai salvato in Collezione."
+                    intro: "<div><h5 class='text-info fw-bold mb-2' style='text-transform: uppercase;'>⚽ La Tua Squadra</h5><p class='mb-0'>Se preferisci inserire i giocatori a mano, selezionali in questi slot.<br>Verranno caricati istantaneamente i <strong>livelli, le mosse e le passive</strong> che hai salvato in Collezione.</p></div>",
+                    position: 'top'
                 },
                 {
                     element: document.querySelector('.global-results'),
-                    intro: "📊 <strong>Risultato Finale</strong><br>Qui vedrai il Danno Combinato totale e lo Score Finale con i moltiplicatori applicati se hai superato la soglia di vittoria. Clicca sulle i vicino ai danni dei singoli per vedere i calcoli dettagliati!"
+                    intro: "<div><h5 class='text-danger fw-bold mb-2' style='text-transform: uppercase;'>📊 Risultato e Dettagli</h5><p class='mb-0'>Scopri se hai superato le <strong>Soglie di Vittoria</strong>.<br>Clicca sulle icone <i class='fas fa-info-circle text-info'></i> vicino ai danni per ispezionare tutta la matematica dietro al calcolo del singolo personaggio!</p></div>",
+                    position: 'top'
                 }
             ]
         }).start();

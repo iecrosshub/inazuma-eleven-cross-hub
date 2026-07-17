@@ -1,7 +1,8 @@
 // js/Controllers/character.js
 
 import { characterRegistry, getPopulatedCharacter, rerollPassivesByRole } from '../Core/database.js';
-import { getUrlParam, getAdjacentCharacterId, parsePassiveText, extractPosition } from '../Core/parsers.js';
+// Come vedi, non importiamo più getUrlParam, gestiamo l'URL direttamente qui dentro!
+import { getAdjacentCharacterId, parsePassiveText, extractPosition } from '../Core/parsers.js';
 import { calcolaStatisticheEsatte } from '../Core/calculator.js';
 
 let db = {};
@@ -12,7 +13,24 @@ let currentId = '';
 // ==========================================
 
 async function init() {
-    currentId = getUrlParam('id') || localStorage.getItem('selectedChar') || 'byronLoveZeus';
+    // 1. CATTURA DELL'URL IN MODO INFALLIBILE
+    const currentUrl = new URL(window.location.href);
+    let clickedId = currentUrl.searchParams.get('id');
+
+    // DEBUG: Stampiamo nella console (F12) cosa sta leggendo il browser
+    console.log("Lettura URL completo:", currentUrl.href);
+    console.log("ID trovato nell'indirizzo:", clickedId);
+
+    // 2. ASSEGNAZIONE PRIORITÀ
+    if (clickedId && clickedId.trim() !== "") {
+        currentId = clickedId;
+        console.log("-> Uso il personaggio cliccato dall'URL:", currentId);
+    } else {
+        currentId = localStorage.getItem('selectedChar') || 'byronLoveZeus';
+        console.log("-> Indirizzo vuoto. Carico il personaggio dalla memoria:", currentId);
+    }
+
+    // 3. AGGIORNAMENTO DELLA MEMORIA
     localStorage.setItem('selectedChar', currentId);
 
     try {
@@ -118,7 +136,6 @@ function renderStats(db, level) {
     };
 
     Object.entries(db.stats).forEach(([key, data]) => {
-        // Se c'è un'icona definita direttamente nel data.icon (vecchio formato), la usiamo, altrimenti usiamo la mappa
         const iconSrc = icons[key] || data.icon || '';
 
         statsList.innerHTML += `
