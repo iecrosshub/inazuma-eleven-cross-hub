@@ -12,7 +12,12 @@ class CollectionApp {
         this.auth = new AuthManager();
         this.collectionData = {};
         this.hasUnsavedChanges = false;
+
+        // --- NUOVE VARIABILI DI SICUREZZA ---
         this.isGridRendered = false;
+        this.isCloudDataLoaded = false;
+        this.isFullyReady = false;
+
         this.loadedCharacters = {};
         this.init();
 
@@ -372,6 +377,11 @@ class CollectionApp {
             logoutBtn.style.display = 'inline-block';
             saveBtn.style.display = 'inline-block';
             greeting.textContent = `Collezione di ${user.displayName}`;
+
+            // DISABILITIAMO IL TASTO MENTRE CARICA
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i> Caricamento in corso...`;
+
             this.loadFromCloud();
         } else {
             loginBtn.style.display = 'inline-block';
@@ -379,7 +389,9 @@ class CollectionApp {
             saveBtn.style.display = 'none';
             greeting.textContent = "Accedi per salvare la tua collezione";
             this.collectionData = {};
-            this.applySavedDataToUI(true);
+
+            this.isCloudDataLoaded = true; // Se non è loggato, non c'è nulla da aspettare dal cloud
+            this.checkReadyState();
         }
     }
 
@@ -413,11 +425,14 @@ class CollectionApp {
                 this.collectionData = {};
             }
 
-            if (this.isGridRendered) {
-                this.applySavedDataToUI();
-            }
+            // COMUNICHIAMO CHE IL CLOUD HA FINITO
+            this.isCloudDataLoaded = true;
+            this.checkReadyState();
+
         } catch (error) {
             console.error("Errore nel caricamento dal cloud:", error);
+            this.isCloudDataLoaded = true;
+            this.checkReadyState(); // Evitiamo che resti bloccato all'infinito in caso di errore
         }
     }
 
@@ -444,12 +459,28 @@ class CollectionApp {
             }
         });
 
+        // COMUNICHIAMO CHE LA GRAFICA HA FINITO
         this.isGridRendered = true;
-        this.applySavedDataToUI();
+        this.checkReadyState();
 
-        // --- AGGIUNTA: Avvia il tutorial solo ORA che le card esistono ---
         if (!localStorage.getItem('tutorial_collection_seen')) {
             this.startTutorial();
+        }
+    }
+
+    // --- NUOVO METODO: IL DIRETTORE D'ORCHESTRA ---
+    checkReadyState() {
+        // Applica i dati all'UI solo se ENTRAMBI i processi (grafica e cloud) hanno finito!
+        if (this.isGridRendered && this.isCloudDataLoaded) {
+            this.applySavedDataToUI();
+
+            const saveBtn = document.getElementById('btn-save-cloud');
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = `<i class="fas fa-cloud-upload-alt me-2"></i> Salva nel Cloud`;
+            }
+
+            this.isFullyReady = true;
         }
     }
 
@@ -630,7 +661,6 @@ class CollectionApp {
                         <div class="d-flex flex-wrap gap-1 mt-2 mb-2">
                             ${tagsHtml}
                         </div>
-                        <!-- TASTO AGGIUNTO PER LA SCHEDA DEL SINGOLO GIOCATORE -->
                         <a href="#" onclick="event.preventDefault(); window.location.href = (window.location.pathname.includes('.html') ? 'character.html' : 'character') + '?id=${baseChar.id}';" class="btn btn-sm btn-outline-info w-100 fw-bold tutorial-detail-btn" style="font-size: 0.8rem; text-transform: uppercase;">
                             <i class="fas fa-id-card me-1"></i> Scheda Dettagliata
                         </a>
@@ -852,6 +882,12 @@ class CollectionApp {
     }
 
     async saveToCloud() {
+        // --- CONTROLLO DI SICUREZZA ---
+        if (!this.isFullyReady) {
+            alert("Attendi il completamento del caricamento della pagina prima di salvare!");
+            return false;
+        }
+
         if (!this.auth.user) {
             alert("Devi essere loggato per salvare!");
             return false;
@@ -898,7 +934,6 @@ class CollectionApp {
             const fullData = this.loadedCharacters[charId];
             const baseChar = characterRegistry.find(c => c.id === charId);
 
-            // Calcolo della rarità di default basata sulle stelle (1, 2 = 0; 3 = 2)
             const defaultRarity = (baseChar && baseChar.stars === 3) ? 2 : 0;
 
             if (resetToDefault || !data) {
@@ -999,12 +1034,6 @@ class CollectionApp {
         }, 100);
     }
 
-    // ==========================================
-    // TUTORIAL INTRO.JS (NUOVO STILE CENTRATO)
-    // ==========================================
-    // ==========================================
-    // TUTORIAL INTRO.JS (GUIDA INTERATTIVA + STILE NUOVO)
-    // ==========================================
     startTutorial() {
         localStorage.setItem('tutorial_collection_seen', 'true');
 
@@ -1018,7 +1047,6 @@ class CollectionApp {
             scrollTo: 'tooltip',
             steps: [
                 {
-                    // Nessun elemento, appare al centro per dare il benvenuto
                     intro: "<div style='text-align: center;'><h4 class='text-primary fw-bold mb-3' style='text-transform: uppercase; letter-spacing: 1px;'>🎒 La Tua Collezione</h4><p>Benvenuto nel cuore del tuo account!<br><br>Qui puoi registrare i giocatori che hai sbloccato nel gioco, impostare i loro livelli e preparare il tuo roster per i simulatori.</p></div>"
                 },
                 {
