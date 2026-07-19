@@ -1,30 +1,23 @@
-// js/Controllers/collection.js
-
 import { characterRegistry, techniquesLibrary, passivesLibrary, universalManualsKeys, rerollPassivesByRole } from '../Core/database.js';
 import { getRarityTier, getLevelTier, extractPosition } from '../Core/parsers.js';
 import { filterCharacters } from '../Core/roster.js';
 import { AuthManager } from '../Services/auth.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 import { calcolaStatisticheEsatte } from '../Core/calculator.js';
+import { showProfileSetupModal } from '../Components/profileModal.js';
+import { showProfileEditModal } from '../Components/profileSettings.js';
 
 class CollectionApp {
     constructor() {
         this.auth = new AuthManager();
         this.collectionData = {};
         this.hasUnsavedChanges = false;
-
-        // --- NUOVE VARIABILI DI SICUREZZA ---
         this.isGridRendered = false;
         this.isCloudDataLoaded = false;
         this.isFullyReady = false;
-
         this.loadedCharacters = {};
-        this.init();
 
-        // Controllo se è la prima volta che l'utente entra nella Collezione
-        if (!localStorage.getItem('tutorial_collection_seen')) {
-            setTimeout(() => this.startTutorial(), 500);
-        }
+        this.init();
     }
 
     setupCoreMembers() {
@@ -198,6 +191,12 @@ class CollectionApp {
         document.getElementById('btn-save-cloud').addEventListener('click', () => this.saveToCloud());
         document.getElementById('btn-tutorial').addEventListener('click', () => this.startTutorial());
 
+        window.addEventListener('open-profile-settings', () => {
+            if (this.auth && this.auth.user) {
+                showProfileEditModal(this.auth.user, this.auth);
+            }
+        });
+
         this.setupCustomSelects();
         this.restoreFilters();
 
@@ -263,7 +262,10 @@ class CollectionApp {
             });
         }
 
-        this.auth.setAuthStateListener((user) => this.handleAuthState(user));
+        this.auth.setAuthStateListener(
+            (user) => this.handleAuthState(user),
+            (user) => showProfileSetupModal(user, this.auth)
+        );
         this.renderCollectionGrid();
 
         this.setupUnsavedTracking();
@@ -376,9 +378,11 @@ class CollectionApp {
             loginBtn.style.display = 'none';
             logoutBtn.style.display = 'inline-block';
             saveBtn.style.display = 'inline-block';
-            greeting.textContent = `Collezione di ${user.displayName}`;
 
-            // DISABILITIAMO IL TASTO MENTRE CARICA
+            const profile = this.auth.getCurrentProfile();
+            const displayNickname = profile && profile.nickname ? profile.nickname : user.displayName;
+            greeting.textContent = `Collezione di ${displayNickname}`;
+
             saveBtn.disabled = true;
             saveBtn.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i> Caricamento in corso...`;
 
@@ -390,7 +394,7 @@ class CollectionApp {
             greeting.textContent = "Accedi per salvare la tua collezione";
             this.collectionData = {};
 
-            this.isCloudDataLoaded = true; // Se non è loggato, non c'è nulla da aspettare dal cloud
+            this.isCloudDataLoaded = true;
             this.checkReadyState();
         }
     }
@@ -425,14 +429,13 @@ class CollectionApp {
                 this.collectionData = {};
             }
 
-            // COMUNICHIAMO CHE IL CLOUD HA FINITO
             this.isCloudDataLoaded = true;
             this.checkReadyState();
 
         } catch (error) {
             console.error("Errore nel caricamento dal cloud:", error);
             this.isCloudDataLoaded = true;
-            this.checkReadyState(); // Evitiamo che resti bloccato all'infinito in caso di errore
+            this.checkReadyState();
         }
     }
 
@@ -459,18 +462,15 @@ class CollectionApp {
             }
         });
 
-        // COMUNICHIAMO CHE LA GRAFICA HA FINITO
         this.isGridRendered = true;
         this.checkReadyState();
 
         if (!localStorage.getItem('tutorial_collection_seen')) {
-            this.startTutorial();
+            setTimeout(() => this.startTutorial(), 300);
         }
     }
 
-    // --- NUOVO METODO: IL DIRETTORE D'ORCHESTRA ---
     checkReadyState() {
-        // Applica i dati all'UI solo se ENTRAMBI i processi (grafica e cloud) hanno finito!
         if (this.isGridRendered && this.isCloudDataLoaded) {
             this.applySavedDataToUI();
 
@@ -569,7 +569,13 @@ class CollectionApp {
         col.className = 'col-12 col-md-6 col-xl-4 collection-item-wrapper';
         col.dataset.charId = baseChar.id;
 
-        const tagsHtml = (fullData.tags || []).map(tagUrl => `<img src="${tagUrl}" class="tag-icon-small" alt="tag">`).join('');
+        // --- RISOLUZIONE INTELLIGENTE DEI PERCORSI IMMAGINI ---
+        const resolvePath = (file, folder) => {
+            if (!file) return '';
+            return file.includes('/') ? file : `img/${folder}/${file}`;
+        };
+
+        const tagsHtml = (fullData.tags || []).map(tagUrl => `<img src="${resolvePath(tagUrl, 'TagTitle')}" class="tag-icon-small" alt="tag">`).join('');
 
         const statIcons = {
             "Tiro": "img/Status/Icon_Status_Kick.png",
@@ -587,10 +593,13 @@ class CollectionApp {
                 const tDef = techniquesLibrary[mKey];
                 if (tDef) {
                     const sbBadge = tDef.shootBlock ? `<span class="badge bg-danger ms-1 px-1 py-0" style="font-size:0.6rem; flex-shrink:0;" title="Shoot Block">SB</span>` : '';
+                    const iconPath = resolvePath(tDef.icon, 'MoveSkill');
+                    const elPath = resolvePath(tDef.elementIcon, 'Element');
+
                     manualOptionsCustomHtml += `
                         <div data-value="${mKey}" title="${tDef.name}" style="display:flex; align-items:center; gap: 4px; padding: 6px 10px; color: #f8f9fa; border-bottom: 1px solid #444; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">
-                            <img src="${tDef.icon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
-                            <img src="${tDef.elementIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
+                            <img src="${iconPath}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
+                            <img src="${elPath}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
                             <span class="text-truncate">${tDef.name}</span>${sbBadge}
                         </div>`;
                 }
@@ -600,8 +609,8 @@ class CollectionApp {
         const nativeTechsHtml = fullData.myTechniques.map(techKey => {
             const techDef = techniquesLibrary[techKey];
             const tName = techDef?.name || techKey;
-            const typeIcon = techDef?.icon || '';
-            const elIcon = techDef?.elementIcon || '';
+            const typeIcon = resolvePath(techDef?.icon, 'MoveSkill');
+            const elIcon = resolvePath(techDef?.elementIcon, 'Element');
             const sbBadge = techDef?.shootBlock ? `<span class="badge bg-danger ms-1 px-1 py-0" style="font-size:0.65rem; flex-shrink:0;" title="Shoot Block">SB</span>` : '';
 
             return `
@@ -640,6 +649,10 @@ class CollectionApp {
             `;
         }
 
+        const thumbPath = resolvePath(baseChar.thumb, 'Characters');
+        const elementPath = resolvePath(fullData.element, 'Element');
+        const positionPath = resolvePath(fullData.position, 'Position');
+
         let html = `
             <div class="collection-card owned" id="card-${baseChar.id}">
                 
@@ -652,12 +665,12 @@ class CollectionApp {
 
                 <div class="d-flex align-items-start mb-3 border-bottom border-secondary pb-2">
                     <div class="position-relative me-3">
-                        <img src="${baseChar.thumb}" class="char-thumb" alt="thumb">
-                        <img src="${fullData.element}" class="position-absolute" style="width: 24px; bottom: -6px; right: -6px;">
+                        <img src="${thumbPath}" class="char-thumb" alt="thumb">
+                        <img src="${elementPath}" class="position-absolute" style="width: 24px; bottom: -6px; right: -6px;">
                     </div>
                     <div style="flex-grow: 1;">
                         <strong style="color: #ffca28; font-size: 1.1rem;">${baseChar.name}</strong><br>
-                        <img src="${fullData.position}" style="height: 18px; margin-top: 2px;">
+                        <img src="${positionPath}" style="height: 18px; margin-top: 2px;">
                         <div class="d-flex flex-wrap gap-1 mt-2 mb-2">
                             ${tagsHtml}
                         </div>
@@ -882,7 +895,6 @@ class CollectionApp {
     }
 
     async saveToCloud() {
-        // --- CONTROLLO DI SICUREZZA ---
         if (!this.isFullyReady) {
             alert("Attendi il completamento del caricamento della pagina prima di salvare!");
             return false;
@@ -1036,6 +1048,7 @@ class CollectionApp {
 
     startTutorial() {
         localStorage.setItem('tutorial_collection_seen', 'true');
+        const firstCard = document.querySelector('.collection-item-wrapper');
 
         introJs().setOptions({
             nextLabel: 'Avanti →',
@@ -1060,9 +1073,9 @@ class CollectionApp {
                     position: 'top'
                 },
                 {
-                    element: document.getElementById('collection-grid'),
+                    element: firstCard ? firstCard : document.getElementById('collection-grid'),
                     intro: "<div><h5 class='text-info fw-bold mb-2' style='text-transform: uppercase;'>📋 Le Carte Giocatore</h5><p class='mb-0'>Usa l'interruttore <strong style='color: #0b1a42;'>POSSEDUTO</strong> per sbloccare la scheda di un giocatore.<br>Potrai insegnargli i manuali, alzare il livello delle mosse, modificare la Rarità e assegnare le <strong>Passive di Reroll</strong>!</p></div>",
-                    position: 'top'
+                    position: 'bottom'
                 },
                 {
                     element: document.getElementById('filter-calc'),

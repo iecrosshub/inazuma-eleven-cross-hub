@@ -1,7 +1,7 @@
 export const rerollPassivesGK = [
     {
-        title: "Potenza di Cattura + (Generica) [キャッチパワー＋]",
-        id: "REROLL_GK_CATCH_POWER",
+        title: "Potenza Portiere + (Generica) [キーパーパワー＋]",
+        id: "REROLL_GK_KEEPER_POWER",
         template: "Aumenta la potenza delle tecniche di Parata di {VAL}.",
         levels: [
             { val: 2, req: "Livello 1" },
@@ -22,8 +22,8 @@ export const rerollPassivesGK = [
         ]
     },
     {
-        title: "Potenza di Cattura + (Fuoco) [キャッチパワー＋〈火〉]",
-        id: "REROLL_GK_CATCH_POWER_FIRE",
+        title: "Potenza Portiere + (Fuoco) [キーパーパワー＋〈火〉]",
+        id: "REROLL_GK_KEEPER_POWER_FIRE",
         template: "Aumenta la potenza delle tecniche di Parata di elemento Fuoco di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
@@ -40,12 +40,12 @@ export const rerollPassivesGK = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Parata", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
-        title: "Potenza di Cattura + (Montagna) [キャッチパワー＋〈山〉]",
-        id: "REROLL_GK_CATCH_POWER_MOUNTAIN",
+        title: "Potenza Portiere + (Montagna) [キーパーパワー＋〈山〉]",
+        id: "REROLL_GK_KEEPER_POWER_MOUNTAIN",
         template: "Aumenta la potenza delle tecniche di Parata di elemento Montagna di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
@@ -62,12 +62,12 @@ export const rerollPassivesGK = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Parata", moveElement: "Mountain", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: "Mountain", valueRef: "val" }
         ]
     },
     {
-        title: "Potenza di Cattura + (Vento) [キャッチパワー＋〈風〉]",
-        id: "REROLL_GK_CATCH_POWER_WIND",
+        title: "Potenza Portiere + (Vento) [キーパーパワー＋〈風〉]",
+        id: "REROLL_GK_KEEPER_POWER_WIND",
         template: "Aumenta la potenza delle tecniche di Parata di elemento Vento di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
@@ -84,12 +84,12 @@ export const rerollPassivesGK = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Parata", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
-        title: "Potenza di Cattura + (Foresta) [キャッチパワー＋〈林〉]",
-        id: "REROLL_GK_CATCH_POWER_FOREST",
+        title: "Potenza Portiere + (Foresta) [キーパーパワー＋〈林〉]",
+        id: "REROLL_GK_KEEPER_POWER_FOREST",
         template: "Aumenta la potenza delle tecniche di Parata di elemento Foresta di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
@@ -106,7 +106,7 @@ export const rerollPassivesGK = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Parata", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {

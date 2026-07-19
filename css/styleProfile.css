@@ -1,0 +1,92 @@
+/* css/styleProfile.css */
+
+/* Overlay e Modale */
+.profile-modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(11, 26, 66, 0.85);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(6px);
+}
+
+.profile-modal-card {
+    background: #1a1e24;
+    color: white;
+    border: 2px solid #2e2e38;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-modal-header {
+    background-color: #0b1a42;
+    border-bottom: 2px solid #ffca28;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Contenitore delle Icone (Avatar, Ruolo, Elemento) */
+.profile-selector-box {
+    background-color: #121212;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Stile base icone cliccabili */
+.profile-icon {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 4px;
+    background-color: transparent;
+}
+
+/* Arrotondamento specifico per elementi (se le tue icone sono tonde) */
+.profile-icon.element-icon {
+    border-radius: 50%;
+}
+
+/* Hover (Passaggio del mouse) */
+.profile-icon:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Stato Attivo (Selezionato) */
+.profile-icon.selected {
+    border-color: #198754 !important; /* Verde Successo */
+    background-color: rgba(25, 135, 84, 0.15);
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(25, 135, 84, 0.6);
+}
+
+/* Scrollbar personalizzata per il box avatar */
+.profile-selector-box::-webkit-scrollbar {
+    width: 8px;
+}
+.profile-selector-box::-webkit-scrollbar-track {
+    background: #1a1e24;
+    border-radius: 4px;
+}
+.profile-selector-box::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+.profile-selector-box::-webkit-scrollbar-thumb:hover {
+    background: #ffca28;
+}

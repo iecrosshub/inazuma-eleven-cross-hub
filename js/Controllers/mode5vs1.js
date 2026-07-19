@@ -1,11 +1,11 @@
-// js/Controllers/mode5vs1.js
-
 import { characterRegistry, passivesLibrary, techniquesLibrary } from '../Core/database.js';
 import { extractPosition, getDailyTrialConfig } from '../Core/parsers.js';
 import { calculateTeamDamage } from '../Core/calculator.js';
 import { AuthManager } from '../Services/auth.js';
 import { TrialOptimizer } from '../Core/trialOptimizer.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
+import { showProfileSetupModal } from '../Components/profileModal.js';
+import { showProfileEditModal } from '../Components/profileSettings.js';
 
 class AppController {
     constructor() {
@@ -18,7 +18,6 @@ class AppController {
         this.optimizer = new TrialOptimizer(this);
         this.init();
 
-        // Controllo se è la prima volta che l'utente entra nel Simulatore
         if (!localStorage.getItem('tutorial_sim_seen')) {
             setTimeout(() => this.startTutorial(), 500);
         }
@@ -38,11 +37,20 @@ class AppController {
         document.getElementById('btn-logout').addEventListener('click', () => this.auth.logout());
         document.getElementById('btn-optimize').addEventListener('click', () => this.optimizer.runOptimization());
 
-        // Aggiunto l'evento per il tasto "Guida"
         const tutorialBtn = document.getElementById('btn-tutorial');
         if (tutorialBtn) tutorialBtn.addEventListener('click', () => this.startTutorial());
 
-        this.auth.setAuthStateListener((user) => this.handleAuthState(user));
+        // Ascoltatore globale per l'apertura del profilo dalla Navbar
+        window.addEventListener('open-profile-settings', () => {
+            if (this.auth && this.auth.user) {
+                showProfileEditModal(this.auth.user, this.auth);
+            }
+        });
+
+        this.auth.setAuthStateListener(
+            (user) => this.handleAuthState(user),
+            (user) => showProfileSetupModal(user, this.auth)
+        );
     }
 
     setUISelectValue(selectId, value) {
@@ -426,9 +434,6 @@ class AppController {
         this.lastResult = null;
     }
 
-    // ==========================================
-    // TUTORIAL INTRO.JS (GUIDA INTERATTIVA + STILE NUOVO)
-    // ==========================================
     startTutorial() {
         localStorage.setItem('tutorial_sim_seen', 'true');
 

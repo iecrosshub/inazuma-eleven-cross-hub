@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1450">
+    <title>Community | Inazuma Eleven Cross</title>
+    <link rel="icon" type="image/png" href="img/IECross.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Link al nuovo CSS dedicato -->
+    <link rel="stylesheet" href="css/styleCommunity.css">
+</head>
+<body class="pb-5">
+
+<script type="module" src="js/Components/navbar.js"></script>
+<inazuma-navbar></inazuma-navbar>
+
+<div class="container-fixed py-4" style="width: 1000px !important; max-width: 1000px !important;">
+
+    <!-- TITOLO PAGINA CENTRATO -->
+    <h2 class="text-white text-center fw-bold mb-4 mt-3" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+        <i class="fas fa-satellite-dish"></i> BACHECA COMMUNITY
+    </h2>
+
+    <!-- NUOVA BARRA UTENTE (Stile Collezione) -->
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded" style="background: #0b1a42; border: 2px solid #ffca28; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+
+        <!-- Spaziatore invisibile a sinistra (serve per mantenere il testo perfettamente al centro) -->
+        <div style="flex: 1;"></div>
+
+        <!-- Testo Centrale -->
+        <div class="text-center" style="flex: 2;">
+            <h4 class="m-0 text-white fw-bold" id="user-greeting">Accedi per partecipare alla Community</h4>
+        </div>
+
+        <!-- Bottoni a destra -->
+        <div class="text-end" style="flex: 1;">
+            <button id="btn-login" class="btn btn-light px-4 fw-bold text-dark"><i class="fab fa-google me-2 text-danger"></i> Accedi con Google</button>
+            <button id="btn-logout" class="btn btn-outline-light px-4 fw-bold" style="display: none;">Esci</button>
+        </div>
+    </div>
+
+    <!-- BACHECA -->
+    <div class="board-container shadow">
+
+        <!-- HEADER -->
+        <div class="board-header">
+            <h4 class="m-0 fw-bold" style="color: #0b1a42;"><i class="fas fa-clipboard-list text-warning me-2"></i> Annunci Recenti</h4>
+            <div class="board-category">
+                <button class="category-btn active" data-filter="all">Tutti</button>
+                <button class="category-btn" data-filter="invite"><i class="fas fa-user-plus"></i> Codici Invito</button>
+                <button class="category-btn" data-filter="club"><i class="fas fa-users"></i> Reclutamento Club</button>
+            </div>
+        </div>
+
+        <!-- ZONA CREAZIONE POST -->
+        <div class="create-post-box" id="create-post-area" style="display:none;">
+            <h6 style="color: #0b1a42;">Pubblica un nuovo annuncio</h6>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <select id="post-type" class="form-select form-select-sm input-custom">
+                        <option value="invite">Codice Invito</option>
+                        <option value="club">Reclutamento Club</option>
+                    </select>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" id="post-code" class="form-control form-control-sm input-custom" placeholder="Inserisci qui il Codice (opzionale)">
+                </div>
+                <div class="col-12">
+                    <textarea id="post-text" class="form-control input-custom" rows="2" placeholder="Scrivi un breve messaggio (es. Aggiungetemi, gioco tutti i giorni!)" maxlength="150"></textarea>
+                    <div class="d-flex justify-content-between mt-2">
+                        <small class="text-info fw-bold"><span id="char-count">0</span>/150 caratteri</small>
+                        <button id="btn-publish" class="btn btn-info text-dark fw-bold px-4"><i class="fas fa-paper-plane me-1"></i> Pubblica</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ZONA UTENTE NON LOGGATO -->
+        <div id="login-prompt-area" class="text-center p-4">
+            <p class="fw-bold m-0 fs-5" style="color: #0b1a42;"><i class="fas fa-lock text-warning me-2"></i> Devi effettuare l'accesso per pubblicare un annuncio.</p>
+        </div>
+
+        <!-- LISTA POST (Si carica via JS) -->
+        <div class="post-list" id="post-container">
+            <!-- I post appariranno qui -->
+        </div>
+    </div>
+</div>
+
+<!-- INCOLLA QUESTO BLOCCO PRIMA DI community.js -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDJLzxu2tREehzZE79YAK7_TIq1G6lf4Rc",
+        authDomain: "inazumaelevencrosshub.firebaseapp.com",
+        projectId: "inazumaelevencrosshub",
+        storageBucket: "inazumaelevencrosshub.firebasestorage.app",
+        messagingSenderId: "100160386925",
+        appId: "1:100160386925:web:2f35aaacb877d70c9f4c64",
+        measurementId: "G-0R453LFDB0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(app);
+    window.googleProvider = new GoogleAuthProvider();
+    window.firebaseDb = getFirestore(app);
+    window.firebaseLogin = signInWithPopup;
+    window.firebaseLogout = signOut;
+    window.firebaseOnAuth = onAuthStateChanged;
+    window.dbDoc = doc;
+    window.dbSet = setDoc;
+    window.dbGet = getDoc;
+</script>
+
+<!-- QUESTO DEVE STARE SOTTO IL BLOCCO FIREBASE -->
+<script type="module" src="js/Controllers/community.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
