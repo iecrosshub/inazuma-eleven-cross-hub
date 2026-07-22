@@ -1,5 +1,3 @@
-// js/Components/navbar.js
-
 const navbarHTML = `
 <div class="inazuma-nav-container">
     <div class="inazuma-nav">
@@ -29,13 +27,12 @@ const navbarHTML = `
         <a href="community.html" class="inazuma-nav-item" id="nav-community-link" style="display: flex; align-items: center; gap: 6px;">
             Community
             <span id="community-badge" style="color: #FF3B30; font-size: 1rem; display: none; text-shadow: none;">
-                <i class="fas fa-comments"></i> <span style="font-size: 0.85rem; font-weight: 900; font-family: Arial, sans-serif;">1</span>
+                <i class="fas fa-circle"></i>
             </span>
         </a>
 
         <a href="collection.html" class="inazuma-nav-item" id="tour-collection">Collezione</a>
         
-        <!-- Tasto Profilo: ora ha lo stesso identico stile degli altri link -->
         <a href="#" class="inazuma-nav-item" id="btn-profile-settings" style="display: none;">
             <i class="fas fa-user-circle me-1"></i> Profilo
         </a>
@@ -47,7 +44,6 @@ class InazumaNavbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = navbarHTML;
 
-        // 1. Logica per evidenziare la pagina attiva
         let path = window.location.pathname.split('/').pop().split('?')[0].split('#')[0];
         let currentPage = path.replace('.html', '');
         if (currentPage === '' || currentPage === 'index' || currentPage === 'character') currentPage = 'index';
@@ -72,37 +68,52 @@ class InazumaNavbar extends HTMLElement {
             }
         });
 
-        // 2. Notifica Community
-        const communityLink = this.querySelector('#nav-community-link');
+        // 2. Controllo vero delle notifiche Community
         const communityBadge = this.querySelector('#community-badge');
-        if (communityLink && communityBadge) {
-            if (!localStorage.getItem('has_visited_community_v2')) {
-                communityBadge.style.display = 'inline-block';
-            }
-            communityLink.addEventListener('click', () => {
-                localStorage.setItem('has_visited_community_v2', 'true');
-                communityBadge.style.display = 'none';
-            });
-        }
 
-        // 3. Gestione Bottone Profilo (Connesso a Firebase)
+        const checkNewPosts = async () => {
+            if (window.firebaseDb && currentPage !== 'community') {
+                try {
+                    const { collection, query, orderBy, limit, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js");
+                    const postsRef = collection(window.firebaseDb, "community_posts");
+                    const q = query(postsRef, orderBy("createdAt", "desc"), limit(1));
+                    const snapshot = await getDocs(q);
+
+                    if (!snapshot.empty) {
+                        const latestPost = snapshot.docs[0].data();
+                        const latestTime = latestPost.createdAt ? latestPost.createdAt.toMillis() : 0;
+                        const lastVisit = parseInt(localStorage.getItem('last_community_visit') || '0');
+
+                        // Se c'è un post più recente dell'ultima visita, mostra il pallino
+                        if (latestTime > lastVisit) {
+                            communityBadge.style.display = 'inline-block';
+                        }
+                    }
+                } catch(e) { console.error("Errore notifica:", e); }
+            }
+        };
+
+        const fbInterval = setInterval(() => {
+            if(window.firebaseDb) {
+                clearInterval(fbInterval);
+                checkNewPosts();
+            }
+        }, 1000);
+
+        // 3. Gestione Profilo
         const profileBtn = this.querySelector('#btn-profile-settings');
         if (profileBtn) {
             profileBtn.addEventListener('click', (e) => {
-                e.preventDefault(); // Evita che la pagina scatti verso l'alto
+                e.preventDefault();
                 window.dispatchEvent(new CustomEvent('open-profile-settings'));
             });
 
             const checkFirebaseInterval = setInterval(() => {
                 if (window.firebaseOnAuth && window.firebaseAuth) {
                     clearInterval(checkFirebaseInterval);
-
                     window.firebaseOnAuth(window.firebaseAuth, (user) => {
-                        if (user) {
-                            profileBtn.style.display = 'inline-block';
-                        } else {
-                            profileBtn.style.display = 'none';
-                        }
+                        if (user) profileBtn.style.display = 'inline-block';
+                        else profileBtn.style.display = 'none';
                     });
                 }
             }, 200);
@@ -110,7 +121,6 @@ class InazumaNavbar extends HTMLElement {
     }
 }
 
-// Controllo per evitare l'errore "already been used with this registry"
 if (!customElements.get('inazuma-navbar')) {
     customElements.define('inazuma-navbar', InazumaNavbar);
 }

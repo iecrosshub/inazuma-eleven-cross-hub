@@ -439,5 +439,18 @@ export const shootLibrary = {
         crit: [6, 6, 6, 6, 9, 9, 9, 9, 9, 12],
         bonusCrit: [5, 5, 5, 5, 8, 8, 8, 8, 8, 11],
         chain: false
-    }
+    },
+
+    "インフェルノペンギン": {
+        name: "Pinguino Infernale (インフェルノペンギン)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        kind: "Tiro",
+        element: "Fuoco",
+        power: [114, 119, 124, 129, 134, 139, 144, 149, 154, 168],
+        tp: [55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
+        range: [29, 29, 29, 29, 29, 29, 29, 29, 29, 29],
+        crit: [3, 3, 3, 3, 8, 8, 8, 8, 8, 11],
+        chain: true
+    },
 };

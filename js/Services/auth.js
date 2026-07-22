@@ -209,8 +209,13 @@ export class AuthManager {
         }, { merge: true });
     }
 
-    // --- SCALATA RARITÀ BILANCIATA ---
+    // --- SCALATA RARITÀ BILANCIATA CON OVERRIDE ADMIN ---
     calculateRarity(exp) {
+        // REGOLA ASSOLUTA: Se sei l'Admin (LolloPassa), sei sempre al grado massimo!
+        if (this.user && this.user.uid === "avNoCAM4I5dyQL6zLY0phnt3fc92") {
+            return "Legendary Player +";
+        }
+
         if (exp >= 50000) return "Legendary Player +";
         if (exp >= 20000) return "Legendary Player";
         if (exp >= 10000) return "Top Player +";

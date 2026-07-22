@@ -79,8 +79,6 @@ export async function showProfileEditModal(user, authManager) {
                                 <img src="img/Element/Icon_Element_Wind.png" class="profile-icon element-icon element-option ${profile.element === 'Vento' ? 'selected' : ''}" data-val="Vento" title="Vento" style="width: 45px; height: 45px;">
                                 <img src="img/Element/Icon_Element_Forest.png" class="profile-icon element-icon element-option ${profile.element === 'Albero' ? 'selected' : ''}" data-val="Albero" title="Albero" style="width: 45px; height: 45px;">
                                 <img src="img/Element/Icon_Element_Mountain.png" class="profile-icon element-icon element-option ${profile.element === 'Montagna' ? 'selected' : ''}" data-val="Montagna" title="Montagna" style="width: 45px; height: 45px;">
-                                <!-- Se hai l'icona del Nulla scommenta la riga sotto -->
-                                <!-- <img src="img/Element/Icon_Element_Void.png" class="profile-icon element-icon element-option ${profile.element === 'Nulla' ? 'selected' : ''}" data-val="Nulla" title="Nulla" style="width: 45px; height: 45px;"> -->
                             </div>
                         </div>
                     </div>

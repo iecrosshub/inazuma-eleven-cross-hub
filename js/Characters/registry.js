@@ -1,6 +1,19 @@
 export const characterRegistry = [
 
     {
+        id: "axelBlazeRoyalAcademy",
+        name: "Axel Blaze RoyalAcademy",
+        romanizedName: "Gōenji Shūya",
+        japaneseName: "豪炎寺 修也",
+        thumb: "img/Characters/AxelBlazeRoyalAcademy.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
         id: "arionSherwindRaimonGO",
         name: "Arion Sherwind",
         romanizedName: "Matsukaze Tenma",

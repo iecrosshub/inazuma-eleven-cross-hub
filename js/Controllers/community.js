@@ -4,7 +4,9 @@ import { showProfileSetupModal } from '../Components/profileModal.js';
 import { showProfileEditModal } from '../Components/profileSettings.js';
 import { characterRegistry } from '../Core/database.js';
 
-const ADMIN_UID = "avNoCAM4I5dyQL6zLY0phnt3fc92";
+// --- GESTIONE DEI RUOLI ---
+const ADMIN_UID = "avNoCAM4I5dyQL6zLY0phnt3fc92"; // Tu (Creatore: onnipotente)
+const MODERATOR_UIDS = ["alqyEbbyuxNjej3yTJQDNthmtf32"]; // Il tuo nuovo Admin!
 
 class CommunityController {
     constructor() {
@@ -67,6 +69,21 @@ class CommunityController {
             });
         });
 
+        // Gestione Cambi di Categoria
+        this.postContainer.addEventListener('change', async (e) => {
+            if (e.target.classList.contains('move-category-select')) {
+                const postId = e.target.getAttribute('data-postid');
+                const newType = e.target.value;
+                const success = await this.board.updatePostCategory(postId, newType);
+                if (success) {
+                    this.loadPosts(); // Ricarica la bacheca per aggiornare i filtri
+                } else {
+                    alert("Errore durante lo spostamento di categoria.");
+                }
+            }
+        });
+
+        // Gestione Copia Codice ed Eliminazione
         this.postContainer.addEventListener('click', async (e) => {
             const copyBtn = e.target.closest('.copy-btn');
             if (copyBtn) {
@@ -85,7 +102,6 @@ class CommunityController {
             const deleteBtn = e.target.closest('.delete-btn');
             if (deleteBtn) {
                 const postId = deleteBtn.getAttribute('data-postid');
-
                 if(confirm("Sei sicuro di voler eliminare questo annuncio?")) {
                     const success = await this.board.deletePost(postId);
                     if (success) {
@@ -160,10 +176,10 @@ class CommunityController {
             }
         }
 
-        if (updated) {
-            const activeFilter = document.querySelector('.category-btn.active').dataset.filter;
-            this.renderPosts(activeFilter);
-        }
+        // RISOLTO: Ora disegna sempre i post, evitando il caricamento infinito!
+        const activeFilter = document.querySelector('.category-btn.active');
+        const filterValue = activeFilter ? activeFilter.dataset.filter : 'all';
+        this.renderPosts(filterValue);
     }
 
     async handlePublish() {
@@ -200,6 +216,9 @@ class CommunityController {
 
     async loadPosts() {
         this.postContainer.innerHTML = '<div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>';
+
+        localStorage.setItem('last_community_visit', Date.now().toString());
+
         this.allPosts = await this.board.fetchPosts();
 
         const profile = this.auth.getCurrentProfile();
@@ -226,13 +245,8 @@ class CommunityController {
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
 
-        if (diffDays === 0) {
-            return `Oggi alle ${hours}:${minutes}`;
-        }
-
-        if (diffDays === 1) {
-            return `Ieri alle ${hours}:${minutes}`;
-        }
+        if (diffDays === 0) return `Oggi alle ${hours}:${minutes}`;
+        if (diffDays === 1) return `Ieri alle ${hours}:${minutes}`;
 
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -260,14 +274,23 @@ class CommunityController {
         };
 
         filteredPosts.forEach(post => {
-            const isInvite = post.type === 'invite';
 
-            const cardClass = isInvite ? '' : 'club-card';
-            const tagClass = isInvite ? 'tag-invite' : 'tag-club';
-            const tagIcon = isInvite ? 'fa-user-plus' : 'fa-users';
-            const tagText = isInvite ? 'Codice Invito' : 'Reclutamento Club';
-            const codeBoxClass = isInvite ? '' : 'club-code';
-            const copyBtnClass = isInvite ? '' : 'club-btn';
+            let tagClass, tagIcon, tagText;
+            if (post.type === 'invite') {
+                tagClass = 'tag-invite'; tagIcon = 'fa-user-plus'; tagText = 'Codice Invito';
+            } else if (post.type === 'club') {
+                tagClass = 'tag-club'; tagIcon = 'fa-users'; tagText = 'Reclutamento Club';
+            } else if (post.type === 'general') {
+                tagClass = 'bg-primary text-white border-0 px-2 py-1 rounded shadow-sm'; tagIcon = 'fa-globe'; tagText = 'Generale';
+            } else if (post.type === 'feedback') {
+                tagClass = 'bg-danger text-white border-0 px-2 py-1 rounded shadow-sm'; tagIcon = 'fa-lightbulb'; tagText = 'Problemi / Consigli';
+            } else {
+                tagClass = 'bg-secondary text-white border-0 px-2 py-1 rounded'; tagIcon = 'fa-comment'; tagText = 'Altro';
+            }
+
+            const cardClass = 'club-card';
+            const codeBoxClass = post.type === 'invite' ? '' : 'club-code';
+            const copyBtnClass = post.type === 'invite' ? '' : 'club-btn';
 
             const safeMessage = post.message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -275,7 +298,9 @@ class CommunityController {
             if (post.authorAvatarId && post.authorAvatarId !== 'default') {
                 const baseChar = characterRegistry.find(c => c.id === post.authorAvatarId);
                 if (baseChar) {
-                    avatarHtml = `<img src="${baseChar.thumb}" class="post-user-avatar" alt="Avatar">`;
+                    let thumbPath = baseChar.thumb;
+                    if(!thumbPath.includes('/')) thumbPath = `img/Characters/${thumbPath}`;
+                    avatarHtml = `<img src="${thumbPath}" class="post-user-avatar" alt="Avatar" style="width: 55px; height: 55px; border-radius: 8px; border: 2px solid #ffca28; object-fit: cover;">`;
                 }
             }
 
@@ -283,28 +308,21 @@ class CommunityController {
             const elementIcon = `img/Element/Icon_Element_${elEng}.png`;
             const roleIcon = `img/Position/Icon_Position_${post.authorRole || 'FW'}.png`;
 
-            // NUOVA LOGICA COLORI RARITÀ UTENTE
-            let bgColor = "#198754"; // Normal Player: Verde
+            let bgColor = "#198754";
             let textColor = "#ffffff";
             let extraStyle = "";
 
             if (post.authorRarity) {
                 if (post.authorRarity.includes("Growing")) {
-                    bgColor = "#add8e6"; // Azzurrino
-                    textColor = "#000000";
+                    bgColor = "#add8e6"; textColor = "#000000";
                 } else if (post.authorRarity.includes("Advanced")) {
-                    bgColor = "#8a2be2"; // Viola
-                    textColor = "#ffffff";
+                    bgColor = "#8a2be2"; textColor = "#ffffff";
                 } else if (post.authorRarity.includes("Top")) {
-                    bgColor = "#fffacd"; // Giallo chiaro
-                    textColor = "#000000";
+                    bgColor = "#fffacd"; textColor = "#000000";
                 } else if (post.authorRarity === "Legendary Player") {
-                    bgColor = "#fd7e14"; // Arancione
-                    textColor = "#ffffff";
+                    bgColor = "#fd7e14"; textColor = "#ffffff";
                 } else if (post.authorRarity === "Legendary Player +") {
-                    bgColor = "transparent";
-                    textColor = "#ffffff";
-                    // Arcobaleno per il grado massimo!
+                    bgColor = "transparent"; textColor = "#ffffff";
                     extraStyle = "background-image: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3); text-shadow: 1px 1px 2px #000; border: 1px solid #fff;";
                 }
             }
@@ -317,9 +335,54 @@ class CommunityController {
                 <span class="badge ms-2" style="background-color: ${bgColor}; color: ${textColor}; font-size: 0.75rem; letter-spacing: 0.5px; border: 1px solid #444; ${extraStyle}">${post.authorRarity || 'Normal Player'}</span>
             `;
 
+            // Logica dei Badges per i Ruoli e Poteri (Creatore/Admin)
             let adminBadgeHtml = '';
             if (post.authorId === ADMIN_UID) {
                 adminBadgeHtml = `<span class="badge ms-2" style="background-color: #dc3545; color: white; font-size: 0.75rem; border: 1px solid #ffca28; text-shadow: 1px 1px 2px #000;"><i class="fas fa-crown text-warning"></i> Creatore</span>`;
+            } else if (MODERATOR_UIDS.includes(post.authorId)) {
+                adminBadgeHtml = `<span class="badge ms-2" style="background-color: #0d6efd; color: white; font-size: 0.75rem; border: 1px solid #fff; text-shadow: 1px 1px 2px #000;"><i class="fas fa-shield-alt text-light"></i> Admin</span>`;
+            }
+
+            // GESTIONE DEI PERMESSI DI MODIFICA / ELIMINAZIONE
+            let actionToolsHTML = '';
+            if (this.currentUser) {
+                const isAuthor = this.currentUser.uid === post.authorId;
+                const isCreator = this.currentUser.uid === ADMIN_UID;
+                const isMod = MODERATOR_UIDS.includes(this.currentUser.uid);
+
+                // Regola: Chi può eliminare?
+                let canDelete = false;
+                if (isAuthor || isCreator) canDelete = true;
+                // Un moderatore può eliminare tutti tranne il Creatore (Tu)
+                if (isMod && post.authorId !== ADMIN_UID) canDelete = true;
+
+                // Regola: Chi può spostare di categoria? (L'autore, il Creatore, i Mod)
+                let canMove = isAuthor || isCreator || isMod;
+
+                if (canDelete || canMove) {
+                    actionToolsHTML = `<div class="d-flex align-items-center gap-2 ms-auto">`;
+
+                    if (canMove) {
+                        actionToolsHTML += `
+                            <select class="form-select form-select-sm bg-dark text-white border-secondary move-category-select" data-postid="${post.id}" style="width: auto; padding: 0.1rem 1.5rem 0.1rem 0.5rem; font-size: 0.75rem;" title="Sposta Annuncio">
+                                <option value="general" ${post.type === 'general' ? 'selected' : ''}>Generale</option>
+                                <option value="invite" ${post.type === 'invite' ? 'selected' : ''}>Invito</option>
+                                <option value="club" ${post.type === 'club' ? 'selected' : ''}>Club</option>
+                                <option value="feedback" ${post.type === 'feedback' ? 'selected' : ''}>Feedback</option>
+                            </select>
+                        `;
+                    }
+
+                    if (canDelete) {
+                        actionToolsHTML += `
+                            <button class="btn btn-sm btn-outline-danger delete-btn" data-postid="${post.id}" title="Elimina annuncio" style="border: none; padding: 2px 6px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        `;
+                    }
+
+                    actionToolsHTML += `</div>`;
+                }
             }
 
             let codeBoxHtml = '';
@@ -329,20 +392,6 @@ class CommunityController {
                     ${post.code}
                     <button class="copy-btn ${copyBtnClass}" data-code="${post.code}" title="Copia Codice"><i class="far fa-copy"></i></button>
                 </div>`;
-            }
-
-            let deleteButtonHTML = '';
-            if (this.currentUser) {
-                const isAuthor = this.currentUser.uid === post.authorId;
-                const isAdmin = this.currentUser.uid === ADMIN_UID;
-
-                if (isAuthor || isAdmin) {
-                    deleteButtonHTML = `
-                        <button class="btn btn-sm btn-outline-danger ms-auto delete-btn" data-postid="${post.id}" title="Elimina annuncio" style="border: none;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    `;
-                }
             }
 
             const html = `
@@ -357,7 +406,7 @@ class CommunityController {
                         </div>
                     </div>
                     <div class="d-flex flex-column align-items-end">
-                        ${deleteButtonHTML}
+                        ${actionToolsHTML}
                         <span class="post-tag ${tagClass} mt-2"><i class="fas ${tagIcon}"></i> ${tagText}</span>
                     </div>
                 </div>

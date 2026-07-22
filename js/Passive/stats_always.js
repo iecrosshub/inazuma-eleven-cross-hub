@@ -1813,5 +1813,72 @@ export const alwaysPassives = [
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
+    },
+
+    {
+        title: "Potenza di Tiro + / Tiro + (シュートパワー＋／キック＋)",
+        id: "101150001",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro di {VAL1} e il proprio Tiro di {VAL2}.",
+        levels: [
+            { val1: 21, val2: 195, req: "Si sblocca con personaggio Lv. 41" },
+            { val1: 27, val2: 254, req: "Si sblocca con personaggio Lv. 71" },
+            { val1: 33, val2: 313, req: "Si sblocca con personaggio Lv. 101" },
+            { val1: 40, val2: 372, req: "Si sblocca con personaggio Lv. 131" },
+            { val1: 46, val2: 431, req: "Si sblocca con personaggio Lv. 161" },
+            { val1: 52, val2: 490, req: "Si sblocca con personaggio Lv. 191" },
+            { val1: 58, val2: 549, req: "Si sblocca con personaggio Lv. 221" },
+            { val1: 64, val2: 608, req: "Si sblocca con personaggio Lv. 251" },
+            { val1: 71, val2: 667, req: "Si sblocca con personaggio Lv. 281" },
+            { val1: 77, val2: 718, req: "Si sblocca con personaggio Lv. 320" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val2" }
+        ]
+    },
+
+
+    {
+        title: "Tiro FW + (ＦＷキック＋)",
+        id: "101150002",
+        template: "All'inizio della partita, aumenta il Tiro dei compagni FW di {VAL}.",
+        levels: [
+            { val: 112, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 185, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 258, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 331, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 404, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 477, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 550, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 623, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 696, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 769, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 828, req: "Si sblocca con personaggio Lv. 320" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+
+    {
+        title: "Potenza Tiro FW (Fuoco) + / Max TP + (ＦＷシュートパワー＋〈火〉／最大ＴＰ＋)",
+        id: "101150003",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di tiro di elemento Fuoco dei compagni FW di {VAL1} e il proprio massimo TP di {VAL2}.",
+        levels: [
+            { val1: 20, val2: 25, req: "Si sblocca con personaggio Lv. 1" },
+            { val1: 25, val2: 30, req: "Si sblocca con personaggio Lv. 51" },
+            { val1: 29, val2: 35, req: "Si sblocca con personaggio Lv. 101" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "TP", valueRef: "val2" }
+        ]
     }
 ];

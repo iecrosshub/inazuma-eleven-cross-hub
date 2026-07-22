@@ -32,7 +32,7 @@ export class BoardManager {
                 authorAvatarId: profileData?.selectedAvatarId || "default",
                 authorRole: profileData?.role || "FW",
                 authorElement: profileData?.element || "Fuoco",
-                authorRarity: profileData?.rarity || "Normal Player", // SALVIAMO LA RARITÀ!
+                authorRarity: profileData?.rarity || "Normal Player",
                 type: type,
                 code: code.toUpperCase().trim(),
                 message: message.trim(),
@@ -56,7 +56,6 @@ export class BoardManager {
         }
     }
 
-    // Aggiorna nome, avatar, ruolo ed elemento nei post vecchi
     async updatePostAuthorData(postId, newData) {
         try {
             const postRef = doc(this.db, this.collectionName, postId);
@@ -64,6 +63,18 @@ export class BoardManager {
             return true;
         } catch (error) {
             console.error("Errore durante l'aggiornamento dei dati nel post:", error);
+            return false;
+        }
+    }
+
+    // NUOVO: Permette di cambiare la categoria di un post esistente
+    async updatePostCategory(postId, newType) {
+        try {
+            const postRef = doc(this.db, this.collectionName, postId);
+            await updateDoc(postRef, { type: newType });
+            return true;
+        } catch (error) {
+            console.error("Errore durante il cambio di categoria:", error);
             return false;
         }
     }
