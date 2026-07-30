@@ -240,5 +240,16 @@ export const dribbleLibrary = {
         tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
         crit: [12, 12, 12, 12, 15, 15, 15, 15, 15, 18],
         foul: [15, 15, 15, 15, 15, 15, 15, 15, 15, 15]
-    }
+    },
+
+    "スカイウォーク（花火）": {
+        name: "Guizzi Aerei (Fuochi d'artificio)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Dribble.png",
+        elementIcon: "img/Element/Icon_Element_Mountain.png",
+        kind: "Dribbling",
+        element: "Montagna",
+        power: [102, 107, 112, 117, 122, 127, 132, 137, 142, 147],
+        tp: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
+        crit: [5, 5, 5, 5, 8, 8, 8, 8, 8, 11]
+    },
 };

@@ -2079,5 +2079,82 @@ export const alwaysPassives = [
             { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" },
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
+    },
+
+    {
+        title: "Blocco + / Parata GK + (ブロック＋／ＧＫキャッチ＋)",
+        id: "102055003",
+        template: "All'inizio della partita, aumenta il proprio Blocco di {VAL} e la Parata dei compagni GK di {VAL}.",
+        levels: [
+            { val: 505, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 1075, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 1613, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 1853, req: "Si sblocca con personaggio Lv. 320" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Mochi Mochi Kinako Mochi (Hanabi) + Kai (もちもち黄粉餅（花火）パワー＋改)",
+        id: "102055004",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Mochi Mochi Kinako Mochi (Hanabi) di {VAL1} e ne riduce il consumo TP di {VAL2}.",
+        levels: [
+            { val1: 90, val2: 5, req: "Si sblocca con: Advanced Player +" },
+            { val1: 110, val2: 5, req: "Si sblocca con: Top Player +" },
+            { val1: 129, val2: 10, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Mochi Mochi Kinako Mochi (Hanabi)", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "Mochi Mochi Kinako Mochi (Hanabi)", moveElement: null, valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "Tiro + (キック＋)",
+        id: "102056003",
+        template: "All'inizio della partita, aumenta il proprio Tiro (Kick) di {VAL}.",
+        levels: [
+            { val: 338, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 450, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 562, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 673, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 785, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 897, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 1009, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 1121, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 1232, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 301" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Bouncer Rabbit (Hanabi) + / Tiro Legno + (バウンサーラビット（花火）パワー＋／林キック＋)",
+        id: "102056004",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Bouncer Rabbit (Hanabi) di {VAL1} e il Tiro (Kick) dei compagni di elemento Legno di {VAL2}.",
+        levels: [
+            { val1: 65, val2: 412, req: "Si sblocca con: Advanced Player +" },
+            { val1: 79, val2: 500, req: "Si sblocca con: Top Player +" },
+            { val1: 93, val2: 589, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Bouncer Rabbit (Hanabi)", moveElement: null, valueRef: "val1" },
+            { targetScope: "team", targetRoles: [], targetElements: ["Wood"], type: "stat", statName: "Tiro", valueRef: "val2" }
+        ]
     }
 ];

@@ -195,5 +195,17 @@ export const blockLibrary = {
         crit: [10, 10, 10, 10, 13, 13, 13, 13, 13, 16],
         foul: [15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
         shootBlock: true
-    }
+    },
+
+    "もちもち黄粉餅（花火）": {
+        name: "Impasto di Goldie (Fuochi d'artificio)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        kind: "Difesa",
+        element: "Fuoco",
+        power: [129, 134, 139, 144, 149, 154, 159, 164, 169, 174],
+        tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+        crit: [10, 10, 10, 10, 13, 13, 13, 13, 13, 16],
+        shootBlock: true
+    },
 };

@@ -1,6 +1,32 @@
 export const characterRegistry = [
 
     {
+        id: "goldieLemmonCross",
+        name: "Goldie Lemmon",
+        romanizedName: "Nanobana Kinako",
+        japaneseName: "菜花 黄名子",
+        thumb: "img/Characters/GoldieLemmonCross.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "feyRuneCross",
+        name: "Fey Rune",
+        romanizedName: "Fei Rūn",
+        japaneseName: "フェイ・ルーン",
+        thumb: "img/Characters/FeyRuneCross.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
         id: "axelBlazeRoyalAcademy",
         name: "Axel Blaze RoyalAcademy",
         romanizedName: "Gōenji Shūya",

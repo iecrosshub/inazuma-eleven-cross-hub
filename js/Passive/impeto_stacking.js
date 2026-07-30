@@ -975,5 +975,52 @@ export const stackingPassives = [
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Prevenzione/Accumulo] Potenza Parata GK + (【逆境/累】ＧＫキーパーパワー＋)",
+        id: "102055001",
+        template: "Ogni volta che una propria tecnica di Blocco fallisce, aumenta la potenza delle tecniche di Parata dei compagni GK di {VAL}. (Condizione di fine: quando l'avversario segna un gol).",
+        levels: [
+            { val: 6, req: "Si sblocca con personaggio Lv. 11" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 23, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 29, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 34, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 40, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 320" }
+        ],
+        category: "Stacking",
+        trigger: "self_block_fail",
+        resetCondition: "enemy_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Prevenzione/Accumulo - Mod] Potenza Tiro FW Legno + <Legno> (【阻止/累・改】林FWシュートパワー＋〈林〉)",
+        id: "102056001",
+        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Tiro di elemento Legno dei compagni FW di elemento Legno di {VAL}. (Condizione di fine: quando se stessi segna un gol).",
+        levels: [
+            { val: 13, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 21, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 25, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 29, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 33, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 41, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 311" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 320" }
+        ],
+        category: "Stacking",
+        trigger: "ally_stop_shoot",
+        resetCondition: "self_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Wood"], type: "power", moveKind: "Tiro", moveElement: "Wood", valueRef: "val" }
+        ]
     }
 ];

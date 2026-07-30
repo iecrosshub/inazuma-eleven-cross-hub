@@ -466,4 +466,28 @@ export const shootLibrary = {
         bonusCrit: [4, 4, 4, 4, 7, 7, 7, 7, 7, 10],
         chain: false
     },
+
+    "やきもちスクリュー（花火）": {
+        name: "Tiro Impastato (Fuochi d'artificio)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        kind: "Tiro",
+        element: "Fuoco",
+        power: [94, 99, 104, 109, 114, 119, 124, 129, 134, 139],
+        tp: [55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
+        crit: [1, 1, 1, 1, 4, 4, 4, 4, 4, 7],
+        chain: true
+    },
+
+    "バウンサーラビット（花火）": {
+        name: "Tiro Rimbalzante (Fuochi d'artificio)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        kind: "Tiro",
+        element: "Albero",
+        power: [122, 127, 132, 137, 142, 147, 152, 157, 162, 167],
+        tp: [45, 45, 45, 45, 45, 45, 45, 45, 45, 45],
+        crit: [2, 2, 2, 2, 5, 5, 5, 5, 5, 8],
+        chain: true
+    },
 };
