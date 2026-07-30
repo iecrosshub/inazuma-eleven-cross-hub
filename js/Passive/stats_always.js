@@ -1880,5 +1880,204 @@ export const alwaysPassives = [
             { targetScope: "team", targetRoles: ["FW"], targetElements: ["Fire"], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val1" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "TP", valueRef: "val2" }
         ]
+    },
+
+    {
+        title: "Potenza Blocco DF + (ＤＦブロックパワー＋)",
+        id: "102045003",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di Difesa dei compagni DF di {VAL}.",
+        levels: [
+            { val: 3, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 5, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 10, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 301" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Difesa", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Blocco + [Rarità] (ブロックパワー＋)",
+        id: "102045004",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Difesa di {VAL}.",
+        levels: [
+            { val: 18, req: "Si sblocca con: Advanced Player +" },
+            { val: 24, req: "Si sblocca con: Top Player +" },
+            { val: 30, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Difesa", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Parata GK + / Blocco DF + (ＧＫキャッチ＋／ＤＦブロック＋)",
+        id: "102044001",
+        template: "All'inizio della partita, aumenta la Parata dei compagni GK di {VAL} e il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 492, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Mano di Luce + (ゴッドハンドパワー＋)",
+        id: "102044003",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Mano di Luce (God Hand) di elemento Montagna di {VAL}.",
+        levels: [
+            { val: 13, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 26, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 33, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 40, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 53, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 60, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 73, req: "Si sblocca con personaggio Lv. 301" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Mano di Luce", moveElement: "Mountain", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Mano di Luce GK Montagna + Kai (山ＧＫゴッドハンドパワー＋改)",
+        id: "102044004",
+        template: "All'inizio della partita, aumenta la potenza della tecnica Mano di Luce (God Hand) di elemento Montagna dei compagni GK di elemento Montagna di {VAL1} e ne riduce il consumo TP di {VAL2}.",
+        levels: [
+            { val1: 37, val2: 5, req: "Si sblocca con: Advanced Player +" },
+            { val1: 49, val2: 5, req: "Si sblocca con: Top Player +" },
+            { val1: 62, val2: 10, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["GK"], targetElements: ["Mountain"], type: "power", moveName: "Mano di Luce", moveElement: "Mountain", valueRef: "val1" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: ["Mountain"], type: "tp_cost_reduction", moveName: "Mano di Luce", moveElement: "Mountain", valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "Tecnica + / Tiro FW + (テクニック＋／ＦＷキック＋)",
+        id: "102053001",
+        template: "All'inizio della partita, aumenta la propria Tecnica di {VAL} e il Tiro (Kick) dei compagni FW di {VAL}.",
+        levels: [
+            { val: 18, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 55, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 74, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 111, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 149, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 186, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 223, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 298, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 373, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 410, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Dribbling + (ドリブルパワー＋)",
+        id: "102053003",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Dribbling di {VAL}.",
+        levels: [
+            { val: 7, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 19, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 23, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 27, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 31, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 35, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 39, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 42, req: "Si sblocca con personaggio Lv. 301" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Tiro + <Vento> (シュートパワー＋〈風〉)",
+        id: "102052003",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro di elemento Vento di {VAL}.",
+        levels: [
+            { val: 9, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 14, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 23, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 28, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 32, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 42, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 47, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 51, req: "Si sblocca con personaggio Lv. 301" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Tecnica MF + / Tiro FW + (ＭＦテクニック＋／ＦＷキック＋)",
+        id: "102051003",
+        template: "All'inizio della partita, aumenta la Tecnica dei compagni MF di {VAL} e il Tiro (Kick) dei compagni FW di {VAL}.",
+        levels: [
+            { val: 59, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 119, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 149, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 209, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 239, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 269, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 299, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 328, req: "Si sblocca con personaggio Lv. 301" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
     }
 ];

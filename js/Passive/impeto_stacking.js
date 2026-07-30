@@ -941,5 +941,39 @@ export const stackingPassives = [
         effects: [
             { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Sinergia/Accumulo] Tiro FW + (【連動/累】ＦＷキック＋)",
+        id: "102053004",
+        template: "Ogni volta che una tecnica di Dribbling di un alleato ha successo, aumenta il Tiro (Kick) dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 318, req: "Si sblocca con: Advanced Player +" },
+            { val: 424, req: "Si sblocca con: Top Player +" },
+            { val: 531, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_dribble_success",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Prevenzione/Accumulo] Potenza Tiro FW + (【阻止】ＦＷシュートパワー＋)",
+        id: "102052004",
+        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Tiro dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 11, req: "Si sblocca con: Advanced Player +" },
+            { val: 15, req: "Si sblocca con: Top Player +" },
+            { val: 19, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_stop_shoot",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+        ]
     }
 ];

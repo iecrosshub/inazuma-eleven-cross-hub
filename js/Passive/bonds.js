@@ -903,5 +903,93 @@ export const bondPassives = [
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Legame] Blocco DF + (Young Inazuma) [【結束】ＤＦブロック＋]",
+        id: "102045001",
+        template: "All'inizio della partita, se ci sono 3 o più compagni con il tag 'Young Inazuma', aumenta la statistica di Difesa (Block) dei compagni DF di {VAL}.",
+        levels: [
+            { val: 28, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 56, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 84, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 112, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 168, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 336, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 560, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 616, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { tag: "Young Inazuma", count: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Difesa", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Tiro FW + (Young Inazuma) [【結束】ＦＷキック＋]",
+        id: "102052001",
+        template: "All'inizio della partita, se ci sono 3 o più compagni con il tag 'Young Inazuma', aumenta il Tiro (Kick) dei compagni FW di {VAL}.",
+        levels: [
+            { val: 23, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 70, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 93, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 140, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 186, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 233, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 373, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 467, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 513, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { tag: "Young Inazuma", count: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Tecnica MF + (Young Inazuma) [【結束】ＭＦテクニック＋]",
+        id: "102051001",
+        template: "All'inizio della partita, se ci sono 3 o più compagni con il tag 'Young Inazuma', aumenta la Tecnica dei compagni MF di {VAL}.",
+        levels: [
+            { val: 23, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 70, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 93, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 140, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 186, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 233, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 373, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 467, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 513, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { tag: "Young Inazuma", count: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame/Rarità] Potenza Dribbling MF + (Young Inazuma) [【結束】ＭＦドリブルパワー＋]",
+        id: "102051004",
+        template: "All'inizio della partita, se ci sono 3 o più compagni con il tag 'Young Inazuma', aumenta la potenza delle tecniche di Dribbling dei compagni MF di {VAL}.",
+        levels: [
+            { val: 10, req: "Si sblocca con: Advanced Player +" },
+            { val: 14, req: "Si sblocca con: Top Player +" },
+            { val: 18, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Bonds",
+        conditions: { tag: "Young Inazuma", count: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
+        ]
     }
 ];

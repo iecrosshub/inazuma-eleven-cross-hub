@@ -143,7 +143,10 @@
                 </div>
             </div>
 
-            <div class="pitch-actions">
+            <div class="pitch-actions d-flex justify-content-center gap-3 mt-3">
+                <button id="btn-share-team" class="btn btn-primary fw-bold px-4 shadow" style="display: none;">
+                    <i class="fas fa-share-square me-2"></i> Condividi Formazione
+                </button>
                 <button id="btn-remove-player" class="tb-btn-remove" style="display: none;">
                     <i class="fas fa-trash"></i> Rimuovi dal campo
                 </button>
@@ -174,10 +177,92 @@
         </aside>
 
     </div>
+
+    <!-- SEZIONE DISCUSSIONI (Tema Community) -->
+    <div class="container-fixed mt-5 mb-5" style="max-width: 1000px; margin: 0 auto;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold m-0" style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                <i class="fas fa-comments text-white me-2"></i> Discussioni Community
+            </h3>
+            <span class="badge bg-light text-dark shadow-sm">Ultime 10 novità</span>
+        </div>
+
+        <div id="discussions-list" class="d-flex flex-column gap-2">
+            <!-- I post verranno generati qui dal JS -->
+            <div class="text-center p-4 text-white"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+        </div>
+
+        <div class="text-center mt-4">
+            <!-- MODIFICATO: Ora punta a community.html con un parametro -->
+            <a href="community.html?tab=teams" id="btn-view-all-discussions" class="btn btn-light fw-bold text-primary shadow" style="display: none;">
+                Vedi in Community <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
 </main>
+
+<!-- MODALE CONDIVISIONE FORMAZIONE (Tema Chiaro) -->
+<div class="modal fade" id="shareTeamModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Rimosso bg-dark, aggiunto tema bianco e bordi blu -->
+        <div class="modal-content bg-white" style="border: 2px solid #1a73e8; border-radius: 12px;">
+            <div class="modal-header" style="border-bottom: 2px solid #e2e8f0;">
+                <h5 class="modal-title fw-bold" style="color: #0b1a42;"><i class="fas fa-bullhorn text-primary me-2"></i> Pubblica la tua Squadra</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="small mb-3" style="color: #5c728e;">Condividi questa formazione con la community per chiedere consigli o mostrare la tua strategia!</p>
+                <div class="mb-3">
+                    <label class="form-label fw-bold" style="color: #0b1a42;">Titolo della discussione</label>
+                    <input type="text" id="share-title" class="form-control" style="background-color: #f8fbff; border: 1px solid #a0bcdc; color: #0b1a42;" placeholder="Es. Consigli per battere la storia?" maxlength="60" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold" style="color: #0b1a42;">Descrizione / Domanda</label>
+                    <textarea id="share-desc" class="form-control" style="background-color: #f8fbff; border: 1px solid #a0bcdc; color: #0b1a42;" rows="3" placeholder="Scrivi qui i tuoi dubbi o il perché hai scelto questi giocatori..." maxlength="300" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 2px solid #e2e8f0;">
+                <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" id="btn-submit-share" class="btn btn-primary fw-bold" style="background-color: #1a73e8;">Pubblica Post</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Script di Intro.js -->
 <script src="https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js"></script>
+<!-- Script di Bootstrap per i Modali -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- INIZIALIZZAZIONE FIREBASE: Il blocco che hai scoperto! -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDJLzxu2tREehzZE79YAK7_TIq1G6lf4Rc",
+        authDomain: "inazumaelevencrosshub.firebaseapp.com",
+        projectId: "inazumaelevencrosshub",
+        storageBucket: "inazumaelevencrosshub.firebasestorage.app",
+        messagingSenderId: "100160386925",
+        appId: "1:100160386925:web:2f35aaacb877d70c9f4c64",
+        measurementId: "G-0R453LFDB0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(app);
+    window.googleProvider = new GoogleAuthProvider();
+    window.firebaseDb = getFirestore(app);
+    window.firebaseLogin = signInWithPopup;
+    window.firebaseLogout = signOut;
+    window.firebaseOnAuth = onAuthStateChanged;
+    window.dbDoc = doc;
+    window.dbSet = setDoc;
+    window.dbGet = getDoc;
+</script>
+
+<!-- CONTROLLER TEAM BUILDER -->
 <script type="module" src="js/Controllers/teamBuilder.js"></script>
 </body>
 </html>

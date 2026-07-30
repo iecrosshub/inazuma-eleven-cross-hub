@@ -234,14 +234,40 @@ export const characterRegistry = [
     },
 
     {
+        id: "seymourHillmanRaimonVG",
+        name: "Seymour Hillman",
+        romanizedName: "Hibiki Seigou",
+        japaneseName: "響木 正剛",
+        thumb: "img/Characters/SeymourHillmanRaimonVG.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_GK.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "charlesIslandRaimonVG",
+        name: "Charles Island",
+        romanizedName: "Ukishima Kazuto",
+        japaneseName: "浮島 一人",
+        thumb: "img/Characters/CharlesIslandRaimonVG.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 2, // (Ho impostato provvisoriamente 2 stelle SR viste le statistiche più alte, modificalo a 1 o 3 a seconda della rarità effettiva nel gioco)
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
         id: "poseidonZeus",
         name: "Poseidon",
         romanizedName: "Posei Donichi",
         japaneseName: "歩星 呑一",
-        thumb: "img/Characters/PoseidonZeus.png", // Puoi aggiornare il nome dell'immagine con quello che usi tu
+        thumb: "img/Characters/PoseidonZeus.png",
         element: "img/Element/Icon_Element_Mountain.png",
         position: "img/Position/Icon_Position_GK.png",
-        stars: 2, // Considerando le statistiche, probabile SR
+        stars: 2,
         background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
@@ -613,6 +639,45 @@ export const characterRegistry = [
         stars: 2,
         background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "ianSuffolkRaimonVG",
+        name: "Ian Suffolk",
+        romanizedName: "Sugata Gen",
+        japaneseName: "菅田 厳",
+        thumb: "img/Characters/IanSuffolkRaimonVG.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "josephYosemiteRaimonVG",
+        name: "Joseph Yosemite",
+        romanizedName: "Taniyama Yō",
+        japaneseName: "民山 謡",
+        thumb: "img/Characters/JosephYosemiteRaimonVG.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "tylerThomasRaimonVG",
+        name: "Tyler Thomas",
+        romanizedName: "Sadayoshi Tamotsu",
+        japaneseName: "定良 保",
+        thumb: "img/Characters/TylerThomasRaimonVG.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
     {

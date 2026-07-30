@@ -453,4 +453,17 @@ export const shootLibrary = {
         crit: [3, 3, 3, 3, 8, 8, 8, 8, 8, 11],
         chain: true
     },
+
+    "炎の風見鶏": {
+        name: "Ali di Fuoco (炎の風見鶏)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        kind: "Tiro",
+        element: "Fuoco",
+        power: [50, 55, 60, 65, 70, 75, 80, 85, 90, 95],
+        tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+        crit: [3, 3, 3, 3, 6, 6, 6, 6, 6, 9],
+        bonusCrit: [4, 4, 4, 4, 7, 7, 7, 7, 7, 10],
+        chain: false
+    },
 };
