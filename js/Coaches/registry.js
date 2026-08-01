@@ -7,11 +7,26 @@ export const coachRegistry = [
         japaneseName: "久遠 道也",
         thumb: "img/Coaches/PercivalTravis.png"
     },
+
     {
         id: "personaggioPrincipale",
         name: "Personaggio Principale",
         japaneseName: "主人公",
         thumb: "img/Coaches/PersonaggioPrincipale.png"
+    },
+
+    {
+        id: "davidEvans",
+        name: "David Evans",
+        japaneseName: "円堂 大介",
+        thumb: "img/Coaches/DavidEvans.png"
+    },
+
+    {
+        id: "toyamaShinochirou",
+        name: "Toyama Shinochirou",
+        japaneseName: "外山 志乃一郎",
+        thumb: "img/Coaches/ToyamaShinochirou.png"
     },
 
     {
@@ -60,13 +75,6 @@ export const coachRegistry = [
         name: "Igajima Sen'ichi",
         japaneseName: "戦国伊賀",
         thumb: "img/Coaches/IgajimaSen'ichi.png"
-    },
-
-    {
-        id: "toyamaShinochirou",
-        name: "Toyama Shinochirou",
-        japaneseName: "外山 志乃一郎",
-        thumb: "img/Coaches/ToyamaShinochirou.png"
     },
 
     {
