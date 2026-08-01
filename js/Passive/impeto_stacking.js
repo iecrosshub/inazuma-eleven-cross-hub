@@ -978,49 +978,51 @@ export const stackingPassives = [
     },
 
     {
-        title: "[Prevenzione/Accumulo] Potenza Parata GK + (【逆境/累】ＧＫキーパーパワー＋)",
-        id: "102055001",
-        template: "Ogni volta che una propria tecnica di Blocco fallisce, aumenta la potenza delle tecniche di Parata dei compagni GK di {VAL}. (Condizione di fine: quando l'avversario segna un gol).",
+        title: "[Avversità/Accumulo] Potenza Parata GK + (【逆境/累】ＧＫキーパーパワー＋)",
+        id: "110002001",
+        template: "Ogni volta che una propria tecnica di Blocco al Tiro fallisce, aumenta la potenza delle tecniche di Parata dei compagni GK di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
         levels: [
-            { val: 6, req: "Si sblocca con personaggio Lv. 11" },
-            { val: 12, req: "Si sblocca con personaggio Lv. 61" },
-            { val: 17, req: "Si sblocca con personaggio Lv. 91" },
-            { val: 23, req: "Si sblocca con personaggio Lv. 121" },
-            { val: 29, req: "Si sblocca con personaggio Lv. 151" },
-            { val: 34, req: "Si sblocca con personaggio Lv. 181" },
-            { val: 40, req: "Si sblocca con personaggio Lv. 211" },
-            { val: 46, req: "Si sblocca con personaggio Lv. 241" },
-            { val: 50, req: "Si sblocca con personaggio Lv. 320" }
+            { val: 6, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 22, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 26, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 30, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Stacking",
-        trigger: "self_block_fail",
-        resetCondition: "enemy_goal",
+        trigger: "self_block_shoot_fail",
+        resetCondition: "ally_goal",
         effects: [
             { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
     },
 
     {
-        title: "[Prevenzione/Accumulo - Mod] Potenza Tiro FW Legno + <Legno> (【阻止/累・改】林FWシュートパワー＋〈林〉)",
-        id: "102056001",
-        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Tiro di elemento Legno dei compagni FW di elemento Legno di {VAL}. (Condizione di fine: quando se stessi segna un gol).",
+        title: "[Prevenzione/Accumulo - Mod] Potenza Tiro FW Foresta + <Foresta> (【阻止/累・改】林ＦＷシュートパワー＋〈林〉)",
+        id: "110003003",
+        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Tiro di elemento Foresta dei compagni FW di elemento Foresta di {VAL}. (Condizione di fine: quando si segna un gol).",
         levels: [
-            { val: 13, req: "Si sblocca con personaggio Lv. 71" },
-            { val: 17, req: "Si sblocca con personaggio Lv. 101" },
-            { val: 21, req: "Si sblocca con personaggio Lv. 131" },
-            { val: 25, req: "Si sblocca con personaggio Lv. 161" },
-            { val: 29, req: "Si sblocca con personaggio Lv. 191" },
-            { val: 33, req: "Si sblocca con personaggio Lv. 221" },
-            { val: 37, req: "Si sblocca con personaggio Lv. 251" },
-            { val: 41, req: "Si sblocca con personaggio Lv. 281" },
-            { val: 46, req: "Si sblocca con personaggio Lv. 311" },
-            { val: 50, req: "Si sblocca con personaggio Lv. 320" }
+            { val: 13, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 23, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 27, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 32, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 36, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 41, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 43, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 301" }
         ],
         category: "Stacking",
         trigger: "ally_stop_shoot",
         resetCondition: "self_goal",
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Wood"], type: "power", moveKind: "Tiro", moveElement: "Wood", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Wood", valueRef: "val" }
         ]
-    }
+    },
 ];

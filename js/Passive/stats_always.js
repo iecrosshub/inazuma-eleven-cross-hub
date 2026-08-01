@@ -1906,18 +1906,19 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Blocco + [Rarità] (ブロックパワー＋)",
+        title: "Potenza Ali di Fuoco (炎の風見鶏パワー＋改)",
         id: "102045004",
-        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Difesa di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Ali di Fuoco di {VAL1} e ne riduce il consumo TP di {VAL2}.",
         levels: [
-            { val: 18, req: "Si sblocca con: Advanced Player +" },
-            { val: 24, req: "Si sblocca con: Top Player +" },
-            { val: 30, req: "Si sblocca con: Legendary Player +" }
+            { val1: 18, val2: 5, req: "Si sblocca con: Advanced Player +" },
+            { val1: 24, val2: 5, req: "Si sblocca con: Top Player +" },
+            { val1: 30, val2: 10, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Difesa", moveElement: null, valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Ali di Fuoco", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "Ali di Fuoco", moveElement: null, valueRef: "val2" }
         ]
     },
 
@@ -2083,15 +2084,19 @@ export const alwaysPassives = [
 
     {
         title: "Blocco + / Parata GK + (ブロック＋／ＧＫキャッチ＋)",
-        id: "102055003",
+        id: "110002003",
         template: "All'inizio della partita, aumenta il proprio Blocco di {VAL} e la Parata dei compagni GK di {VAL}.",
         levels: [
             { val: 505, req: "Si sblocca con personaggio Lv. 41" },
-            { val: 806, req: "Si sblocca con personaggio Lv. 71" },
-            { val: 1075, req: "Si sblocca con personaggio Lv. 101" },
-            { val: 1344, req: "Si sblocca con personaggio Lv. 131" },
-            { val: 1613, req: "Si sblocca con personaggio Lv. 161" },
-            { val: 1853, req: "Si sblocca con personaggio Lv. 320" }
+            { val: 674, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 842, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 1011, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 1179, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 1348, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 1516, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 1600, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 1685, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 1853, req: "Si sblocca con personaggio Lv. 301" }
         ],
         category: "Always",
         conditions: null,
@@ -2102,37 +2107,38 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Mochi Mochi Kinako Mochi (Hanabi) + Kai (もちもち黄粉餅（花火）パワー＋改)",
-        id: "102055004",
-        template: "All'inizio della partita, aumenta la potenza della propria tecnica Mochi Mochi Kinako Mochi (Hanabi) di {VAL1} e ne riduce il consumo TP di {VAL2}.",
+        title: "Potenza Impasto di Goldie (Fuochi d'artificio) (もちもち黄粉餅（花火）パワー＋改)",
+        id: "110002004",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Impasto di Goldie (Fuochi d'artificio) di {VAL1} e ne riduce il consumo TP di {VAL2}.",
         levels: [
             { val1: 90, val2: 5, req: "Si sblocca con: Advanced Player +" },
-            { val1: 110, val2: 5, req: "Si sblocca con: Top Player +" },
+            { val1: 109, val2: 5, req: "Si sblocca con: Top Player +" },
             { val1: 129, val2: 10, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Mochi Mochi Kinako Mochi (Hanabi)", moveElement: null, valueRef: "val1" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "Mochi Mochi Kinako Mochi (Hanabi)", moveElement: null, valueRef: "val2" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "もちもち黄粉餅（花火）", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "もちもち黄粉餅（花火）", moveElement: null, valueRef: "val2" }
         ]
     },
 
     {
         title: "Tiro + (キック＋)",
-        id: "102056003",
+        id: "110003001",
         template: "All'inizio della partita, aumenta il proprio Tiro (Kick) di {VAL}.",
         levels: [
-            { val: 338, req: "Si sblocca con personaggio Lv. 41" },
-            { val: 450, req: "Si sblocca con personaggio Lv. 61" },
-            { val: 562, req: "Si sblocca con personaggio Lv. 91" },
-            { val: 673, req: "Si sblocca con personaggio Lv. 121" },
-            { val: 785, req: "Si sblocca con personaggio Lv. 151" },
-            { val: 897, req: "Si sblocca con personaggio Lv. 181" },
-            { val: 1009, req: "Si sblocca con personaggio Lv. 211" },
-            { val: 1121, req: "Si sblocca con personaggio Lv. 241" },
-            { val: 1232, req: "Si sblocca con personaggio Lv. 271" },
-            { val: 1344, req: "Si sblocca con personaggio Lv. 301" }
+            { val: 338, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 451, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 564, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 677, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 903, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 1129, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 1354, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 1580, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 1919, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 2258, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 2596, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Always",
         conditions: null,
@@ -2142,9 +2148,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Bouncer Rabbit (Hanabi) + / Tiro Legno + (バウンサーラビット（花火）パワー＋／林キック＋)",
-        id: "102056004",
-        template: "All'inizio della partita, aumenta la potenza della propria tecnica Bouncer Rabbit (Hanabi) di {VAL1} e il Tiro (Kick) dei compagni di elemento Legno di {VAL2}.",
+        title: "Potenza Tiro Rimbalzante (Fuochi d'artificio) + / Tiro Legno + (バウンサーラビット（花火）パワー＋／林キック＋)",
+        id: "110003004",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Tiro Rimbalzante (Fuochi d'artificio) di {VAL1} e il Tiro (Kick) dei compagni di elemento Legno di {VAL2}.",
         levels: [
             { val1: 65, val2: 412, req: "Si sblocca con: Advanced Player +" },
             { val1: 79, val2: 500, req: "Si sblocca con: Top Player +" },
@@ -2153,7 +2159,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Bouncer Rabbit (Hanabi)", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "バウンサーラビット（花火）", moveElement: null, valueRef: "val1" },
             { targetScope: "team", targetRoles: [], targetElements: ["Wood"], type: "stat", statName: "Tiro", valueRef: "val2" }
         ]
     }

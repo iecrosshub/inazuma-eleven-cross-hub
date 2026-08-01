@@ -30,6 +30,6 @@ export const charData = {
     ],
 
     myTechniques: ["バウンサーラビット（花火）", "スカイウォーク（花火）"],
-    myBasicPassivesIds: ["102056001", "100000101", "102056003"],
-    myRarityPassivesIds: ["100000501", "102056004"]
+    myBasicPassivesIds: ["100000101", "110003001", "110003003"],
+    myRarityPassivesIds: ["100000501", "110003004"]
 };
