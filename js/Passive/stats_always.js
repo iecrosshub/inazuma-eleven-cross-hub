@@ -2126,7 +2126,7 @@ export const alwaysPassives = [
     {
         title: "Tiro + (キック＋)",
         id: "110003001",
-        template: "All'inizio della partita, aumenta il proprio Tiro (Kick) di {VAL}.",
+        template: "All'inizio della partita, aumenta il proprio Tiro di {VAL}.",
         levels: [
             { val: 338, req: "Si sblocca con personaggio Lv. 1" },
             { val: 451, req: "Si sblocca con personaggio Lv. 21" },
@@ -2148,9 +2148,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Tiro Rimbalzante (Fuochi d'artificio) + / Tiro Legno + (バウンサーラビット（花火）パワー＋／林キック＋)",
+        title: "Potenza Tiro Rimbalzante (Fuochi d'artificio) + / Tiro Foresta + (バウンサーラビット（花火）パワー＋／林キック＋)",
         id: "110003004",
-        template: "All'inizio della partita, aumenta la potenza della propria tecnica Tiro Rimbalzante (Fuochi d'artificio) di {VAL1} e il Tiro (Kick) dei compagni di elemento Legno di {VAL2}.",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Tiro Rimbalzante (Fuochi d'artificio) di {VAL1} e il Tiro dei compagni di elemento Foresta di {VAL2}.",
         levels: [
             { val1: 65, val2: 412, req: "Si sblocca con: Advanced Player +" },
             { val1: 79, val2: 500, req: "Si sblocca con: Top Player +" },
@@ -2160,7 +2160,7 @@ export const alwaysPassives = [
         conditions: null,
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "バウンサーラビット（花火）", moveElement: null, valueRef: "val1" },
-            { targetScope: "team", targetRoles: [], targetElements: ["Wood"], type: "stat", statName: "Tiro", valueRef: "val2" }
+            { targetScope: "team", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val2" }
         ]
     }
 ];
