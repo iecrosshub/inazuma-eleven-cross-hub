@@ -979,7 +979,7 @@ export const stackingPassives = [
 
     {
         title: "[Avversità/Accumulo] Potenza Parata GK + (【逆境/累】ＧＫキーパーパワー＋)",
-        id: "110002001",
+        id: "100000301",
         template: "Ogni volta che una propria tecnica di Blocco al Tiro fallisce, aumenta la potenza delle tecniche di Parata dei compagni GK di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
         levels: [
             { val: 6, req: "Si sblocca con personaggio Lv. 1" },

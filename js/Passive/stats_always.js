@@ -1145,21 +1145,7 @@ export const alwaysPassives = [
             { targetScope: "allies", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
-    {
-        title: "Potenza Tiro FW + (ＦＷシュートパワー＋)",
-        id: "101001004",
-        template: "All'inizio della partita, aumenta la potenza delle tecniche di Tiro degli FW alleati di {VAL}.",
-        levels: [
-            { val: 13, req: "Si sblocca a: Advanced Player +" },
-            { val: 17, req: "Si sblocca a: Top Player +" },
-            { val: 22, req: "Si sblocca a: Legendary Player +" }
-        ],
-        category: "Always",
-        conditions: null,
-        effects: [
-            { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
-        ]
-    },
+
     {
         title: "Potenza Dribbling + (ドリブルパワー＋)",
         id: "101007004",
@@ -2084,7 +2070,7 @@ export const alwaysPassives = [
 
     {
         title: "Blocco + / Parata GK + (ブロック＋／ＧＫキャッチ＋)",
-        id: "110002003",
+        id: "102055003",
         template: "All'inizio della partita, aumenta il proprio Blocco di {VAL} e la Parata dei compagni GK di {VAL}.",
         levels: [
             { val: 505, req: "Si sblocca con personaggio Lv. 41" },
@@ -2108,7 +2094,7 @@ export const alwaysPassives = [
 
     {
         title: "Potenza Impasto di Goldie (Fuochi d'artificio) (もちもち黄粉餅（花火）パワー＋改)",
-        id: "110002004",
+        id: "102055004",
         template: "All'inizio della partita, aumenta la potenza della propria tecnica Impasto di Goldie (Fuochi d'artificio) di {VAL1} e ne riduce il consumo TP di {VAL2}.",
         levels: [
             { val1: 90, val2: 5, req: "Si sblocca con: Advanced Player +" },

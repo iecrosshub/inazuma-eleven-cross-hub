@@ -467,6 +467,19 @@ export const shootLibrary = {
         chain: false
     },
 
+    "イナズマ落とし": {
+        name: "Trampolino Inazuma (イナズマ落とし)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        kind: "Tiro",
+        element: "Vento",
+        power: [123, 128, 133, 138, 143, 148, 153, 158, 163, 168],
+        tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+        crit: [5, 5, 5, 5, 8, 8, 8, 8, 8, 11],
+        bonusCrit: [10, 10, 10, 10, 13, 13, 13, 13, 13, 16],
+        chain: false
+    },
+
     "やきもちスクリュー（花火）": {
         name: "Tiro Impastato (Fuochi d'artificio)",
         icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
