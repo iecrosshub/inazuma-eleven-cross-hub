@@ -201,9 +201,9 @@ export const specificMovesPassives = [
         ]
     },
     {
-        title: "Potenza Saetta Spiovente + (パトリオットシュートパワー＋改)",
+        title: "Potenza Razzo Spiovente + (パトリオットシュートパワー＋改)",
         id: "101110004",
-        template: "All'inizio della partita, aumenta la potenza di Saetta Spiovente di {POWER} e il suo tasso critico di {CRT}%.",
+        template: "All'inizio della partita, aumenta la potenza di Razzo Spiovente di {POWER} e il suo tasso critico di {CRT}%.",
         levels: [
             { power: 22, crt: 600, req: "Si sblocca a: Advanced Player +" },
             { power: 30, crt: 800, req: "Si sblocca a: Top Player +" },
@@ -248,9 +248,9 @@ export const specificMovesPassives = [
         ]
     },
     {
-        title: "Potenza Tiro Cometa + (彗星シュートパワー＋改)",
+        title: "Potenza Tiro della Cometa + (彗星シュートパワー＋改)",
         id: "101077004",
-        template: "All'inizio della partita, aumenta la potenza di Tiro Cometa di {POWER} e il suo tasso critico di {CRT}%.",
+        template: "All'inizio della partita, aumenta la potenza di Tiro della Cometa di {POWER} e il suo tasso critico di {CRT}%.",
         levels: [
             { power: 15, crt: 500, req: "Si sblocca a: Advanced Player +" },
             { power: 20, crt: 800, req: "Si sblocca a: Top Player +" },

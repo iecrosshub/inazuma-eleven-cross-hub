@@ -56,7 +56,7 @@ export const blockLibrary = {
     },
 
     "スーパー四股踏み": {
-        name: "Super Blocco Difensivo (スーパー四股踏み)",
+        name: "Super Pestone Sumo (スーパー四股踏み)",
         icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
         elementIcon: "img/Element/Icon_Element_Fire.png",
         kind: "Blocco",

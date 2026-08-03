@@ -76,7 +76,7 @@ export const catchLibrary = {
     },
 
     "シュートポケット": {
-        name: "Campo Magnetico (シュートポケット)",
+        name: "Barriera Magnetica (シュートポケット)",
         icon: "img/MoveSkill/Icon_MoveSkill_Catch.png",
         elementIcon: "img/Element/Icon_Element_Forest.png",
         kind: "Parata",

@@ -271,7 +271,7 @@ export const shootLibrary = {
     },
 
     "パトリオットシュート": {
-        name: "Saetta Spiovente (パトリオットシュート)",
+        name: "Razzo Spiovente (パトリオットシュート)",
         icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
         elementIcon: "img/Element/Icon_Element_Fire.png",
         kind: "Tiro",
@@ -295,7 +295,7 @@ export const shootLibrary = {
     },
 
     "彗星シュート": {
-        name: "Tiro Cometa (彗星シュート)",
+        name: "Tiro della Cometa (彗星シュート)",
         icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
         elementIcon: "img/Element/Icon_Element_Wind.png",
         kind: "Tiro",
@@ -307,7 +307,7 @@ export const shootLibrary = {
     },
 
     "グレネードショット": {
-        name: "Tiro Fulminante (グレネードショット)",
+        name: "Tiro Granata (グレネードショット)",
         icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
         elementIcon: "img/Element/Icon_Element_Fire.png",
         kind: "Tiro",
@@ -417,7 +417,7 @@ export const shootLibrary = {
         chain: true
     },
     "ディバインアロー": {
-        name: "Freccia Divina (ディバインアロー)",
+        name: "Freccia Saettante (ディバインアロー)",
         icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
         elementIcon: "img/Element/Icon_Element_Wind.png",
         kind: "Tiro",
@@ -502,5 +502,18 @@ export const shootLibrary = {
         tp: [45, 45, 45, 45, 45, 45, 45, 45, 45, 45],
         crit: [2, 2, 2, 2, 5, 5, 5, 5, 5, 8],
         chain: true
+    },
+
+    "ド根性バット": {
+        name: "Colpo del Battitore (ド根性バット)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        kind: "Tiro",
+        element: "Fuoco",
+        power: [94, 99, 104, 109, 114, 119, 124, 129, 134, 139],
+        tp: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
+        crit: [4, 4, 4, 4, 7, 7, 7, 7, 7, 10],
+        bonusCrit: [5, 5, 5, 5, 8, 8, 8, 8, 8, 11],
+        chain: false
     },
 };
