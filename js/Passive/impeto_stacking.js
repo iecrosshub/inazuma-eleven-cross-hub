@@ -1025,4 +1025,27 @@ export const stackingPassives = [
             { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Wood", valueRef: "val" }
         ]
     },
+
+    {
+        title: "【救援/累】ＧＫキーパーパワー＋",
+        id: "104003003",
+        template: "Ogni volta che un blocco al tiro di un alleato DF fallisce, aumenta la potenza delle tecniche di Parata dei compagni GK di {VAL}. (Reset: gol alleato).",
+        levels: [
+            { val: 13, req: "Lv. 41" },
+            { val: 18, req: "Lv. 61" },
+            { val: 23, req: "Lv. 91" },
+            { val: 27, req: "Lv. 121" },
+            { val: 32, req: "Lv. 151" },
+            { val: 36, req: "Lv. 181" },
+            { val: 41, req: "Lv. 211" },
+            { val: 43, req: "Lv. 241" },
+            { val: 46, req: "Lv. 271" },
+            { val: 50, req: "Lv. 301" },
+            { val: 55, req: "Lv. 331" }
+        ],
+        category: "Stacking",
+        trigger: "ally_shoot_block_fail",
+        resetCondition: "ally_goal",
+        effects: [{ targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }]
+    }
 ];

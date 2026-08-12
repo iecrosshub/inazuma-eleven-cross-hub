@@ -208,4 +208,32 @@ export const blockLibrary = {
         crit: [10, 10, 10, 10, 13, 13, 13, 13, 13, 16],
         shootBlock: true
     },
+
+    "ザ・ミスト": {
+        name: "Cinta di Nebbia (ザ・ミスト)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        kind: "Blocco",
+        element: "Foresta",
+        power: [111, 116, 121, 126, 131, 136, 141, 146, 151, 156],
+        tp: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
+        crit: [6, 6, 6, 6, 8, 8, 8, 8, 8, 11],
+        bonusCrit: [10, 10, 10, 10, 15, 15, 15, 15, 15, 20],
+        foul: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        shootBlock: false
+    },
+
+    "ディープミスト": {
+        name: "Nebbia Avvolgente (ディープミスト)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        kind: "Blocco",
+        element: "Foresta",
+        power: [128, 133, 138, 143, 148, 153, 158, 163, 168, 173],
+        tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+        crit: [5, 5, 5, 5, 7, 7, 7, 7, 7, 10],
+        bonusCrit: [12, 12, 12, 12, 17, 17, 17, 17, 17, 22],
+        foul: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+        shootBlock: true
+    },
 };

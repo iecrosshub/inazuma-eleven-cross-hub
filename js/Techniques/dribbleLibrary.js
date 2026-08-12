@@ -252,4 +252,18 @@ export const dribbleLibrary = {
         tp: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
         crit: [5, 5, 5, 5, 8, 8, 8, 8, 8, 11]
     },
+
+    "プレストターン": {
+        name: "Toccata e Fuga (プレストターン)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Dribble.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        kind: "Dribbling",
+        element: "Foresta",
+        power: [110, 115, 120, 125, 130, 135, 140, 145, 150, 155],
+        tp: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
+        crit: [12, 12, 12, 12, 15, 15, 15, 15, 15, 18],
+        bonusCrit: [23, 23, 23, 23, 26, 26, 26, 26, 26, 29],
+        foul: [15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
+        shootBlock: false
+    },
 };

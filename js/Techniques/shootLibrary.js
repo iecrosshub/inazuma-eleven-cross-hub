@@ -516,4 +516,17 @@ export const shootLibrary = {
         bonusCrit: [5, 5, 5, 5, 8, 8, 8, 8, 8, 11],
         chain: false
     },
+
+    "フォルテシモ": {
+        name: "Tiro Sonoro (フォルテシモ)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        kind: "Tiro",
+        element: "Foresta",
+        power: [83, 88, 93, 98, 103, 108, 113, 118, 123, 128],
+        tp: [45, 45, 45, 45, 45, 45, 45, 45, 45, 45],
+        crit: [2, 2, 2, 2, 4, 4, 4, 4, 4, 7],
+        bonusCrit: [2, 2, 2, 2, 7, 7, 7, 7, 7, 12],
+        chain: false
+    },
 };

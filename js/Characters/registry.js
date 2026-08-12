@@ -1,6 +1,32 @@
 export const characterRegistry = [
 
     {
+        id: "riccardoDiRigoRaimonGO",
+        name: "Riccardo Di Rigo",
+        romanizedName: "Shindou Takuto",
+        japaneseName: "神童 拓人",
+        thumb: "img/Characters/RiccardoDiRigoRaimonGO.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "gabiRaimonGO",
+        name: "Gabi Garcia",
+        romanizedName: "Kirino Ranmaru",
+        japaneseName: "霧野 蘭丸",
+        thumb: "img/Characters/GabiRaimonGO.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
         id: "goldieLemmonCross",
         name: "Goldie Lemmon",
         romanizedName: "Nanobana Kinako",
