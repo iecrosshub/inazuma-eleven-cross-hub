@@ -48,7 +48,7 @@ class MetaBuildsController {
         document.getElementById('tier-list-container').style.display = 'none';
 
         // Pulisce i contenitori con ID sicuri
-        ['S-plus', 'S', 'A', 'B', 'C'].forEach(t => {
+        ['SS', 'S', 'A', 'B', 'C'].forEach(t => {
             const el = document.getElementById(`tier-${t}`);
             if (el) el.innerHTML = '';
         });
@@ -59,9 +59,8 @@ class MetaBuildsController {
             const char = characterRegistry.find(c => c.id === build.characterId);
             if (!char) return;
 
-            // FIX: Se nel database è salvato "S+" o "SS", lo sposta in modo sicuro in "S-plus"
             let tierId = build.tier || 'S';
-            if (tierId === 'S+' || tierId === 'SS') tierId = 'S-plus';
+            if (tierId === 'SS' || tierId === 'SS') tierId = 'SS';
 
             const tierContainer = document.getElementById(`tier-${tierId}`);
             if (tierContainer) {
@@ -91,7 +90,14 @@ class MetaBuildsController {
         document.getElementById('view-modal-name').textContent = char.name;
         document.getElementById('view-modal-thumb').src = char.thumb;
         document.getElementById('view-modal-general').textContent = build.generalDescription || "Nessuna descrizione generale.";
-        document.getElementById('btn-go-to-char').href = `character.html?id=${char.id}`;
+
+        // FIX SICURO: Assegnazione dinamica dell'evento click con il percorso corretto al 100%
+        const btnGoToChar = document.getElementById('btn-go-to-char');
+        btnGoToChar.onclick = (e) => {
+            e.preventDefault();
+            const basePath = window.location.pathname.includes('.html') ? 'character.html' : 'character';
+            window.location.href = `${basePath}?id=${char.id}`;
+        };
 
         const passivesContainer = document.getElementById('view-modal-passives');
         passivesContainer.innerHTML = '';
@@ -286,9 +292,8 @@ class MetaBuildsController {
         if (build) {
             document.getElementById('build-desc-general').value = build.generalDescription || "";
 
-            // MAPPA IN AUTOMATICO I VECCHI VALORI ERRATI IN "S-plus"
             let loadTier = build.tier || "S";
-            if(loadTier === "SS" || loadTier === "S+") loadTier = "S-plus";
+            if(loadTier === "SS" || loadTier === "SS") loadTier = "SS";
             this.setCustomSelectValue('build-tier', loadTier);
 
             for (let i = 0; i < 3; i++) {
