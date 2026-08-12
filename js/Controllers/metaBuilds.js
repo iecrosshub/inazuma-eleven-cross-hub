@@ -5,7 +5,7 @@ import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSe
 import { parsePassiveText, extractPosition } from '../Core/parsers.js';
 
 const ADMIN_UID = "avNoCAM4I5dyQL6zLY0phnt3fc92";
-const MODERATOR_UIDS = ["alqyEbbyuxNjej3yTJQDNthmtf32"];
+const MODERATOR_UIDS = ["alqyEbbyuxNjej3yTJQDNthmtf32", "Cu2zjcxpxIh2lddFrlDIc6YePgu1"];
 
 class MetaBuildsController {
     constructor() {

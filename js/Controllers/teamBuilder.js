@@ -427,7 +427,7 @@ class TeamBuilderController {
 
             // Controllo per attivare il tasto speciale Meta Formazione (Solo Admin)
             const uid = this.auth.user.uid;
-            if (uid === 'avNoCAM4I5dyQL6zLY0phnt3fc92' || uid === 'alqyEbbyuxNjej3yTJQDNthmtf32') {
+            if (uid === 'avNoCAM4I5dyQL6zLY0phnt3fc92' || uid === 'alqyEbbyuxNjej3yTJQDNthmtf32' || uid === 'Cu2zjcxpxIh2lddFrlDIc6YePgu1') {
                 if (btnPublishMeta) btnPublishMeta.style.display = 'inline-block';
             } else {
                 if (btnPublishMeta) btnPublishMeta.style.display = 'none';
