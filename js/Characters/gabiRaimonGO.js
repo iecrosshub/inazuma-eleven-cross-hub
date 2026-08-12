@@ -9,9 +9,9 @@ export const charData = {
     japaneseName: "霧野 蘭丸",
 
     tags: [
-        "img/TagTitle/Icon_Tag_Team_RevolutionRaimon.png",
+        "img/TagTitle/Icon_Tag_Team_RaimonGO.png",
         "img/TagTitle/Icon_Tag_Ability_Shootblocker.png",
-        "img/TagTitle/Icon_Tag_Title_InaEleGo1.png"
+        "img/TagTitle/Icon_Tag_Title_InaEleGO.png"
     ],
 
 
