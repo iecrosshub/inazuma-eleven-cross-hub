@@ -30,6 +30,6 @@ export const charData = {
     ],
 
     myTechniques: ["フォルテシモ", "プレストターン"],
-    myBasicPassivesIds: ["100000201", "101100001", "101100003"],
-    myRarityPassivesIds: ["100000501", "101100004"]
+    myBasicPassivesIds: ["100000601", "104009001", "104009003"],
+    myRarityPassivesIds: ["100000501", "104009004"]
 };
