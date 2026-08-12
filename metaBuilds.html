@@ -15,7 +15,7 @@
         /* Stile Tier List Pubblica */
         .tier-row { display: flex; margin-bottom: 10px; border-radius: 8px; overflow: hidden; background-color: #0b1a42; border: 2px solid #1269e8; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .tier-label { width: 120px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); flex-shrink: 0; border-right: 2px solid #1269e8; }
-        .tier-S-plus { background-color: #ffc107; color: #000; text-shadow: none; }
+        .tier-SS { background-color: #ffc107; color: #000; text-shadow: none; }
         .tier-S { background-color: #dc3545; }
         .tier-A { background-color: #198754; }
         .tier-B { background-color: #0d6efd; }
@@ -60,11 +60,11 @@
                     <div class="custom-select" id="build-tier" data-value="S">
                         <div class="select-selected"><span class="fw-bold" style="color: #dc3545;">S (Top Meta)</span> <i class="fas fa-chevron-down"></i></div>
                         <div class="select-items select-hide">
-                            <div data-value="S-plus"><span class="fw-bold" style="color: #ffc107;">S+ (God Tier)</span></div>
-                            <div data-value="S"><span class="fw-bold" style="color: #dc3545;">S (Top Meta)</span></div>
-                            <div data-value="A"><span class="fw-bold" style="color: #198754;">A (Ottimo)</span></div>
-                            <div data-value="B"><span class="fw-bold" style="color: #0d6efd;">B (Situazionale)</span></div>
-                            <div data-value="C"><span class="fw-bold" style="color: #6c757d;">C (Meme/For Fun)</span></div>
+                            <div data-value="SS"><span class="fw-bold" style="color: #ffc107;">SS</span></div>
+                            <div data-value="S"><span class="fw-bold" style="color: #dc3545;">S</span></div>
+                            <div data-value="A"><span class="fw-bold" style="color: #198754;">A</span></div>
+                            <div data-value="B"><span class="fw-bold" style="color: #0d6efd;">B</span></div>
+                            <div data-value="C"><span class="fw-bold" style="color: #6c757d;">C</span></div>
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
 
     <!-- TIER LIST PUBBLICA: FIX degli ID rimuovendo i + -->
     <div id="tier-list-container" style="display: none;">
-        <div class="tier-row"><div class="tier-label tier-S-plus">S+</div><div class="tier-content" id="tier-S-plus"></div></div>
+        <div class="tier-row"><div class="tier-label tier-SS">SS</div><div class="tier-content" id="tier-SS"></div></div>
         <div class="tier-row"><div class="tier-label tier-S">S</div><div class="tier-content" id="tier-S"></div></div>
         <div class="tier-row"><div class="tier-label tier-A">A</div><div class="tier-content" id="tier-A"></div></div>
         <div class="tier-row"><div class="tier-label tier-B">B</div><div class="tier-content" id="tier-B"></div></div>
