@@ -16,7 +16,15 @@ export const charData = {
 
     growth_pattern_code: 407,
 
-    // Griglia base di esempio per un Portiere (GK)
+    stats: {
+        "TP": { lv320: 100, icon: "img/Status/Icon_Status_TP.png" },
+        "Tiro": { lv320: 2248, icon: "img/Status/Icon_Status_Kick.png" },
+        "Tecnica": { lv320: 2220, icon: "img/Status/Icon_Status_Technic.png" },
+        "Blocco": { lv320: 2976, icon: "img/Status/Icon_Status_Block.png" },
+        "Parata": { lv320: 4308, icon: "img/Status/Icon_Status_Catch.png" },
+        "Velocità": { lv320: 2, icon: "img/Status/Icon_Status_Speed.png" }
+    },
+
     zones: [
         { code: 10, rank: 'B' },
         { code: 8, rank: 'A' },

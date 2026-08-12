@@ -1,3 +1,5 @@
+// js/Controllers/teamBuilder.js
+
 import { AuthManager } from '../Services/auth.js';
 import { collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { coachRegistry } from '../Coaches/registry.js';
@@ -92,7 +94,7 @@ class TeamBuilderController {
         });
         setupGlobalSelectClose();
 
-        // Gestione Auth per mostrare il tasto condividi
+        // Gestione Auth per mostrare i tasti Condividi/Admin
         this.auth.setAuthStateListener((user) => {
             this.checkShareButtonVisibility();
         });
@@ -129,6 +131,10 @@ class TeamBuilderController {
 
         const btnSubmitShare = document.getElementById('btn-submit-share');
         if (btnSubmitShare) btnSubmitShare.addEventListener('click', () => this.submitTeamShare());
+
+        // Bottone Admin per il Meta
+        const btnPublishMeta = document.getElementById('btn-publish-meta');
+        if (btnPublishMeta) btnPublishMeta.addEventListener('click', () => this.publishToMeta());
     }
 
     // --- SALVATAGGIO STATO ---
@@ -411,12 +417,24 @@ class TeamBuilderController {
     // --- COMMUNITY & CONDIVISIONE ---
     checkShareButtonVisibility() {
         const btnShare = document.getElementById('btn-share-team');
-        if (!btnShare) return;
+        const btnPublishMeta = document.getElementById('btn-publish-meta');
 
-        if (this.auth && this.auth.user && Object.keys(this.teamRoster).length > 0) {
-            btnShare.style.display = 'block';
+        const hasPlayers = Object.keys(this.teamRoster).length > 0;
+
+        if (this.auth && this.auth.user && hasPlayers) {
+            // Mostra sempre il tasto Condividi per tutti gli utenti loggati
+            if (btnShare) btnShare.style.display = 'block';
+
+            // Controllo per attivare il tasto speciale Meta Formazione (Solo Admin)
+            const uid = this.auth.user.uid;
+            if (uid === 'avNoCAM4I5dyQL6zLY0phnt3fc92' || uid === 'alqyEbbyuxNjej3yTJQDNthmtf32') {
+                if (btnPublishMeta) btnPublishMeta.style.display = 'inline-block';
+            } else {
+                if (btnPublishMeta) btnPublishMeta.style.display = 'none';
+            }
         } else {
-            btnShare.style.display = 'none';
+            if (btnShare) btnShare.style.display = 'none';
+            if (btnPublishMeta) btnPublishMeta.style.display = 'none';
         }
     }
 
@@ -466,6 +484,34 @@ class TeamBuilderController {
         btnSubmit.innerHTML = 'Pubblica Post';
     }
 
+    // --- NUOVA LOGICA: INVIA LA SQUADRA ALLA PAGINA META (SOLO ADMIN) ---
+    publishToMeta() {
+        if (!this.activeCoachDb || Object.keys(this.teamRoster).length === 0) {
+            alert("Completa la formazione schierando almeno un giocatore prima di promuoverla al Meta!");
+            return;
+        }
+
+        const playersArray = [];
+
+        // Formatta i giocatori convertendo gli ID degli slot nel loro ruolo in campo
+        for (const [slotNum, charId] of Object.entries(this.teamRoster)) {
+            const slotInfo = this.activeCoachDb.slots.find(s => s.number == slotNum);
+            playersArray.push({
+                id: charId,
+                position: slotInfo ? slotInfo.position : 'Sconosciuto'
+            });
+        }
+
+        const metaTeam = {
+            coach: this.activeCoachDb,
+            players: playersArray,
+            roster: this.teamRoster
+        };
+
+        sessionStorage.setItem('meta_formation_draft', JSON.stringify(metaTeam));
+        window.location.href = 'metaTeam.html';
+    }
+
     async loadLatestDiscussions() {
         const listContainer = document.getElementById('discussions-list');
         if (!listContainer) return;
@@ -483,7 +529,6 @@ class TeamBuilderController {
         if (posts === null) return;
 
         if (posts.length === 0) {
-            // Messaggio Vuoto con tema Chiaro/Blu
             listContainer.innerHTML = '<div class="text-center p-4 fw-bold shadow-sm" style="color: #1a73e8; background-color: #ffffff; border: 2px solid #c0d3e8; border-radius: 12px;">Nessuna formazione condivisa di recente. Sii il primo a chiedere consigli alla community!</div>';
             return;
         }
@@ -500,7 +545,6 @@ class TeamBuilderController {
                 if(c) coachThumb = c.thumb;
             }
 
-            // MODIFICATO: Stile identico alla Community + Redirect a community.html
             html += `
             <div class="post-card bg-white p-3 rounded d-flex align-items-center gap-3 shadow-sm mb-2" 
                  style="border: 1px solid #c0d3e8; border-left: 5px solid #1a73e8; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" 
@@ -579,5 +623,4 @@ class TeamBuilderController {
     }
 }
 
-// Avvia l'app creando un'istanza della classe
 new TeamBuilderController();

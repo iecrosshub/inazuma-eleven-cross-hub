@@ -14,12 +14,21 @@ export const charData = {
         "img/TagTitle/Icon_Tag_Title_InaEle3.png"
     ],
 
-    growth_pattern_code:101,
+    growth_pattern_code: 101,
+
+    stats: {
+        "TP": { lv320: 100, icon: "img/Status/Icon_Status_TP.png" },
+        "Tiro": { lv320: 4802, icon: "img/Status/Icon_Status_Kick.png" },
+        "Tecnica": { lv320: 3970, icon: "img/Status/Icon_Status_Technic.png" },
+        "Blocco": { lv320: 2906, icon: "img/Status/Icon_Status_Block.png" },
+        "Parata": { lv320: 1924, icon: "img/Status/Icon_Status_Catch.png" },
+        "Velocità": { lv320: 4, icon: "img/Status/Icon_Status_Speed.png" }
+    },
 
     zones: [
-        { code: 2, rank: 'S' }, 
-        { code: 3, rank: 'A' }, 
-        { code: 6, rank: 'B' }  
+        { code: 2, rank: 'S' },
+        { code: 3, rank: 'A' },
+        { code: 6, rank: 'B' }
     ],
 
     myTechniques: ["流星ブレード", "天空落とし"],

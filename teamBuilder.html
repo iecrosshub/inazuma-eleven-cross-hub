@@ -16,12 +16,11 @@
     <link rel="stylesheet" href="css/styleTeamBuilder.css">
 
     <style>
-        /* Personalizzazione del fumetto del tutorial */
         .introjs-tooltip {
             min-width: 400px;
             color: #0b1a42;
             font-family: inherit;
-            border: 2px solid #1a73e8; /* Blu acceso */
+            border: 2px solid #1a73e8;
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
@@ -34,7 +33,6 @@
         }
         .introjs-button:hover { background-color: #1557b0; color: #ffffff; }
 
-        /* Tasto Guida in alto a DESTRA */
         .btn-guide-corner {
             position: absolute;
             top: 12px;
@@ -54,17 +52,15 @@
             background-color: #0b5ed7;
         }
 
-        /* Titolo globale Team Builder */
         .tb-main-title {
             font-size: 2.8rem;
             color: #ffffff !important;
             text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
         }
 
-        /* FIX: Stile Intestazione Allenatore (Ombra scura e struttura fissa) */
         .detail-title {
             flex: 1;
-            padding-right: 90px; /* Evita sovrapposizione col bottone */
+            padding-right: 90px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -76,7 +72,7 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Ombra scura per staccare dallo sfondo */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             margin-bottom: 2px;
         }
 
@@ -84,12 +80,12 @@
             width: 100%;
             color: #ffffff;
             font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-            font-weight: 900; /* Font bello massiccio come i titoli */
+            font-weight: 900;
             line-height: 1.1;
             word-wrap: break-word;
             white-space: normal;
             margin: 0;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9); /* Ombra scura marcata */
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
         }
     </style>
 </head>
@@ -98,7 +94,6 @@
 <script type="module" src="js/Components/navbar.js"></script>
 <inazuma-navbar></inazuma-navbar>
 
-<!-- NUOVO TITOLO GLOBALE CENTRATO (GIGANTE E BIANCO) -->
 <div class="container-fixed text-center mt-4 mb-2">
     <h1 class="album-title fw-bold m-0 tb-main-title" style="text-transform: uppercase; letter-spacing: 2px;">
         Team Builder
@@ -119,12 +114,10 @@
         <!-- COLONNA CENTRALE: CAMPO GIGANTE -->
         <article class="main-detail" style="position: relative;">
 
-            <!-- TASTO GUIDA SPOSTATO IN ALTO A DESTRA -->
             <button id="btn-tutorial" class="btn-guide-corner">
                 <i class="fas fa-question-circle me-1"></i> Guida
             </button>
 
-            <!-- Intestazione Allenatore (Pulita con Label e Nome) -->
             <div class="detail-header" style="margin-top: 20px;">
                 <img id="coach-portrait" src="" alt="Coach" class="coach-portrait" style="display:none;">
 
@@ -147,6 +140,11 @@
                 <button id="btn-share-team" class="btn btn-primary fw-bold px-4 shadow" style="display: none;">
                     <i class="fas fa-share-square me-2"></i> Condividi Formazione
                 </button>
+                <!-- NUOVO BOTTONE ADMIN META -->
+                <button id="btn-publish-meta" class="btn btn-warning fw-bold px-4 shadow" style="display: none;">
+                    <i class="fas fa-crown me-2"></i> Promuovi a Meta Formazione
+                </button>
+                <!-- FINE NUOVO BOTTONE -->
                 <button id="btn-remove-player" class="tb-btn-remove" style="display: none;">
                     <i class="fas fa-trash"></i> Rimuovi dal campo
                 </button>
@@ -159,7 +157,6 @@
                 <h2>Giocatori:</h2>
             </div>
 
-            <!-- PANNELLO FILTRI BIANCO -->
             <div class="filters-container shadow-sm mb-3">
                 <script type="module" src="js/Components/filters.js"></script>
                 <inazuma-filters></inazuma-filters>
@@ -167,7 +164,6 @@
 
             <button id="btn-reset-filters" class="tb-btn-reset">Resetta Filtri</button>
 
-            <!-- BOX CONDIZIONI -->
             <div id="tb-conditions-box" class="tb-conditions" style="display:none; margin-bottom: 12px; width: 100%; margin-top: 20px;">
                 <div class="conditions-title">Condizioni Allenatore</div>
                 <div id="tb-conditions-list" class="tb-conditions-list-horizontal"></div>
@@ -188,12 +184,10 @@
         </div>
 
         <div id="discussions-list" class="d-flex flex-column gap-2">
-            <!-- I post verranno generati qui dal JS -->
             <div class="text-center p-4 text-white"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
         </div>
 
         <div class="text-center mt-4">
-            <!-- MODIFICATO: Ora punta a community.html con un parametro -->
             <a href="community.html?tab=teams" id="btn-view-all-discussions" class="btn btn-light fw-bold text-primary shadow" style="display: none;">
                 Vedi in Community <i class="fas fa-arrow-right ms-1"></i>
             </a>
@@ -201,10 +195,9 @@
     </div>
 </main>
 
-<!-- MODALE CONDIVISIONE FORMAZIONE (Tema Chiaro) -->
+<!-- MODALE CONDIVISIONE FORMAZIONE -->
 <div class="modal fade" id="shareTeamModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <!-- Rimosso bg-dark, aggiunto tema bianco e bordi blu -->
         <div class="modal-content bg-white" style="border: 2px solid #1a73e8; border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 2px solid #e2e8f0;">
                 <h5 class="modal-title fw-bold" style="color: #0b1a42;"><i class="fas fa-bullhorn text-primary me-2"></i> Pubblica la tua Squadra</h5>
@@ -229,12 +222,9 @@
     </div>
 </div>
 
-<!-- Script di Intro.js -->
 <script src="https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js"></script>
-<!-- Script di Bootstrap per i Modali -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- INIZIALIZZAZIONE FIREBASE: Il blocco che hai scoperto! -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -262,7 +252,6 @@
     window.dbGet = getDoc;
 </script>
 
-<!-- CONTROLLER TEAM BUILDER -->
 <script type="module" src="js/Controllers/teamBuilder.js"></script>
 </body>
 </html>

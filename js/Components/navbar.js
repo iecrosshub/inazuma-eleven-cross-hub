@@ -1,3 +1,5 @@
+// js/Components/navbar.js
+
 const navbarHTML = `
 <div class="inazuma-nav-container">
     <div class="inazuma-nav">
@@ -15,6 +17,8 @@ const navbarHTML = `
         <div class="nav-dropdown" id="tour-info">
             <button class="dropbtn">Info & Utility <i class="fas fa-caret-down"></i></button>
             <div class="dropdown-content">
+                <a href="metaTeam.html"><i class="fas fa-shield-alt me-1"></i> Meta Formazioni Competitivo</a>
+                <a href="metaBuilds.html"><i class="fas fa-tools me-1"></i> Meta Build PG</a>
                 <a href="meta5vs1.html"><i class="fas fa-crown me-1"></i> Meta Formazioni 5vs1</a>
                 <a href="calendar.html"><i class="fas fa-calendar-alt me-1"></i> Calendario Sfide</a>
                 <a href="stats.html"><i class="fas fa-chart-bar me-1"></i> Database Statistiche</a>
@@ -68,7 +72,6 @@ class InazumaNavbar extends HTMLElement {
             }
         });
 
-        // 2. Controllo vero delle notifiche Community
         const communityBadge = this.querySelector('#community-badge');
 
         const checkNewPosts = async () => {
@@ -84,7 +87,6 @@ class InazumaNavbar extends HTMLElement {
                         const latestTime = latestPost.createdAt ? latestPost.createdAt.toMillis() : 0;
                         const lastVisit = parseInt(localStorage.getItem('last_community_visit') || '0');
 
-                        // Se c'è un post più recente dell'ultima visita, mostra il pallino
                         if (latestTime > lastVisit) {
                             communityBadge.style.display = 'inline-block';
                         }
@@ -100,7 +102,6 @@ class InazumaNavbar extends HTMLElement {
             }
         }, 1000);
 
-        // 3. Gestione Profilo
         const profileBtn = this.querySelector('#btn-profile-settings');
         if (profileBtn) {
             profileBtn.addEventListener('click', (e) => {
