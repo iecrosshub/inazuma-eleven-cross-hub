@@ -286,6 +286,45 @@ export const characterRegistry = [
     },
 
     {
+        id: "constantBuilderRaimonVG",
+        name: "Constant Builder",
+        romanizedName: "Minyama Yō",
+        japaneseName: "民山 謡",
+        thumb: "img/Characters/ConstantBuilderRaimonVG.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "peterMildredRaimonVG",
+        name: "Peter Mildred",
+        romanizedName: "Batora Shi",
+        japaneseName: "場寅 仕",
+        thumb: "img/Characters/PeterMildredRaimonVG.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "arthurSweetRaimonVG",
+        name: "Arthur Sweet",
+        romanizedName: "Aida Chikara",
+        japaneseName: "会田 力",
+        thumb: "img/Characters/ArthurSweetRaimonVG.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
         id: "seymourHillmanRaimonVG",
         name: "Seymour Hillman",
         romanizedName: "Hibiki Seigou",
@@ -306,7 +345,7 @@ export const characterRegistry = [
         thumb: "img/Characters/CharlesIslandRaimonVG.png",
         element: "img/Element/Icon_Element_Forest.png",
         position: "img/Position/Icon_Position_DF.png",
-        stars: 2, // (Ho impostato provvisoriamente 2 stelle SR viste le statistiche più alte, modificalo a 1 o 3 a seconda della rarità effettiva nel gioco)
+        stars: 2,
         background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
@@ -691,6 +730,45 @@ export const characterRegistry = [
         stars: 2,
         background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "joshNathanielRaimonVG",
+        name: "Josh Nathaniel",
+        romanizedName: "Nakama Yō",
+        japaneseName: "中間 庸",
+        thumb: "img/Characters/JoshNathanielRaimonVG.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "edwardGladstoneRaimonVG",
+        name: "Edward Gladstone",
+        romanizedName: "Ikari Gangorou",
+        japaneseName: "碇 頑五郎",
+        thumb: "img/Characters/EdwardGladstoneRaimonVG.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "garretHairtownRaimonVG",
+        name: "Garret Hairtown",
+        romanizedName: "Kamimura Kirito",
+        japaneseName: "髪村 切斗",
+        thumb: "img/Characters/GarretHairtownRaimonVG.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
     },
 
     {

@@ -991,5 +991,145 @@ export const bondPassives = [
         effects: [
             { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Legame] Tiro & Tecnica FW + (【結束】ＦＷキック＆テクニック＋)",
+        id: "102054001",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Young Inazuma', aumenta il Tiro e la Tecnica dei compagni FW di {VAL}.",
+        levels: [
+            { val: 14, req: "Lv. 1" },
+            { val: 29, req: "Lv. 21" },
+            { val: 44, req: "Lv. 71" },
+            { val: 59, req: "Lv. 101" },
+            { val: 89, req: "Lv. 131" },
+            { val: 119, req: "Lv. 161" },
+            { val: 149, req: "Lv. 191" },
+            { val: 179, req: "Lv. 221" },
+            { val: 239, req: "Lv. 251" },
+            { val: 299, req: "Lv. 281" },
+            { val: 328, req: "Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame/Rarità] Tiro FW + (【結束】ＦＷキック＋)",
+        id: "102054004",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Young Inazuma', aumenta il Tiro dei compagni FW di {VAL}.",
+        levels: [
+            { val: 559, req: "Advanced Player +" },
+            { val: 746, req: "Top Player +" },
+            { val: 933, req: "Legendary Player +" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Tiro FW + / Blocco DF + (【結束】ＦＷキック＋／ＤＦブロック＋)",
+        id: "102047001",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Young Inazuma', aumenta il Tiro dei compagni FW di {VAL} e il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 15, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 31, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 62, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 93, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 125, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 156, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 187, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 250, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 313, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 344, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Blocco DF + / Parata GK + (【結束】ＤＦブロック＋／ＧＫキャッチ＋)",
+        id: "102049003",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Young Inazuma', aumenta il Blocco dei compagni DF di {VAL} e la Parata dei compagni GK di {VAL}.",
+        levels: [
+            { val: 19, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 39, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 59, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 79, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 119, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 159, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 199, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 238, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 318, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 398, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 437, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Tiro FW + (【結束】ＦＷキック＋)",
+        id: "102050003",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Young Inazuma', aumenta il Tiro dei compagni FW di {VAL}.",
+        levels: [
+            { val: 112, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 168, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 336, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 392, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 504, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 560, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 616, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Blocco + / Parata GK + (【結束】ブロック＋／ＧＫキャッチ＋)",
+        id: "102046001",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Young Inazuma', aumenta il proprio Blocco di {VAL} e la Parata dei compagni GK di {VAL}.",
+        levels: [
+            { val: 31, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 62, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 93, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 125, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 187, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 250, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 312, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 375, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 500, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 625, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 687, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
+        ]
     }
 ];

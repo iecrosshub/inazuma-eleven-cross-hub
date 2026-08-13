@@ -1047,5 +1047,124 @@ export const stackingPassives = [
         trigger: "ally_shoot_block_fail",
         resetCondition: "ally_goal",
         effects: [{ targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }]
+    },
+
+    {
+        title: "[Avversità] Blocco DF + (【逆境】ＤＦブロック＋)",
+        id: "102048003",
+        template: "Quando una tecnica di Dribbling di un alleato fallisce, aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 149, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 298, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 373, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 522, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 597, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 747, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 821, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 896, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Stacking",
+        trigger: "ally_dribble_fail",
+        resetCondition: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Prevenzione/Accumulo] Potenza Dribbling MF + (【阻止/累】ＭＦドリブルパワー＋)",
+        id: "102048004",
+        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Dribbling dei compagni MF di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 9, req: "Si sblocca con: Advanced Player +" },
+            { val: 12, req: "Si sblocca con: Top Player +" },
+            { val: 16, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_stop_shoot",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Attivazione/Accumulo] Tiro FW + (【発動】ＦＷキック＋)",
+        id: "102047004",
+        template: "Ogni volta che si utilizza la tecnica Drago Crash, aumenta il Tiro dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 597, req: "Si sblocca con: Advanced Player +" },
+            { val: 796, req: "Si sblocca con: Top Player +" },
+            { val: 996, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "self_use_move",
+        triggerMove: "ドラゴンクラッシュ",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Avversità/Accumulo] Blocco DF + (【逆境】ＤＦブロック＋)",
+        id: "102049004",
+        template: "Ogni volta che una tecnica di Blocco di un alleato fallisce, aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 477, req: "Si sblocca con: Advanced Player +" },
+            { val: 636, req: "Si sblocca con: Top Player +" },
+            { val: 796, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_block_fail",
+        resetCondition: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Prevenzione/Accumulo] Potenza Tiro FW + (【阻止】ＦＷシュートパワー＋)",
+        id: "102050004",
+        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Tiro dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 12, req: "Si sblocca con: Advanced Player +" },
+            { val: 16, req: "Si sblocca con: Top Player +" },
+            { val: 20, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_stop_shoot",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Avversità/Accumulo] Potenza Parata GK Montagna + (【逆境/累】山ＧＫキーパーパワー＋)",
+        id: "102046003",
+        template: "Ogni volta che una propria tecnica di Blocco al Tiro fallisce, aumenta la potenza delle tecniche di Parata dei compagni GK di elemento Montagna di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 6, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 21, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 27, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 31, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 34, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Stacking",
+        trigger: "self_block_shoot_fail",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["GK"], targetElements: ["Mountain"], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
+        ]
     }
 ];

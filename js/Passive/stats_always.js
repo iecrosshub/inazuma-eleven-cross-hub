@@ -6,30 +6,25 @@ export const alwaysPassives = [
         id: "100000101",
         template: "All'inizio della partita, aumenta il proprio Tiro di {VAL}.",
         levels: [
-            { val: 67, req: "Si sblocca con personaggio Lv. 11" },
-            { val: 134, req: "Si sblocca con personaggio Lv. 51" },
-            { val: 201, req: "Si sblocca con personaggio Lv. 81" },
-            { val: 268, req: "Si sblocca con personaggio Lv. 111" },
-            { val: 403, req: "Si sblocca con personaggio Lv. 141" },
-            { val: 537, req: "Si sblocca con personaggio Lv. 171" },
-            { val: 672, req: "Si sblocca con personaggio Lv. 201" },
-            { val: 806, req: "Si sblocca con personaggio Lv. 231" },
-            { val: 1075, req: "Si sblocca con personaggio Lv. 261" },
-            { val: 1344, req: "Si sblocca con personaggio Lv. 291" }
+            { val: 67, req: "Lv. 11" },
+            { val: 134, req: "Lv. 51" },
+            { val: 201, req: "Lv. 81" },
+            { val: 268, req: "Lv. 111" },
+            { val: 403, req: "Lv. 141" },
+            { val: 537, req: "Lv. 171" },
+            { val: 672, req: "Lv. 201" },
+            { val: 806, req: "Lv. 231" },
+            { val: 1075, req: "Lv. 261" },
+            { val: 1344, req: "Lv. 291" },
+            { val: 1545, req: "Lv. 321" }
         ],
         category: "Always",
         conditions: null,
         effects: [
-            {
-                targetScope: "self",
-                targetRoles: [],
-                targetElements: [],
-                type: "stat",
-                statName: "Tiro",
-                valueRef: "val"
-            }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
+
     {
         title: "TP Massimi + (最大ＴＰ＋)",
         id: "100000501",
@@ -1891,23 +1886,6 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Ali di Fuoco (炎の風見鶏パワー＋改)",
-        id: "102045004",
-        template: "All'inizio della partita, aumenta la potenza della propria tecnica Ali di Fuoco di {VAL1} e ne riduce il consumo TP di {VAL2}.",
-        levels: [
-            { val1: 18, val2: 5, req: "Si sblocca con: Advanced Player +" },
-            { val1: 24, val2: 5, req: "Si sblocca con: Top Player +" },
-            { val1: 30, val2: 10, req: "Si sblocca con: Legendary Player +" }
-        ],
-        category: "Always",
-        conditions: null,
-        effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Ali di Fuoco", moveElement: null, valueRef: "val1" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "Ali di Fuoco", moveElement: null, valueRef: "val2" }
-        ]
-    },
-
-    {
         title: "Parata GK + / Blocco DF + (ＧＫキャッチ＋／ＤＦブロック＋)",
         id: "102044001",
         template: "All'inizio della partita, aumenta la Parata dei compagni GK di {VAL} e il Blocco dei compagni DF di {VAL}.",
@@ -1929,29 +1907,6 @@ export const alwaysPassives = [
         effects: [
             { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" },
             { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
-        ]
-    },
-
-    {
-        title: "Potenza Mano di Luce + (ゴッドハンドパワー＋)",
-        id: "102044003",
-        template: "All'inizio della partita, aumenta la potenza della propria tecnica Mano di Luce (God Hand) di elemento Montagna di {VAL}.",
-        levels: [
-            { val: 13, req: "Si sblocca con personaggio Lv. 41" },
-            { val: 20, req: "Si sblocca con personaggio Lv. 61" },
-            { val: 26, req: "Si sblocca con personaggio Lv. 91" },
-            { val: 33, req: "Si sblocca con personaggio Lv. 121" },
-            { val: 40, req: "Si sblocca con personaggio Lv. 151" },
-            { val: 46, req: "Si sblocca con personaggio Lv. 181" },
-            { val: 53, req: "Si sblocca con personaggio Lv. 211" },
-            { val: 60, req: "Si sblocca con personaggio Lv. 241" },
-            { val: 67, req: "Si sblocca con personaggio Lv. 271" },
-            { val: 73, req: "Si sblocca con personaggio Lv. 301" }
-        ],
-        category: "Always",
-        conditions: null,
-        effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Mano di Luce", moveElement: "Mountain", valueRef: "val" }
         ]
     },
 
@@ -2092,23 +2047,6 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Impasto di Goldie (Fuochi d'artificio) (もちもち黄粉餅（花火）パワー＋改)",
-        id: "102055004",
-        template: "All'inizio della partita, aumenta la potenza della propria tecnica Impasto di Goldie (Fuochi d'artificio) di {VAL1} e ne riduce il consumo TP di {VAL2}.",
-        levels: [
-            { val1: 90, val2: 5, req: "Si sblocca con: Advanced Player +" },
-            { val1: 109, val2: 5, req: "Si sblocca con: Top Player +" },
-            { val1: 129, val2: 10, req: "Si sblocca con: Legendary Player +" }
-        ],
-        category: "Always",
-        conditions: null,
-        effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "もちもち黄粉餅（花火）", moveElement: null, valueRef: "val1" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "もちもち黄粉餅（花火）", moveElement: null, valueRef: "val2" }
-        ]
-    },
-
-    {
         title: "Tiro + (キック＋)",
         id: "110003001",
         template: "All'inizio della partita, aumenta il proprio Tiro di {VAL}.",
@@ -2129,23 +2067,6 @@ export const alwaysPassives = [
         conditions: null,
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
-        ]
-    },
-
-    {
-        title: "Potenza Tiro Rimbalzante (Fuochi d'artificio) + / Tiro Foresta + (バウンサーラビット（花火）パワー＋／林キック＋)",
-        id: "110003004",
-        template: "All'inizio della partita, aumenta la potenza della propria tecnica Tiro Rimbalzante (Fuochi d'artificio) di {VAL1} e il Tiro dei compagni di elemento Foresta di {VAL2}.",
-        levels: [
-            { val1: 65, val2: 412, req: "Si sblocca con: Advanced Player +" },
-            { val1: 79, val2: 500, req: "Si sblocca con: Top Player +" },
-            { val1: 93, val2: 589, req: "Si sblocca con: Legendary Player +" }
-        ],
-        category: "Always",
-        conditions: null,
-        effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "バウンサーラビット（花火）", moveElement: null, valueRef: "val1" },
-            { targetScope: "team", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val2" }
         ]
     },
 
@@ -2277,6 +2198,95 @@ export const alwaysPassives = [
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: ["Forest"], type: "power", moveKind: null, moveElement: "Forest", valueRef: "val1" },
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "Blocco DF + / Parata GK + (ＤＦブロック＋／ＧＫキャッチ＋)",
+        id: "102048001",
+        template: "All'inizio della partita, aumenta il Blocco dei compagni DF di {VAL} e la Parata dei compagni GK di {VAL}.",
+        levels: [
+            { val: 19, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 39, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 59, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 79, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 119, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 159, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 199, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 238, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 318, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 398, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 437, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Blocco + (ブロック＋)",
+        id: "102049001",
+        template: "All'inizio della partita, aumenta il proprio Blocco di {VAL}.",
+        levels: [
+            { val: 67, req: "Si sblocca con personaggio Lv. 11" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 51" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 81" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 111" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 141" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 171" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 201" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 231" },
+            { val: 1075, req: "Si sblocca con personaggio Lv. 261" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 291" },
+            { val: 1545, req: "Si sblocca con personaggio Lv. 321" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Blocco MF + (ＭＦブロック＋)",
+        id: "102050001",
+        template: "All'inizio della partita, aumenta il Blocco dei compagni MF di {VAL}.",
+        levels: [
+            { val: 22, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 89, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 179, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 224, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 358, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 448, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 492, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Blocco + Vento (ブロックパワー＋〈風〉)",
+        id: "102046004",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Blocco di elemento Vento di {VAL}.",
+        levels: [
+            { val: 37, req: "Si sblocca con: Advanced Player +" },
+            { val: 49, req: "Si sblocca con: Top Player +" },
+            { val: 62, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: "Wind", valueRef: "val" }
         ]
     }
 ];

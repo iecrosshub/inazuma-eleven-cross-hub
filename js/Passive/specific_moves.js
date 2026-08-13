@@ -324,5 +324,127 @@ export const specificMovesPassives = [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "ジャッジスルー", valueRef: "val" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "foul_reduction", valueRef: "val2" }
         ]
+    },
+
+    {
+        title: "Potenza Ali di Fuoco (炎の風見鶏パワー＋改)",
+        id: "102045004",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Ali di Fuoco di {VAL1} e ne riduce il consumo TP di {VAL2}.",
+        levels: [
+            { val1: 18, val2: 5, req: "Si sblocca con: Advanced Player +" },
+            { val1: 24, val2: 5, req: "Si sblocca con: Top Player +" },
+            { val1: 30, val2: 10, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "炎の風見鶏", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "炎の風見鶏", moveElement: null, valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "Potenza Mano di Luce + (ゴッドハンドパワー＋)",
+        id: "102044003",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Mano di Luce di elemento Montagna di {VAL}.",
+        levels: [
+            { val: 13, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 26, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 33, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 40, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 53, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 60, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 73, req: "Si sblocca con personaggio Lv. 301" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "ゴッドハンド", moveElement: "Mountain", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Impasto di Goldie (Fuochi d'artificio) (もちもち黄粉餅（花火）パワー＋改)",
+        id: "102055004",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Impasto di Goldie (Fuochi d'artificio) di {VAL1} e ne riduce il consumo TP di {VAL2}.",
+        levels: [
+            { val1: 90, val2: 5, req: "Si sblocca con: Advanced Player +" },
+            { val1: 109, val2: 5, req: "Si sblocca con: Top Player +" },
+            { val1: 129, val2: 10, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "もちもち黄粉餅（花火）", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "もちもち黄粉餅（花火）", moveElement: null, valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "Potenza Tiro Rimbalzante (Fuochi d'artificio) + / Tiro Foresta + (バウンサーラビット（花火）パワー＋／林キック＋)",
+        id: "110003004",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Tiro Rimbalzante (Fuochi d'artificio) di {VAL1} e il Tiro dei compagni di elemento Foresta di {VAL2}.",
+        levels: [
+            { val1: 65, val2: 412, req: "Si sblocca con: Advanced Player +" },
+            { val1: 79, val2: 500, req: "Si sblocca con: Top Player +" },
+            { val1: 93, val2: 589, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "バウンサーラビット（花火）", moveElement: null, valueRef: "val1" },
+            { targetScope: "team", targetRoles: [], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "Potenza Ali di Fuoco + (炎の風見鶏パワー＋)",
+        id: "102054003",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Ali di Fuoco (炎の風見鶏) di {VAL}.",
+        levels: [
+            { val: 13, req: "Lv. 41" },
+            { val: 20, req: "Lv. 61" },
+            { val: 26, req: "Lv. 91" },
+            { val: 33, req: "Lv. 121" },
+            { val: 40, req: "Lv. 151" },
+            { val: 46, req: "Lv. 181" },
+            { val: 53, req: "Lv. 211" },
+            { val: 60, req: "Lv. 241" },
+            { val: 67, req: "Lv. 271" },
+            { val: 73, req: "Lv. 301" },
+            { val: 80, req: "Lv. 331" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "炎の風見鶏", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Dragon Crash FW + (ＦＷドラゴンクラッシュパワー＋)",
+        id: "102047003",
+        template: "All'inizio della partita, aumenta la potenza della tecnica Dragon Crash  dei compagni FW di {VAL}.",
+        levels: [
+            { val: 4, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 19, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 22, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 26, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveName: "ドラゴンクラッシュ", moveElement: null, valueRef: "val" }
+        ]
     }
 ];
