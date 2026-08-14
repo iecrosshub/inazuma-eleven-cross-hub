@@ -1050,6 +1050,31 @@ export const stackingPassives = [
     },
 
     {
+        title: "[Avversità/Accumulo] Potenza Parata GK + (【逆境/累】ＧＫキーパーパワー＋)",
+        id: "102055001",
+        template: "Ogni volta che una propria tecnica di Blocco al Tiro fallisce, aumenta la potenza delle tecniche di Parata dei compagni GK di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 6, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 8, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 22, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 26, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 30, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Stacking",
+        trigger: "self_block_shoot_fail",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
         title: "[Avversità] Blocco DF + (【逆境】ＤＦブロック＋)",
         id: "102048003",
         template: "Quando una tecnica di Dribbling di un alleato fallisce, aumenta il Blocco dei compagni DF di {VAL}.",
