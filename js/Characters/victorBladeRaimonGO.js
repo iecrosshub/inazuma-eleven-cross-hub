@@ -14,12 +14,12 @@ export const charData = {
     ],
 
     stats: {
-        "TP": { lv1: 100, lv300: 100, lv320: 100, icon: "img/Status/Icon_Status_TP.png" },
-        "Tiro": { lv1: 69, lv300: 5460, lv320: 6060, icon: "img/Status/Icon_Status_Kick.png" },
-        "Tecnica": { lv1: 50, lv300: 3846, lv320: 4268, icon: "img/Status/Icon_Status_Technic.png" },
-        "Blocco": { lv1: 36, lv300: 2598, lv320: 2884, icon: "img/Status/Icon_Status_Block.png" },
-        "Parata": { lv1: 26, lv300: 1734, lv320: 1924, icon: "img/Status/Icon_Status_Catch.png" },
-        "Velocità": { lv1: 4, lv300: 4, lv320: 4, icon: "img/Status/Icon_Status_Speed.png" }
+        "TP": { lv1: 100, lv300: 100, lv320: 100, lv340: 100, icon: "img/Status/Icon_Status_TP.png" },
+        "Tiro": { lv1: 69, lv300: 5460, lv320: 6060, lv340: 6606, icon: "img/Status/Icon_Status_Kick.png" },
+        "Tecnica": { lv1: 50, lv300: 3846, lv320: 4268, lv340: 4652, icon: "img/Status/Icon_Status_Technic.png" },
+        "Blocco": { lv1: 36, lv300: 2598, lv320: 2884, lv340: 3142, icon: "img/Status/Icon_Status_Block.png" },
+        "Parata": { lv1: 26, lv300: 1734, lv320: 1924, lv340: 2096, icon: "img/Status/Icon_Status_Catch.png" },
+        "Velocità": { lv1: 4, lv300: 4, lv320: 4, lv340: 4, icon: "img/Status/Icon_Status_Speed.png" }
     },
 
     zones: [

@@ -26,7 +26,7 @@ export const charData = {
     zones: [
         { code: 2, rank: 'A' },
         { code: 3, rank: 'A' },
-        { code: 6, rank: 'B' }
+        { code: 5, rank: 'B' }
     ],
 
     myTechniques: ["炎の風見鶏", "ヒートタックル"],

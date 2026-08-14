@@ -17,12 +17,12 @@ export const charData = {
     growth_pattern_code: 101,
 
     stats: {
-        "TP": { lv320: 100, icon: "img/Status/Icon_Status_TP.png" },
-        "Tiro": { lv320: 4802, icon: "img/Status/Icon_Status_Kick.png" },
-        "Tecnica": { lv320: 3970, icon: "img/Status/Icon_Status_Technic.png" },
-        "Blocco": { lv320: 2906, icon: "img/Status/Icon_Status_Block.png" },
-        "Parata": { lv320: 1924, icon: "img/Status/Icon_Status_Catch.png" },
-        "Velocità": { lv320: 4, icon: "img/Status/Icon_Status_Speed.png" }
+        "TP": { lv320: 100, lv340: 100, icon: "img/Status/Icon_Status_TP.png" },
+        "Tiro": { lv320: 4802, lv340: 5234, icon: "img/Status/Icon_Status_Kick.png" },
+        "Tecnica": { lv320: 3970, lv340: 4326, icon: "img/Status/Icon_Status_Technic.png" },
+        "Blocco": { lv320: 2906, lv340: 3166, icon: "img/Status/Icon_Status_Block.png" },
+        "Parata": { lv320: 1924, lv340: 2096, icon: "img/Status/Icon_Status_Catch.png" },
+        "Velocità": { lv320: 4, lv340: 4, icon: "img/Status/Icon_Status_Speed.png" }
     },
 
     zones: [

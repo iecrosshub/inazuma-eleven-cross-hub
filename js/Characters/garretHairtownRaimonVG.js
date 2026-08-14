@@ -24,9 +24,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 6, rank: 'A' },
+        { code: 9, rank: 'A' },
         { code: 10, rank: 'A' },
-        { code: 3, rank: 'B' }
+        { code: 6, rank: 'B' }
     ],
 
     myTechniques: ["スピニングカット", "残像"],

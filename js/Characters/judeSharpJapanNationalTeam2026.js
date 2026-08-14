@@ -22,6 +22,15 @@ export const charData = {
 
     growth_pattern_code:201,
 
+    stats: {
+        "TP": { lv340: 100, icon: "img/Status/Icon_Status_TP.png" },
+        "Tiro": { lv340: 4168, icon: "img/Status/Icon_Status_Kick.png" },
+        "Tecnica": { lv340: 5234, icon: "img/Status/Icon_Status_Technic.png" },
+        "Blocco": { lv340: 3108, icon: "img/Status/Icon_Status_Block.png" },
+        "Parata": { lv340: 2072, icon: "img/Status/Icon_Status_Catch.png" },
+        "Velocità": { lv340: 6, icon: "img/Status/Icon_Status_Speed.png" }
+    },
+
     myTechniques: ["サムライペンギン2号", "ブルーサイクロン"],
 
     myBasicPassivesIds: ["100000201", "1010005001", "1010005003"],

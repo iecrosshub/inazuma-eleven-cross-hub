@@ -24,9 +24,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 6, rank: 'A' },
-        { code: 7, rank: 'A' },
-        { code: 5, rank: 'B' }
+        { code: 8, rank: 'A' },
+        { code: 4, rank: 'A' },
+        { code: 1, rank: 'B' }
     ],
 
     myTechniques: ["ザ・ウォール", "ドラゴンクラッシュ"],

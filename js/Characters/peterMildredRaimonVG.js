@@ -24,9 +24,9 @@ export const charData = {
     },
 
     zones: [
-        { code: 5, rank: 'A' },
-        { code: 7, rank: 'A' },
-        { code: 4, rank: 'B' }
+        { code: 6, rank: 'A' },
+        { code: 10, rank: 'A' },
+        { code: 3, rank: 'B' }
     ],
 
     myTechniques: ["ブレードアタック", "残像"],

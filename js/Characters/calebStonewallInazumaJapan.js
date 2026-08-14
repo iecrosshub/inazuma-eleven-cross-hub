@@ -14,6 +14,15 @@ export const charData = {
     ],
     growth_pattern_code:203,
 
+    stats: {
+        "TP": { lv340: 100, icon: "img/Status/Icon_Status_TP.png" },
+        "Tiro": { lv340: 4048, icon: "img/Status/Icon_Status_Kick.png" },
+        "Tecnica": { lv340: 5524, icon: "img/Status/Icon_Status_Technic.png" },
+        "Blocco": { lv340: 3006, icon: "img/Status/Icon_Status_Block.png" },
+        "Parata": { lv340: 2004, icon: "img/Status/Icon_Status_Catch.png" },
+        "Velocità": { lv340: 6, icon: "img/Status/Icon_Status_Speed.png" }
+    },
+
     zones: [
         { code: 4, rank: 'S' }, 
         { code: 6, rank: 'A' }, 

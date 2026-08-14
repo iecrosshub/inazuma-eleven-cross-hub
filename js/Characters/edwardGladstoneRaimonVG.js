@@ -23,11 +23,10 @@ export const charData = {
         "Velocità": { lv1: 6, lv340: 6, icon: "img/Status/Icon_Status_Speed.png" }
     },
 
-    // Zone standard per un Playmaker (MF)
     zones: [
-        { code: 2, rank: 'A' },
-        { code: 3, rank: 'A' },
-        { code: 1, rank: 'B' }
+        { code: 4, rank: 'A' },
+        { code: 5, rank: 'A' },
+        { code: 7, rank: 'B' }
     ],
 
     myTechniques: ["ドラゴンクラッシュ", "ひとりワンツー"],
