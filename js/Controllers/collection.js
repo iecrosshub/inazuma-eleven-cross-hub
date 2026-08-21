@@ -7,6 +7,11 @@ import { calcolaStatisticheEsatte } from '../Core/calculator.js';
 import { showProfileSetupModal } from '../Components/profileModal.js';
 import { showProfileEditModal } from '../Components/profileSettings.js';
 
+// ==========================================
+// LIMITE MASSIMO DEL GIOCO (Modifica solo questo per futuri update!)
+// ==========================================
+const MAX_LEVEL = 340;
+
 class CollectionApp {
     constructor() {
         this.auth = new AuthManager();
@@ -44,7 +49,7 @@ class CollectionApp {
                         const sel = document.querySelector(`.core-member-select[data-slot="${i}"]`);
                         const inp = document.querySelector(`.core-member-level[data-slot="${i}"]`);
                         if (sel) sel.value = saved[i].id || "";
-                        if (inp) inp.value = saved[i].level || 300;
+                        if (inp) inp.value = saved[i].level || MAX_LEVEL;
                     }
                 }
             }
@@ -65,7 +70,7 @@ class CollectionApp {
             }
         }
 
-        const fallbackLevel = 300;
+        const fallbackLevel = MAX_LEVEL;
         const crossLevel = levels.length > 0 ? Math.min(...levels) : fallbackLevel;
 
         const display = document.getElementById('display-cross-level');
@@ -78,7 +83,7 @@ class CollectionApp {
             if(sel && inp) {
                 toSave[i] = {
                     id: sel.value,
-                    level: parseInt(inp.value) || 300
+                    level: parseInt(inp.value) || MAX_LEVEL
                 };
             }
         }
@@ -94,7 +99,7 @@ class CollectionApp {
             const inp = document.querySelector(`.core-member-level[data-slot="${i}"]`);
 
             if(sel && inp && sel.value !== "") {
-                const lvl = parseInt(inp.value) || 300;
+                const lvl = parseInt(inp.value) || MAX_LEVEL;
                 levels.push(lvl);
 
                 if(sel.value === charId || charId.includes(sel.value) || sel.value.includes(charId)) {
@@ -106,7 +111,7 @@ class CollectionApp {
         if (specificLevel !== null) return specificLevel;
         if (levels.length > 0) return Math.min(...levels);
 
-        return 300;
+        return MAX_LEVEL;
     }
 
     setupEquipMatrix() {
@@ -149,7 +154,7 @@ class CollectionApp {
                         <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary equip-matrix-select mx-auto" 
                                style="font-size: 0.95rem; max-width: 80px; text-align: center; font-weight: bold;" 
                                data-role="${r.id}" data-cat="${c.key}" 
-                               min="0" max="300" step="5" value="300">
+                               min="0" max="${MAX_LEVEL}" step="5" value="${MAX_LEVEL}">
                     </td>`;
                 });
                 html += `</tr>`;
@@ -160,7 +165,7 @@ class CollectionApp {
                 inp.addEventListener('change', (e) => {
                     let v = parseInt(e.target.value);
                     if (isNaN(v) || v <= 0) e.target.value = 1;
-                    else if (v > 300) e.target.value = 300;
+                    else if (v > MAX_LEVEL) e.target.value = MAX_LEVEL;
                 });
             });
         }
@@ -174,14 +179,14 @@ class CollectionApp {
                     if (savedMatrix[r] && savedMatrix[r][c]) {
                         sel.value = savedMatrix[r][c];
                     } else {
-                        sel.value = "300";
+                        sel.value = MAX_LEVEL.toString();
                     }
                 });
             } else {
-                document.querySelectorAll('.equip-matrix-select').forEach(sel => sel.value = "300");
+                document.querySelectorAll('.equip-matrix-select').forEach(sel => sel.value = MAX_LEVEL.toString());
             }
         } catch(e) {
-            document.querySelectorAll('.equip-matrix-select').forEach(sel => sel.value = "300");
+            document.querySelectorAll('.equip-matrix-select').forEach(sel => sel.value = MAX_LEVEL.toString());
         }
     }
 
@@ -211,7 +216,7 @@ class CollectionApp {
 
                 const matrixObj = { FW: {}, MF: {}, DF: {}, GK: {} };
                 document.querySelectorAll('.equip-matrix-select').forEach(sel => {
-                    matrixObj[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || 300;
+                    matrixObj[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || MAX_LEVEL;
                 });
                 localStorage.setItem('collection_equip_matrix', JSON.stringify(matrixObj));
 
@@ -540,7 +545,7 @@ class CollectionApp {
 
         const equipMatrix = { FW: {}, MF: {}, DF: {}, GK: {} };
         document.querySelectorAll('.equip-matrix-select').forEach(sel => {
-            equipMatrix[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || 300;
+            equipMatrix[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || MAX_LEVEL;
         });
 
         const newStats = calcolaStatisticheEsatte(fullData, charLevel, rarity, equipMatrix);
@@ -653,6 +658,14 @@ class CollectionApp {
         const elementPath = resolvePath(fullData.element, 'Element');
         const positionPath = resolvePath(fullData.position, 'Position');
 
+        // Crea dinamicamente il segnaposto corretto se manca nel database
+        const placeholderStatValue = (stat) => {
+            if (fullData.stats && fullData.stats[stat]) {
+                return fullData.stats[stat]['lv' + MAX_LEVEL] || fullData.stats[stat].lv300 || 0;
+            }
+            return 0;
+        };
+
         let html = `
             <div class="collection-card owned" id="card-${baseChar.id}">
                 
@@ -690,7 +703,7 @@ class CollectionApp {
                                 </span>
                                 <input type="number" class="form-control bg-dark text-white border-secondary stat-input ${hasAutoStats ? 'auto-stat' : ''}" 
                                        data-char="${baseChar.id}" data-stat="${stat}" 
-                                       placeholder="${fullData.stats && fullData.stats[stat] ? fullData.stats[stat].lv300 : 0}">
+                                       placeholder="${placeholderStatValue(stat)}">
                             </div>
                         `).join('')}
                     </div>

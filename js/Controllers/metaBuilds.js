@@ -14,6 +14,7 @@ class MetaBuildsController {
         this.isAdmin = false;
         this.allBuilds = [];
         this.currentViewedCharId = null;
+        this.dragOccurred = false;
 
         const allRerollsUnfiltered = Object.values(rerollPassivesByRole).flat();
         this.availableRerolls = Array.from(new Map(allRerollsUnfiltered.map(p => [p.id, p])).values());
@@ -23,21 +24,30 @@ class MetaBuildsController {
     }
 
     async init() {
-        this.auth.setAuthStateListener((user) => {
+        // Il sito aspetta di sapere chi sei prima di disegnare i personaggi
+        this.auth.setAuthStateListener(async (user) => {
             this.isAdmin = user && (user.uid === ADMIN_UID || MODERATOR_UIDS.includes(user.uid));
+
             if (this.isAdmin) {
                 document.getElementById('btn-toggle-admin').style.display = 'block';
                 this.setupAdminForm();
                 this.bindAdminEvents();
+            } else {
+                const adminBtn = document.getElementById('btn-toggle-admin');
+                if (adminBtn) adminBtn.style.display = 'none';
             }
+
+            // Ora carichiamo la grafica
+            await this.loadTierList();
         });
 
-        document.getElementById('btn-toggle-admin').addEventListener('click', () => {
-            const panel = document.getElementById('admin-panel-container');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        });
-
-        await this.loadTierList();
+        const toggleBtn = document.getElementById('btn-toggle-admin');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                const panel = document.getElementById('admin-panel-container');
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            });
+        }
     }
 
     // ==========================================
@@ -47,13 +57,15 @@ class MetaBuildsController {
         document.getElementById('loading-spinner').style.display = 'block';
         document.getElementById('tier-list-container').style.display = 'none';
 
-        // Pulisce i contenitori con ID sicuri
         ['SS', 'S', 'A', 'B', 'C'].forEach(t => {
             const el = document.getElementById(`tier-${t}`);
             if (el) el.innerHTML = '';
         });
 
         this.allBuilds = await this.buildManager.getAllBuilds();
+
+        // Ordina le build per posizione salvata
+        this.allBuilds.sort((a, b) => (a.order || 0) - (b.order || 0));
 
         this.allBuilds.forEach(build => {
             const char = characterRegistry.find(c => c.id === build.characterId);
@@ -64,9 +76,10 @@ class MetaBuildsController {
 
             const tierContainer = document.getElementById(`tier-${tierId}`);
             if (tierContainer) {
+                const draggableAttr = this.isAdmin ? 'draggable="true" style="cursor: grab;"' : '';
                 const iconHtml = `
-                    <div class="char-icon-btn" data-charid="${char.id}" title="${char.name}">
-                        <img src="${char.thumb}" alt="${char.name}">
+                    <div class="char-icon-btn" data-charid="${char.id}" title="${char.name}" ${draggableAttr}>
+                        <img src="${char.thumb}" alt="${char.name}" draggable="false" style="pointer-events: none;">
                     </div>
                 `;
                 tierContainer.insertAdjacentHTML('beforeend', iconHtml);
@@ -77,9 +90,94 @@ class MetaBuildsController {
         document.getElementById('tier-list-container').style.display = 'block';
 
         document.querySelectorAll('.char-icon-btn').forEach(btn => {
-            btn.addEventListener('click', () => this.openViewModal(btn.dataset.charid));
+            btn.addEventListener('click', (e) => {
+                if (this.dragOccurred) {
+                    e.preventDefault();
+                    return;
+                }
+                this.openViewModal(btn.dataset.charid);
+            });
+        });
+
+        // Abilita la logica di trascinamento solo per Admin e Moderatori
+        if (this.isAdmin) {
+            this.setupDragAndDrop();
+        }
+    }
+
+    // ==========================================
+    // SISTEMA DRAG & DROP (Solo Admin/Mod)
+    // ==========================================
+    setupDragAndDrop() {
+        const containers = document.querySelectorAll('.tier-content');
+
+        document.querySelectorAll('.char-icon-btn').forEach(draggable => {
+            draggable.addEventListener('dragstart', (e) => {
+                this.dragOccurred = true;
+                draggable.classList.add('dragging');
+                draggable.style.opacity = '0.4';
+                if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+            });
+
+            draggable.addEventListener('dragend', async () => {
+                draggable.classList.remove('dragging');
+                draggable.style.opacity = '1';
+
+                setTimeout(() => { this.dragOccurred = false; }, 100);
+
+                await this.saveNewOrder(draggable.parentElement);
+            });
+        });
+
+        containers.forEach(container => {
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = this.getDragAfterElement(container, e.clientX);
+                const draggable = document.querySelector('.dragging');
+                if (draggable) {
+                    if (afterElement == null) {
+                        container.appendChild(draggable);
+                    } else {
+                        container.insertBefore(draggable, afterElement);
+                    }
+                }
+            });
         });
     }
+
+    getDragAfterElement(container, x) {
+        const draggableElements = [...container.querySelectorAll('.char-icon-btn:not(.dragging)')];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = x - box.left - box.width / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    async saveNewOrder(container) {
+        const newTier = container.id.replace('tier-', '');
+        const items = container.querySelectorAll('.char-icon-btn');
+        const updates = [];
+
+        document.body.style.cursor = 'wait';
+
+        items.forEach((item, index) => {
+            const charId = item.dataset.charid;
+            updates.push(this.buildManager.saveBuild(charId, {
+                order: index,
+                tier: newTier
+            }));
+        });
+
+        await Promise.all(updates);
+        document.body.style.cursor = 'default';
+    }
+
 
     openViewModal(charId) {
         this.currentViewedCharId = charId;
@@ -91,7 +189,6 @@ class MetaBuildsController {
         document.getElementById('view-modal-thumb').src = char.thumb;
         document.getElementById('view-modal-general').textContent = build.generalDescription || "Nessuna descrizione generale.";
 
-        // FIX SICURO: Assegnazione dinamica dell'evento click con il percorso corretto al 100%
         const btnGoToChar = document.getElementById('btn-go-to-char');
         btnGoToChar.onclick = (e) => {
             e.preventDefault();
@@ -337,10 +434,20 @@ class MetaBuildsController {
             btn.disabled = true;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Salvataggio...`;
 
+            // Recuperiamo l'ordine corrente se la build esisteva già
+            let existingOrder = 0;
+            const existingBuild = this.allBuilds.find(b => b.characterId === charId);
+            if(existingBuild && existingBuild.order !== undefined) {
+                existingOrder = existingBuild.order;
+            } else {
+                existingOrder = this.allBuilds.length; // Si mette in fondo se è nuovo
+            }
+
             const buildData = {
                 authorId: this.auth.user.uid,
                 tier: document.getElementById('build-tier').dataset.value,
                 generalDescription: document.getElementById('build-desc-general').value.trim(),
+                order: existingOrder, // Mantiene l'ordinamento
                 passives: [],
                 extraMove: {
                     id: document.getElementById('build-move-select').dataset.value || "",

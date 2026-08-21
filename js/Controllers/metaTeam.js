@@ -17,19 +17,23 @@ class MetaTeamController {
         this.draftFormation = null;
         this.currentViewedId = null;
         this.currentForm = null;
+        this.dragOccurred = false; // Traccia il trascinamento per bloccare il click accidentale
 
         setupGlobalSelectClose();
         this.init();
     }
 
     async init() {
-        this.auth.setAuthStateListener((user) => {
+        initCustomSelect(document.getElementById('formation-tier'));
+
+        // FIX: Spostato il caricamento dentro il listener di Auth per gestire i permessi prima di renderizzare
+        this.auth.setAuthStateListener(async (user) => {
             this.isAdmin = user && (user.uid === ADMIN_UID || MODERATOR_UIDS.includes(user.uid));
             this.checkDraft();
+
+            await this.loadTierList();
         });
 
-        initCustomSelect(document.getElementById('formation-tier'));
-        await this.loadTierList();
         this.bindEvents();
     }
 
@@ -68,16 +72,22 @@ class MetaTeamController {
             const snap = await window.dbGetDocs(window.dbCollection(window.firebaseDb, "meta_teams"));
             this.allFormations = snap.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
 
+            // Ordinamento basato sul campo "order"
+            this.allFormations.sort((a, b) => (a.order || 0) - (b.order || 0));
+
             this.allFormations.forEach(form => {
                 const tierContainer = document.getElementById(`tier-${form.tier}`);
                 if (tierContainer) {
                     const coachImg = form.team.coach ? form.team.coach.thumb : 'img/IECross.png';
                     const coachName = form.team.coach ? form.team.coach.name : 'Sconosciuto';
 
+                    // Aggiunti draggable="true" per gli admin e blocchi pointer-events per un drag fluido
+                    const draggableAttr = this.isAdmin ? 'draggable="true" style="cursor: grab;"' : '';
+
                     const cardHtml = `
-                        <div class="formation-card shadow-sm" data-uid="${form.uid}">
-                            <img src="${coachImg}">
-                            <div class="overflow-hidden">
+                        <div class="formation-card shadow-sm" data-uid="${form.uid}" ${draggableAttr}>
+                            <img src="${coachImg}" draggable="false" style="pointer-events: none;">
+                            <div class="overflow-hidden" style="pointer-events: none;">
                                 <h6 class="mb-0 fw-bold text-dark text-truncate">${form.title}</h6>
                                 <small class="text-secondary fw-bold">All: ${coachName}</small>
                             </div>
@@ -86,15 +96,105 @@ class MetaTeamController {
                     tierContainer.insertAdjacentHTML('beforeend', cardHtml);
                 }
             });
-        } catch (e) {}
+        } catch (e) {
+            console.error("Errore nel caricamento formazioni:", e);
+        }
 
         document.getElementById('loading-spinner').style.display = 'none';
         document.getElementById('tier-list-container').style.display = 'block';
 
         document.querySelectorAll('.formation-card').forEach(card => {
-            card.addEventListener('click', () => this.openViewModal(card.dataset.uid));
+            card.addEventListener('click', (e) => {
+                if (this.dragOccurred) {
+                    e.preventDefault();
+                    return;
+                }
+                this.openViewModal(card.dataset.uid);
+            });
+        });
+
+        // Inizializza il sistema di trascinamento se l'utente è Admin o Moderatore
+        if (this.isAdmin) {
+            this.setupDragAndDrop();
+        }
+    }
+
+    // ==========================================
+    // SISTEMA DRAG & DROP (Solo Admin/Mod)
+    // ==========================================
+    setupDragAndDrop() {
+        // Selezioniamo le aree dove le formazioni possono essere rilasciate
+        const containers = document.querySelectorAll('[id^="tier-"]');
+
+        document.querySelectorAll('.formation-card').forEach(draggable => {
+            draggable.addEventListener('dragstart', (e) => {
+                this.dragOccurred = true;
+                draggable.classList.add('dragging');
+                draggable.style.opacity = '0.4';
+                if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+            });
+
+            draggable.addEventListener('dragend', async () => {
+                draggable.classList.remove('dragging');
+                draggable.style.opacity = '1';
+
+                // Ritardo per permettere al click di essere bloccato
+                setTimeout(() => { this.dragOccurred = false; }, 100);
+
+                await this.saveNewOrder(draggable.parentElement);
+            });
+        });
+
+        containers.forEach(container => {
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = this.getDragAfterElement(container, e.clientX);
+                const draggable = document.querySelector('.dragging');
+                if (draggable) {
+                    if (afterElement == null) {
+                        container.appendChild(draggable);
+                    } else {
+                        container.insertBefore(draggable, afterElement);
+                    }
+                }
+            });
         });
     }
+
+    getDragAfterElement(container, x) {
+        const draggableElements = [...container.querySelectorAll('.formation-card:not(.dragging)')];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = x - box.left - box.width / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    async saveNewOrder(container) {
+        const newTier = container.id.replace('tier-', '');
+        const items = container.querySelectorAll('.formation-card');
+        const updates = [];
+
+        document.body.style.cursor = 'wait';
+
+        items.forEach((item, index) => {
+            const uid = item.dataset.uid;
+            const formRef = window.dbDoc(window.firebaseDb, "meta_teams", uid);
+            updates.push(window.dbSet(formRef, {
+                order: index,
+                tier: newTier
+            }, { merge: true }));
+        });
+
+        await Promise.all(updates);
+        document.body.style.cursor = 'default';
+    }
+
 
     async openViewModal(uid) {
         this.currentViewedId = uid;
@@ -264,6 +364,7 @@ class MetaTeamController {
                     title: title,
                     desc: desc,
                     tier: tier,
+                    order: this.allFormations.length, // Viene inserita in fondo per default
                     team: this.draftFormation,
                     createdAt: new Date().toISOString()
                 });
