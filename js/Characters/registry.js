@@ -1,6 +1,115 @@
 export const characterRegistry = [
 
     {
+        id: "sonnyRaimon",
+        name: "Sonny Raimon",
+        romanizedName: "Raimon Souichirou",
+        japaneseName: "雷門 総一郎",
+        thumb: "img/Characters/SonnyRaimon.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "gregorySmith",
+        name: "Gregory Smith",
+        romanizedName: "Smith",
+        japaneseName: "スミス",
+        thumb: "img/Characters/GregorySmith.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "aureliaDingle",
+        name: "Aurelia Dingle",
+        romanizedName: "Ootani Tsukushi",
+        japaneseName: "大谷 つくし",
+        thumb: "img/Characters/AureliaDingle.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "hillmanAdulto",
+        name: "Seymour Hillman Adulto",
+        romanizedName: "Hibiki Seigou",
+        japaneseName: "響木 正剛",
+        thumb: "img/Characters/HillmanAdulto.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_GK.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "juliaBlaze",
+        name: "Julia Blaze",
+        romanizedName: "Gouenji Yuuka",
+        japaneseName: "豪炎寺 夕香",
+        thumb: "img/Characters/JuliaBlaze.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "celiaHills",
+        name: "Celia Hills",
+        romanizedName: "Otonashi Haruna",
+        japaneseName: "音無 春奈",
+        thumb: "img/Characters/CeliaHills.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "malcolmNightKirkwood",
+        name: "Malcolm Night (Kirkwood)",
+        romanizedName: "Nishigaki Mamoru",
+        japaneseName: "西垣 守",
+        thumb: "img/Characters/MalcolmNightKirkwood.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "nellyRaimon",
+        name: "Nelly Raimon",
+        romanizedName: "Raimon Natsumi",
+        japaneseName: "雷門 夏未",
+        thumb: "img/Characters/NellyRaimon.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+    {
+        id: "silviaWoods",
+        name: "Silvia Woods",
+        romanizedName: "Kino Aki",
+        japaneseName: "木野 秋",
+        thumb: "img/Characters/SilviaWoods.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
         id: "riccardoDiRigoRaimonGO",
         name: "Riccardo Di Rigo",
         romanizedName: "Shindou Takuto",
