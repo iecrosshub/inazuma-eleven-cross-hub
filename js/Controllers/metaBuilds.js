@@ -45,7 +45,6 @@ class MetaBuildsController {
             await this.loadTierList();
         });
 
-        // Gestione pannello admin a tendina
         const toggleBtn = document.getElementById('btn-toggle-admin');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {
@@ -57,14 +56,12 @@ class MetaBuildsController {
         // Sistema a schede: Navigazione tra i ruoli
         document.querySelectorAll('.role-filter-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
-                // Rimuovi classe attiva da tutti i bottoni
                 document.querySelectorAll('.role-filter-btn').forEach(b => {
                     b.classList.remove('active');
                     b.classList.remove('btn-info');
                     b.classList.add('btn-outline-info');
                 });
 
-                // Metti la classe attiva sul bottone cliccato
                 const clicked = e.currentTarget;
                 clicked.classList.remove('btn-outline-info');
                 clicked.classList.add('btn-info');
@@ -72,12 +69,10 @@ class MetaBuildsController {
 
                 this.currentRoleFilter = clicked.dataset.role;
 
-                // Aggiorna titolo visivo
                 const roleTitles = { 'FW': 'Attaccanti', 'MF': 'Centrocampisti', 'DF': 'Difensori', 'GK': 'Portieri' };
                 document.getElementById('active-tier-title').innerHTML = `Tier List Meta: ${roleTitles[this.currentRoleFilter]}`;
                 document.getElementById('pool-role-text').innerHTML = roleTitles[this.currentRoleFilter];
 
-                // Ricarica le Tier per il nuovo ruolo
                 await this.loadTierList();
             });
         });
@@ -101,47 +96,58 @@ class MetaBuildsController {
 
         // 1. Estraiamo e filtriamo SOLO le build del Ruolo corrente
         const currentRoleBuilds = this.allBuilds.filter(b => {
-            const role = b.roleBuild || 'FW'; // Se mancano dati vecchi, li consideriamo FW
+            const role = b.roleBuild || 'FW';
             return role === this.currentRoleFilter;
         });
 
+        // 2. Ordinamento assoluto basato sul Cloud (ordine in cui li hai trascinati tu)
         currentRoleBuilds.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-        // Mappa veloce: per ogni build salvata in questo ruolo, recuperiamo l'id base del PG
-        const buildMap = new Map();
-        currentRoleBuilds.forEach(b => {
-            const baseId = b.baseCharId || b.characterId;
-            buildMap.set(baseId, b);
-        });
+        const rankedCharIds = new Set();
 
-        // 2. Ciclare tutti i personaggi del database in ordine alfabetico
-        const sortedRegistry = [...characterRegistry].sort((a, b) => a.name.localeCompare(b.name));
+        // 3. Ciclo 1: Posizioniamo i personaggi GIA' CLASSIFICATI nel loro ordine esatto
+        currentRoleBuilds.forEach(build => {
+            const baseId = build.baseCharId || build.characterId;
+            const char = characterRegistry.find(c => c.id === baseId);
+            if (!char) return;
 
-        sortedRegistry.forEach(char => {
-            const build = buildMap.get(char.id);
-            const draggableAttr = this.isAdmin ? 'draggable="true" style="cursor: grab;"' : '';
-            const iconHtml = `
-                <div class="char-icon-btn" data-charid="${char.id}" title="${char.name}" ${draggableAttr}>
-                    <img src="${char.thumb}" alt="${char.name}" draggable="false" style="pointer-events: none;">
-                </div>
-            `;
+            rankedCharIds.add(baseId);
 
-            if (build) {
-                // Se ha la build in QUESTO ruolo, lo mettiamo nel Tier List corretto
-                let tierId = build.tier || 'S';
-                if (!['S', 'A', 'B', 'C', 'D'].includes(tierId)) tierId = 'S';
+            let tierId = build.tier || 'S';
+            if (!['S', 'A', 'B', 'C', 'D'].includes(tierId)) tierId = 'S';
 
-                const tierContainer = document.getElementById(`tier-${tierId}`);
-                if (tierContainer) tierContainer.insertAdjacentHTML('beforeend', iconHtml);
-            } else if (this.isAdmin && pool) {
-                // Se NON ha la build, lo gettiamo nel calderone gigante per gli Admin!
-                pool.insertAdjacentHTML('beforeend', iconHtml);
+            const tierContainer = document.getElementById(`tier-${tierId}`);
+            if (tierContainer) {
+                const draggableAttr = this.isAdmin ? 'draggable="true" style="cursor: grab;"' : '';
+                const iconHtml = `
+                    <div class="char-icon-btn" data-charid="${char.id}" title="${char.name}" ${draggableAttr}>
+                        <img src="${char.thumb}" alt="${char.name}" draggable="false" style="pointer-events: none;">
+                    </div>
+                `;
+                tierContainer.insertAdjacentHTML('beforeend', iconHtml);
             }
         });
+
+        // 4. Ciclo 2: Riempiamo il calderone (Admin Pool) con quelli che NON hanno ancora una build
+        if (this.isAdmin && pool) {
+            const sortedRegistry = [...characterRegistry].sort((a, b) => a.name.localeCompare(b.name));
+            sortedRegistry.forEach(char => {
+                if (!rankedCharIds.has(char.id)) {
+                    const draggableAttr = 'draggable="true" style="cursor: grab;"';
+                    const iconHtml = `
+                        <div class="char-icon-btn" data-charid="${char.id}" title="${char.name}" ${draggableAttr}>
+                            <img src="${char.thumb}" alt="${char.name}" draggable="false" style="pointer-events: none;">
+                        </div>
+                    `;
+                    pool.insertAdjacentHTML('beforeend', iconHtml);
+                }
+            });
+        }
 
         document.getElementById('loading-spinner').style.display = 'none';
         document.getElementById('tier-list-container').style.display = 'block';
 
+        // Riattiviamo i click sulle icone
         document.querySelectorAll('.char-icon-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 if (this.dragOccurred) {
@@ -177,7 +183,6 @@ class MetaBuildsController {
 
                 setTimeout(() => { this.dragOccurred = false; }, 100);
 
-                // Passa il contenitore in cui lo stiamo mollando, e l'ID del personaggio che avevamo in mano
                 await this.saveNewOrder(draggable.parentElement, draggable.dataset.charid);
             });
         });
@@ -220,20 +225,16 @@ class MetaBuildsController {
         document.body.style.cursor = 'wait';
 
         if (isPool) {
-            // Se lo abbiamo trascinato nel riquadro in basso, ELIMINIAMO la build dal DB!
             updates.push(this.buildManager.deleteBuild(`${charIdDragged}_${this.currentRoleFilter}`));
-
-            // Retrocompatibilità (nel caso avessi vecchi salvataggi incastrati prima di questo aggiornamento)
             if (this.currentRoleFilter === 'FW') {
                 updates.push(this.buildManager.deleteBuild(charIdDragged));
             }
         } else {
-            // Lo stiamo mettendo o riordinando in un Tier valido
             const newTier = container.id.replace('tier-', '');
 
             items.forEach((item, index) => {
-                const charId = item.dataset.charid; // L'ID base del pg (es. markEvansRaimon)
-                const compositeId = `${charId}_${this.currentRoleFilter}`; // L'ID documento (es. markEvansRaimon_FW)
+                const charId = item.dataset.charid;
+                const compositeId = `${charId}_${this.currentRoleFilter}`;
 
                 const buildData = {
                     baseCharId: charId,
@@ -248,7 +249,6 @@ class MetaBuildsController {
         }
 
         await Promise.all(updates);
-        // Aggiorniamo silenziosamente la lista locale per evitare sfarfallii
         this.allBuilds = await this.buildManager.getAllBuilds();
         document.body.style.cursor = 'default';
     }
@@ -258,14 +258,12 @@ class MetaBuildsController {
         const char = characterRegistry.find(c => c.id === charId);
         if (!char) return;
 
-        // Troviamo se ha una build attiva in QUESTA pagina specifica
         let build = this.allBuilds.find(b => {
             const baseId = b.baseCharId || b.characterId;
             const role = b.roleBuild || 'FW';
             return baseId === charId && role === this.currentRoleFilter;
         });
 
-        // Se clicchiamo un PG del pool che non ha ancora una build
         if (!build) {
             build = {
                 generalDescription: "Personaggio non ancora classificato per questo Ruolo. Clicca 'Modifica Build' per compilare le info.",
@@ -411,8 +409,6 @@ class MetaBuildsController {
         const char = characterRegistry.find(c => c.id === charId);
         if (!char) return;
 
-        // Le passive si basano sul ruolo ORIGINALE del personaggio
-        // (Un portiere ha passive da portiere, anche se lo stiamo valutando nella Tier List Attaccanti)
         const role = extractPosition(char.position);
         const rolePassives = rerollPassivesByRole[role] || [];
         rolePassives.sort((a, b) => (a.title || a.name || "").localeCompare(b.title || b.name || ""));
@@ -479,7 +475,6 @@ class MetaBuildsController {
         const compositeId = `${charId}_${this.currentRoleFilter}`;
         let build = await this.buildManager.getBuild(compositeId);
 
-        // Fallback vecchie build salvate solo col nome base (Le assumevamo FW in precedenza)
         if (!build && this.currentRoleFilter === 'FW') {
             build = await this.buildManager.getBuild(charId);
         }
@@ -523,7 +518,6 @@ class MetaBuildsController {
             btn.disabled = true;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Salvataggio...`;
 
-            // Mantiene l'ordine attuale se già posizionato, altrimenti lo mette per ultimo nel tier
             let existingOrder = 0;
             const existingBuild = this.allBuilds.find(b => {
                 const baseId = b.baseCharId || b.characterId;
@@ -544,7 +538,7 @@ class MetaBuildsController {
 
             const buildData = {
                 baseCharId: charId,
-                roleBuild: this.currentRoleFilter, // Associa indissolubilmente la build al Ruolo
+                roleBuild: this.currentRoleFilter,
                 authorId: this.auth.user.uid,
                 tier: document.getElementById('build-tier').dataset.value,
                 generalDescription: document.getElementById('build-desc-general').value.trim(),
