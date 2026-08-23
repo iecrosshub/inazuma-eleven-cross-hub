@@ -16,15 +16,20 @@
     <style>
         .tier-row { display: flex; margin-bottom: 10px; border-radius: 8px; overflow: hidden; background-color: #0b1a42; border: 2px solid #1269e8; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .tier-label { width: 120px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); flex-shrink: 0; border-right: 2px solid #1269e8; }
-        .tier-SS { background-color: #ffc107; color: #000; text-shadow: none; }
-        .tier-S { background-color: #dc3545; }
-        .tier-A { background-color: #198754; }
-        .tier-B { background-color: #0d6efd; }
+
+        /* Nuovi Colori Tier */
+        .tier-S { background-color: #dc3545; } /* Rosso */
+        .tier-A { background-color: #fd7e14; } /* Arancione */
+        .tier-B { background-color: #ffc107; } /* Giallo */
+        .tier-C { background-color: #198754; } /* Verde */
+        .tier-D { background-color: #0d6efd; } /* Blu */
+
         .tier-content { padding: 15px; display: flex; flex-wrap: wrap; gap: 15px; flex-grow: 1; min-height: 110px; }
 
         .formation-card { background: #e4edf8; border: 2px solid #c0d3e8; border-radius: 8px; padding: 10px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; width: 300px; }
         .formation-card:hover { transform: scale(1.05); border-color: #1a73e8; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .formation-card img { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 2px solid #102247; }
+        .formation-card.dragging { opacity: 0.4; }
 
         .draft-mini-icon { width: 40px; height: 40px; border-radius: 4px; border: 1px solid #fff; object-fit: cover; }
 
@@ -57,10 +62,11 @@
                     <div class="custom-select" id="formation-tier" data-value="S">
                         <div class="select-selected"><span class="fw-bold" style="color: #dc3545;">S</span> <i class="fas fa-chevron-down"></i></div>
                         <div class="select-items select-hide">
-                            <div data-value="SS"><span class="fw-bold" style="color: #ffc107;">SS</span></div>
                             <div data-value="S"><span class="fw-bold" style="color: #dc3545;">S</span></div>
-                            <div data-value="A"><span class="fw-bold" style="color: #198754;">A</span></div>
-                            <div data-value="B"><span class="fw-bold" style="color: #0d6efd;">B</span></div>
+                            <div data-value="A"><span class="fw-bold" style="color: #fd7e14;">A</span></div>
+                            <div data-value="B"><span class="fw-bold" style="color: #ffc107;">B</span></div>
+                            <div data-value="C"><span class="fw-bold" style="color: #198754;">C</span></div>
+                            <div data-value="D"><span class="fw-bold" style="color: #0d6efd;">D</span></div>
                         </div>
                     </div>
                 </div>
@@ -85,10 +91,18 @@
     </div>
 
     <div id="tier-list-container" style="display: none;">
-        <div class="tier-row"><div class="tier-label tier-SS">SS</div><div class="tier-content" id="tier-SS"></div></div>
         <div class="tier-row"><div class="tier-label tier-S">S</div><div class="tier-content" id="tier-S"></div></div>
         <div class="tier-row"><div class="tier-label tier-A">A</div><div class="tier-content" id="tier-A"></div></div>
         <div class="tier-row"><div class="tier-label tier-B">B</div><div class="tier-content" id="tier-B"></div></div>
+        <div class="tier-row"><div class="tier-label tier-C">C</div><div class="tier-content" id="tier-C"></div></div>
+        <div class="tier-row"><div class="tier-label tier-D">D</div><div class="tier-content" id="tier-D"></div></div>
+    </div>
+
+    <!-- ARCHIVIO FORMAZIONI (Stile Uwufufu - Solo Admin) -->
+    <div id="admin-pool-container" style="display: none; margin-top: 40px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 12px; border: 2px dashed #0dcaf0;">
+        <h4 class="text-info fw-bold mb-3"><i class="fas fa-archive me-2"></i> Archivio Formazioni (Non Classificate)</h4>
+        <p class="text-white small mb-3">Trascina le formazioni qui dentro per toglierle dalla Tier List principale senza eliminarle, oppure trascinale in alto per ripristinarle nel Meta.</p>
+        <div class="tier-content rounded" id="unranked-pool" style="background: #102247; min-height: 150px; align-items: flex-start;"></div>
     </div>
 </div>
 

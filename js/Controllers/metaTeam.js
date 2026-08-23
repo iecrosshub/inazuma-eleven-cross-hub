@@ -17,7 +17,7 @@ class MetaTeamController {
         this.draftFormation = null;
         this.currentViewedId = null;
         this.currentForm = null;
-        this.dragOccurred = false; // Traccia il trascinamento per bloccare il click accidentale
+        this.dragOccurred = false;
 
         setupGlobalSelectClose();
         this.init();
@@ -26,11 +26,17 @@ class MetaTeamController {
     async init() {
         initCustomSelect(document.getElementById('formation-tier'));
 
-        // FIX: Spostato il caricamento dentro il listener di Auth per gestire i permessi prima di renderizzare
         this.auth.setAuthStateListener(async (user) => {
             this.isAdmin = user && (user.uid === ADMIN_UID || MODERATOR_UIDS.includes(user.uid));
-            this.checkDraft();
 
+            const poolContainer = document.getElementById('admin-pool-container');
+            if (this.isAdmin) {
+                if (poolContainer) poolContainer.style.display = 'block';
+            } else {
+                if (poolContainer) poolContainer.style.display = 'none';
+            }
+
+            this.checkDraft();
             await this.loadTierList();
         });
 
@@ -63,10 +69,12 @@ class MetaTeamController {
         document.getElementById('loading-spinner').style.display = 'block';
         document.getElementById('tier-list-container').style.display = 'none';
 
-        ['S-plus', 'S', 'A', 'B'].forEach(t => {
+        ['S', 'A', 'B', 'C', 'D'].forEach(t => {
             const el = document.getElementById(`tier-${t}`);
             if (el) el.innerHTML = '';
         });
+        const pool = document.getElementById('unranked-pool');
+        if (pool) pool.innerHTML = '';
 
         try {
             const snap = await window.dbGetDocs(window.dbCollection(window.firebaseDb, "meta_teams"));
@@ -76,12 +84,16 @@ class MetaTeamController {
             this.allFormations.sort((a, b) => (a.order || 0) - (b.order || 0));
 
             this.allFormations.forEach(form => {
-                const tierContainer = document.getElementById(`tier-${form.tier}`);
+                let tierId = form.tier || 'S';
+                // Se non è nei 5 standard, la destiniamo all'archivio (Pool)
+                if (!['S', 'A', 'B', 'C', 'D'].includes(tierId)) tierId = 'POOL';
+
+                const tierContainer = (tierId === 'POOL' && this.isAdmin) ? pool : document.getElementById(`tier-${tierId}`);
+
                 if (tierContainer) {
                     const coachImg = form.team.coach ? form.team.coach.thumb : 'img/IECross.png';
                     const coachName = form.team.coach ? form.team.coach.name : 'Sconosciuto';
 
-                    // Aggiunti draggable="true" per gli admin e blocchi pointer-events per un drag fluido
                     const draggableAttr = this.isAdmin ? 'draggable="true" style="cursor: grab;"' : '';
 
                     const cardHtml = `
@@ -113,7 +125,6 @@ class MetaTeamController {
             });
         });
 
-        // Inizializza il sistema di trascinamento se l'utente è Admin o Moderatore
         if (this.isAdmin) {
             this.setupDragAndDrop();
         }
@@ -123,8 +134,7 @@ class MetaTeamController {
     // SISTEMA DRAG & DROP (Solo Admin/Mod)
     // ==========================================
     setupDragAndDrop() {
-        // Selezioniamo le aree dove le formazioni possono essere rilasciate
-        const containers = document.querySelectorAll('[id^="tier-"]');
+        const containers = document.querySelectorAll('.tier-content');
 
         document.querySelectorAll('.formation-card').forEach(draggable => {
             draggable.addEventListener('dragstart', (e) => {
@@ -138,7 +148,6 @@ class MetaTeamController {
                 draggable.classList.remove('dragging');
                 draggable.style.opacity = '1';
 
-                // Ritardo per permettere al click di essere bloccato
                 setTimeout(() => { this.dragOccurred = false; }, 100);
 
                 await this.saveNewOrder(draggable.parentElement);
@@ -176,7 +185,10 @@ class MetaTeamController {
     }
 
     async saveNewOrder(container) {
-        const newTier = container.id.replace('tier-', '');
+        // Se viene rilasciata nell'archivio la settiamo a 'POOL', altrimenti leggiamo l'ID
+        const isPool = container.id === 'unranked-pool';
+        const newTier = isPool ? 'POOL' : container.id.replace('tier-', '');
+
         const items = container.querySelectorAll('.formation-card');
         const updates = [];
 
@@ -192,6 +204,11 @@ class MetaTeamController {
         });
 
         await Promise.all(updates);
+
+        // Ricarichiamo in memoria locale la lista aggiornata
+        const snap = await window.dbGetDocs(window.dbCollection(window.firebaseDb, "meta_teams"));
+        this.allFormations = snap.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
+
         document.body.style.cursor = 'default';
     }
 
@@ -264,7 +281,10 @@ class MetaTeamController {
         detailsContainer.innerHTML = '<div class="text-center p-5 w-100"><i class="fas fa-spinner fa-spin fa-3x text-info"></i><br><span class="fw-bold mt-2 d-block text-white">Estrazione Dati...</span></div>';
 
         const char = characterRegistry.find(c => c.id === charId);
-        const build = await this.buildManager.getBuild(charId);
+
+        // Estrae la build del PG se presente (indipendentemente dal ruolo, tenta di cercare un match)
+        const allBuilds = await this.buildManager.getAllBuilds();
+        const build = allBuilds.find(b => (b.baseCharId === charId || b.characterId === charId));
 
         let buildHtml = '';
         if (build) {
@@ -364,7 +384,7 @@ class MetaTeamController {
                     title: title,
                     desc: desc,
                     tier: tier,
-                    order: this.allFormations.length, // Viene inserita in fondo per default
+                    order: this.allFormations.length,
                     team: this.draftFormation,
                     createdAt: new Date().toISOString()
                 });
