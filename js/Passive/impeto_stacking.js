@@ -1191,5 +1191,122 @@ export const stackingPassives = [
         effects: [
             { targetScope: "team", targetRoles: ["GK"], targetElements: ["Mountain"], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Soccorso/Accumulo] Potenza Parata GK + (【救援/累】キーパーパワー＋)",
+        id: "101166003",
+        template: "Ogni volta che un blocco al tiro di un alleato fallisce, aumenta la potenza delle proprie tecniche di Parata di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 12, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 28, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 32, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 36, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 38, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 41, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 45, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 49, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Stacking",
+        trigger: "ally_shoot_block_fail",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Impeto/Accumulo] Tiro FW - (【破竹/累】ＦＷキック－)",
+        id: "101167001",
+        template: "Ogni volta che una propria tecnica di Dribbling ha successo, riduce il Tiro dei FW avversari di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: -102, req: "Si sblocca con personaggio Lv. 1" },
+            { val: -136, req: "Si sblocca con personaggio Lv. 21" },
+            { val: -170, req: "Si sblocca con personaggio Lv. 71" },
+            { val: -204, req: "Si sblocca con personaggio Lv. 101" },
+            { val: -272, req: "Si sblocca con personaggio Lv. 131" },
+            { val: -340, req: "Si sblocca con personaggio Lv. 161" },
+            { val: -408, req: "Si sblocca con personaggio Lv. 191" },
+            { val: -476, req: "Si sblocca con personaggio Lv. 221" },
+            { val: -578, req: "Si sblocca con personaggio Lv. 251" },
+            { val: -681, req: "Si sblocca con personaggio Lv. 281" },
+            { val: -783, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Stacking",
+        trigger: "self_dribble_success",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Impeto/Accumulo] Potenza Blocco DF Montagna - (【破竹/累】山ＤＦブロックパワー－)",
+        id: "101167003",
+        template: "Ogni volta che una propria tecnica di Dribbling ha successo, riduce la potenza delle tecniche di Blocco dei DF avversari di elemento Montagna di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: -12, req: "Si sblocca con personaggio Lv. 41" },
+            { val: -16, req: "Si sblocca con personaggio Lv. 61" },
+            { val: -21, req: "Si sblocca con personaggio Lv. 91" },
+            { val: -25, req: "Si sblocca con personaggio Lv. 121" },
+            { val: -29, req: "Si sblocca con personaggio Lv. 151" },
+            { val: -33, req: "Si sblocca con personaggio Lv. 181" },
+            { val: -37, req: "Si sblocca con personaggio Lv. 211" },
+            { val: -39, req: "Si sblocca con personaggio Lv. 241" },
+            { val: -42, req: "Si sblocca con personaggio Lv. 271" },
+            { val: -46, req: "Si sblocca con personaggio Lv. 301" },
+            { val: -50, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Stacking",
+        trigger: "self_dribble_success",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: ["Mountain"], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Attivazione/Accumulo - Mod] Tiro FW + (【発動/累・改】ＦＷキック＋)",
+        id: "101168003",
+        template: "Ogni volta che si utilizza una tecnica di Tiro, aumenta il Tiro dei compagni FW di {VAL}. (Condizione di fine: quando si segna un gol).",
+        levels: [
+            { val: 342, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 457, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 571, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 685, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 800, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 914, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 1028, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 1085, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 1143, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 1257, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 1371, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Stacking",
+        trigger: "self_use_shoot",
+        resetCondition: "self_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Ispirazione/Accumulo] Potenza Tiro FW + (【奮起/累】ＦＷシュートパワー＋)",
+        id: "101168004",
+        template: "Ogni volta che un tiro di un alleato viene fermato dall'avversario, aumenta la potenza delle tecniche di Tiro dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 27, req: "Si sblocca con: Advanced Player +" },
+            { val: 33, req: "Si sblocca con: Top Player +" },
+            { val: 39, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_shoot_blocked",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+        ]
     }
 ];

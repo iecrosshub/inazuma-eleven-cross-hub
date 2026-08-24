@@ -2288,5 +2288,45 @@ export const alwaysPassives = [
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: "Wind", valueRef: "val" }
         ]
+    },
+
+    {
+        title: "Potenza Dribbling MF + (ＭＦドリブルパワー＋)",
+        id: "101167004",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di Dribbling dei compagni MF di {VAL}.",
+        levels: [
+            { val: 31, req: "Si sblocca con: Advanced Player +" },
+            { val: 38, req: "Si sblocca con: Top Player +" },
+            { val: 45, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Tiro + (キック＋)",
+        id: "100000101",
+        template: "All'inizio della partita, aumenta il proprio Tiro (Kick) di {VAL}.",
+        levels: [
+            { val: 67, req: "Si sblocca con personaggio Lv. 11" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 51" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 81" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 111" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 141" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 171" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 201" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 231" },
+            { val: 1075, req: "Si sblocca con personaggio Lv. 261" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 291" },
+            { val: 1545, req: "Si sblocca con personaggio Lv. 321" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
     }
 ];

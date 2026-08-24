@@ -446,5 +446,22 @@ export const specificMovesPassives = [
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveName: "ドラゴンクラッシュ", moveElement: null, valueRef: "val" }
         ]
+    },
+
+    {
+        title: "Potenza Mano di Luce (ゴッドハンドパワー＋改)",
+        id: "101166004",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Mano di Luce di elemento Montagna di {VAL1} e ne riduce il consumo TP di {VAL2}.",
+        levels: [
+            { val1: 81, val2: 5, req: "Si sblocca con: Advanced Player +" },
+            { val1: 99, val2: 5, req: "Si sblocca con: Top Player +" },
+            { val1: 117, val2: 5, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "ゴッドハンド", moveElement: "Mountain", valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "ゴッドハンド", moveElement: "Mountain", valueRef: "val2" }
+        ]
     }
 ];

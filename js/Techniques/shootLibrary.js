@@ -529,4 +529,17 @@ export const shootLibrary = {
         bonusCrit: [2, 2, 2, 2, 7, 7, 7, 7, 7, 12],
         chain: false
     },
+
+    "ローズスプラッシュ": {
+        name: "Petali di Rosa (ローズスプラッシュ)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Forest.png",
+        kind: "Tiro",
+        element: "Foresta",
+        power: [50, 55, 60, 65, 70, 75, 80, 85, 90, 95],
+        tp: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+        crit: [1, 1, 1, 1, 4, 4, 4, 4, 4, 7],
+        bonusCrit: [3, 3, 3, 3, 6, 6, 6, 6, 6, 9],
+        chain: false
+    },
 };

@@ -157,5 +157,18 @@ export const catchLibrary = {
         power: [108, 113, 118, 123, 128, 133, 138, 143, 148, 153],
         tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
         crit: [4, 4, 4, 4, 7, 7, 7, 7, 7, 10]
-    }
+    },
+
+    "熱血パンチ": {
+        name: "Pugno di Fuoco(熱血パンチ)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Catch.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        kind: "Parata",
+        element: "Fuoco",
+        catchType: "Respinta",
+        power: [90, 95, 100, 105, 110, 115, 120, 125, 130, 135],
+        tp: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+        crit: [15, 15, 15, 15, 18, 18, 18, 18, 18, 21],
+        bonusCrit: [21, 21, 21, 21, 24, 24, 24, 24, 24, 27]
+    },
 };

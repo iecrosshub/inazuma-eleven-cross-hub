@@ -1131,5 +1131,53 @@ export const bondPassives = [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
             { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Legame] Parata + (【結束】キャッチ＋)",
+        id: "101166001",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', aumenta la propria Parata (Catch) di {VAL}.",
+        levels: [
+            { val: 352, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 470, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 588, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 705, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 940, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 1176, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 1411, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 1646, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 1999, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 2352, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 2704, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Blocco DF - (【結束】ＤＦブロック－)",
+        id: "101168001",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce il Blocco dei DF avversari di {VAL}.",
+        levels: [
+            { val: -117, req: "Si sblocca con personaggio Lv. 1" },
+            { val: -156, req: "Si sblocca con personaggio Lv. 21" },
+            { val: -196, req: "Si sblocca con personaggio Lv. 71" },
+            { val: -235, req: "Si sblocca con personaggio Lv. 101" },
+            { val: -313, req: "Si sblocca con personaggio Lv. 131" },
+            { val: -392, req: "Si sblocca con personaggio Lv. 161" },
+            { val: -470, req: "Si sblocca con personaggio Lv. 191" },
+            { val: -548, req: "Si sblocca con personaggio Lv. 221" },
+            { val: -666, req: "Si sblocca con personaggio Lv. 251" },
+            { val: -784, req: "Si sblocca con personaggio Lv. 281" },
+            { val: -901, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        effects: [
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
     }
 ];

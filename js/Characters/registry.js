@@ -1,6 +1,45 @@
 export const characterRegistry = [
 
     {
+        id: "silviaWoodsRaimon",
+        name: "Silvia Woods",
+        romanizedName: "Kino Aki",
+        japaneseName: "木野 秋",
+        thumb: "img/Characters/SilviaWoodsRaimon.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_GK.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "celiaHillsRaimon",
+        name: "Celia Hills",
+        romanizedName: "Otonashi Haruna",
+        japaneseName: "音無 春奈",
+        thumb: "img/Characters/CeliaHillsRaimon.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "nellyRaimonRaimon",
+        name: "Nelly Raimon",
+        romanizedName: "Raimon Natsumi",
+        japaneseName: "雷門 夏未",
+        thumb: "img/Characters/NellyRaimonRaimon.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
         id: "sonnyRaimon",
         name: "Sonny Raimon",
         romanizedName: "Raimon Souichirou",
@@ -60,18 +99,7 @@ export const characterRegistry = [
         background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
-    {
-        id: "celiaHills",
-        name: "Celia Hills",
-        romanizedName: "Otonashi Haruna",
-        japaneseName: "音無 春奈",
-        thumb: "img/Characters/CeliaHills.png",
-        element: "img/Element/Icon_Element_Wind.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
+
     {
         id: "malcolmNightKirkwood",
         name: "Malcolm Night (Kirkwood)",
@@ -84,30 +112,7 @@ export const characterRegistry = [
         background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
     },
-    {
-        id: "nellyRaimon",
-        name: "Nelly Raimon",
-        romanizedName: "Raimon Natsumi",
-        japaneseName: "雷門 夏未",
-        thumb: "img/Characters/NellyRaimon.png",
-        element: "img/Element/Icon_Element_Fire.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-    {
-        id: "silviaWoods",
-        name: "Silvia Woods",
-        romanizedName: "Kino Aki",
-        japaneseName: "木野 秋",
-        thumb: "img/Characters/SilviaWoods.png",
-        element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
+
 
     {
         id: "riccardoDiRigoRaimonGO",
