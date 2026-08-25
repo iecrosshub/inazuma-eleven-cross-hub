@@ -8,7 +8,7 @@ import { parsePassiveText } from '../Core/parsers.js';
 const ADMIN_UID = "avNoCAM4I5dyQL6zLY0phnt3fc92";
 const MODERATOR_UIDS = ["alqyEbbyuxNjej3yTJQDNthmtf32", "Cu2zjcxpxIh2lddFrlDIc6YePgu1"];
 
-class MetaTeamController {
+class TierListTeamController {
     constructor() {
         this.auth = new AuthManager();
         this.buildManager = new BuildManager();
@@ -18,6 +18,7 @@ class MetaTeamController {
         this.currentViewedId = null;
         this.currentForm = null;
         this.dragOccurred = false;
+        this.editingUid = null;
 
         setupGlobalSelectClose();
         this.init();
@@ -43,25 +44,35 @@ class MetaTeamController {
         this.bindEvents();
     }
 
+    renderMiniPreview(teamData) {
+        const previewContainer = document.getElementById('draft-preview');
+        let html = '';
+        if (teamData.coach) {
+            html += `<div class="text-center me-3 border-end border-primary pe-3"><span class="badge bg-warning text-dark d-block mb-1">All.</span><img src="${teamData.coach.thumb}" class="draft-mini-icon"></div>`;
+        }
+        if (teamData.players) {
+            teamData.players.forEach(p => {
+                const char = characterRegistry.find(c => c.id === p.id);
+                if (char) html += `<div class="text-center"><img src="${char.position}" style="height: 14px; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto;"><img src="${char.thumb}" class="draft-mini-icon"></div>`;
+            });
+        }
+        previewContainer.innerHTML = html;
+    }
+
     checkDraft() {
         if (!this.isAdmin) return;
         const draftStr = sessionStorage.getItem('meta_formation_draft');
         if (draftStr) {
             this.draftFormation = JSON.parse(draftStr);
-            document.getElementById('admin-panel-container').style.display = 'block';
 
-            const previewContainer = document.getElementById('draft-preview');
-            let html = '';
-            if (this.draftFormation.coach) {
-                html += `<div class="text-center me-3 border-end border-primary pe-3"><span class="badge bg-warning text-dark d-block mb-1">All.</span><img src="${this.draftFormation.coach.thumb}" class="draft-mini-icon"></div>`;
-            }
-            if (this.draftFormation.players) {
-                this.draftFormation.players.forEach(p => {
-                    const char = characterRegistry.find(c => c.id === p.id);
-                    if (char) html += `<div class="text-center"><img src="${char.position}" style="height: 14px; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto;"><img src="${char.thumb}" class="draft-mini-icon"></div>`;
-                });
-            }
-            previewContainer.innerHTML = html;
+            this.editingUid = this.draftFormation.originalUid || null;
+
+            document.getElementById('formation-title').value = this.draftFormation.originalTitle || '';
+            document.getElementById('formation-desc').value = this.draftFormation.originalDesc || '';
+            this.setCustomSelectValue('formation-tier', this.draftFormation.originalTier || 'S');
+
+            document.getElementById('admin-panel-container').style.display = 'block';
+            this.renderMiniPreview(this.draftFormation);
         }
     }
 
@@ -80,12 +91,10 @@ class MetaTeamController {
             const snap = await window.dbGetDocs(window.dbCollection(window.firebaseDb, "meta_teams"));
             this.allFormations = snap.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
 
-            // Ordinamento basato sul campo "order"
             this.allFormations.sort((a, b) => (a.order || 0) - (b.order || 0));
 
             this.allFormations.forEach(form => {
                 let tierId = form.tier || 'S';
-                // Se non è nei 5 standard, la destiniamo all'archivio (Pool)
                 if (!['S', 'A', 'B', 'C', 'D'].includes(tierId)) tierId = 'POOL';
 
                 const tierContainer = (tierId === 'POOL' && this.isAdmin) ? pool : document.getElementById(`tier-${tierId}`);
@@ -130,9 +139,6 @@ class MetaTeamController {
         }
     }
 
-    // ==========================================
-    // SISTEMA DRAG & DROP (Solo Admin/Mod)
-    // ==========================================
     setupDragAndDrop() {
         const containers = document.querySelectorAll('.tier-content');
 
@@ -185,7 +191,6 @@ class MetaTeamController {
     }
 
     async saveNewOrder(container) {
-        // Se viene rilasciata nell'archivio la settiamo a 'POOL', altrimenti leggiamo l'ID
         const isPool = container.id === 'unranked-pool';
         const newTier = isPool ? 'POOL' : container.id.replace('tier-', '');
 
@@ -205,13 +210,11 @@ class MetaTeamController {
 
         await Promise.all(updates);
 
-        // Ricarichiamo in memoria locale la lista aggiornata
         const snap = await window.dbGetDocs(window.dbCollection(window.firebaseDb, "meta_teams"));
         this.allFormations = snap.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
 
         document.body.style.cursor = 'default';
     }
-
 
     async openViewModal(uid) {
         this.currentViewedId = uid;
@@ -221,7 +224,7 @@ class MetaTeamController {
         document.getElementById('view-build-details').innerHTML = `
             <div class="h-100 d-flex flex-column align-items-center justify-content-center text-center">
                 <i class="fas fa-hand-pointer fa-4x text-info mb-3 pulse-icon"></i>
-                <h4 class="fw-bold text-white">Clicca su un giocatore in campo<br>per visualizzare la sua Meta Build!</h4>
+                <h4 class="fw-bold text-white">Clicca su un giocatore in campo<br>per visualizzare la sua Build!</h4>
             </div>`;
         document.getElementById('view-build-details').style.justifyContent = 'center';
 
@@ -232,8 +235,12 @@ class MetaTeamController {
             document.getElementById('view-coach-name').textContent = "All: " + this.currentForm.team.coach.name;
         }
 
-        const btnDelete = document.getElementById('btn-delete-formation');
-        btnDelete.style.display = this.isAdmin ? 'inline-block' : 'none';
+        const adminActions = document.getElementById('admin-modal-actions');
+        if (this.isAdmin) {
+            adminActions.style.display = 'flex';
+        } else {
+            adminActions.style.display = 'none';
+        }
 
         const pitchContainer = document.getElementById('view-pitch-container');
         pitchContainer.innerHTML = '';
@@ -256,7 +263,7 @@ class MetaTeamController {
                         <div class="pitch-slot has-player" 
                              style="top: ${slot.y}%; left: ${slot.x}%;" 
                              data-charid="${player.id}" 
-                             onclick="window.metaTeamController.showPlayerBuild('${player.id}', this)">
+                             onclick="window.tierListTeamController.showPlayerBuild('${player.id}', this)">
                             <img src="${slot.baseAsset}" class="role-icon" alt="${slot.position}">
                             <img src="${player.thumb}" class="player-thumb">
                         </div>
@@ -282,7 +289,6 @@ class MetaTeamController {
 
         const char = characterRegistry.find(c => c.id === charId);
 
-        // Estrae la build del PG se presente (indipendentemente dal ruolo, tenta di cercare un match)
         const allBuilds = await this.buildManager.getAllBuilds();
         const build = allBuilds.find(b => (b.baseCharId === charId || b.characterId === charId));
 
@@ -324,7 +330,7 @@ class MetaTeamController {
 
             buildHtml = `
                 <div class="mt-4 w-100">
-                    <h5 class="fw-bold pb-2 mb-3" style="color: #0dcaf0; border-bottom: 2px solid #0dcaf0;"><i class="fas fa-tools me-2"></i> Equipaggiamento Meta</h5>
+                    <h5 class="fw-bold pb-2 mb-3" style="color: #0dcaf0; border-bottom: 2px solid #0dcaf0;"><i class="fas fa-tools me-2"></i> Equipaggiamento</h5>
                     ${passivesHtml || '<p class="text-secondary small fw-bold">Nessuna passiva specificata per la build.</p>'}
                     ${moveHtml}
                 </div>
@@ -333,7 +339,7 @@ class MetaTeamController {
             buildHtml = `
                 <div class="mt-4 p-4 rounded border text-center w-100 shadow-sm" style="background-color: #ffffff; border-color: #c0d3e8 !important;">
                     <i class="fas fa-folder-open fa-3x text-secondary mb-3"></i><br>
-                    <span class="fw-bold" style="color: #0b1a42;">Nessuna Meta Build specifica registrata nel database per questo giocatore.</span>
+                    <span class="fw-bold" style="color: #0b1a42;">Nessuna Build specifica registrata nel database per questo giocatore.</span>
                 </div>`;
         }
 
@@ -355,15 +361,59 @@ class MetaTeamController {
         `;
     }
 
+    setCustomSelectValue(elId, val) {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        el.dataset.value = val;
+        let targetOption = el.querySelector(`.select-items div[data-value="${val}"]`);
+        if (targetOption) el.querySelector('.select-selected span').innerHTML = targetOption.innerHTML;
+    }
+
     bindEvents() {
+        // IL PONTE MAGICO VERSO IL TEAM BUILDER
+        document.getElementById('btn-edit-roster').addEventListener('click', () => {
+            const editPayload = {
+                uid: this.editingUid || null,
+                title: document.getElementById('formation-title').value,
+                desc: document.getElementById('formation-desc').value,
+                tier: document.getElementById('formation-tier').dataset.value,
+                coachId: this.draftFormation ? this.draftFormation.coach.id : this.currentForm.team.coach.id,
+                roster: this.draftFormation ? this.draftFormation.roster : this.currentForm.team.roster
+            };
+            sessionStorage.setItem('edit_meta_team_request', JSON.stringify(editPayload));
+
+            // LA CORREZIONE: PUNTIAMO A TEAM BUILDER
+            window.location.href = 'teamBuilder.html';
+        });
+
         document.getElementById('btn-cancel-draft').addEventListener('click', () => {
             sessionStorage.removeItem('meta_formation_draft');
             document.getElementById('admin-panel-container').style.display = 'none';
             this.draftFormation = null;
+            this.editingUid = null;
+        });
+
+        document.getElementById('btn-edit-formation').addEventListener('click', () => {
+            bootstrap.Modal.getInstance(document.getElementById('formationModal')).hide();
+            document.getElementById('admin-panel-container').style.display = 'block';
+
+            document.getElementById('formation-title').value = this.currentForm.title || '';
+            document.getElementById('formation-desc').value = this.currentForm.desc || '';
+
+            let loadTier = this.currentForm.tier || 'S';
+            if(loadTier === 'POOL') loadTier = 'S';
+            this.setCustomSelectValue('formation-tier', loadTier);
+
+            this.renderMiniPreview(this.currentForm.team);
+            this.editingUid = this.currentForm.uid;
+
+            this.draftFormation = this.currentForm.team;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         document.getElementById('btn-save-formation').addEventListener('click', async (e) => {
-            if (!this.draftFormation) return;
+            if (!this.draftFormation && !this.editingUid) return;
 
             const title = document.getElementById('formation-title').value.trim();
             const desc = document.getElementById('formation-desc').value.trim();
@@ -376,24 +426,34 @@ class MetaTeamController {
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Salvataggio...`;
 
             try {
-                const newId = `metaTeam_${Date.now()}`;
-                const formRef = window.dbDoc(window.firebaseDb, "meta_teams", newId);
-
-                await window.dbSet(formRef, {
-                    authorId: this.auth.user.uid,
-                    title: title,
-                    desc: desc,
-                    tier: tier,
-                    order: this.allFormations.length,
-                    team: this.draftFormation,
-                    createdAt: new Date().toISOString()
-                });
+                if (this.editingUid) {
+                    const formRef = window.dbDoc(window.firebaseDb, "meta_teams", this.editingUid);
+                    await window.dbSet(formRef, {
+                        title: title,
+                        desc: desc,
+                        tier: tier,
+                        team: this.draftFormation
+                    }, { merge: true });
+                } else {
+                    const newId = `metaTeam_${Date.now()}`;
+                    const formRef = window.dbDoc(window.firebaseDb, "meta_teams", newId);
+                    await window.dbSet(formRef, {
+                        authorId: this.auth.user.uid,
+                        title: title,
+                        desc: desc,
+                        tier: tier,
+                        order: this.allFormations.length,
+                        team: this.draftFormation,
+                        createdAt: new Date().toISOString()
+                    });
+                }
 
                 sessionStorage.removeItem('meta_formation_draft');
                 document.getElementById('admin-panel-container').style.display = 'none';
                 this.draftFormation = null;
+                this.editingUid = null;
 
-                alert("Squadra Meta a 11 pubblicata con successo!");
+                alert("Salvataggio completato con successo!");
                 await this.loadTierList();
 
             } catch (err) {
@@ -401,11 +461,11 @@ class MetaTeamController {
             }
 
             btn.disabled = false;
-            btn.innerHTML = `<i class="fas fa-save me-2"></i> Salva nel Meta`;
+            btn.innerHTML = `<i class="fas fa-save me-2"></i> Salva nella Tier List`;
         });
 
         document.getElementById('btn-delete-formation').addEventListener('click', async () => {
-            if(confirm("Sei sicuro di voler eliminare definitivamente questa Formazione dal Meta?")) {
+            if(confirm("Sei sicuro di voler eliminare definitivamente questa Formazione dalla Tier List?")) {
                 try {
                     await window.dbDelete(window.dbDoc(window.firebaseDb, "meta_teams", this.currentViewedId));
                     bootstrap.Modal.getInstance(document.getElementById('formationModal')).hide();
@@ -419,5 +479,5 @@ class MetaTeamController {
     }
 }
 
-const metaTeamController = new MetaTeamController();
-window.metaTeamController = metaTeamController;
+const tierListTeamController = new TierListTeamController();
+window.tierListTeamController = tierListTeamController;

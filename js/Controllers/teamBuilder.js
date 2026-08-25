@@ -7,15 +7,11 @@ import { characterRegistry, fetchCoachData } from '../Core/database.js';
 import { filterCharacters } from '../Core/roster.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
-// ==========================================
-// 1. MANAGER DISCUSSIONI (Stile BoardManager)
-// ==========================================
 class TeamDiscussionManager {
     constructor() {
         this.collectionName = "team_discussions";
     }
 
-    // Recupera il database in modo dinamico per evitare crash
     get db() {
         return window.firebaseDb;
     }
@@ -55,27 +51,21 @@ class TeamDiscussionManager {
     }
 }
 
-// ==========================================
-// 2. CONTROLLER PRINCIPALE TEAM BUILDER
-// ==========================================
 class TeamBuilderController {
     constructor() {
-        // Inizializza i Manager
         this.auth = new AuthManager();
         this.discussionManager = new TeamDiscussionManager();
 
-        // Variabili di Stato
         this.currentCoachId = '';
         this.activeCoachDb = null;
         this.teamRoster = {};
         this.activeSelection = null;
         this.lastFilteredList = characterRegistry;
+        this.editMetaPayload = null;
 
-        // Esponi le funzioni al window per i tag onclick nell'HTML
         window.handleSlotClick = (slotNumber) => this.handleSlotClick(slotNumber);
         window.assignPlayerToSlot = (charId) => this.assignPlayerToSlot(charId);
 
-        // Avvio sicuro
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.init());
         } else {
@@ -85,16 +75,27 @@ class TeamBuilderController {
 
     async init() {
         this.bindEvents();
-        this.loadTeamState();
+
+        const editRequestStr = sessionStorage.getItem('edit_meta_team_request');
+        if (editRequestStr) {
+            const editRequest = JSON.parse(editRequestStr);
+            this.currentCoachId = editRequest.coachId;
+            this.teamRoster = editRequest.roster;
+            this.editMetaPayload = editRequest;
+
+            sessionStorage.removeItem('edit_meta_team_request');
+            this.saveTeamState();
+        } else {
+            this.loadTeamState();
+        }
+
         this.restoreFilters();
 
-        // Inizializza select custom
         document.querySelectorAll(".custom-select").forEach(sel => {
             initCustomSelect(sel, () => this.applyFilters());
         });
         setupGlobalSelectClose();
 
-        // Gestione Auth per mostrare i tasti Condividi/Admin
         this.auth.setAuthStateListener((user) => {
             this.checkShareButtonVisibility();
         });
@@ -107,7 +108,6 @@ class TeamBuilderController {
         this.applyFilters();
         this.loadLatestDiscussions();
 
-        // Avvio tutorial automatico
         if (!localStorage.getItem('tutorial_teambuilder_seen')) {
             setTimeout(() => this.startTutorial(), 800);
         }
@@ -132,12 +132,10 @@ class TeamBuilderController {
         const btnSubmitShare = document.getElementById('btn-submit-share');
         if (btnSubmitShare) btnSubmitShare.addEventListener('click', () => this.submitTeamShare());
 
-        // Bottone Admin per il Meta
         const btnPublishMeta = document.getElementById('btn-publish-meta');
         if (btnPublishMeta) btnPublishMeta.addEventListener('click', () => this.publishToMeta());
     }
 
-    // --- SALVATAGGIO STATO ---
     saveTeamState() {
         localStorage.setItem('tb_roster', JSON.stringify(this.teamRoster));
         localStorage.setItem('tb_coach', this.currentCoachId);
@@ -184,7 +182,6 @@ class TeamBuilderController {
         }
     }
 
-    // --- FILTRI ---
     resetFilters() {
         const searchInput = document.getElementById('search-name');
         if(searchInput) searchInput.value = '';
@@ -216,7 +213,6 @@ class TeamBuilderController {
         this.renderPlayerGrid(this.lastFilteredList);
     }
 
-    // --- ALLENATORE E RENDER CAMPO ---
     renderSidebar() {
         const listContainer = document.getElementById('coach-list');
         if (!listContainer) return;
@@ -295,13 +291,26 @@ class TeamBuilderController {
             const isConditionClass = conditionSlots.includes(slot.number) ? 'condition-slot' : '';
 
             if (playerId) {
+                // FIX: Verifica se il giocatore esiste ancora nel database
                 const player = characterRegistry.find(c => c.id === playerId);
-                return `
-                    <div class="pitch-slot has-player ${isSelectedClass} ${isConditionClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
-                        <img src="${slot.baseAsset}" class="role-icon" alt="${slot.position}">
-                        <img src="${player.thumb}" class="player-thumb" onerror="this.src='https://placehold.co/65'">
-                    </div>
-                `;
+                if (player) {
+                    return `
+                        <div class="pitch-slot has-player ${isSelectedClass} ${isConditionClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
+                            <img src="${slot.baseAsset}" class="role-icon" alt="${slot.position}">
+                            <img src="${player.thumb}" class="player-thumb" onerror="this.src='https://placehold.co/65'">
+                        </div>
+                    `;
+                } else {
+                    // Se il giocatore è stato rimosso dal database, lo puliamo dal roster!
+                    delete this.teamRoster[slot.number];
+                    this.saveTeamState();
+                    return `
+                        <div class="pitch-slot ${isSelectedClass} ${isConditionClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
+                            <img src="${slot.baseAsset}" class="role-icon" alt="${slot.position}">
+                            <strong>${slot.number}</strong>
+                        </div>
+                    `;
+                }
             } else {
                 return `
                     <div class="pitch-slot ${isSelectedClass} ${isConditionClass}" style="top: ${slot.y}%; left: ${slot.x}%;" onclick="handleSlotClick(${slot.number})">
@@ -337,7 +346,6 @@ class TeamBuilderController {
         });
     }
 
-    // --- INTERAZIONI CAMPO/GRIGLIA ---
     handleSlotClick(slotNumber) {
         if (!this.activeSelection) {
             this.activeSelection = { type: 'slot', value: slotNumber };
@@ -414,7 +422,6 @@ class TeamBuilderController {
         }
     }
 
-    // --- COMMUNITY & CONDIVISIONE ---
     checkShareButtonVisibility() {
         const btnShare = document.getElementById('btn-share-team');
         const btnPublishMeta = document.getElementById('btn-publish-meta');
@@ -422,10 +429,8 @@ class TeamBuilderController {
         const hasPlayers = Object.keys(this.teamRoster).length > 0;
 
         if (this.auth && this.auth.user && hasPlayers) {
-            // Mostra sempre il tasto Condividi per tutti gli utenti loggati
             if (btnShare) btnShare.style.display = 'block';
 
-            // Controllo per attivare il tasto speciale Meta Formazione (Solo Admin)
             const uid = this.auth.user.uid;
             if (uid === 'avNoCAM4I5dyQL6zLY0phnt3fc92' || uid === 'alqyEbbyuxNjej3yTJQDNthmtf32' || uid === 'Cu2zjcxpxIh2lddFrlDIc6YePgu1') {
                 if (btnPublishMeta) btnPublishMeta.style.display = 'inline-block';
@@ -484,16 +489,14 @@ class TeamBuilderController {
         btnSubmit.innerHTML = 'Pubblica Post';
     }
 
-    // --- NUOVA LOGICA: INVIA LA SQUADRA ALLA PAGINA META (SOLO ADMIN) ---
     publishToMeta() {
         if (!this.activeCoachDb || Object.keys(this.teamRoster).length === 0) {
-            alert("Completa la formazione schierando almeno un giocatore prima di promuoverla al Meta!");
+            alert("Completa la formazione schierando almeno un giocatore prima di promuoverla alla Tier List!");
             return;
         }
 
         const playersArray = [];
 
-        // Formatta i giocatori convertendo gli ID degli slot nel loro ruolo in campo
         for (const [slotNum, charId] of Object.entries(this.teamRoster)) {
             const slotInfo = this.activeCoachDb.slots.find(s => s.number == slotNum);
             playersArray.push({
@@ -505,7 +508,12 @@ class TeamBuilderController {
         const metaTeam = {
             coach: this.activeCoachDb,
             players: playersArray,
-            roster: this.teamRoster
+            roster: this.teamRoster,
+
+            originalUid: this.editMetaPayload ? this.editMetaPayload.uid : null,
+            originalTitle: this.editMetaPayload ? this.editMetaPayload.title : '',
+            originalDesc: this.editMetaPayload ? this.editMetaPayload.desc : '',
+            originalTier: this.editMetaPayload ? this.editMetaPayload.tier : 'S'
         };
 
         sessionStorage.setItem('meta_formation_draft', JSON.stringify(metaTeam));
@@ -517,7 +525,7 @@ class TeamBuilderController {
         if (!listContainer) return;
 
         if (!window.firebaseDb) {
-            listContainer.innerHTML = '<div class="text-center p-4 text-warning border border-secondary rounded bg-dark fw-bold">Connessione al Database in corso...<br><small class="text-muted fw-normal">Se questo messaggio non va via, controlla di aver inserito gli script di Firebase nel file HTML!</small></div>';
+            listContainer.innerHTML = '<div class="text-center p-4 text-warning border border-secondary rounded bg-dark fw-bold">Connessione al Database in corso...</div>';
             setTimeout(() => this.loadLatestDiscussions(), 1500);
             return;
         }

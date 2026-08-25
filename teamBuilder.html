@@ -87,6 +87,61 @@
             margin: 0;
             text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
         }
+
+        /* =======================================================
+           LAYOUT PC: RIPRISTINATO E ALLARGATO AL CENTRO
+           ======================================================= */
+        @media (min-width: 1201px) {
+            /* Ripristina la tua altezza bloccata per evitare lo straripamento! */
+            .app-container { height: 1050px !important; }
+            .tb-workspace { height: 100% !important; align-items: stretch; }
+            .main-detail { height: 100% !important; flex-grow: 1 !important; }
+
+            /* Stringe leggermente i lati per dare molto più spazio al campo */
+            .sidebar-left { width: 280px !important; }
+            .sidebar-right { width: 350px !important; }
+        }
+
+        /* =======================================================
+           GIOCATORI IN CAMPO PIU' PICCOLI (Non si toccano più)
+           ======================================================= */
+        /* Scala i giocatori all'85% così non si accavallano sulle difese a 4 */
+        .pitch-slot { transform: translate(-50%, -50%) scale(0.85) !important; }
+        .pitch-slot:hover { transform: translate(-50%, -50%) scale(0.95) !important; z-index: 10; }
+
+        @keyframes pulse-slot-new {
+            0% { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 5px #ffd337); }
+            50% { transform: translate(-50%, -50%) scale(0.95); filter: drop-shadow(0 0 15px #ffd337); }
+            100% { transform: translate(-50%, -50%) scale(0.85); filter: drop-shadow(0 0 5px #ffd337); }
+        }
+        .pitch-slot.active-selection { animation: pulse-slot-new 1.2s infinite !important; z-index: 20; }
+
+        .pitch-container-wrapper { width: 100%; display: flex; justify-content: center; transform-origin: top center; }
+
+        /* =======================================================
+           ADATTAMENTO PER TABLET E TELEFONI (INCOLONNAMENTO)
+           ======================================================= */
+        @media (max-width: 1200px) {
+            .app-container { height: auto !important; min-height: 100vh; padding-bottom: 40px; }
+            .tb-workspace { flex-direction: column; align-items: center; gap: 30px; height: auto !important; }
+            .sidebar-left, .sidebar-right, .main-detail { width: 100% !important; max-width: 800px; height: auto !important; }
+            .coach-grid { max-height: 250px; overflow-y: auto; }
+            .tb-player-grid { max-height: 450px; overflow-y: auto; }
+        }
+
+        @media (max-width: 768px) {
+            .pitch-container-wrapper { transform: scale(0.75); height: 420px !important; margin-bottom: -20px; }
+            .detail-header { flex-direction: column; text-align: center; gap: 10px; }
+            .detail-title { padding-right: 0 !important; align-items: center; }
+        }
+        @media (max-width: 576px) {
+            .pitch-container-wrapper { transform: scale(0.60); height: 340px !important; margin-bottom: -40px; }
+            #coach-name { font-size: 1.8rem !important; }
+            .coach-portrait { height: 130px; }
+        }
+        @media (max-width: 420px) {
+            .pitch-container-wrapper { transform: scale(0.50); height: 280px !important; margin-bottom: -50px; }
+        }
     </style>
 </head>
 <body class="teambuilder-page">
@@ -140,11 +195,9 @@
                 <button id="btn-share-team" class="btn btn-primary fw-bold px-4 shadow" style="display: none;">
                     <i class="fas fa-share-square me-2"></i> Condividi Formazione
                 </button>
-                <!-- NUOVO BOTTONE ADMIN META -->
-                <button id="btn-publish-meta" class="btn btn-warning fw-bold px-4 shadow" style="display: none;">
-                    <i class="fas fa-crown me-2"></i> Promuovi a Meta Formazione
+                <button id="btn-publish-meta" class="btn btn-warning fw-bold px-4 shadow text-dark" style="display: none;">
+                    <i class="fas fa-crown me-2"></i> Promuovi a Tier List
                 </button>
-                <!-- FINE NUOVO BOTTONE -->
                 <button id="btn-remove-player" class="tb-btn-remove" style="display: none;">
                     <i class="fas fa-trash"></i> Rimuovi dal campo
                 </button>

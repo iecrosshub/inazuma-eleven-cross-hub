@@ -17,7 +17,7 @@ const navbarHTML = `
         <div class="nav-dropdown" id="tour-info">
             <button class="dropbtn">Info & Utility <i class="fas fa-caret-down"></i></button>
             <div class="dropdown-content">
-                <a href="metaTeam.html"><i class="fas fa-shield-alt me-1"></i> Meta Formazioni Competitivo</a>
+                <a href="metaTeam.html"><i class="fas fa-shield-alt me-1"></i> Tier List Team</a>
                 <a href="metaBuilds.html"><i class="fas fa-tools me-1"></i> Meta Build PG</a>
                 <a href="meta5vs1.html"><i class="fas fa-crown me-1"></i> Meta Formazioni 5vs1</a>
                 <a href="calendar.html"><i class="fas fa-calendar-alt me-1"></i> Calendario Sfide</a>
