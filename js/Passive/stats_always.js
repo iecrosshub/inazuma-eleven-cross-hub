@@ -320,27 +320,31 @@ export const alwaysPassives = [
             { targetScope: "team", targetRoles: [], targetElements: [], type: "foul_reduction", valueRef: "val2" }
         ]
     },
+
     {
         title: "Blocco + (ブロック＋)",
         id: "100000301",
         template: "All'inizio della partita, aumenta il proprio Blocco di {VAL}.",
         levels: [
-            { val: 67, req: "Lv. 11" },
-            { val: 134, req: "Lv. 51" },
-            { val: 201, req: "Lv. 81" },
-            { val: 268, req: "Lv. 111" },
-            { val: 403, req: "Lv. 141" },
-            { val: 537, req: "Lv. 171" },
-            { val: 672, req: "Lv. 201" },
-            { val: 806, req: "Lv. 231" },
-            { val: 1075, req: "Lv. 261" },
-            { val: 1344, req: "Lv. 291" },
-            { val: 1545, req: "Lv. 321" }
+            { val: 67, req: "Si sblocca con personaggio Lv. 11" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 51" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 81" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 111" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 141" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 171" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 201" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 231" },
+            { val: 1075, req: "Si sblocca con personaggio Lv. 261" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 291" },
+            { val: 1545, req: "Si sblocca con personaggio Lv. 321" }
         ],
         category: "Always",
         conditions: null,
-        effects: [{ targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Bloqueo", valueRef: "val" }]
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
     },
+
     {
         title: "Potenza Blocco (Montagna) + (ブロックパワー＋〈山〉)",
         id: "103003004",
@@ -2180,7 +2184,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: ["Forest"], type: "power", moveKind: "Blocco", moveElement: "Wood", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["DF"], targetElements: ["Forest"], type: "power", moveKind: "Blocco", moveElement: "Forest", valueRef: "val" }
         ]
     },
 
@@ -2305,5 +2309,229 @@ export const alwaysPassives = [
             { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
         ]
     },
+
+    {
+        title: "Blocco DF + (ＤＦブロック＋)",
+        id: "101170001",
+        template: "All'inizio della partita, aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 80, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 107, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 161, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 215, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 269, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 322, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 376, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 457, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 538, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 618, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Tiro FW Foresta - (林ＦＷキック－)",
+        id: "101145001",
+        template: "All'inizio della partita, riduce il Tiro dei FW avversari di elemento Foresta di {VAL}.",
+        levels: [
+            { val: -120, req: "Si sblocca con personaggio Lv. 1" },
+            { val: -161, req: "Si sblocca con personaggio Lv. 21" },
+            { val: -201, req: "Si sblocca con personaggio Lv. 71" },
+            { val: -241, req: "Si sblocca con personaggio Lv. 101" },
+            { val: -322, req: "Si sblocca con personaggio Lv. 131" },
+            { val: -403, req: "Si sblocca con personaggio Lv. 161" },
+            { val: -483, req: "Si sblocca con personaggio Lv. 191" },
+            { val: -564, req: "Si sblocca con personaggio Lv. 221" },
+            { val: -685, req: "Si sblocca con personaggio Lv. 251" },
+            { val: -806, req: "Si sblocca con personaggio Lv. 281" },
+            { val: -926, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Blocco DF + (ＤＦブロック＋)",
+        id: "101145004",
+        template: "All'inizio della partita, aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 627, req: "Si sblocca con: Advanced Player +" },
+            { val: 761, req: "Si sblocca con: Top Player +" },
+            { val: 896, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Dribbling MF + (ＭＦドリブルパワー＋)",
+        id: "101171003",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di Dribbling dei compagni MF di {VAL}.",
+        levels: [
+            { val: 3, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 5, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 7, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 10, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 14, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Blocco MF Foresta + (林ＭＦブロック＋)",
+        id: "101175001",
+        template: "All'inizio della partita, aumenta il Blocco dei compagni MF di elemento Foresta di {VAL}.",
+        levels: [
+            { val: 120, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 161, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 241, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 322, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 483, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 564, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 685, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 926, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: ["Forest"], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Tiro FW Foresta + (林ＦＷシュートパワー＋)",
+        id: "101175004",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di Tiro dei compagni FW di elemento Foresta di {VAL}.",
+        levels: [
+            { val: 23, req: "Si sblocca con: Advanced Player +" },
+            { val: 28, req: "Si sblocca con: Top Player +" },
+            { val: 33, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Blocco DF Montagna + (山ＤＦブロック＋)",
+        id: "101172003",
+        template: "All'inizio della partita, aumenta il Blocco dei compagni DF di elemento Montagna di {VAL}.",
+        levels: [
+            { val: 241, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 322, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 483, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 564, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 644, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 725, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 765, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 886, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 967, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: ["Mountain"], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Blocco + (ブロック＋)",
+        id: "101172001",
+        template: "All'inizio della partita, aumenta il proprio Blocco di {VAL}.",
+        levels: [
+            { val: 201, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 336, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 940, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 1142, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 1545, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Tiro FW Legno - (林ＦＷキック－)",
+        id: "101174001",
+        template: "All'inizio della partita, riduce il Tiro dei FW avversari di elemento Legno di {VAL}.",
+        levels: [
+            { val: -120, req: "Si sblocca con personaggio Lv. 1" },
+            { val: -161, req: "Si sblocca con personaggio Lv. 21" },
+            { val: -201, req: "Si sblocca con personaggio Lv. 71" },
+            { val: -241, req: "Si sblocca con personaggio Lv. 101" },
+            { val: -322, req: "Si sblocca con personaggio Lv. 131" },
+            { val: -403, req: "Si sblocca con personaggio Lv. 161" },
+            { val: -483, req: "Si sblocca con personaggio Lv. 191" },
+            { val: -564, req: "Si sblocca con personaggio Lv. 221" },
+            { val: -685, req: "Si sblocca con personaggio Lv. 251" },
+            { val: -806, req: "Si sblocca con personaggio Lv. 281" },
+            { val: -926, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Tiro + (シュートパワー＋)",
+        id: "101173003",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro di {VAL}.",
+        levels: [
+            { val: 11, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 19, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 23, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 27, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 31, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 35, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 39, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 42, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+        ]
+    }
 
 ];

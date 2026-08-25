@@ -1,17 +1,17 @@
 import { characterRegistry } from './registry.js';
 
-const baseInfo = characterRegistry.find(char => char.id === "joshNathanielRaimonVG");
+const baseInfo = characterRegistry.find(char => char.id === "juliaBlaze");
 
 export const charData = {
     ...baseInfo,
-    name: "Josh Nathaniel",
-    romanizedName: "Nakama Yō",
-    japaneseName: "中間 庸",
+    name: "Julia Blaze",
+    romanizedName: "Gouenji Yuuka",
+    japaneseName: "豪炎寺 夕香",
 
     tags: [
-        "img/TagTitle/Icon_Tag_Team_YoungInazuma.png",
-        "img/TagTitle/Icon_Tag_Ability_Defensivehalf.png",
-        "img/TagTitle/Icon_Tag_Title_InaEle2.png"
+        "img/TagTitle/Icon_Tag_Team_Free.png",
+        "img/TagTitle/Icon_Tag_Ability_Playmaker.png",
+        "img/TagTitle/Icon_Tag_Title_InaEle1.png"
     ],
 
     stats: {
@@ -23,13 +23,14 @@ export const charData = {
         "Velocità": { lv1: 6, lv340: 6, icon: "img/Status/Icon_Status_Speed.png" }
     },
 
+    // Zone standard per un Playmaker (MF)
     zones: [
         { code: 5, rank: 'A' },
-        { code: 7, rank: 'A' },
-        { code: 9, rank: 'B' }
+        { code: 6, rank: 'A' },
+        { code: 3, rank: 'B' }
     ],
 
-    myTechniques: ["ジグザグスパーク", "ブレードアタック"],
-    myBasicPassivesIds: ["100000201", "102049001", "102049003"],
-    myRarityPassivesIds: ["100000501", "102049004"]
+    myTechniques: ["ひとりワンツー", "ファイアトルネード"],
+    myBasicPassivesIds: ["100000201", "101171001", "101171003"],
+    myRarityPassivesIds: ["100000501", "101171004"]
 };

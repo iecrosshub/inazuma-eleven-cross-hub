@@ -88,7 +88,7 @@ const filtersHTML = `
                 <div class="select-selected"><span>Tutte le Squadre</span> <i class="fas fa-chevron-down"></i></div>
                 <div class="select-items select-hide">
                     <div data-value="">Tutte le Squadre</div>
-                    <div data-value="YoungInazuma"><img src="img/TagTitle/Icon_Tag_Team_YoungInazuma.png" alt=""> Raimon Vecchie Glorie</div>
+                    <div data-value="YoungInazuma"><img src="img/TagTitle/Icon_Tag_Team_YoungInazuma.png" alt=""> Young Inazuma</div>
                     <div data-value="RaimonGO"><img src="img/TagTitle/Icon_Tag_Team_RaimonGO.png" alt=""> RaimonGO</div>
                     <div data-value="Raimon"><img src="img/TagTitle/Icon_Tag_Team_Raimon.png" alt=""> Raimon</div>
                     <div data-value="RoyalAcademy"><img src="img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" alt=""> Royal Academy</div>

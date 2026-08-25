@@ -1179,5 +1179,126 @@ export const bondPassives = [
         effects: [
             { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Legame] Blocco DF + (【結束】ＤＦブロック＋)",
+        id: "101170003",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', aumenta il Blocco dei compagni DF di {VAL}.",
+        levels: [
+            { val: 210, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 350, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 420, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 490, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 560, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 630, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 665, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 700, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 770, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 840, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Risonanza] Potenza Tiro MF Foresta + (【共鳴】林ＭＦシュートパワー＋)",
+        id: "101175003",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Foresta, aumenta la potenza delle tecniche di Tiro dei compagni MF di elemento Foresta di {VAL}.",
+        levels: [
+            { val: 7, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 10, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 13, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 20, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 23, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 26, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 28, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 31, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Bonds",
+        conditions: { type: "element_count", element: "Forest", minCount: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Risonanza] Potenza Tecniche DF Montagna + (【共鳴】ＤＦパワー＋〈山〉)",
+        id: "101172004",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Montagna, aumenta la potenza delle tecniche di elemento Montagna dei compagni DF di {VAL}.",
+        levels: [
+            { val: 12, req: "Si sblocca con: Advanced Player +" },
+            { val: 15, req: "Si sblocca con: Top Player +" },
+            { val: 18, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Bonds",
+        conditions: { type: "element_count", element: "Mountain", minCount: 3 },
+        effects: [
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: null, moveElement: "Mountain", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Risonanza] Potenza Tiro FW Foresta - (【共鳴】ＦＷシュートパワー－〈林〉)",
+        id: "101174004",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Fuoco, riduce la potenza delle tecniche di Tiro di elemento Foresta dei FW avversari di {VAL}.",
+        levels: [
+            { val: -15, req: "Si sblocca con: Advanced Player +" },
+            { val: -18, req: "Si sblocca con: Top Player +" },
+            { val: -22, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Bonds",
+        conditions: { type: "element_count", element: "Fire", minCount: 3 },
+        effects: [
+            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Wood"], type: "power", moveKind: "Tiro", moveElement: "Wood", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Tecnica MF - (【結束】ＭＦテクニック－)",
+        id: "101173001",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce la Tecnica dei MF avversari di {VAL}.",
+        levels: [
+            { val: -70, req: "Si sblocca con personaggio Lv. 1" },
+            { val: -93, req: "Si sblocca con personaggio Lv. 21" },
+            { val: -116, req: "Si sblocca con personaggio Lv. 71" },
+            { val: -140, req: "Si sblocca con personaggio Lv. 101" },
+            { val: -186, req: "Si sblocca con personaggio Lv. 131" },
+            { val: -233, req: "Si sblocca con personaggio Lv. 161" },
+            { val: -280, req: "Si sblocca con personaggio Lv. 191" },
+            { val: -326, req: "Si sblocca con personaggio Lv. 221" },
+            { val: -396, req: "Si sblocca con personaggio Lv. 251" },
+            { val: -467, req: "Si sblocca con personaggio Lv. 281" },
+            { val: -537, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        effects: [
+            { targetScope: "enemy_team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Legame] Potenza Blocco DF - (【結束】ＤＦブロックパワー－)",
+        id: "101173004",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce la potenza delle tecniche di Blocco dei DF avversari di {VAL}.",
+        levels: [
+            { val: -12, req: "Si sblocca con: Advanced Player +" },
+            { val: -15, req: "Si sblocca con: Top Player +" },
+            { val: -18, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        effects: [
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+        ]
     }
+
 ];

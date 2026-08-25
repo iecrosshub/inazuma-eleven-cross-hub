@@ -1308,5 +1308,115 @@ export const stackingPassives = [
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Soccorso/Accumulo] Potenza Parata GK + (【救援/累】キーパーパワー＋)",
+        id: "101170004",
+        template: "Ogni volta che un blocco al tiro di un alleato fallisce, aumenta la potenza delle proprie tecniche di Parata di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 39, req: "Si sblocca con: Advanced Player +" },
+            { val: 47, req: "Si sblocca con: Top Player +" },
+            { val: 56, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_shoot_block_fail",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Avversità/Accumulo] Parata GK Montagna + (【逆境/累】山ＧＫキーパーパワー＋)",
+        id: "101145003",
+        template: "Ogni volta che una propria tecnica di Blocco al Tiro fallisce, aumenta la potenza delle tecniche di Parata dei compagni GK di elemento Montagna di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 7, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 14, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 22, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 25, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 29, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 33, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 40, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Stacking",
+        trigger: "self_block_shoot_fail",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["GK"], targetElements: ["Mountain"], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Impeto/Accumulo] Blocco MF + (【破竹/累】ＭＦブロック＋)",
+        id: "101171001",
+        template: "Ogni volta che una propria tecnica di Dribbling ha successo, aumenta il Blocco dei compagni MF di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 60, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 81, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 101, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 121, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 162, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 202, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 243, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 283, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 344, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 405, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 465, req: "Si sblocca con personaggio Lv. 311" }
+        ],
+        category: "Stacking",
+        trigger: "self_dribble_success",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Prevenzione/Accumulo] Potenza Tiro FW + <Fuoco> (【阻止/累】ＦＷシュートパワー＋〈火〉)",
+        id: "101171004",
+        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Tiro di elemento Fuoco dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 12, req: "Si sblocca con: Advanced Player +" },
+            { val: 15, req: "Si sblocca con: Top Player +" },
+            { val: 18, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_stop_shoot",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Attivazione/Accumulo] Potenza Parata GK + (【発動】キーパーパワー＋)",
+        id: "101174003",
+        template: "Quando un avversario utilizza una tecnica di Tiro di elemento Foresta, aumenta la potenza delle proprie tecniche di Parata di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 13, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 22, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 26, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 30, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 35, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 39, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 41, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 44, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 48, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 52, req: "Si sblocca con personaggio Lv. 331" }
+        ],
+        category: "Stacking",
+        trigger: "enemy_use_shoot",
+        triggerMoveElement: "Forest",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
+        ]
     }
 ];

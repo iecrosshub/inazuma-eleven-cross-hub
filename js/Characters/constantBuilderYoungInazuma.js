@@ -1,6 +1,6 @@
 import { characterRegistry } from './registry.js';
 
-const baseInfo = characterRegistry.find(char => char.id === "constantBuilderRaimonVG");
+const baseInfo = characterRegistry.find(char => char.id === "constantBuilderYoungInazuma");
 
 export const charData = {
     ...baseInfo,

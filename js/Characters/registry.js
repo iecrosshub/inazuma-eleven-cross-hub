@@ -40,81 +40,6 @@ export const characterRegistry = [
     },
 
     {
-        id: "sonnyRaimon",
-        name: "Sonny Raimon",
-        romanizedName: "Raimon Souichirou",
-        japaneseName: "雷門 総一郎",
-        thumb: "img/Characters/SonnyRaimon.png",
-        element: "img/Element/Icon_Element_Mountain.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-    {
-        id: "gregorySmith",
-        name: "Gregory Smith",
-        romanizedName: "Smith",
-        japaneseName: "スミス",
-        thumb: "img/Characters/GregorySmith.png",
-        element: "img/Element/Icon_Element_Fire.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-    {
-        id: "aureliaDingle",
-        name: "Aurelia Dingle",
-        romanizedName: "Ootani Tsukushi",
-        japaneseName: "大谷 つくし",
-        thumb: "img/Characters/AureliaDingle.png",
-        element: "img/Element/Icon_Element_Wind.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-    {
-        id: "hillmanAdulto",
-        name: "Seymour Hillman Adulto",
-        romanizedName: "Hibiki Seigou",
-        japaneseName: "響木 正剛",
-        thumb: "img/Characters/HillmanAdulto.png",
-        element: "img/Element/Icon_Element_Mountain.png",
-        position: "img/Position/Icon_Position_GK.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-    {
-        id: "juliaBlaze",
-        name: "Julia Blaze",
-        romanizedName: "Gouenji Yuuka",
-        japaneseName: "豪炎寺 夕香",
-        thumb: "img/Characters/JuliaBlaze.png",
-        element: "img/Element/Icon_Element_Fire.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-
-    {
-        id: "malcolmNightKirkwood",
-        name: "Malcolm Night (Kirkwood)",
-        romanizedName: "Nishigaki Mamoru",
-        japaneseName: "西垣 守",
-        thumb: "img/Characters/MalcolmNightKirkwood.png",
-        element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_DF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-
-
-    {
         id: "riccardoDiRigoRaimonGO",
         name: "Riccardo Di Rigo",
         romanizedName: "Shindou Takuto",
@@ -384,8 +309,6 @@ export const characterRegistry = [
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
     },
 
-
-
     {
         id: "markEvansInazumaJapan",
         name: "Mark Evans InazumaJapan",
@@ -400,47 +323,8 @@ export const characterRegistry = [
     },
 
     {
-        id: "constantBuilderRaimonVG",
-        name: "Constant Builder",
-        romanizedName: "Minyama Yō",
-        japaneseName: "民山 謡",
-        thumb: "img/Characters/ConstantBuilderRaimonVG.png",
-        element: "img/Element/Icon_Element_Fire.png",
-        position: "img/Position/Icon_Position_FW.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-
-    {
-        id: "peterMildredRaimonVG",
-        name: "Peter Mildred",
-        romanizedName: "Batora Shi",
-        japaneseName: "場寅 仕",
-        thumb: "img/Characters/PeterMildredRaimonVG.png",
-        element: "img/Element/Icon_Element_Forest.png",
-        position: "img/Position/Icon_Position_MF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-
-    {
-        id: "arthurSweetRaimonVG",
-        name: "Arthur Sweet",
-        romanizedName: "Aida Chikara",
-        japaneseName: "会田 力",
-        thumb: "img/Characters/ArthurSweetRaimonVG.png",
-        element: "img/Element/Icon_Element_Mountain.png",
-        position: "img/Position/Icon_Position_DF.png",
-        stars: 2,
-        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
-        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
-    },
-
-    {
-        id: "seymourHillmanRaimonVG",
-        name: "Seymour Hillman",
+        id: "SeymourHillmanRaimonVG",
+        name: "Seymour Hillman Adulto",
         romanizedName: "Hibiki Seigou",
         japaneseName: "響木 正剛",
         thumb: "img/Characters/SeymourHillmanRaimonVG.png",
@@ -452,11 +336,89 @@ export const characterRegistry = [
     },
 
     {
-        id: "charlesIslandRaimonVG",
+        id: "malcolmNightKirkwood",
+        name: "Malcolm Night (Kirkwood)",
+        romanizedName: "Nishigaki Mamoru",
+        japaneseName: "西垣 守",
+        thumb: "img/Characters/MalcolmNightKirkwood.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "aureliaDingle",
+        name: "Aurelia Dingle",
+        romanizedName: "Ootani Tsukushi",
+        japaneseName: "大谷 つくし",
+        thumb: "img/Characters/AureliaDingle.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "constantBuilderYoungInazuma",
+        name: "Constant Builder",
+        romanizedName: "Minyama Yō",
+        japaneseName: "民山 謡",
+        thumb: "img/Characters/ConstantBuilderYoungInazuma.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "peterMildredYoungInazuma",
+        name: "Peter Mildred",
+        romanizedName: "Batora Shi",
+        japaneseName: "場寅 仕",
+        thumb: "img/Characters/PeterMildredYoungInazuma.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "arthurSweetYoungInazuma",
+        name: "Arthur Sweet",
+        romanizedName: "Aida Chikara",
+        japaneseName: "会田 力",
+        thumb: "img/Characters/ArthurSweetYoungInazuma.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "seymourHillmanYoungInazuma",
+        name: "Seymour Hillman",
+        romanizedName: "Hibiki Seigou",
+        japaneseName: "響木 正剛",
+        thumb: "img/Characters/SeymourHillmanYoungInazuma.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_GK.png",
+        stars: 2,
+        background: "img/Frm_GachaIcon/Gacha_SR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SR.png"
+    },
+
+    {
+        id: "charlesIslandYoungInazuma",
         name: "Charles Island",
         romanizedName: "Ukishima Kazuto",
         japaneseName: "浮島 一人",
-        thumb: "img/Characters/CharlesIslandRaimonVG.png",
+        thumb: "img/Characters/CharlesIslandYoungInazuma.png",
         element: "img/Element/Icon_Element_Forest.png",
         position: "img/Position/Icon_Position_DF.png",
         stars: 2,
@@ -847,11 +809,63 @@ export const characterRegistry = [
     },
 
     {
-        id: "joshNathanielRaimonVG",
+        id: "juliaBlaze",
+        name: "Julia Blaze",
+        romanizedName: "Gouenji Yuuka",
+        japaneseName: "豪炎寺 夕香",
+        thumb: "img/Characters/JuliaBlaze.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "zackWallside",
+        name: "Zack Wallside",
+        romanizedName: "Kabeyama Saku",
+        japaneseName: "壁山 サク",
+        thumb: "img/Characters/ZackWallside.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_DF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "gregorySmith",
+        name: "Gregory Smith",
+        romanizedName: "Smith",
+        japaneseName: "スミス",
+        thumb: "img/Characters/GregorySmith.png",
+        element: "img/Element/Icon_Element_Fire.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "sonnyRaimon",
+        name: "Sonny Raimon",
+        romanizedName: "Raimon Souichirou",
+        japaneseName: "雷門 総一郎",
+        thumb: "img/Characters/SonnyRaimon.png",
+        element: "img/Element/Icon_Element_Mountain.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 1,
+        background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"
+    },
+
+    {
+        id: "joshNathanielYoungInazuma",
         name: "Josh Nathaniel",
         romanizedName: "Nakama Yō",
         japaneseName: "中間 庸",
-        thumb: "img/Characters/JoshNathanielRaimonVG.png",
+        thumb: "img/Characters/JoshNathanielYoungInazuma.png",
         element: "img/Element/Icon_Element_Forest.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 1,
@@ -860,11 +874,11 @@ export const characterRegistry = [
     },
 
     {
-        id: "edwardGladstoneRaimonVG",
+        id: "edwardGladstoneYoungInazuma",
         name: "Edward Gladstone",
         romanizedName: "Ikari Gangorou",
         japaneseName: "碇 頑五郎",
-        thumb: "img/Characters/EdwardGladstoneRaimonVG.png",
+        thumb: "img/Characters/EdwardGladstoneYoungInazuma.png",
         element: "img/Element/Icon_Element_Fire.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 1,
@@ -873,11 +887,11 @@ export const characterRegistry = [
     },
 
     {
-        id: "garretHairtownRaimonVG",
+        id: "garretHairtownYoungInazuma",
         name: "Garret Hairtown",
         romanizedName: "Kamimura Kirito",
         japaneseName: "髪村 切斗",
-        thumb: "img/Characters/GarretHairtownRaimonVG.png",
+        thumb: "img/Characters/GarretHairtownYoungInazuma.png",
         element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_DF.png",
         stars: 1,
@@ -886,11 +900,11 @@ export const characterRegistry = [
     },
 
     {
-        id: "ianSuffolkRaimonVG",
+        id: "ianSuffolkYoungInazuma",
         name: "Ian Suffolk",
         romanizedName: "Sugata Gen",
         japaneseName: "菅田 厳",
-        thumb: "img/Characters/IanSuffolkRaimonVG.png",
+        thumb: "img/Characters/IanSuffolkYoungInazuma.png",
         element: "img/Element/Icon_Element_Fire.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 1,
@@ -899,11 +913,11 @@ export const characterRegistry = [
     },
 
     {
-        id: "josephYosemiteRaimonVG",
+        id: "josephYosemiteYoungInazuma",
         name: "Joseph Yosemite",
         romanizedName: "Taniyama Yō",
         japaneseName: "民山 謡",
-        thumb: "img/Characters/JosephYosemiteRaimonVG.png",
+        thumb: "img/Characters/JosephYosemiteYoungInazuma.png",
         element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_FW.png",
         stars: 1,
@@ -912,11 +926,11 @@ export const characterRegistry = [
     },
 
     {
-        id: "tylerThomasRaimonVG",
+        id: "tylerThomasYoungInazuma",
         name: "Tyler Thomas",
         romanizedName: "Sadayoshi Tamotsu",
         japaneseName: "定良 保",
-        thumb: "img/Characters/TylerThomasRaimonVG.png",
+        thumb: "img/Characters/TylerThomasYoungInazuma.png",
         element: "img/Element/Icon_Element_Mountain.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 1,

@@ -7,14 +7,14 @@ export const coachData = {
     ...baseInfo,
     artwork: "img/Coaches/DavidEvans.png",
     level: 10,
-    formationName: "Raimon Vecchie Glorie",
+    formationName: "Young Inazuma",
     formationConditions: [
         { slotCode: 2, icon: "img/Element/Icon_Element_Fire.png" },
         { slotCode: 6, icon: "img/Element/Icon_Element_Mountain.png" },
         { slotCode: 11, icon: "img/Element/Icon_Element_Mountain.png" }
     ],
     formationPassive: {
-        title: "Attiva F-Raimon Vecchie Glorie (アクティブ・F-ヤングイナズマ)",
+        title: "Attiva F-Young Inazuma (アクティブ・F-ヤングイナズマ)",
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png"],
         text: "Durante la partita:<br>Ogni volta che una tecnica di parata alleata ha successo, la potenza delle <strong>tecniche di tiro alleate</strong> aumenta di +50.<br><em>Condizione di fine: quando un alleato segna un gol.</em>",
         actions: [

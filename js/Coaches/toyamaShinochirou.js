@@ -20,7 +20,7 @@ export const coachData = {
         text: "All'inizio della partita:<br><strong>Alleati elemento Fuoco:</strong> potenza tecniche di tecnica +30<br><strong>Alleati elemento Foresta:</strong> potenza tecniche di tecnica +30",
         actions: [
             { target: "team_Fire", stat: "Tecnica", type: "move_power", amount: 30, condition: "always" },
-            { target: "team_Wood", stat: "Tecnica", type: "move_power", amount: 30, condition: "always" }
+            { target: "team_Forest", stat: "Tecnica", type: "move_power", amount: 30, condition: "always" }
         ]
     },
     coachPassive: {
@@ -42,7 +42,7 @@ export const coachData = {
         ],
         actions: [
             { target: "team_Fire_recommended_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "always" },
-            { target: "team_Wood_recommended_GK", stat: "Potenza_Arrêt", type: "move_power", amount: "{VAL2}", condition: "always" }
+            { target: "team_Forest_recommended_GK", stat: "Potenza_Arrêt", type: "move_power", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [
