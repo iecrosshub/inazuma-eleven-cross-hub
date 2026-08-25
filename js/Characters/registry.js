@@ -841,7 +841,7 @@ export const characterRegistry = [
         japaneseName: "スミス",
         thumb: "img/Characters/GregorySmith.png",
         element: "img/Element/Icon_Element_Fire.png",
-        position: "img/Position/Icon_Position_MF.png",
+        position: "img/Position/Icon_Position_GK.png",
         stars: 1,
         background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
         frame: "img/Frm_GachaIcon/Frm_GachaIcon_R.png"

@@ -16,6 +16,12 @@ export const charData = {
 
     growth_pattern_code:309,
 
+    zones: [
+        { code: 9, rank: 'A' },
+        { code: 8, rank: 'A' },
+        { code: 10, rank: 'B' }
+    ],
+
     myTechniques: ["アースクェイク", "キラースライド"],
 
     myBasicPassivesIds: ["100000301", "101018001", "101018003"],
