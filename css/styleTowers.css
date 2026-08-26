@@ -1,0 +1,147 @@
+/* =======================================================
+   STILI SPECIFICI PER LA SEZIONE TORRI 5VS5
+   ======================================================= */
+
+/* --- SIDEBAR DI NAVIGAZIONE --- */
+.tower-sidebar {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 150px);
+    position: sticky;
+    top: 20px;
+    border: 2px solid #c0d3e8;
+}
+
+.tower-sidebar-header { border-bottom: 2px solid #1a73e8; padding-bottom: 10px; margin-bottom: 10px; }
+.tower-sidebar-header h3 { font-size: 1.5rem; color: #0b1a42; margin: 0; font-weight: 900; }
+.tower-list { overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
+
+.tower-btn {
+    display: flex; align-items: center; gap: 12px; background: #f8fbff;
+    border: 1px solid #d4e1f1; border-radius: 8px; padding: 12px;
+    cursor: pointer; transition: all 0.2s; text-align: left;
+}
+.tower-btn:hover { background: #edf6ff; transform: translateX(3px); }
+.tower-btn.active { border-color: #1a73e8; background: #0b1a42; color: #ffffff; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.tower-btn.active .text-dark { color: #ffffff !important; }
+.tower-btn-icon {
+    width: 40px; height: 40px; border-radius: 8px; background: #1a73e8; color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    flex-shrink: 0; border: 2px solid #ffca28;
+}
+
+/* --- LAYOUT STILE JAP (ADATTATO) --- */
+.jap-layout-container {
+    background: #ffffff;
+    border: 3px solid #1a73e8;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    color: #102247;
+}
+
+/* Header in stile Jap */
+.jap-header {
+    display: flex;
+    background: #0b1a42;
+    border-bottom: 4px solid #1a73e8;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.jap-number {
+    background: #dc3545; /* Rosso */
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 900;
+    padding: 10px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.jap-title-area {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.jap-title-area h2 { color: #ffffff; margin: 5px 0 0 0; font-weight: 900; font-size: 2rem; }
+.jap-formation {
+    padding: 15px 25px;
+    text-align: right;
+    color: #c0d3e8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+.jap-formation strong { color: #ffca28; font-size: 1.5rem; line-height: 1; }
+
+/* Testo descrittivo base */
+.jap-intro-text { font-size: 1.1rem; font-weight: bold; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
+
+/* IL CAMPETTO (Centrato) */
+.jap-pitch-area {
+    background: #f8fbff;
+    border: 1px solid #c0d3e8;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+.pitch-headers { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; font-size: 0.9rem;}
+.pitch-footers { text-align: center; font-weight: bold; margin-top: 10px; font-size: 0.85rem; color: #5c728e;}
+
+.pitch-5v5-wrapper { display: flex; justify-content: center; padding: 20px 0; }
+.pitch-5v5 {
+    position: relative; width: 300px; height: 480px; background: #198754;
+    border: 3px solid #ffffff; border-radius: 5px; box-shadow: inset 0 0 30px rgba(0,0,0,0.4), 0 10px 20px rgba(0,0,0,0.5);
+}
+.pitch-5v5::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.7); transform: translateY(-50%); }
+.pitch-5v5::after { content: ''; position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; border: 3px solid rgba(255,255,255,0.7); border-radius: 50%; transform: translate(-50%, -50%); }
+.penalty-area-top, .penalty-area-bottom { position: absolute; left: 50%; width: 140px; height: 70px; border: 3px solid rgba(255,255,255,0.7); transform: translateX(-50%); }
+.penalty-area-top { top: 0; border-top: none; }
+.penalty-area-bottom { bottom: 0; border-bottom: none; }
+
+.player-node-5v5 { position: absolute; width: 55px; height: 55px; transform: translate(-50%, -50%); border-radius: 8px; border: 2px solid #ffca28; background-color: #0b1a42; z-index: 10; box-shadow: 0 4px 8px rgba(0,0,0,0.6); }
+.player-node-5v5 img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+.player-role-badge { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 900; padding: 2px 8px; border-radius: 12px; color: white; text-shadow: 1px 1px 2px black; box-shadow: 0 2px 4px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3); }
+.role-fw { background-color: #dc3545; }
+.role-mf { background-color: #ffc107; color: #000; text-shadow: none;}
+.role-df { background-color: #0d6efd; }
+.role-gk { background-color: #198754; }
+
+/* Box Info Affiancati */
+.jap-info-box { background: #fdfdfd; border: 2px solid #c0d3e8; border-radius: 8px; padding: 20px; height: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.jap-info-box.highlight { border-color: #ffca28; background: #fffdf5; }
+.jap-info-title { font-weight: 900; color: #0b1a42; font-size: 1.2rem; margin-bottom: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;}
+
+/* Lista numerata stile Jap */
+.numbered-list { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-weight: bold; font-size: 0.95rem;}
+.numbered-list .num { background: #0b1a42; color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: 900; flex-shrink: 0; }
+
+/* Sostituti */
+.substitute-box { margin-top: 30px; border-top: 2px solid #1a73e8; padding-top: 20px; }
+.sub-char-icon { display: inline-flex; align-items: center; gap: 8px; background: #f0f5fa; border: 1px solid #c0d3e8; padding: 5px 10px 5px 5px; border-radius: 6px; font-weight: bold; margin-right: 10px; margin-bottom: 10px; }
+.sub-char-icon img { width: 35px; height: 35px; border-radius: 4px; object-fit: cover; border: 1px solid #102247;}
+
+/* Griglia Piani Difficili */
+.difficult-stages-title { color: #dc3545; font-weight: 900; font-size: 1.4rem; margin: 40px 0 20px 0; display: flex; align-items: center; gap: 10px; }
+.difficult-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.floor-card { background: #ffffff; border: 1px solid #c0d3e8; border-top: 4px solid #0b1a42; border-radius: 8px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.floor-card h5 { font-weight: 900; color: #0b1a42; border-bottom: 1px dashed #c0d3e8; padding-bottom: 10px; margin-bottom: 15px; }
+.floor-card p { font-size: 0.95rem; font-weight: 500; margin: 0; line-height: 1.6; }
+
+/* Responsive */
+@media (max-width: 991px) {
+    .tower-sidebar { height: auto; position: relative; top: 0; margin-bottom: 20px; }
+    .difficult-grid { grid-template-columns: 1fr; }
+    .jap-header { flex-direction: column; text-align: center; }
+    .jap-formation { text-align: center; border-left: none; border-top: 1px solid rgba(255,255,255,0.1); }
+    .pitch-5v5 { transform: scale(0.8); }
+}
+@media (max-width: 576px) { .pitch-5v5 { transform: scale(0.65); margin: -40px 0; } }
