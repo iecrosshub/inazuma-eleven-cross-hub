@@ -323,7 +323,7 @@ export const characterRegistry = [
     },
 
     {
-        id: "SeymourHillmanRaimonVG",
+        id: "seymourHillmanRaimonVG",
         name: "Seymour Hillman Adulto",
         romanizedName: "Hibiki Seigou",
         japaneseName: "響木 正剛",
