@@ -1,3 +1,5 @@
+// js/Controllers/collection.js
+
 import { characterRegistry, techniquesLibrary, passivesLibrary, universalManualsKeys, rerollPassivesByRole } from '../Core/database.js';
 import { getRarityTier, getLevelTier, extractPosition } from '../Core/parsers.js';
 import { filterCharacters } from '../Core/roster.js';
@@ -8,7 +10,7 @@ import { showProfileSetupModal } from '../Components/profileModal.js';
 import { showProfileEditModal } from '../Components/profileSettings.js';
 
 // ==========================================
-// LIMITE MASSIMO DEL GIOCO (Modifica solo questo per futuri update!)
+// LIMITE MASSIMO DEL GIOCO
 // ==========================================
 const MAX_LEVEL = 340;
 
@@ -21,6 +23,15 @@ class CollectionApp {
         this.isCloudDataLoaded = false;
         this.isFullyReady = false;
         this.loadedCharacters = {};
+
+        this.equipCategories = [
+            { key: 'シューズ', label: '👟 Scarpe' },
+            { key: 'ミサンガ', label: '📿 Bracciale' },
+            { key: 'すね当て', label: '🛡️ Parastinchi' },
+            { key: 'リストバンド', label: '💪 Polsino' },
+            { key: 'グローブ', label: '🧤 Guanti/Accessorio' },
+            { key: 'ペンダント', label: '🏅 Ciondolo' }
+        ];
 
         this.init();
     }
@@ -76,6 +87,18 @@ class CollectionApp {
         const display = document.getElementById('display-cross-level');
         if(display) display.textContent = `Cross Level: ${crossLevel}`;
 
+        // --- NUOVA LOGICA: MOSTRA/NASCONDI ALERT PER LIVELLI > 300 ---
+        const alertBox = document.getElementById('alert-over-300');
+        if (alertBox) {
+            if (crossLevel > 300) {
+                alertBox.classList.remove('d-none');
+                alertBox.classList.add('d-flex');
+            } else {
+                alertBox.classList.remove('d-flex');
+                alertBox.classList.add('d-none');
+            }
+        }
+
         const toSave = {};
         for(let i=1; i<=5; i++) {
             const sel = document.querySelector(`.core-member-select[data-slot="${i}"]`);
@@ -122,21 +145,12 @@ class CollectionApp {
             { id: 'GK', name: 'GK', color: '#0097a7' }
         ];
 
-        const categories = [
-            { key: 'シューズ', label: '👟 Scarpe' },
-            { key: 'ミサンガ', label: '📿 Bracciale' },
-            { key: 'すね当て', label: '🛡️ Parastinchi' },
-            { key: 'リストバンド', label: '💪 Polsino' },
-            { key: 'グローブ', label: '🧤 Guanti/Accessorio' },
-            { key: 'ペンダント', label: '🏅 Ciondolo' }
-        ];
-
         const thead = document.getElementById('equip-matrix-head');
         const tbody = document.getElementById('equip-matrix-body');
 
         if (thead && tbody) {
             let headHtml = `<tr><th style="width: 8%;"></th>`;
-            categories.forEach(c => {
+            this.equipCategories.forEach(c => {
                 headHtml += `<th class="fw-bold" style="width: 15%;">${c.label}</th>`;
             });
             headHtml += `</tr>`;
@@ -148,13 +162,23 @@ class CollectionApp {
                     <td class="fw-bold text-white shadow-sm" style="background-color: ${r.color}; font-size: 1.2rem; border-radius: 8px 0 0 8px;">
                         ${r.name}
                     </td>`;
-                categories.forEach((c, index) => {
-                    let radius = (index === categories.length - 1) ? '0 8px 8px 0' : '0';
+                this.equipCategories.forEach((c, index) => {
+                    let radius = (index === this.equipCategories.length - 1) ? '0 8px 8px 0' : '0';
                     html += `<td style="background-color: #212529; padding: 10px; border-radius: ${radius};">
-                        <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary equip-matrix-select mx-auto" 
-                               style="font-size: 0.95rem; max-width: 80px; text-align: center; font-weight: bold;" 
-                               data-role="${r.id}" data-cat="${c.key}" 
-                               min="0" max="${MAX_LEVEL}" step="5" value="${MAX_LEVEL}">
+                        
+                        <div class="equip-auto-view">
+                            <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary equip-matrix-select mx-auto" 
+                                   style="font-size: 0.95rem; max-width: 80px; text-align: center; font-weight: bold;" 
+                                   data-role="${r.id}" data-cat="${c.key}" 
+                                   min="0" max="${MAX_LEVEL}" step="5" value="${MAX_LEVEL}">
+                        </div>
+
+                        <div class="equip-manual-view" style="display:none;">
+                            <button class="btn btn-sm btn-outline-warning w-100 fw-bold btn-edit-manual-equip" data-role="${r.id}" data-cat="${c.key}">
+                                <i class="fas fa-edit"></i> Modifica
+                            </button>
+                        </div>
+
                     </td>`;
                 });
                 html += `</tr>`;
@@ -168,19 +192,31 @@ class CollectionApp {
                     else if (v > MAX_LEVEL) e.target.value = MAX_LEVEL;
                 });
             });
+
+            document.querySelectorAll('.btn-edit-manual-equip').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    this.openManualEquipModal(btn.dataset.role, btn.dataset.cat);
+                });
+            });
         }
 
+        const toggleMode = document.getElementById('toggle-equip-mode');
+        if (toggleMode) {
+            toggleMode.addEventListener('change', () => this.toggleEquipView());
+        }
+
+        // Ripristino dati salvati
         try {
+            const savedMode = JSON.parse(localStorage.getItem('collection_equip_mode'));
+            if (savedMode === true && toggleMode) toggleMode.checked = true;
+
             const savedMatrix = JSON.parse(localStorage.getItem('collection_equip_matrix'));
             if (savedMatrix) {
                 document.querySelectorAll('.equip-matrix-select').forEach(sel => {
                     const r = sel.dataset.role;
                     const c = sel.dataset.cat;
-                    if (savedMatrix[r] && savedMatrix[r][c]) {
-                        sel.value = savedMatrix[r][c];
-                    } else {
-                        sel.value = MAX_LEVEL.toString();
-                    }
+                    if (savedMatrix[r] && savedMatrix[r][c]) sel.value = savedMatrix[r][c];
+                    else sel.value = MAX_LEVEL.toString();
                 });
             } else {
                 document.querySelectorAll('.equip-matrix-select').forEach(sel => sel.value = MAX_LEVEL.toString());
@@ -188,6 +224,36 @@ class CollectionApp {
         } catch(e) {
             document.querySelectorAll('.equip-matrix-select').forEach(sel => sel.value = MAX_LEVEL.toString());
         }
+
+        this.toggleEquipView();
+    }
+
+    toggleEquipView() {
+        const toggleMode = document.getElementById('toggle-equip-mode');
+        if (!toggleMode) return;
+        const isManual = toggleMode.checked;
+
+        document.querySelectorAll('.equip-auto-view').forEach(el => el.style.display = isManual ? 'none' : 'block');
+        document.querySelectorAll('.equip-manual-view').forEach(el => el.style.display = isManual ? 'block' : 'none');
+    }
+
+    openManualEquipModal(role, cat) {
+        document.getElementById('equip-modal-role').value = role;
+        document.getElementById('equip-modal-cat').value = cat;
+
+        const manualData = JSON.parse(localStorage.getItem('collection_equip_manual')) || {};
+        const stats = manualData[role]?.[cat] || { Tiro:0, Tecnica:0, Blocco:0, Parata:0, Velocità:0 };
+
+        document.querySelectorAll('.equip-modal-input').forEach(inp => {
+            const s = inp.dataset.stat;
+            inp.value = stats[s] || 0;
+        });
+
+        const modalLabel = this.equipCategories.find(c => c.key === cat).label;
+        document.getElementById('equipManualModalTitle').innerHTML = `Modifica ${modalLabel} <span class="badge bg-secondary ms-2">${role}</span>`;
+
+        const myModal = new bootstrap.Modal(document.getElementById('equipManualModal'));
+        myModal.show();
     }
 
     init() {
@@ -195,6 +261,27 @@ class CollectionApp {
         document.getElementById('btn-logout').addEventListener('click', () => this.auth.logout());
         document.getElementById('btn-save-cloud').addEventListener('click', () => this.saveToCloud());
         document.getElementById('btn-tutorial').addEventListener('click', () => this.startTutorial());
+
+        // Salvataggio della singola modale manuale
+        document.getElementById('btn-save-equip-manual').addEventListener('click', () => {
+            const role = document.getElementById('equip-modal-role').value;
+            const cat = document.getElementById('equip-modal-cat').value;
+
+            const manualData = JSON.parse(localStorage.getItem('collection_equip_manual')) || { FW:{}, MF:{}, DF:{}, GK:{} };
+            if(!manualData[role]) manualData[role] = {};
+
+            const stats = {};
+            document.querySelectorAll('.equip-modal-input').forEach(inp => {
+                stats[inp.dataset.stat] = parseInt(inp.value) || 0;
+            });
+
+            manualData[role][cat] = stats;
+            localStorage.setItem('collection_equip_manual', JSON.stringify(manualData));
+
+            const modalEl = document.getElementById('equipManualModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance.hide();
+        });
 
         window.addEventListener('open-profile-settings', () => {
             if (this.auth && this.auth.user) {
@@ -214,6 +301,10 @@ class CollectionApp {
         if (btnApplyGlobal) {
             btnApplyGlobal.addEventListener('click', () => {
 
+                // Salva le impostazioni della griglia nel LocalStorage
+                const isManual = document.getElementById('toggle-equip-mode').checked;
+                localStorage.setItem('collection_equip_mode', JSON.stringify(isManual));
+
                 const matrixObj = { FW: {}, MF: {}, DF: {}, GK: {} };
                 document.querySelectorAll('.equip-matrix-select').forEach(sel => {
                     matrixObj[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || MAX_LEVEL;
@@ -222,6 +313,7 @@ class CollectionApp {
 
                 this.updateCrossLevel();
 
+                // Applica i ricalcoli a tutte le card renderizzate
                 document.querySelectorAll('.collection-item-wrapper').forEach(col => {
                     const charId = col.dataset.charId;
                     const charLevel = this.getCharLevel(charId);
@@ -413,7 +505,8 @@ class CollectionApp {
             if (docSnap.exists()) {
                 const data = docSnap.data();
 
-                const { characters, coreMembers, equipMatrix, globalLevel, ...oldCharsData } = data;
+                // Estrai i dati extra dal cloud
+                const { characters, coreMembers, equipMatrix, equipManualMatrix, isEquipManualMode, globalLevel, ...oldCharsData } = data;
 
                 if (data.characters && Object.keys(data.characters).length > 0) {
                     this.collectionData = data.characters;
@@ -427,6 +520,12 @@ class CollectionApp {
 
                 if (data.coreMembers) localStorage.setItem('collection_core_members', JSON.stringify(data.coreMembers));
                 if (data.equipMatrix) localStorage.setItem('collection_equip_matrix', JSON.stringify(data.equipMatrix));
+                if (data.equipManualMatrix) localStorage.setItem('collection_equip_manual', JSON.stringify(data.equipManualMatrix));
+                if (data.isEquipManualMode !== undefined) {
+                    localStorage.setItem('collection_equip_mode', JSON.stringify(data.isEquipManualMode));
+                    const toggle = document.getElementById('toggle-equip-mode');
+                    if (toggle) toggle.checked = data.isEquipManualMode;
+                }
 
                 this.setupCoreMembers();
                 this.setupEquipMatrix();
@@ -540,17 +639,55 @@ class CollectionApp {
         if (!raritySel) return;
 
         const rarity = parseInt(raritySel.value) || 0;
-
         const charLevel = this.getCharLevel(charId);
 
+        // --- GESTIONE CALCOLI EQUIPAGGIAMENTI AUTO VS MANUAL ---
+        const toggleMode = document.getElementById('toggle-equip-mode');
+        const isManualEquip = toggleMode ? toggleMode.checked : false;
+
         const equipMatrix = { FW: {}, MF: {}, DF: {}, GK: {} };
-        document.querySelectorAll('.equip-matrix-select').forEach(sel => {
-            equipMatrix[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || MAX_LEVEL;
-        });
+
+        if (!isManualEquip) {
+            // Modalità Automatica: Invia i livelli inseriti e il calcolatore fa il resto
+            document.querySelectorAll('.equip-matrix-select').forEach(sel => {
+                equipMatrix[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || MAX_LEVEL;
+            });
+        } else {
+            // Modalità Manuale: "Inganniamo" il calcolatore passando tutti Livelli 0
+            // In questo modo il calcolatore ci restituisce solo le stats base pure!
+            this.equipCategories.forEach(c => {
+                ['FW','MF','DF','GK'].forEach(r => { equipMatrix[r][c.key] = 0; });
+            });
+        }
 
         const newStats = calcolaStatisticheEsatte(fullData, charLevel, rarity, equipMatrix);
 
         if (newStats) {
+            // Se siamo in modalità manuale, andiamo a sommare direttamente le stats compilate nella modale!
+            if (isManualEquip) {
+                const role = extractPosition(fullData.position);
+                const manualData = JSON.parse(localStorage.getItem('collection_equip_manual')) || { FW:{}, MF:{}, DF:{}, GK:{} };
+                const roleData = manualData[role] || {};
+
+                let totalManual = { Tiro:0, Tecnica:0, Blocco:0, Parata:0, Velocità:0 };
+                for (let cat in roleData) {
+                    if (roleData[cat]) {
+                        totalManual.Tiro += roleData[cat].Tiro || 0;
+                        totalManual.Tecnica += roleData[cat].Tecnica || 0;
+                        totalManual.Blocco += roleData[cat].Blocco || 0;
+                        totalManual.Parata += roleData[cat].Parata || 0;
+                        totalManual.Velocità += roleData[cat].Velocità || 0;
+                    }
+                }
+
+                // Sommiamo la matematica pura
+                newStats.kick = (newStats.kick || 0) + totalManual.Tiro;
+                newStats.technique = (newStats.technique || 0) + totalManual.Tecnica;
+                newStats.block = (newStats.block || 0) + totalManual.Blocco;
+                newStats.catch = (newStats.catch || 0) + totalManual.Parata;
+                newStats.speed = (newStats.speed || 0) + totalManual.Velocità;
+            }
+
             const statMap = {
                 "Tiro": "kick",
                 "Tecnica": "technique",
@@ -574,7 +711,6 @@ class CollectionApp {
         col.className = 'col-12 col-md-6 col-xl-4 collection-item-wrapper';
         col.dataset.charId = baseChar.id;
 
-        // --- RISOLUZIONE INTELLIGENTE DEI PERCORSI IMMAGINI ---
         const resolvePath = (file, folder) => {
             if (!file) return '';
             return file.includes('/') ? file : `img/${folder}/${file}`;
@@ -658,7 +794,6 @@ class CollectionApp {
         const elementPath = resolvePath(fullData.element, 'Element');
         const positionPath = resolvePath(fullData.position, 'Position');
 
-        // Crea dinamicamente il segnaposto corretto se manca nel database
         const placeholderStatValue = (stat) => {
             if (fullData.stats && fullData.stats[stat]) {
                 return fullData.stats[stat]['lv' + MAX_LEVEL] || fullData.stats[stat].lv300 || 0;
@@ -929,12 +1064,19 @@ class CollectionApp {
             const coreMembers = JSON.parse(localStorage.getItem('collection_core_members') || '{}');
             const equipMatrix = JSON.parse(localStorage.getItem('collection_equip_matrix') || '{}');
 
+            // Salvataggio anche dei nuovi dati manuali per syncare tra dispositivi!
+            const equipManualMatrix = JSON.parse(localStorage.getItem('collection_equip_manual') || '{}');
+            const toggleMode = document.getElementById('toggle-equip-mode');
+            const isEquipManualMode = toggleMode ? toggleMode.checked : false;
+
             const userDocRef = window.dbDoc(window.firebaseDb, "collezione", this.auth.user.uid);
 
             await window.dbSet(userDocRef, {
                 characters: dataToSave,
                 coreMembers: coreMembers,
-                equipMatrix: equipMatrix
+                equipMatrix: equipMatrix,
+                equipManualMatrix: equipManualMatrix,
+                isEquipManualMode: isEquipManualMode
             }, { merge: true });
 
             this.hasUnsavedChanges = false;

@@ -26,13 +26,13 @@
             color: #ffca28 !important;
         }
 
-        /* Personalizzazione del fumetto del tutorial (Stile Nuovo Centrato) */
+        /* Personalizzazione del fumetto del tutorial */
         .introjs-tooltip {
             min-width: 450px !important;
             max-width: 500px !important;
             color: #0b1a42;
             font-family: inherit;
-            border: 2px solid #1a73e8; /* Bordo blu stile nuovo */
+            border: 2px solid #1a73e8;
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
@@ -52,6 +52,16 @@
             background-color: #1557b0;
             color: #ffffff;
         }
+
+        /* Stile Inputs Modale Equipaggiamento */
+        .equip-modal-input::-webkit-outer-spin-button,
+        .equip-modal-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .equip-modal-input {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 
@@ -67,9 +77,7 @@
             <h4 class="m-0 text-white fw-bold" id="user-greeting">Accedi per salvare la tua collezione</h4>
         </div>
         <div>
-            <!-- BOTTONE TUTORIAL AGGIUNTO QUI -->
             <button id="btn-tutorial" class="btn btn-info px-3 fw-bold me-2 text-dark"><i class="fas fa-question-circle"></i> Guida</button>
-
             <button id="btn-login" class="btn btn-light px-4 fw-bold text-dark"><i class="fab fa-google me-2 text-danger"></i> Accedi con Google</button>
             <button id="btn-logout" class="btn btn-outline-light px-4 fw-bold" style="display: none;">Esci</button>
             <button id="btn-save-cloud" class="btn btn-warning px-4 ms-2 fw-bold text-dark" style="display: none;"><i class="fas fa-cloud-upload-alt me-2"></i> Salva nel Cloud</button>
@@ -82,6 +90,14 @@
         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-info pb-2">
             <h5 class="text-info m-0 fw-bold"><i class="fas fa-users"></i> Membri Principali (Cross Level)</h5>
             <h4 class="text-warning m-0 fw-bold" id="display-cross-level">Cross Level: 340</h4>
+        </div>
+
+        <!-- NUOVO: ALERT LIVELLO > 300 (Nascosto di default con classe d-none) -->
+        <div id="alert-over-300" class="alert alert-warning align-items-center mb-3 py-2 fw-bold d-none" role="alert" style="font-size: 0.9rem; border: 2px solid #d32f2f;">
+            <i class="fas fa-exclamation-triangle fs-4 me-3 text-danger"></i>
+            <div>
+                <strong>Attenzione: Hai superato il Livello 300!</strong> Oltre questa soglia il sito non è implementato per mancanza di informazioni. I calcoli automatici per giocatori ed equipaggiamenti non sono presenti: ti consigliamo di attivare la modalità manuale per inserire i valori esatti per Equipaggiamenti e Personaggi!
+            </div>
         </div>
 
         <div class="row g-2 mb-3" id="core-members-container">
@@ -164,8 +180,17 @@
         </div>
 
         <div class="collapse mt-3" id="equipMatrixCollapse">
-            <div class="card card-body bg-dark border-warning p-2">
-                <h6 class="text-warning mb-3 fw-bold text-center"><i class="fas fa-tshirt"></i> Matrice Livelli Equipaggiamenti (Salti di 5)</h6>
+            <div class="card card-body bg-dark border-warning p-3">
+
+                <!-- TOGGLE MODALITÀ EQUIPAGGIAMENTO -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
+                    <h6 class="text-warning mb-2 mb-md-0 fw-bold"><i class="fas fa-tshirt"></i> Matrice Equipaggiamenti (Default: Livelli)</h6>
+                    <div class="form-check form-switch m-0 border border-warning px-3 py-1 rounded" style="background-color: rgba(255, 202, 40, 0.1);">
+                        <input class="form-check-input ms-0 me-2" type="checkbox" id="toggle-equip-mode" style="cursor: pointer;">
+                        <label class="form-check-label text-warning small fw-bold" for="toggle-equip-mode" style="cursor: pointer;">Forza Valori Manuali (Statistiche Esatte)</label>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-borderless align-middle text-center mb-0" style="font-size: 0.85rem; border-spacing: 0 8px; border-collapse: separate;">
                         <thead id="equip-matrix-head" class="text-light"></thead>
@@ -219,6 +244,49 @@
     </div>
 </div>
 
+<!-- Modal Equipaggiamento Manuale -->
+<div class="modal fade" id="equipManualModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content bg-dark text-white" style="border: 2px solid #ffca28; border-radius: 12px;">
+            <div class="modal-header" style="border-bottom: 2px solid #ffca28;">
+                <h5 class="modal-title text-warning fw-bold" id="equipManualModalTitle">Modifica Equipaggiamento</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <input type="hidden" id="equip-modal-role">
+                <input type="hidden" id="equip-modal-cat">
+                <p class="small text-secondary mb-4 text-center">Inserisci le statistiche fornite da questo specifico pezzo di equipaggiamento.</p>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="fw-bold d-flex align-items-center gap-2"><img src="img/Status/Icon_Status_Kick.png" style="width:20px;"> Tiro</label>
+                    <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary w-50 equip-modal-input text-center fw-bold" data-stat="Tiro" value="0">
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="fw-bold d-flex align-items-center gap-2"><img src="img/Status/Icon_Status_Technic.png" style="width:20px;"> Tecnica</label>
+                    <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary w-50 equip-modal-input text-center fw-bold" data-stat="Tecnica" value="0">
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="fw-bold d-flex align-items-center gap-2"><img src="img/Status/Icon_Status_Block.png" style="width:20px;"> Blocco</label>
+                    <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary w-50 equip-modal-input text-center fw-bold" data-stat="Blocco" value="0">
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="fw-bold d-flex align-items-center gap-2"><img src="img/Status/Icon_Status_Catch.png" style="width:20px;"> Parata</label>
+                    <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary w-50 equip-modal-input text-center fw-bold" data-stat="Parata" value="0">
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-0">
+                    <label class="fw-bold d-flex align-items-center gap-2"><img src="img/Status/Icon_Status_Speed.png" style="width:20px;"> Velocità</label>
+                    <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary w-50 equip-modal-input text-center fw-bold" data-stat="Velocità" value="0">
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #333;">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark px-4" id="btn-save-equip-manual">Salva Valori</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Unsaved Changes -->
 <div id="unsaved-modal" class="global-modal-overlay">
     <div class="global-modal-content">
         <div class="global-modal-header"><i class="fas fa-exclamation-triangle"></i> Attenzione!</div>
