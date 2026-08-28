@@ -2,7 +2,12 @@ import { AuthManager } from '../Services/auth.js';
 import { characterRegistry } from '../Core/database.js';
 
 const ADMIN_UID = "avNoCAM4I5dyQL6zLY0phnt3fc92";
-const MODERATOR_UIDS = ["alqyEbbyuxNjej3yTJQDNthmtf32", "Cu2zjcxpxIh2lddFrlDIc6YePgu1"];
+// Aggiunto il nuovo UID qui per dargli accesso al Pannello Admin delle Torri
+const MODERATOR_UIDS = [
+    "alqyEbbyuxNjej3yTJQDNthmtf32",
+    "Cu2zjcxpxIh2lddFrlDIc6YePgu1",
+    "EjTkeNHHKBdnvCToNtmHmKhXjko2"
+];
 
 class TowersController {
     constructor() {
