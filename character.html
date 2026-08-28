@@ -14,67 +14,208 @@
     <!-- CSS Personalizzati -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/styleCharacter.css">
+
+    <style>
+        /* Modale ricerca */
+        .compare-char-list { max-height: 400px; overflow-y: auto; }
+        .compare-char-item { cursor: pointer; transition: background 0.2s; padding: 10px; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 15px; }
+        .compare-char-item:hover { background-color: #f8fbff; border-left: 4px solid #1a73e8; }
+        #btn-close-compare { display: none; }
+
+        /* Fix Anti-schiacciamento tabelle */
+        .table-responsive table th, .table-responsive table td { white-space: nowrap !important; }
+
+        /* RECUPERO STILI ORIGINALI PER ENTRAMBI GLI SLOT */
+        [id^="char-name-main-"], .stat-title-custom {
+            color: #102247 !important;
+            font-weight: 900 !important;
+            text-transform: uppercase !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+            letter-spacing: 1px;
+        }
+        ul[id^="stats-list-"] { list-style: none; padding: 0; margin: 0; }
+        ul[id^="stats-list-"] li {
+            background-color: #0b1a42 !important; color: #e4edf8 !important;
+            border: 2px solid #1269e8 !important; border-radius: 6px;
+            margin-bottom: 5px; padding: 8px 12px; display: flex;
+            justify-content: space-between; align-items: center;
+            white-space: nowrap; font-weight: bold;
+        }
+        ul[id^="stats-list-"] li span:first-child { color: #e4edf8 !important; }
+        ul[id^="stats-list-"] li span:last-child { color: #0dcaf0 !important; font-size: 1.1em; font-weight: 900; }
+
+        /* ==========================================================
+           LA MAGIA DELLA GRIGLIA: ALLINEAMENTO PERFETTO E ANTI-COLLASSO
+           ========================================================== */
+        .scroll-wrapper { width: 100%; overflow-x: auto; padding-bottom: 50px; }
+
+        /* Modalità Normale */
+        .layout-single {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 24px;
+            max-width: 1300px;
+            margin: 0 auto;
+            align-items: start;
+        }
+        /* Assegnazione celle modalità singola */
+        .layout-single #grid-info-1 { grid-column: 1; grid-row: 1 / span 4; }
+        .layout-single #grid-tech-1 { grid-column: 2; grid-row: 1; }
+        .layout-single #grid-pass-base-1 { grid-column: 2; grid-row: 2; }
+        .layout-single #grid-pass-awake-1 { grid-column: 2; grid-row: 3; }
+        .layout-single #grid-pass-reroll-1 { grid-column: 2; grid-row: 4; }
+
+        /* Modalità Confronto */
+        .layout-compare {
+            display: grid;
+            grid-template-columns: 300px 550px 550px 300px; /* Larghezze bloccate: non si schiaccia mai! */
+            gap: 24px;
+            min-width: 1780px;
+            margin: 0 auto;
+            justify-content: center; /* CENTRA LA GRIGLIA SULLO SCHERMO */
+            align-items: start;
+        }
+        /* Assegnazione celle modalità confronto (le righe combaciano perfettamente) */
+        .layout-compare #grid-info-1 { grid-column: 1; grid-row: 1 / span 4; }
+        .layout-compare #grid-tech-1 { grid-column: 2; grid-row: 1; }
+        .layout-compare #grid-pass-base-1 { grid-column: 2; grid-row: 2; }
+        .layout-compare #grid-pass-awake-1 { grid-column: 2; grid-row: 3; }
+        .layout-compare #grid-pass-reroll-1 { grid-column: 2; grid-row: 4; }
+
+        .layout-compare #grid-info-2 { grid-column: 4; grid-row: 1 / span 4; }
+        .layout-compare #grid-tech-2 { grid-column: 3; grid-row: 1; }
+        .layout-compare #grid-pass-base-2 { grid-column: 3; grid-row: 2; }
+        .layout-compare #grid-pass-awake-2 { grid-column: 3; grid-row: 3; }
+        .layout-compare #grid-pass-reroll-2 { grid-column: 3; grid-row: 4; }
+
+        .compare-mode-active {
+            max-width: 100% !important;
+            width: 100% !important;
+            overflow-x: auto;
+        }
+
+        /* Responsive Singolo per Cellulari */
+        @media (max-width: 991px) {
+            .layout-single { display: flex; flex-direction: column; }
+        }
+    </style>
 </head>
 <body class="pt-3">
 
-<!-- NAVIGAZIONE PRINCIPALE -->
 <div class="container-fixed my-4 position-relative">
-
-    <!-- Tasti laterali -->
-    <button type="button" id="btn-prev-char" class="btn btn-outline-info fw-bold rounded-pill px-4 position-absolute top-50 start-0 translate-middle-y">
-        ◀ Precedente
-    </button>
-    <button type="button" id="btn-next-char" class="btn btn-outline-info fw-bold rounded-pill px-4 position-absolute top-50 end-0 translate-middle-y">
-        Successivo ▶
-    </button>
-
-    <!-- NAVBAR INIETTATA DINAMICAMENTE -->
+    <button type="button" id="btn-prev-char" class="btn btn-outline-info fw-bold rounded-pill px-4 position-absolute top-50 start-0 translate-middle-y">◀ Precedente</button>
+    <button type="button" id="btn-next-char" class="btn btn-outline-info fw-bold rounded-pill px-4 position-absolute top-50 end-0 translate-middle-y">Successivo ▶</button>
     <script type="module" src="js/Components/navbar.js"></script>
     <inazuma-navbar></inazuma-navbar>
-
 </div>
 
-<!-- CONTENITORE FISSO ANTI-ZOOM -->
-<div class="container-fixed pb-5">
-    <div class="row g-4">
-        <!-- Colonna Sinistra (Immagine e Statistiche) -->
-        <div class="col-lg-4 col-xl-3 text-center">
-            <div class="bg-dark p-3 rounded-3 border border-secondary shadow mb-4">
-                <img id="char-img" src="" alt="Personaggio" class="img-fluid rounded mb-3">
-                <h2 id="char-name-main" class="h4 text-info mb-1">Caricamento...</h2>
-                <h4 id="char-name-jp" class="text-secondary" style="font-size: 1.1rem; opacity: 0.9;"></h4>
-                <div class="d-flex justify-content-center gap-4 mb-3">
-                    <img id="element-icon" src="" style="height: 45px;">
-                    <img id="position-icon" src="" style="height: 45px;">
-                </div>
-                <div id="tags-container" class="d-flex justify-content-center gap-2 flex-wrap border-top border-secondary pt-3"></div>
-            </div>
+<div class="text-center mb-4">
+    <button id="btn-compare" class="btn btn-warning fw-bold px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#compareModal">
+        <i class="fas fa-balance-scale me-2"></i> Confronta Personaggio
+    </button>
+    <button id="btn-close-compare" class="btn btn-danger fw-bold px-4 shadow-sm ms-2">
+        <i class="fas fa-times me-2"></i> Chiudi Confronto
+    </button>
+</div>
 
+<!-- ==============================================
+     MASTER LAYOUT: Tutto viene impaginato dalla Griglia CSS!
+     ============================================== -->
+<div class="scroll-wrapper">
+    <div id="master-layout" class="layout-single">
+
+        <!-- SLOT 1: INFORMAZIONI -->
+        <div id="grid-info-1" class="text-center">
+            <div class="bg-dark p-3 rounded-3 border border-secondary shadow mb-4">
+                <img id="char-img-1" src="" class="img-fluid rounded mb-3">
+                <h2 id="char-name-main-1" class="h4 char-name-custom mb-1">Caricamento...</h2>
+                <h4 id="char-name-jp-1" class="text-secondary" style="font-size: 1.1rem; opacity: 0.9;"></h4>
+                <div class="d-flex justify-content-center gap-4 mb-3">
+                    <img id="element-icon-1" src="" style="height: 45px;">
+                    <img id="position-icon-1" src="" style="height: 45px;">
+                </div>
+                <div id="tags-container-1" class="d-flex justify-content-center gap-2 flex-wrap border-top border-secondary pt-3"></div>
+            </div>
             <div class="bg-dark p-3 rounded-3 border border-secondary shadow text-start">
                 <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-3">
-                    <span class="text-info fw-bold fs-5">Statistiche</span>
+                    <span class="stat-title-custom fs-5">Statistiche</span>
                     <div class="btn-group btn-group-sm">
-                        <button id="btn-lv1" class="btn btn-outline-info active">Lv. 1</button>
-                        <button id="btn-lv300" class="btn btn-outline-info">Lv. 300</button>
+                        <button id="btn-lv1-1" class="btn btn-outline-info active" onclick="window.charController.switchLevel(1, 'lv1')">Lv. 1</button>
+                        <button id="btn-lv300-1" class="btn btn-outline-info" onclick="window.charController.switchLevel(1, 'lv300')">Lv. 300</button>
                     </div>
                 </div>
-                <ul id="stats-list" class="list-unstyled"></ul>
-                <div id="zones-container"></div>
+                <ul id="stats-list-1"></ul>
+                <div id="zones-container-1"></div>
             </div>
         </div>
 
-        <!-- Colonna Destra (Tecniche e Passive) -->
-        <div class="col-lg-8 col-xl-9">
-            <h3 class="mb-4 text-info">Tecniche</h3>
-            <div id="tecniche-container"></div>
+        <!-- SLOT 1: DETTAGLI -->
+        <div id="grid-tech-1">
+            <h3 class="mb-4 text-info text-uppercase fw-bold">TECNICHE</h3>
+            <div id="tecniche-container-1"></div>
+        </div>
+        <div id="grid-pass-base-1"></div>
+        <div id="grid-pass-awake-1"></div>
+        <div id="grid-pass-reroll-1"></div>
 
-            <div id="passive-container"></div>
+
+        <!-- SLOT 2: INFORMAZIONI (Nascosto in single mode) -->
+        <div id="grid-info-2" class="text-center slot-2-element" style="display: none;">
+            <div class="bg-dark p-3 rounded-3 border border-secondary shadow mb-4">
+                <img id="char-img-2" src="" class="img-fluid rounded mb-3">
+                <h2 id="char-name-main-2" class="h4 char-name-custom mb-1">Caricamento...</h2>
+                <h4 id="char-name-jp-2" class="text-secondary" style="font-size: 1.1rem; opacity: 0.9;"></h4>
+                <div class="d-flex justify-content-center gap-4 mb-3">
+                    <img id="element-icon-2" src="" style="height: 45px;">
+                    <img id="position-icon-2" src="" style="height: 45px;">
+                </div>
+                <div id="tags-container-2" class="d-flex justify-content-center gap-2 flex-wrap border-top border-secondary pt-3"></div>
+            </div>
+            <div class="bg-dark p-3 rounded-3 border border-secondary shadow text-start">
+                <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-3">
+                    <span class="stat-title-custom fs-5">Statistiche</span>
+                    <div class="btn-group btn-group-sm">
+                        <button id="btn-lv1-2" class="btn btn-outline-info active" onclick="window.charController.switchLevel(2, 'lv1')">Lv. 1</button>
+                        <button id="btn-lv300-2" class="btn btn-outline-info" onclick="window.charController.switchLevel(2, 'lv300')">Lv. 300</button>
+                    </div>
+                </div>
+                <ul id="stats-list-2"></ul>
+                <div id="zones-container-2"></div>
+            </div>
+        </div>
+
+        <!-- SLOT 2: DETTAGLI (Nascosto in single mode) -->
+        <div id="grid-tech-2" class="slot-2-element" style="display: none;">
+            <h3 class="mb-4 text-info text-uppercase fw-bold">TECNICHE</h3>
+            <div id="tecniche-container-2"></div>
+        </div>
+        <div id="grid-pass-base-2" class="slot-2-element" style="display: none;"></div>
+        <div id="grid-pass-awake-2" class="slot-2-element" style="display: none;"></div>
+        <div id="grid-pass-reroll-2" class="slot-2-element" style="display: none;"></div>
+
+    </div>
+</div>
+
+<!-- MODALE SELEZIONE: Tolto modal-dialog-centered e aggiunto margine top per farlo apparire più in alto -->
+<div class="modal fade" id="compareModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="margin-top: 8vh;">
+        <div class="modal-content bg-white" style="border: 3px solid #ffca28; border-radius: 12px;">
+            <div class="modal-header" style="background-color: #0b1a42; color: #fff; border-bottom: 2px solid #ffca28;">
+                <h5 class="modal-title fw-bold"><i class="fas fa-search me-2 text-warning"></i> Scegli il Personaggio da Confrontare</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="p-3 border-bottom bg-light sticky-top">
+                    <input type="text" id="compare-search-input" class="form-control form-control-lg border-warning shadow-none" placeholder="Cerca per nome...">
+                </div>
+                <div id="compare-list-container" class="compare-char-list bg-white"></div>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script type="module" src="./js/Controllers/character.js?v=2"></script>
+<script type="module" src="./js/Controllers/character.js"></script>
 
 </body>
 </html>

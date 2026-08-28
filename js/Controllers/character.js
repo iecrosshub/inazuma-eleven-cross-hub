@@ -1,50 +1,48 @@
 // js/Controllers/character.js
 
 import { characterRegistry, getPopulatedCharacter, rerollPassivesByRole } from '../Core/database.js';
-// Come vedi, non importiamo più getUrlParam, gestiamo l'URL direttamente qui dentro!
 import { getAdjacentCharacterId, parsePassiveText, extractPosition } from '../Core/parsers.js';
 import { calcolaStatisticheEsatte } from '../Core/calculator.js';
 
-let db = {};
-let currentId = '';
+let db1 = null;
+let db2 = null;
+let currentId1 = '';
 
 // ==========================================
-// 1. INIZIALIZZAZIONE E RECUPERO DATI
+// 1. INIZIALIZZAZIONE
 // ==========================================
 
 async function init() {
-    // 1. CATTURA DELL'URL IN MODO INFALLIBILE
     const currentUrl = new URL(window.location.href);
     let clickedId = currentUrl.searchParams.get('id');
 
-    // DEBUG: Stampiamo nella console (F12) cosa sta leggendo il browser
-    console.log("Lettura URL completo:", currentUrl.href);
-    console.log("ID trovato nell'indirizzo:", clickedId);
-
-    // 2. ASSEGNAZIONE PRIORITÀ
     if (clickedId && clickedId.trim() !== "") {
-        currentId = clickedId;
-        console.log("-> Uso il personaggio cliccato dall'URL:", currentId);
+        currentId1 = clickedId;
     } else {
-        currentId = localStorage.getItem('selectedChar') || 'byronLoveZeus';
-        console.log("-> Indirizzo vuoto. Carico il personaggio dalla memoria:", currentId);
+        currentId1 = localStorage.getItem('selectedChar') || 'byronLoveZeus';
     }
 
-    // 3. AGGIORNAMENTO DELLA MEMORIA
-    localStorage.setItem('selectedChar', currentId);
+    localStorage.setItem('selectedChar', currentId1);
 
+    db1 = await fetchCharacterData(currentId1);
+    if(db1) {
+        populateCharacterUI(db1, 1);
+    }
+
+    setupNavigationControls();
+    setupCompareControls();
+}
+
+async function fetchCharacterData(charId) {
     try {
-        const module = await import(`../Characters/${currentId}.js`);
+        const module = await import(`../Characters/${charId}.js`);
+        let charDb = getPopulatedCharacter(module.charData);
 
-        db = getPopulatedCharacter(module.charData);
-
-        // 1. Calcolo per personaggi con formula automatica
-        if (db.growth_pattern_code) {
-            const stats1 = calcolaStatisticheEsatte(db, 1, 9, 1);
-            const stats300 = calcolaStatisticheEsatte(db, 300, 9, 1);
-
+        if (charDb.growth_pattern_code) {
+            const stats1 = calcolaStatisticheEsatte(charDb, 1, 9, 1);
+            const stats300 = calcolaStatisticheEsatte(charDb, 300, 9, 1);
             if (stats1 && stats300) {
-                db.stats = {
+                charDb.stats = {
                     "TP": { lv1: stats1.tp || 100, lv300: stats300.tp || 100 },
                     "Tiro": { lv1: stats1.kick, lv300: stats300.kick },
                     "Tecnica": { lv1: stats1.technique, lv300: stats300.technique },
@@ -55,89 +53,55 @@ async function init() {
             }
         }
 
-        // 2. Fallback per personaggi manuali senza stats (se l'oggetto non esiste o è vuoto)
-        if (!db.stats || Object.keys(db.stats).length === 0) {
-            db.stats = {
-                "TP": { lv1: 100, lv300: 100 },
-                "Tiro": { lv1: 100, lv300: 100 },
-                "Tecnica": { lv1: 100, lv300: 100 },
-                "Blocco": { lv1: 100, lv300: 100 },
-                "Parata": { lv1: 100, lv300: 100 },
-                "Velocità": { lv1: 100, lv300: 100 }
+        if (!charDb.stats || Object.keys(charDb.stats).length === 0) {
+            charDb.stats = {
+                "TP": { lv1: 100, lv300: 100 }, "Tiro": { lv1: 100, lv300: 100 }, "Tecnica": { lv1: 100, lv300: 100 },
+                "Blocco": { lv1: 100, lv300: 100 }, "Parata": { lv1: 100, lv300: 100 }, "Velocità": { lv1: 100, lv300: 100 }
             };
         }
-
-        document.getElementById('char-name-main').textContent = `${db.name} (${db.romanizedName})`;
-        document.getElementById('char-name-jp').textContent = db.japaneseName;
-        document.getElementById('char-img').src = db.characterImg || db.thumb;
-        document.getElementById('element-icon').src = db.element;
-        document.getElementById('position-icon').src = db.position;
-
-        const tagsContainer = document.getElementById('tags-container');
-        if (tagsContainer && db.tags) {
-            tagsContainer.innerHTML = db.tags.map(t => `<img src="${t}" style="height: 38px;">`).join('');
-        }
-
-        const btnLv1 = document.getElementById('btn-lv1');
-        const btnLv300 = document.getElementById('btn-lv300');
-        if (btnLv1) btnLv1.onclick = () => renderStats(db, 'lv1');
-        if (btnLv300) btnLv300.onclick = () => renderStats(db, 'lv300');
-
-        renderStats(db, 'lv1');
-        renderPassives(db);
-        renderTechniques(db);
-
-        setupNavigationControls();
+        return charDb;
     } catch (err) {
-        console.error("Errore durante il caricamento del personaggio:", err);
-    }
-}
-
-function setupNavigationControls() {
-    const simBtn = document.getElementById('btn-send-to-sim');
-    if (simBtn) simBtn.href = `simulator.html?char=${currentId}`;
-
-    const prevBtn = document.getElementById('btn-prev-char');
-    if (prevBtn) {
-        prevBtn.onclick = (e) => {
-            e.preventDefault();
-            const prevId = getAdjacentCharacterId(currentId, characterRegistry, 'prev');
-            if (prevId) window.location.search = `?id=${prevId}`;
-        };
-    }
-
-    const nextBtn = document.getElementById('btn-next-char');
-    if (nextBtn) {
-        nextBtn.onclick = (e) => {
-            e.preventDefault();
-            const nextId = getAdjacentCharacterId(currentId, characterRegistry, 'next');
-            if (nextId) window.location.search = `?id=${nextId}`;
-        };
+        console.error("Errore fetch pg:", charId, err);
+        return null;
     }
 }
 
 // ==========================================
-// 2. FUNZIONI DI RENDER GRAFICO
+// 2. FUNZIONI DI POPOLAMENTO UI
 // ==========================================
 
-function renderStats(db, level) {
-    const statsList = document.getElementById('stats-list');
+function populateCharacterUI(db, slot) {
+    document.getElementById(`char-name-main-${slot}`).textContent = `${db.name} (${db.romanizedName})`;
+    document.getElementById(`char-name-jp-${slot}`).textContent = db.japaneseName;
+    document.getElementById(`char-img-${slot}`).src = db.characterImg || db.thumb;
+    document.getElementById(`element-icon-${slot}`).src = db.element;
+    document.getElementById(`position-icon-${slot}`).src = db.position;
+
+    const tagsContainer = document.getElementById(`tags-container-${slot}`);
+    if (tagsContainer && db.tags) {
+        tagsContainer.innerHTML = db.tags.map(t => `<img src="${t}" style="height: 38px;">`).join('');
+    }
+
+    renderStats(db, 'lv1', slot);
+    renderTechniques(db, slot);
+    renderPassives(db, slot);
+}
+
+function renderStats(db, level, slot) {
+    const statsList = document.getElementById(`stats-list-${slot}`);
     statsList.innerHTML = '';
-    document.getElementById('btn-lv1').classList.toggle('active', level === 'lv1');
-    document.getElementById('btn-lv300').classList.toggle('active', level === 'lv300');
+
+    document.getElementById(`btn-lv1-${slot}`).classList.toggle('active', level === 'lv1');
+    document.getElementById(`btn-lv300-${slot}`).classList.toggle('active', level === 'lv300');
 
     const icons = {
-        "TP": "img/Status/Icon_Status_TP.png",
-        "Tiro": "img/Status/Icon_Status_Kick.png",
-        "Tecnica": "img/Status/Icon_Status_Technic.png",
-        "Blocco": "img/Status/Icon_Status_Block.png",
-        "Parata": "img/Status/Icon_Status_Catch.png",
-        "Velocità": "img/Status/Icon_Status_Speed.png"
+        "TP": "img/Status/Icon_Status_TP.png", "Tiro": "img/Status/Icon_Status_Kick.png",
+        "Tecnica": "img/Status/Icon_Status_Technic.png", "Blocco": "img/Status/Icon_Status_Block.png",
+        "Parata": "img/Status/Icon_Status_Catch.png", "Velocità": "img/Status/Icon_Status_Speed.png"
     };
 
     Object.entries(db.stats).forEach(([key, data]) => {
         const iconSrc = icons[key] || data.icon || '';
-
         statsList.innerHTML += `
             <li>
                 <span class="d-flex align-items-center gap-2">
@@ -148,13 +112,15 @@ function renderStats(db, level) {
             </li>`;
     });
 
-    const zonesContainer = document.getElementById('zones-container');
+    const zonesContainer = document.getElementById(`zones-container-${slot}`);
     if (zonesContainer) zonesContainer.innerHTML = createZonesGrid(db.zones || []);
 }
 
-function renderTechniques(db) {
-    const container = document.getElementById('tecniche-container');
+function renderTechniques(db, slot) {
+    // FIX: Ora targetta esattamente il contenitore corretto senza iniettare H3 doppi
+    const container = document.getElementById(`tecniche-container-${slot}`);
     if (!container) return;
+    container.innerHTML = '';
 
     if (!db.techniques || Object.keys(db.techniques).length === 0) {
         container.innerHTML = '<p class="text-secondary fw-bold mt-3">Nessuna tecnica disponibile.</p>';
@@ -165,7 +131,6 @@ function renderTechniques(db) {
 
     for (const [key, tech] of Object.entries(db.techniques)) {
         let rowsHtml = '';
-
         if (tech.power) rowsHtml += `<tr><th class="text-start">Potenza</th>${tech.power.map(v => `<td>${v}</td>`).join('')}</tr>`;
         if (tech.tp) rowsHtml += `<tr><th class="text-start">Costo TP</th>${tech.tp.map(v => `<td>${v}</td>`).join('')}</tr>`;
         if (tech.range) rowsHtml += `<tr><th class="text-start">Portata</th>${tech.range.map(v => `<td>${v}</td>`).join('')}</tr>`;
@@ -180,16 +145,14 @@ function renderTechniques(db) {
         if (tech.catchType) badgesHtml += `<span class="badge bg-primary me-1 mb-1">${tech.catchType}</span>`;
 
         html += `
-        <div class="card mb-3 shadow-sm">
+        <div class="card mb-3 shadow-sm border-secondary">
             <div class="card-header d-flex align-items-center">
                 <img src="${tech.icon}" alt="Icon" class="me-2" style="width: 28px; height: 28px;">
                 <img src="${tech.elementIcon}" alt="Element" class="me-2" style="width: 28px; height: 28px;">
-                <h5 class="mb-0" style="font-size: 1.1rem; color: #0dcaf0; font-weight: bold;">${tech.name}</h5>
+                <h5 class="mb-0 text-info fw-bold" style="font-size: 1.1rem;">${tech.name}</h5>
             </div>
             <div class="card-body p-2">
-                <div class="mb-2 ps-1">
-                    ${badgesHtml}
-                </div>
+                <div class="mb-2 ps-1">${badgesHtml}</div>
                 <div class="table-responsive">
                     <table class="table table-sm text-center align-middle mb-0" style="font-size: 0.85rem;">
                         <thead>
@@ -198,33 +161,35 @@ function renderTechniques(db) {
                                 ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lv => `<th>${lv}</th>`).join('')}
                             </tr>
                         </thead>
-                        <tbody>
-                            ${rowsHtml}
-                        </tbody>
+                        <tbody>${rowsHtml}</tbody>
                     </table>
                 </div>
             </div>
         </div>`;
     }
-
     container.innerHTML = html;
 }
 
-function renderPassives(db) {
-    const passContainer = document.getElementById('passive-container');
-    if (!passContainer) return;
-    passContainer.innerHTML = '';
+function renderPassives(db, slot) {
+    // FIX: Nomi ID corretti per targettare la Griglia
+    const baseC = document.getElementById(`grid-pass-base-${slot}`);
+    const awakeC = document.getElementById(`grid-pass-awake-${slot}`);
+    const rerollC = document.getElementById(`grid-pass-reroll-${slot}`);
 
-    // --- 1. RENDER PASSIVE BASE E RISVEGLIO ---
-    const drawGroup = (title, passiveList) => {
+    if(!baseC || !awakeC || !rerollC) return;
+
+    baseC.innerHTML = ''; awakeC.innerHTML = ''; rerollC.innerHTML = '';
+
+    const drawGroup = (title, passiveList, targetContainer) => {
         if (passiveList.length === 0) return;
-        passContainer.innerHTML += `<h3 class="mb-4 mt-5 text-info">${title}</h3>`;
+
+        let html = `<h3 class="mb-4 mt-5 text-info text-uppercase fw-bold">${title}</h3>`;
 
         passiveList.forEach((p) => {
             let tabs = '', content = '';
             p.levels.forEach((lv, lvIdx) => {
                 const active = lvIdx === 0 ? 'active' : '';
-                const tabId = `p-${p.id}-${lvIdx}`;
+                const tabId = `p-${slot}-${p.id}-${lvIdx}`;
                 const descrizione = parsePassiveText(p.template, lv);
 
                 tabs += `<li class="nav-item"><button class="nav-link ${active}" data-bs-toggle="tab" data-bs-target="#${tabId}">Lv. ${lvIdx + 1}</button></li>`;
@@ -239,10 +204,10 @@ function renderPassives(db) {
                         </div>
                     </div>`;
             });
-            passContainer.innerHTML += `
+            html += `
                 <div class="card border-secondary mb-4 shadow">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong style="color: #0dcaf0; font-size: 1.1rem;">${p.title}</strong>
+                        <strong class="text-info" style="font-size: 1.1rem;">${p.title}</strong>
                         <small class="opacity-75 text-white">ID: ${p.id}</small>
                     </div>
                     <div class="card-body">
@@ -251,98 +216,79 @@ function renderPassives(db) {
                     </div>
                 </div>`;
         });
+        targetContainer.innerHTML = html;
     };
 
-    drawGroup("Passive di Livello", db.basicPassives);
-    drawGroup("Passive di Risveglio", db.rarityPassives);
+    drawGroup("PASSIVE DI LIVELLO", db.basicPassives, baseC);
+    drawGroup("PASSIVE DI RISVEGLIO", db.rarityPassives, awakeC);
 
-    // --- 2. RENDER SLOT PASSIVE DI REROLL ---
     const role = extractPosition(db.position);
     const availableRerolls = rerollPassivesByRole[role] || [];
 
     if (availableRerolls.length > 0) {
-        passContainer.innerHTML += `
-            <h3 class="mb-4 mt-5 text-info d-flex align-items-center gap-2">
-                <i class="fas fa-dice text-warning"></i> Simulatore Passive di Reroll [Pool: ${role}]
+        let rerollHtml = `
+            <h3 class="mb-4 mt-5 text-info text-uppercase fw-bold d-flex align-items-center gap-2">
+                <i class="fas fa-dice text-warning"></i> Simulatore Reroll [${role}]
             </h3>
         `;
 
-        let optionsHtml = `<option value="">-- Seleziona una passiva da equipaggiare --</option>`;
+        let optionsHtml = `<option value="">-- Seleziona passiva --</option>`;
         availableRerolls.forEach(p => {
             optionsHtml += `<option value="${p.id}">${p.title}</option>`;
         });
 
-        // Creazione dei 3 slot
         for (let i = 1; i <= 3; i++) {
-            passContainer.innerHTML += `
+            rerollHtml += `
                 <div class="card border-secondary mb-4 shadow reroll-slot-card" data-slot="${i}">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2">
-                            <span class="badge border border-info" style="background-color: #0b1a42; color: #0dcaf0; font-size: 0.9rem;">Slot ${i}</span>
-                            <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-select fw-bold" style="min-width: 280px; cursor: pointer;">
+                            <span class="badge border border-info" style="background-color: #0b1a42; color: #0dcaf0;">Slot ${i}</span>
+                            <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-select fw-bold" style="min-width: 250px;">
                                 ${optionsHtml}
                             </select>
                         </div>
-                        <small class="opacity-75 text-white reroll-id-display"></small>
                     </div>
-                    <div class="card-body reroll-content" style="display: none;">
-                        <!-- Il contenuto dei tab verrà caricato qui via JS -->
-                    </div>
+                    <div class="card-body reroll-content" style="display: none;"></div>
                     <div class="card-body reroll-placeholder text-center py-4">
-                        <span style="color: #102247; font-weight: bold; font-size: 0.95rem;">
-                            Seleziona una passiva dal menu per visualizzarne i dettagli.
-                        </span>
+                        <span style="color: #102247; font-weight: bold;">Seleziona dal menu</span>
                     </div>
                 </div>
             `;
         }
 
-        // Event listener
-        document.querySelectorAll('.reroll-select').forEach(select => {
+        rerollC.innerHTML = rerollHtml;
+
+        rerollC.querySelectorAll('.reroll-select').forEach(select => {
             select.addEventListener('change', (e) => {
                 const card = e.target.closest('.reroll-slot-card');
                 const contentContainer = card.querySelector('.reroll-content');
                 const placeholder = card.querySelector('.reroll-placeholder');
-                const idDisplay = card.querySelector('.reroll-id-display');
                 const selectedId = e.target.value;
 
                 if (!selectedId) {
                     contentContainer.style.display = 'none';
                     placeholder.style.display = 'block';
-                    idDisplay.textContent = '';
                     contentContainer.innerHTML = '';
                     return;
                 }
 
                 const p = availableRerolls.find(x => x.id === selectedId);
                 if (p) {
-                    idDisplay.textContent = `ID: ${p.id}`; // Inserisce l'ID nell'header a destra
-
                     let tabs = '', content = '';
                     p.levels.forEach((lv, lvIdx) => {
                         const active = lvIdx === 0 ? 'active' : '';
-                        const tabId = `r-${p.id}-slot${card.dataset.slot}-${lvIdx}`;
+                        const tabId = `r-${slot}-${p.id}-s${card.dataset.slot}-${lvIdx}`;
                         const descrizione = parsePassiveText(p.template, lv);
 
                         tabs += `<li class="nav-item"><button class="nav-link ${active}" data-bs-toggle="tab" data-bs-target="#${tabId}">Lv. ${lvIdx + 1}</button></li>`;
-
                         content += `
                             <div class="tab-pane fade ${lvIdx === 0 ? 'show active' : ''}" id="${tabId}">
-                                <div class="mb-2 mt-2">
-                                    <span class="badge border border-info" style="background-color: #102247; color: #0dcaf0;">${lv.req || 'Nessun requisito'}</span>
-                                </div>
-                                <div class="bg-light">
-                                    <p class="mb-0" style="font-size: 1.05rem; line-height: 1.5;">${descrizione}</p>
-                                </div>
+                                <div class="mb-2 mt-2"><span class="badge border border-info" style="background-color: #102247; color: #0dcaf0;">${lv.req || 'Nessun requisito'}</span></div>
+                                <div class="bg-light"><p class="mb-0">${descrizione}</p></div>
                             </div>`;
                     });
 
-                    // Costruisce SOLO i tab e il box chiaro nel card-body (niente titolo ripetuto)
-                    contentContainer.innerHTML = `
-                        <ul class="nav nav-tabs border-secondary mb-3">${tabs}</ul>
-                        <div class="tab-content">${content}</div>
-                    `;
-
+                    contentContainer.innerHTML = `<ul class="nav nav-tabs border-secondary mb-3">${tabs}</ul><div class="tab-content">${content}</div>`;
                     placeholder.style.display = 'none';
                     contentContainer.style.display = 'block';
                 }
@@ -368,11 +314,106 @@ function createZonesGrid(playerZones) {
         return `<span class="zone-cell ${rankClass}" style="grid-row:${cell.row}; grid-column:${cell.col}">${area ? area.rank : ""}</span>`;
     });
 
-    return `
-        <div class="field-zone">
-            <div class="field-zone-title">Zone</div>
-            <div class="position-grid">${cells.join("")}</div>
-        </div>`;
+    return `<div class="field-zone"><div class="field-zone-title text-uppercase">Zone</div><div class="position-grid">${cells.join("")}</div></div>`;
 }
+
+// ==========================================
+// 3. TOGGLE VISTA E SELEZIONE
+// ==========================================
+
+function toggleCompareMode(isCompare) {
+    const layout = document.getElementById('master-layout');
+    const slot2Elements = document.querySelectorAll('.slot-2-element');
+
+    if (isCompare) {
+        layout.className = 'layout-compare';
+        document.body.classList.add('compare-mode-active');
+        slot2Elements.forEach(el => el.style.display = 'block');
+        document.getElementById('btn-compare').style.display = 'none';
+        document.getElementById('btn-close-compare').style.display = 'inline-block';
+    } else {
+        layout.className = 'layout-single';
+        document.body.classList.remove('compare-mode-active');
+        slot2Elements.forEach(el => el.style.display = 'none');
+        document.getElementById('btn-compare').style.display = 'inline-block';
+        document.getElementById('btn-close-compare').style.display = 'none';
+        db2 = null;
+    }
+}
+
+function setupCompareControls() {
+    const listContainer = document.getElementById('compare-list-container');
+    const searchInput = document.getElementById('compare-search-input');
+
+    let html = '';
+    characterRegistry.forEach(char => {
+        // FIX: Inserite le ICONE fisiche del personaggio invece del nome testuale
+        html += `
+            <div class="compare-char-item" data-id="${char.id}">
+                <img src="${char.thumb}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                <div>
+                    <h6 class="m-0 text-dark fw-bold">${char.name}</h6>
+                    <div class="mt-1 d-flex align-items-center gap-2">
+                        <img src="${char.element}" style="height: 18px;" title="Elemento">
+                        <img src="${char.position}" style="height: 18px;" title="Ruolo">
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    listContainer.innerHTML = html;
+
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        listContainer.querySelectorAll('.compare-char-item').forEach(item => {
+            const text = item.innerText.toLowerCase();
+            item.style.display = text.includes(term) ? 'flex' : 'none';
+        });
+    });
+
+    listContainer.querySelectorAll('.compare-char-item').forEach(item => {
+        item.addEventListener('click', async () => {
+            const idToCompare = item.getAttribute('data-id');
+            bootstrap.Modal.getInstance(document.getElementById('compareModal')).hide();
+
+            db2 = await fetchCharacterData(idToCompare);
+            if(db2) {
+                populateCharacterUI(db2, 2);
+                toggleCompareMode(true);
+            }
+        });
+    });
+
+    document.getElementById('btn-close-compare').addEventListener('click', () => {
+        toggleCompareMode(false);
+    });
+}
+
+function setupNavigationControls() {
+    const prevBtn = document.getElementById('btn-prev-char');
+    if (prevBtn) {
+        prevBtn.onclick = (e) => {
+            e.preventDefault();
+            const prevId = getAdjacentCharacterId(currentId1, characterRegistry, 'prev');
+            if (prevId) window.location.search = `?id=${prevId}`;
+        };
+    }
+
+    const nextBtn = document.getElementById('btn-next-char');
+    if (nextBtn) {
+        nextBtn.onclick = (e) => {
+            e.preventDefault();
+            const nextId = getAdjacentCharacterId(currentId1, characterRegistry, 'next');
+            if (nextId) window.location.search = `?id=${nextId}`;
+        };
+    }
+}
+
+window.charController = {
+    switchLevel: function(slot, level) {
+        const targetDb = slot === 1 ? db1 : db2;
+        if (targetDb) renderStats(targetDb, level, slot);
+    }
+};
 
 document.addEventListener('DOMContentLoaded', init);

@@ -9,29 +9,54 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- LIBRERIA INTRO.JS PER IL TUTORIAL -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css">
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/styleSimulator.css">
 
     <style>
-        .introjs-tooltip {
-            min-width: 450px;
-            color: #0b1a42;
-            font-family: inherit;
-            border: 2px solid #1a73e8;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        .introjs-button {
-            background-color: #1a73e8;
-            color: white;
-            text-shadow: none;
-            border: none;
-            font-weight: bold;
-        }
+        .introjs-tooltip { min-width: 450px; color: #0b1a42; font-family: inherit; border: 2px solid #1a73e8; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .introjs-button { background-color: #1a73e8; color: white; text-shadow: none; border: none; font-weight: bold; }
         .introjs-button:hover { background-color: #1557b0; color: #ffffff; }
+
+        /* ==========================================================
+           GRIGLIA ANTI-COLLASSO PER IL CONFRONTO SIMULATORI
+           ========================================================== */
+        .scroll-wrapper { width: 100%; overflow-x: auto; padding-bottom: 50px; }
+
+        .layout-single {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        .layout-compare {
+            display: grid;
+            grid-template-columns: 420px 420px 420px 420px; /* 4 colonne fisse */
+            gap: 24px;
+            min-width: 1800px;
+            justify-content: center;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        .compare-mode-active {
+            max-width: 100% !important;
+            width: 100% !important;
+            overflow-x: auto;
+        }
+
+        /* Assegnazione Aree */
+        .layout-single #col-settings-1 { grid-column: 1; grid-row: 1; }
+        .layout-single #col-results-1 { grid-column: 2; grid-row: 1; }
+
+        .layout-compare #col-settings-1 { grid-column: 1; grid-row: 1; }
+        .layout-compare #col-results-1 { grid-column: 2; grid-row: 1; }
+        .layout-compare #col-settings-2 { grid-column: 3; grid-row: 1; }
+        .layout-compare #col-results-2 { grid-column: 4; grid-row: 1; }
     </style>
 </head>
 <body class="pb-5">
@@ -39,9 +64,8 @@
 <script type="module" src="js/Components/navbar.js"></script>
 <inazuma-navbar></inazuma-navbar>
 
-<div class="container-fixed" style="width: 1200px !important; max-width: 1200px !important; padding-top: 20px;">
-
-    <div class="top-bar d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 p-3 rounded" style="background: #0b1a42; border: 2px solid #ffca28; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+<div class="container-fixed my-4 position-relative" style="max-width: 1200px !important;">
+    <div class="top-bar d-flex justify-content-between align-items-center flex-wrap gap-3 p-3 rounded" style="background: #0b1a42; border: 2px solid #ffca28; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
         <div>
             <h4 class="m-0 text-white fw-bold" id="user-greeting">Accedi per usare la tua Collezione</h4>
         </div>
@@ -63,21 +87,38 @@
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row g-4">
-        <div class="col-lg-6" id="tour-settings">
+<!-- BARRA STRUMENTI CONFRONTO -->
+<div class="text-center mb-4">
+    <button id="btn-compare" class="btn btn-warning fw-bold px-4 shadow-sm">
+        <i class="fas fa-balance-scale me-2"></i> Confronta con un'altra mossa
+    </button>
+    <button id="btn-close-compare" class="btn btn-danger fw-bold px-4 shadow-sm ms-2" style="display: none;">
+        <i class="fas fa-times me-2"></i> Chiudi Confronto
+    </button>
+</div>
+
+<!-- ==============================================
+     MASTER LAYOUT: LA GRIGLIA DEL SIMULATORE
+     ============================================== -->
+<div class="scroll-wrapper">
+    <div id="master-layout" class="layout-single">
+
+        <!-- SLOT 1: IMPOSTAZIONI (SINISTRA) -->
+        <div id="col-settings-1">
             <div class="card p-4 shadow mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-info m-0">Impostazioni Calcolo</h5>
+                    <h5 class="text-info m-0">Impostazioni Calcolo (1)</h5>
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="sim-manual-mode-switch">
-                        <label class="form-check-label fw-bold text-warning" for="sim-manual-mode-switch">Modalità Manuale</label>
+                        <input class="form-check-input" type="checkbox" id="sim-manual-mode-switch-1">
+                        <label class="form-check-label fw-bold text-warning" for="sim-manual-mode-switch-1">Manuale</label>
                     </div>
                 </div>
 
-                <div id="automatic-mode-container">
+                <div id="automatic-mode-container-1">
                     <label class="form-label small fw-bold">PERSONAGGIO</label>
-                    <div class="custom-select shadow-sm mb-3" id="sim-char-select" data-value="">
+                    <div class="custom-select shadow-sm mb-3" id="sim-char-select-1" data-value="">
                         <div class="select-selected"><span>-- Seleziona Personaggio --</span> <i class="fas fa-chevron-down"></i></div>
                         <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
                     </div>
@@ -85,13 +126,13 @@
 
                 <div class="mb-3">
                     <label class="form-label small fw-bold d-flex align-items-center gap-2">
-                        STATISTICA BASE <img id="stat-base-icon" src="img/Status/Icon_Status_Kick.png" style="height: 18px; display: none;">
+                        STATISTICA BASE <img id="stat-base-icon-1" src="img/Status/Icon_Status_Kick.png" style="height: 18px; display: none;">
                     </label>
-                    <input type="number" id="sim-custom-stat" class="form-control" placeholder="Es. 367" min="0">
+                    <input type="number" id="sim-custom-stat-1" class="form-control" placeholder="Es. 367" min="0">
                 </div>
 
                 <label class="form-label small fw-bold">MOLTIPLICATORE RUOLO</label>
-                <div class="custom-select shadow-sm mb-3" id="sim-role-select" data-value="1.00">
+                <div class="custom-select shadow-sm mb-3" id="sim-role-select-1" data-value="1.00">
                     <div class="select-selected"><span>Nessuno (x1.00)</span> <i class="fas fa-chevron-down"></i></div>
                     <div class="select-items select-hide">
                         <div data-value="1.00">Nessuno (x1.00)</div>
@@ -101,17 +142,17 @@
                     </div>
                 </div>
 
-                <div id="tech-automatic-section">
+                <div id="tech-automatic-section-1">
                     <label class="form-label small fw-bold">TECNICA E LIVELLO MOSSA</label>
                     <div class="row g-2 mb-3 align-items-center">
                         <div class="col-8">
-                            <div class="custom-select shadow-sm" id="sim-tech-select" data-value="">
+                            <div class="custom-select shadow-sm" id="sim-tech-select-1" data-value="">
                                 <div class="select-selected"><span>-- Nessuna Tecnica --</span> <i class="fas fa-chevron-down"></i></div>
                                 <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="custom-select shadow-sm" id="sim-tech-lvl-select" data-value="10">
+                            <div class="custom-select shadow-sm" id="sim-tech-lvl-select-1" data-value="10">
                                 <div class="select-selected"><span>Lv. 10</span> <i class="fas fa-chevron-down"></i></div>
                                 <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
                             </div>
@@ -119,18 +160,18 @@
                     </div>
                 </div>
 
-                <div id="tech-manual-section" style="display: none;" class="mb-3">
+                <div id="tech-manual-section-1" style="display: none;" class="mb-3">
                     <label class="form-label small fw-bold">VALORE / POTENZA TECNICA DI BASE</label>
-                    <input type="number" id="sim-manual-tech-power" class="form-control" placeholder="Es. 85" min="0">
+                    <input type="number" id="sim-manual-tech-power-1" class="form-control" placeholder="Es. 85" min="0">
                 </div>
 
                 <div class="form-check form-switch mb-3 mt-2">
-                    <input class="form-check-input" type="checkbox" id="sim-stab" checked>
-                    <label class="form-check-label fw-bold small text-info" id="stab-label">STAB AUTOMATICO (x1.20)</label>
+                    <input class="form-check-input" type="checkbox" id="sim-stab-1" checked>
+                    <label class="form-check-label fw-bold small text-info" id="stab-label-1">STAB AUTOMATICO (x1.20)</label>
                 </div>
 
                 <label class="form-label small fw-bold">VANTAGGIO DI TIPO (BONUS ELEMENTO)</label>
-                <div class="custom-select shadow-sm mb-3" id="sim-advantage-select" data-value="1.0">
+                <div class="custom-select shadow-sm mb-3" id="sim-advantage-select-1" data-value="1.0">
                     <div class="select-selected"><span>Neutro (x1.00)</span> <i class="fas fa-chevron-down"></i></div>
                     <div class="select-items select-hide">
                         <div data-value="1.0">Neutro (x1.00)</div>
@@ -140,53 +181,178 @@
                 </div>
             </div>
 
-            <!-- PANNELLO PASSIVE / VALORI DINAMICI DA AGGIUNGERE -->
             <div class="card p-4 shadow">
-                <h5 class="text-info mb-3" id="passives-card-title">Livello delle Abilità Passive</h5>
-                <div id="dynamic-passives-container"></div>
+                <h5 class="text-info mb-3" id="passives-card-title-1">Livello delle Abilità Passive</h5>
+                <div id="dynamic-passives-container-1"></div>
 
-                <!-- Liste dinamiche con tasto + e cestino -->
-                <div id="manual-additions-container" style="display: none;">
+                <div id="manual-additions-container-1" style="display: none;" data-slot="1">
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Valori aggiuntivi per la Statistica</label>
                         <div class="input-group input-group-sm mb-2">
-                            <input type="number" id="sim-input-stat-val" class="form-control" placeholder="Es. 796">
-                            <button class="btn btn-primary fw-bold px-3" type="button" id="btn-add-stat-bonus"><i class="fas fa-plus"></i></button>
+                            <input type="number" id="sim-input-stat-val-1" class="form-control" placeholder="Es. 796">
+                            <button class="btn btn-primary fw-bold px-3 btn-add-stat-bonus" type="button" data-slot="1"><i class="fas fa-plus"></i></button>
                         </div>
-                        <div id="stat-bonuses-list" class="d-flex flex-column gap-1" style="max-height: 140px; overflow-y: auto;"></div>
+                        <div id="stat-bonuses-list-1" class="d-flex flex-column gap-1" style="max-height: 140px; overflow-y: auto;"></div>
                     </div>
 
                     <div class="mb-1">
                         <label class="form-label small fw-bold">Valori aggiuntivi per la Potenza Tecnica</label>
                         <div class="input-group input-group-sm mb-2">
-                            <input type="number" id="sim-input-power-val" class="form-control" placeholder="Es. 37">
-                            <button class="btn btn-primary fw-bold px-3" type="button" id="btn-add-power-val"><i class="fas fa-plus"></i></button>
+                            <input type="number" id="sim-input-power-val-1" class="form-control" placeholder="Es. 37">
+                            <button class="btn btn-primary fw-bold px-3 btn-add-power-val" type="button" data-slot="1"><i class="fas fa-plus"></i></button>
                         </div>
-                        <div id="power-bonuses-list" class="d-flex flex-column gap-1" style="max-height: 140px; overflow-y: auto;"></div>
+                        <div id="power-bonuses-list-1" class="d-flex flex-column gap-1" style="max-height: 140px; overflow-y: auto;"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-6" id="tour-results">
+        <!-- SLOT 1: RISULTATI (DESTRA NELLA VISTA SINGOLA) -->
+        <div id="col-results-1">
             <div class="card p-4 text-center mb-4 shadow">
-                <h4 class="h5 text-dark fw-bold">Potenza Finale Stimata</h4>
-                <div id="damage-result" class="display-1 text-primary fw-bold my-2">0</div>
+                <h4 class="h5 text-dark fw-bold">Potenza Finale Stimata (1)</h4>
+                <div id="damage-result-1" class="display-1 text-primary fw-bold my-2">0</div>
                 <div class="p-2 rounded border border-secondary mt-3" style="background:#f8fbff;">
-                    <small id="damage-formula" class="text-secondary font-monospace" style="font-size: 0.85rem; display: block; white-space: pre-wrap; text-align: left;"></small>
+                    <small id="damage-formula-1" class="text-secondary font-monospace" style="font-size: 0.85rem; display: block; white-space: pre-wrap; text-align: left;"></small>
                 </div>
             </div>
 
             <div class="card p-4 shadow mb-4">
                 <h5 class="text-info border-bottom border-secondary pb-2">Valori Coinvolti</h5>
-                <ul id="stats-display" class="list-unstyled mb-0 style-list" style="line-height: 2;"></ul>
+                <ul id="stats-display-1" class="list-unstyled mb-0 style-list" style="line-height: 2;"></ul>
             </div>
 
             <div class="card p-4 shadow">
-                <h5 class="text-info border-bottom border-secondary pb-2" id="results-secondary-title">Effetti delle Passive</h5>
-                <ul id="passive-display" class="list-unstyled mb-0 mt-3" style="font-size: 0.95rem; line-height: 1.6;"></ul>
+                <h5 class="text-info border-bottom border-secondary pb-2" id="results-secondary-title-1">Effetti delle Passive</h5>
+                <ul id="passive-display-1" class="list-unstyled mb-0 mt-3" style="font-size: 0.95rem; line-height: 1.6;"></ul>
             </div>
         </div>
+
+        <!-- ============================================================== -->
+
+        <!-- SLOT 2: IMPOSTAZIONI (COPIA ESATTA DELLO SLOT 1) -->
+        <div id="col-settings-2" class="slot-2-el" style="display: none;">
+            <div class="card p-4 shadow mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-info m-0">Impostazioni Calcolo (2)</h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="sim-manual-mode-switch-2">
+                        <label class="form-check-label fw-bold text-warning" for="sim-manual-mode-switch-2">Manuale</label>
+                    </div>
+                </div>
+
+                <div id="automatic-mode-container-2">
+                    <label class="form-label small fw-bold">PERSONAGGIO</label>
+                    <div class="custom-select shadow-sm mb-3" id="sim-char-select-2" data-value="">
+                        <div class="select-selected"><span>-- Seleziona Personaggio --</span> <i class="fas fa-chevron-down"></i></div>
+                        <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold d-flex align-items-center gap-2">
+                        STATISTICA BASE <img id="stat-base-icon-2" src="img/Status/Icon_Status_Kick.png" style="height: 18px; display: none;">
+                    </label>
+                    <input type="number" id="sim-custom-stat-2" class="form-control" placeholder="Es. 367" min="0">
+                </div>
+
+                <label class="form-label small fw-bold">MOLTIPLICATORE RUOLO</label>
+                <div class="custom-select shadow-sm mb-3" id="sim-role-select-2" data-value="1.00">
+                    <div class="select-selected"><span>Nessuno (x1.00)</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="select-items select-hide">
+                        <div data-value="1.00">Nessuno (x1.00)</div>
+                        <div data-value="1.05">Ruolo B (x1.05)</div>
+                        <div data-value="1.10">Ruolo A (x1.10)</div>
+                        <div data-value="1.15">Ruolo S (x1.15)</div>
+                    </div>
+                </div>
+
+                <div id="tech-automatic-section-2">
+                    <label class="form-label small fw-bold">TECNICA E LIVELLO MOSSA</label>
+                    <div class="row g-2 mb-3 align-items-center">
+                        <div class="col-8">
+                            <div class="custom-select shadow-sm" id="sim-tech-select-2" data-value="">
+                                <div class="select-selected"><span>-- Nessuna Tecnica --</span> <i class="fas fa-chevron-down"></i></div>
+                                <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="custom-select shadow-sm" id="sim-tech-lvl-select-2" data-value="10">
+                                <div class="select-selected"><span>Lv. 10</span> <i class="fas fa-chevron-down"></i></div>
+                                <div class="select-items select-hide" style="max-height: 250px; overflow-y: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tech-manual-section-2" style="display: none;" class="mb-3">
+                    <label class="form-label small fw-bold">VALORE / POTENZA TECNICA DI BASE</label>
+                    <input type="number" id="sim-manual-tech-power-2" class="form-control" placeholder="Es. 85" min="0">
+                </div>
+
+                <div class="form-check form-switch mb-3 mt-2">
+                    <input class="form-check-input" type="checkbox" id="sim-stab-2" checked>
+                    <label class="form-check-label fw-bold small text-info" id="stab-label-2">STAB AUTOMATICO (x1.20)</label>
+                </div>
+
+                <label class="form-label small fw-bold">VANTAGGIO DI TIPO (BONUS ELEMENTO)</label>
+                <div class="custom-select shadow-sm mb-3" id="sim-advantage-select-2" data-value="1.0">
+                    <div class="select-selected"><span>Neutro (x1.00)</span> <i class="fas fa-chevron-down"></i></div>
+                    <div class="select-items select-hide">
+                        <div data-value="1.0">Neutro (x1.00)</div>
+                        <div data-value="1.2" class="text-success fw-bold"><i class="fas fa-arrow-up text-success"></i> Vantaggio (+20%)</div>
+                        <div data-value="0.8" class="text-danger fw-bold"><i class="fas fa-arrow-down text-danger"></i> Svantaggio (-20%)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-4 shadow">
+                <h5 class="text-info mb-3" id="passives-card-title-2">Livello delle Abilità Passive</h5>
+                <div id="dynamic-passives-container-2"></div>
+
+                <div id="manual-additions-container-2" style="display: none;" data-slot="2">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Valori aggiuntivi per la Statistica</label>
+                        <div class="input-group input-group-sm mb-2">
+                            <input type="number" id="sim-input-stat-val-2" class="form-control" placeholder="Es. 796">
+                            <button class="btn btn-primary fw-bold px-3 btn-add-stat-bonus" type="button" data-slot="2"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div id="stat-bonuses-list-2" class="d-flex flex-column gap-1" style="max-height: 140px; overflow-y: auto;"></div>
+                    </div>
+
+                    <div class="mb-1">
+                        <label class="form-label small fw-bold">Valori aggiuntivi per la Potenza Tecnica</label>
+                        <div class="input-group input-group-sm mb-2">
+                            <input type="number" id="sim-input-power-val-2" class="form-control" placeholder="Es. 37">
+                            <button class="btn btn-primary fw-bold px-3 btn-add-power-val" type="button" data-slot="2"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div id="power-bonuses-list-2" class="d-flex flex-column gap-1" style="max-height: 140px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLOT 2: RISULTATI (COPIA ESATTA DELLO SLOT 1) -->
+        <div id="col-results-2" class="slot-2-el" style="display: none;">
+            <div class="card p-4 text-center mb-4 shadow">
+                <h4 class="h5 text-dark fw-bold">Potenza Finale Stimata (2)</h4>
+                <div id="damage-result-2" class="display-1 text-primary fw-bold my-2">0</div>
+                <div class="p-2 rounded border border-secondary mt-3" style="background:#f8fbff;">
+                    <small id="damage-formula-2" class="text-secondary font-monospace" style="font-size: 0.85rem; display: block; white-space: pre-wrap; text-align: left;"></small>
+                </div>
+            </div>
+
+            <div class="card p-4 shadow mb-4">
+                <h5 class="text-info border-bottom border-secondary pb-2">Valori Coinvolti</h5>
+                <ul id="stats-display-2" class="list-unstyled mb-0 style-list" style="line-height: 2;"></ul>
+            </div>
+
+            <div class="card p-4 shadow">
+                <h5 class="text-info border-bottom border-secondary pb-2" id="results-secondary-title-2">Effetti delle Passive</h5>
+                <ul id="passive-display-2" class="list-unstyled mb-0 mt-3" style="font-size: 0.95rem; line-height: 1.6;"></ul>
+            </div>
+        </div>
+
     </div>
 </div>
 
