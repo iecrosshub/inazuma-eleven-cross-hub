@@ -1,3 +1,5 @@
+// js/Controllers/metaBuilds.js
+
 import { AuthManager } from '../Services/auth.js';
 import { BuildManager } from '../Services/buildManager.js';
 import { characterRegistry, rerollPassivesByRole, techniquesLibrary, universalManualsKeys, passivesLibrary } from '../Core/database.js';
@@ -10,6 +12,7 @@ const MODERATOR_UIDS = [
     "Cu2zjcxpxIh2lddFrlDIc6YePgu1",
     "yKqkWBd0mzN2lz9KcQqOYNlCBH32"
 ];
+
 class MetaBuildsController {
     constructor() {
         this.auth = new AuthManager();
@@ -75,6 +78,10 @@ class MetaBuildsController {
                 const roleTitles = { 'FW': 'Attaccanti', 'MF': 'Centrocampisti', 'DF': 'Difensori', 'GK': 'Portieri' };
                 document.getElementById('active-tier-title').innerHTML = `Tier List Meta: ${roleTitles[this.currentRoleFilter]}`;
                 document.getElementById('pool-role-text').innerHTML = roleTitles[this.currentRoleFilter];
+
+                // Reset della ricerca admin quando si cambia ruolo
+                const searchPoolInput = document.getElementById('search-pool-input');
+                if (searchPoolInput) searchPoolInput.value = '';
 
                 await this.loadTierList();
             });
@@ -337,7 +344,7 @@ class MetaBuildsController {
     }
 
     // ==========================================
-    // PARTE ADMIN: FORM E SALVATAGGIO
+    // PARTE ADMIN: FORM E SALVATAGGIO E RICERCA POOL
     // ==========================================
     setupAdminForm() {
         const charSelect = document.getElementById('build-character');
@@ -571,6 +578,19 @@ class MetaBuildsController {
             btn.innerHTML = `<i class="fas fa-save me-2"></i> Salva Dettagli Build`;
             document.getElementById('admin-panel-container').style.display = 'none';
         });
+
+        // --- RICERCA NEL POOL PERSONAGGI ---
+        const searchPoolInput = document.getElementById('search-pool-input');
+        if (searchPoolInput) {
+            searchPoolInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('#unranked-pool .char-icon-btn').forEach(btn => {
+                    const name = btn.getAttribute('title').toLowerCase();
+                    // Usiamo stringa vuota per ripristinare il display originale di flex-child
+                    btn.style.display = name.includes(term) ? '' : 'none';
+                });
+            });
+        }
     }
 }
 
