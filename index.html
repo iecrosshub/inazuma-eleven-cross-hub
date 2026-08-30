@@ -76,6 +76,59 @@
     .nav-dropdown.force-show .dropdown-content {
       display: block !important;
     }
+
+    /* ==========================================================
+       VETRINA QUICK LINKS
+       ========================================================== */
+    .quick-link-card {
+      display: flex;
+      align-items: center;
+      background-color: #0b1a42;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 12px 15px;
+      text-decoration: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-link-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+      background-color: #102247;
+    }
+
+    .ql-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      margin-right: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .ql-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ql-content h6 {
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.95rem;
+    }
+
+    .ql-content span {
+      line-height: 1.2;
+      opacity: 0.85;
+    }
   </style>
 </head>
 <body>
@@ -85,8 +138,61 @@
 
 <div class="container-fixed py-3">
 
+  <!-- VETRINA QUICK LINKS / NOVITÀ IN VISTA -->
+  <div class="quick-links-wrapper mb-4 mt-2">
+    <div class="row g-3">
+
+      <!-- Card 1: Tier List -->
+      <div class="col-6 col-md-3">
+        <a href="character_builds.html" class="quick-link-card border-warning">
+          <div class="ql-icon bg-warning text-dark"><i class="fas fa-trophy"></i></div>
+          <div class="ql-content">
+            <h6 class="text-warning fw-bold mb-1">Tier List PG</h6>
+            <span class="text-light small">Scopri chi domina il Meta attuale.</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Card 2: Formazioni Meta -->
+      <div class="col-6 col-md-3">
+        <a href="meta_teams.html" class="quick-link-card border-success">
+          <div class="ql-icon bg-success text-white"><i class="fas fa-users"></i></div>
+          <div class="ql-content">
+            <h6 class="text-success fw-bold mb-1">Squadre Meta</h6>
+            <span class="text-light small">Le migliori formazioni da usare.</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Card 3: Confronto Personaggi (Punta a Mark JNT come esempio) -->
+      <div class="col-6 col-md-3">
+        <a href="character.html?id=markEvansJapanNationalTeam2026" class="quick-link-card border-info">
+          <div class="ql-icon bg-info text-dark"><i class="fas fa-balance-scale"></i></div>
+          <div class="ql-content">
+            <h6 class="text-info fw-bold mb-1">Confronto PG</h6>
+            <span class="text-light small">Paragona statistiche e passive.</span>
+          </div>
+          <span class="badge bg-danger position-absolute top-0 end-0 m-2">NUOVO</span>
+        </a>
+      </div>
+
+      <!-- Card 4: Confronto Tecniche -->
+      <div class="col-6 col-md-3">
+        <a href="simulator.html" class="quick-link-card border-danger">
+          <div class="ql-icon bg-danger text-white"><i class="fas fa-fire"></i></div>
+          <div class="ql-content">
+            <h6 class="text-danger fw-bold mb-1">Danni Tecniche</h6>
+            <span class="text-light small">Simula e confronta le mosse.</span>
+          </div>
+          <span class="badge bg-danger position-absolute top-0 end-0 m-2">NUOVO</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
   <!-- INTESTAZIONE: TITOLO A SINISTRA E BOTTONE A DESTRA -->
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 mt-2 px-2">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 mt-2 px-2 border-top border-info pt-4">
     <h2 class="album-title m-0 fw-bold" style="text-transform: uppercase; letter-spacing: 1px;">
       Seleziona un Giocatore
     </h2>
