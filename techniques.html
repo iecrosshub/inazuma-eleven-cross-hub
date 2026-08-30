@@ -17,7 +17,6 @@
 </head>
 <body class="pb-5">
 
-<!-- NAVBAR -->
 <!-- NAVBAR INIETTATA DINAMICAMENTE -->
 <script type="module" src="js/Components/navbar.js"></script>
 <inazuma-navbar></inazuma-navbar>
@@ -31,13 +30,15 @@
     <!-- PANNELLO FILTRI -->
     <div class="filters-container mb-4 shadow-sm">
         <div class="row g-3">
-            <div class="col-12 col-md-12">
+            <div class="col-12">
                 <div class="filter-group">
                     <label>Cerca per Nome</label>
                     <input type="text" id="search-name" placeholder="Inserisci il nome della tecnica..." style="width: 100%;">
                 </div>
             </div>
-            <div class="col-12 col-md-3">
+
+            <!-- 5 Colonne equamente divise per i filtri -->
+            <div class="col-12 col-md-4 col-lg">
                 <div class="filter-group">
                     <label>Tipo Mossa</label>
                     <div class="custom-select" id="filter-kind" data-value="All">
@@ -52,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-4 col-lg">
                 <div class="filter-group">
                     <label>Elemento</label>
                     <div class="custom-select" id="filter-element" data-value="All">
@@ -67,7 +68,19 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-4 col-lg">
+                <div class="filter-group">
+                    <label>Insegnabile (Shop)</label>
+                    <div class="custom-select" id="filter-manual" data-value="All">
+                        <div class="select-selected"><span>Tutte le Mosse</span> <i class="fas fa-chevron-down"></i></div>
+                        <div class="select-items select-hide">
+                            <div data-value="All">Tutte le Mosse</div>
+                            <div data-value="yes"><i class="fas fa-book text-warning"></i> Solo Insegnabili</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
                 <div class="filter-group">
                     <label>Filtro Blocco Tiri</label>
                     <div class="custom-select" id="filter-sb" data-value="All">
@@ -80,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-6 col-lg">
                 <div class="filter-group">
                     <label>Stile Parata</label>
                     <div class="custom-select" id="filter-catch" data-value="All">

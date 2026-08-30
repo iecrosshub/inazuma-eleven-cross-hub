@@ -1299,6 +1299,21 @@ export const bondPassives = [
         effects: [
             { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
-    }
+    },
+
+    {
+        title: "[Legame] Tiro + (【結束】キック＋)",
+        id: "102173003",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Inazuma Japan', aumenta il proprio Tiro di {VAL}.",
+        levels: [
+            // ... inserire gli altri livelli intermedi
+            { val: 2704, req: "Si sblocca con personaggio Lv. 340" }
+        ],
+        category: "Bonds",
+        conditions: { type: "tag_count", tag: "Inazuma Japan", minCount: 3 },
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
 
 ];

@@ -1,6 +1,19 @@
 export const characterRegistry = [
 
     {
+        id: "davidSamfordInazumaJapan",
+        name: "David Samford",
+        romanizedName: "Sakuma Jirou",
+        japaneseName: "佐久間 次郎",
+        thumb: "img/Characters/DavidSamfordJapan.png",
+        element: "img/Element/Icon_Element_Forest.png",
+        position: "img/Position/Icon_Position_FW.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
         id: "silviaWoodsRaimon",
         name: "Silvia Woods",
         romanizedName: "Kino Aki",

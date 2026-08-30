@@ -1,6 +1,6 @@
 // js/Controllers/techniques.js
 
-import { techniquesLibrary } from '../Core/database.js';
+import { techniquesLibrary, universalManualsKeys } from '../Core/database.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
 
 class TechniquesDatabase {
@@ -42,12 +42,12 @@ class TechniquesDatabase {
                 setCustomSelect('filter-element', filters.element);
                 setCustomSelect('filter-sb', filters.sb);
                 setCustomSelect('filter-catch', filters.catchType);
+                setCustomSelect('filter-manual', filters.manual);
             } catch (e) {}
         }
     }
 
     setupCustomSelects() {
-        // Uso del Componente Universale
         document.querySelectorAll('.filters-container .custom-select').forEach(customSelect => {
             initCustomSelect(customSelect, () => this.applyFilters());
         });
@@ -60,7 +60,8 @@ class TechniquesDatabase {
             kind: document.getElementById('filter-kind').dataset.value,
             element: document.getElementById('filter-element').dataset.value,
             sb: document.getElementById('filter-sb').dataset.value,
-            catchType: document.getElementById('filter-catch').dataset.value
+            catchType: document.getElementById('filter-catch').dataset.value,
+            manual: document.getElementById('filter-manual').dataset.value
         };
 
         localStorage.setItem('techniques_filters', JSON.stringify(filters));
@@ -80,6 +81,10 @@ class TechniquesDatabase {
                 if (filters.catchType === 'Respinta' && !isPunch) return false;
                 if (filters.catchType === 'Blocco' && isPunch) return false;
             }
+
+            // Filtro Manuali Insegnabili
+            const isManual = universalManualsKeys.includes(tech.id);
+            if (filters.manual === 'yes' && !isManual) return false;
 
             return true;
         });
@@ -106,6 +111,19 @@ class TechniquesDatabase {
             const foul = tech.foul || Array(10).fill(0);
 
             let extraBadges = '';
+            let shopHtml = '';
+
+            // ICONE SHOP (Carrello e Info con Tooltip integrato)
+            if (universalManualsKeys.includes(tech.id)) {
+                const shopLocation = tech.shop || "Manuale Acquistabile";
+                shopHtml = `
+                    <span class="text-warning ms-2" style="font-size: 1.1rem; display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-info-circle text-info" title="${shopLocation}" style="cursor: help;"></i>
+                    </span>
+                `;
+            }
+
             let rowsHtml = `
                 <tr>
                     <td>Potenza</td>
@@ -161,9 +179,14 @@ class TechniquesDatabase {
             const cardHtml = `
                 <div class="tech-card">
                     <div class="tech-header">
-                        <img src="${tech.icon}" alt="${tech.kind}" onerror="this.style.display='none'">
-                        <img src="${tech.elementIcon}" alt="${tech.element}" onerror="this.style.display='none'">
-                        ${tech.name}
+                        <div class="d-flex align-items-center">
+                            <img src="${tech.icon}" alt="${tech.kind}" onerror="this.style.display='none'">
+                            <img src="${tech.elementIcon}" alt="${tech.element}" onerror="this.style.display='none'">
+                            <div class="d-flex align-items-center">
+                                <span>${tech.name}</span>
+                                ${shopHtml}
+                            </div>
+                        </div>
                     </div>
                     <div class="tech-content-wrapper">
                         <div class="tech-badges">

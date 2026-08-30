@@ -266,4 +266,17 @@ export const dribbleLibrary = {
         foul: [15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
         shootBlock: false
     },
+
+    "烈風ダッシュ": {
+        name: "Scatto Infuocato (烈風ダッシュ)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Dribble.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        kind: "Dribbling",
+        element: "Fuoco",
+        power: [120, 125, 130, 135, 140, 145, 150, 155, 160, 165],
+        tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+        crit: [7, 7, 7, 7, 10, 10, 10, 10, 10, 13],
+        foul: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        obtainableFrom: ["Sfida online 11vs11"]
+    },
 };

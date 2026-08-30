@@ -2532,6 +2532,22 @@ export const alwaysPassives = [
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
-    }
+    },
+
+    {
+        title: "Tiro e Tecnica FW Foresta + (林FWキック＆テクニック＋)",
+        id: "102173002",
+        template: "All'inizio della partita, aumenta il Tiro e la Tecnica dei compagni FW di elemento Foresta di {VAL}.",
+        levels: [
+            // ... inserire gli altri livelli intermedi
+            { val: 1263, req: "Si sblocca con personaggio Lv. 340" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tecnica", valueRef: "val" }
+        ]
+    },
 
 ];

@@ -463,5 +463,21 @@ export const specificMovesPassives = [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "ゴッドハンド", moveElement: "Mountain", valueRef: "val1" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "ゴッドハンド", moveElement: "Mountain", valueRef: "val2" }
         ]
+    },
+
+    {
+        title: "[Risonanza] Potenza Pinguino Imperatore 2 + (【共鳴】皇帝ペンギン2号パワー＋改)",
+        id: "102173005",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Foresta, aumenta la potenza della propria tecnica Pinguino Imperatore 2 di {VAL1} e ne riduce il consumo TP di {VAL2}.",
+        levels: [
+            // ... inserire i livelli Advanced e Top Player +
+            { val1: 136, val2: 20, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Bonds",
+        conditions: { type: "element_count", element: "Forest", minCount: 3 },
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Pinguino Imperatore 2", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "Pinguino Imperatore 2", moveElement: null, valueRef: "val2" }
+        ]
     }
 ];

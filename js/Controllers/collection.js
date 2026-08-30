@@ -87,7 +87,6 @@ class CollectionApp {
         const display = document.getElementById('display-cross-level');
         if(display) display.textContent = `Cross Level: ${crossLevel}`;
 
-        // --- NUOVA LOGICA: MOSTRA/NASCONDI ALERT PER LIVELLI > 300 ---
         const alertBox = document.getElementById('alert-over-300');
         if (alertBox) {
             if (crossLevel > 300) {
@@ -205,7 +204,6 @@ class CollectionApp {
             toggleMode.addEventListener('change', () => this.toggleEquipView());
         }
 
-        // Ripristino dati salvati
         try {
             const savedMode = JSON.parse(localStorage.getItem('collection_equip_mode'));
             if (savedMode === true && toggleMode) toggleMode.checked = true;
@@ -262,7 +260,6 @@ class CollectionApp {
         document.getElementById('btn-save-cloud').addEventListener('click', () => this.saveToCloud());
         document.getElementById('btn-tutorial').addEventListener('click', () => this.startTutorial());
 
-        // Salvataggio della singola modale manuale
         document.getElementById('btn-save-equip-manual').addEventListener('click', () => {
             const role = document.getElementById('equip-modal-role').value;
             const cat = document.getElementById('equip-modal-cat').value;
@@ -301,7 +298,6 @@ class CollectionApp {
         if (btnApplyGlobal) {
             btnApplyGlobal.addEventListener('click', () => {
 
-                // Salva le impostazioni della griglia nel LocalStorage
                 const isManual = document.getElementById('toggle-equip-mode').checked;
                 localStorage.setItem('collection_equip_mode', JSON.stringify(isManual));
 
@@ -313,7 +309,6 @@ class CollectionApp {
 
                 this.updateCrossLevel();
 
-                // Applica i ricalcoli a tutte le card renderizzate
                 document.querySelectorAll('.collection-item-wrapper').forEach(col => {
                     const charId = col.dataset.charId;
                     const charLevel = this.getCharLevel(charId);
@@ -505,7 +500,6 @@ class CollectionApp {
             if (docSnap.exists()) {
                 const data = docSnap.data();
 
-                // Estrai i dati extra dal cloud
                 const { characters, coreMembers, equipMatrix, equipManualMatrix, isEquipManualMode, globalLevel, ...oldCharsData } = data;
 
                 if (data.characters && Object.keys(data.characters).length > 0) {
@@ -641,20 +635,16 @@ class CollectionApp {
         const rarity = parseInt(raritySel.value) || 0;
         const charLevel = this.getCharLevel(charId);
 
-        // --- GESTIONE CALCOLI EQUIPAGGIAMENTI AUTO VS MANUAL ---
         const toggleMode = document.getElementById('toggle-equip-mode');
         const isManualEquip = toggleMode ? toggleMode.checked : false;
 
         const equipMatrix = { FW: {}, MF: {}, DF: {}, GK: {} };
 
         if (!isManualEquip) {
-            // Modalità Automatica: Invia i livelli inseriti e il calcolatore fa il resto
             document.querySelectorAll('.equip-matrix-select').forEach(sel => {
                 equipMatrix[sel.dataset.role][sel.dataset.cat] = parseInt(sel.value) || MAX_LEVEL;
             });
         } else {
-            // Modalità Manuale: "Inganniamo" il calcolatore passando tutti Livelli 0
-            // In questo modo il calcolatore ci restituisce solo le stats base pure!
             this.equipCategories.forEach(c => {
                 ['FW','MF','DF','GK'].forEach(r => { equipMatrix[r][c.key] = 0; });
             });
@@ -663,7 +653,6 @@ class CollectionApp {
         const newStats = calcolaStatisticheEsatte(fullData, charLevel, rarity, equipMatrix);
 
         if (newStats) {
-            // Se siamo in modalità manuale, andiamo a sommare direttamente le stats compilate nella modale!
             if (isManualEquip) {
                 const role = extractPosition(fullData.position);
                 const manualData = JSON.parse(localStorage.getItem('collection_equip_manual')) || { FW:{}, MF:{}, DF:{}, GK:{} };
@@ -680,7 +669,6 @@ class CollectionApp {
                     }
                 }
 
-                // Sommiamo la matematica pura
                 newStats.kick = (newStats.kick || 0) + totalManual.Tiro;
                 newStats.technique = (newStats.technique || 0) + totalManual.Tecnica;
                 newStats.block = (newStats.block || 0) + totalManual.Blocco;
@@ -728,7 +716,14 @@ class CollectionApp {
 
         const hasAutoStats = !!fullData.growth_pattern_code;
 
-        let manualOptionsCustomHtml = `<div data-value="" style="display:flex; align-items:center; padding: 6px 10px; color: #f8f9fa; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">-- Nessuna Tecnica Extra --</div>`;
+        // --- INIEZIONE BARRA DI RICERCA NEL MENU TECNICA EXTRA ---
+        let manualOptionsCustomHtml = `
+            <div class="p-2 sticky-top border-bottom border-secondary" style="background-color: #212529; z-index: 10;">
+                <input type="text" class="form-control form-control-sm bg-dark text-white border-warning manual-search-input" placeholder="🔍 Cerca tecnica..." autocomplete="off">
+            </div>
+            <div data-value="" class="manual-opt" style="display:flex; align-items:center; padding: 6px 10px; color: #f8f9fa; cursor: pointer;">-- Nessuna Tecnica Extra --</div>
+        `;
+
         universalManualsKeys.forEach(mKey => {
             if (!fullData.myTechniques.includes(mKey)) {
                 const tDef = techniquesLibrary[mKey];
@@ -738,7 +733,7 @@ class CollectionApp {
                     const elPath = resolvePath(tDef.elementIcon, 'Element');
 
                     manualOptionsCustomHtml += `
-                        <div data-value="${mKey}" title="${tDef.name}" style="display:flex; align-items:center; gap: 4px; padding: 6px 10px; color: #f8f9fa; border-bottom: 1px solid #444; cursor: pointer;" onmouseover="this.style.backgroundColor='#343a40'; this.style.color='#ffca28';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f8f9fa';">
+                        <div data-value="${mKey}" title="${tDef.name}" class="manual-opt" style="display:flex; align-items:center; gap: 4px; padding: 6px 10px; color: #f8f9fa; border-bottom: 1px solid #444; cursor: pointer;">
                             <img src="${iconPath}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
                             <img src="${elPath}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">
                             <span class="text-truncate">${tDef.name}</span>${sbBadge}
@@ -919,6 +914,31 @@ class CollectionApp {
 
         col.innerHTML = html;
         container.appendChild(col);
+
+        // --- GESTIONE BARRA DI RICERCA NEL DROPDOWN ---
+        const searchInput = col.querySelector('.manual-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('click', (e) => e.stopPropagation()); // Evita che il menu si chiuda cliccando la barra
+
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const options = col.querySelectorAll('.manual-opt');
+                options.forEach(opt => {
+                    const text = opt.textContent || opt.innerText;
+                    opt.style.display = text.toLowerCase().includes(term) ? "flex" : "none";
+                });
+            });
+
+            // Resetta la ricerca ogni volta che apro il menu a tendina
+            const selectSelected = col.querySelector('.manual-equip .select-selected');
+            if (selectSelected) {
+                selectSelected.addEventListener('click', () => {
+                    searchInput.value = '';
+                    col.querySelectorAll('.manual-opt').forEach(opt => opt.style.display = "flex");
+                    setTimeout(() => searchInput.focus(), 50); // Mette il cursore nella barra pronto per scrivere
+                });
+            }
+        }
 
         const manualCustomSelect = col.querySelector('.manual-equip');
         initCustomSelect(manualCustomSelect, (selectedTech) => {
