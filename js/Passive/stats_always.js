@@ -443,9 +443,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Potenza + (Foresta) (パワー＋〈林〉)",
+        title: "Potenza + (Albero) (パワー＋〈林〉)",
         id: "103020003",
-        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche Albero di {VAL}.",
         levels: [
             { val: 17, req: "Si sblocca con personaggio Lv. 41" },
             { val: 26, req: "Si sblocca con personaggio Lv. 61" },
@@ -553,9 +553,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Blocco & Parata DF/GK Foresta + (林ＤＦ・ＧＫブロック＆キャッチ＋)",
+        title: "Blocco & Parata DF/GK Albero + (林ＤＦ・ＧＫブロック＆キャッチ＋)",
         id: "103006001",
-        template: "All'inizio della partita, aumenta il Blocco e la Parata dei compagni DF e GK di attributo Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta il Blocco e la Parata dei compagni DF e GK di attributo Albero di {VAL}.",
         levels: [
             { val: 14, req: "Si sblocca con personaggio Lv. 1" },
             { val: 29, req: "Si sblocca con personaggio Lv. 21" },
@@ -798,9 +798,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Potenza Tiro (Foresta) + (シュートパワー＋〈林〉)",
+        title: "Potenza Tiro (Albero) + (シュートパワー＋〈林〉)",
         id: "101040004",
-        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro Albero di {VAL}.",
         levels: [
             { val: 46, req: "Si sblocca a: Advanced Player +" },
             { val: 62, req: "Si sblocca a: Top Player +" },
@@ -835,9 +835,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Tecnica Foresta + (林テクニック＋)",
+        title: "Tecnica Albero + (林テクニック＋)",
         id: "101011003",
-        template: "All'inizio della partita, aumenta la Tecnica degli alleati di attributo Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta la Tecnica degli alleati di attributo Albero di {VAL}.",
         levels: [
             { val: 67, req: "Si sblocca con personaggio Lv. 41" },
             { val: 100, req: "Si sblocca con personaggio Lv. 61" },
@@ -856,9 +856,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Potenza + (Foresta) (パワー＋〈林〉)",
+        title: "Potenza + (Albero) (パワー＋〈林〉)",
         id: "101011004",
-        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche Albero di {VAL}.",
         levels: [
             { val: 39, req: "Si sblocca a: Advanced Player +" },
             { val: 52, req: "Si sblocca a: Top Player +" },
@@ -929,9 +929,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Potenza Tiro FW (Fuoco/Foresta) + (ＦＷシュートパワー＋〈火＆林〉)",
+        title: "Potenza Tiro FW (Fuoco/Albero) + (ＦＷシュートパワー＋〈火＆林〉)",
         id: "101010004",
-        template: "All'inizio della partita, aumenta la Potenza delle tecniche di Tiro di elemento Fuoco e Foresta degli FW alleati di {VAL}.",
+        template: "All'inizio della partita, aumenta la Potenza delle tecniche di Tiro di elemento Fuoco e Albero degli FW alleati di {VAL}.",
         levels: [
             { val: 15, req: "Si sblocca a: Advanced Player +" },
             { val: 20, req: "Si sblocca a: Top Player +" },
@@ -1092,9 +1092,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Potenza DF/GK + (Foresta) (ＤＦ・ＧＫパワー＋〈林〉)",
+        title: "Potenza DF/GK + (Albero) (ＤＦ・ＧＫパワー＋〈林〉)",
         id: "101004004",
-        template: "All'inizio della partita, aumenta la potenza delle tecniche di elemento Foresta degli alleati DF e GK di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di elemento Albero degli alleati DF e GK di {VAL}.",
         levels: [
             { val: 10, req: "Si sblocca a: Advanced Player +" },
             { val: 14, req: "Si sblocca a: Top Player +" },
@@ -1107,9 +1107,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Potenza DF/GK + (Foresta) (ＤＦ・ＧＫパワー＋〈林〉)",
+        title: "Potenza DF/GK + (Albero) (ＤＦ・ＧＫパワー＋〈林〉)",
         id: "101005004",
-        template: "All'inizio della partita, aumenta la potenza delle tecniche di elemento Foresta degli alleati DF e GK di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di elemento Albero degli alleati DF e GK di {VAL}.",
         levels: [
             { val: 10, req: "Si sblocca a: Advanced Player +" },
             { val: 14, req: "Si sblocca a: Top Player +" },
@@ -1284,9 +1284,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Tiro FW (Foresta) + (林ＦＷキック＋)",
+        title: "Tiro FW (Albero) + (林ＦＷキック＋)",
         id: "101078003",
-        template: "All'inizio della partita, aumenta il Tiro degli FW alleati di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta il Tiro degli FW alleati di elemento Albero di {VAL}.",
         levels: [
             { val: 161, req: "Si sblocca con personaggio Lv. 41" },
             { val: 241, req: "Si sblocca con personaggio Lv. 61" },
@@ -1327,9 +1327,9 @@ export const alwaysPassives = [
         ]
     },
     {
-        title: "Potenza Tiro Foresta + (シュートパワー＋〈林〉)",
+        title: "Potenza Tiro Albero + (シュートパワー＋〈林〉)",
         id: "101025003",
-        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di Tiro Albero di {VAL}.",
         levels: [
             { val: 9, req: "Si sblocca con personaggio Lv. 41" },
             { val: 14, req: "Si sblocca con personaggio Lv. 61" },
@@ -2077,7 +2077,7 @@ export const alwaysPassives = [
     {
         title: "【共鳴】林ＤＦブロック＋／ＧＫキャッチ＋",
         id: "104003001",
-        template: "All'inizio della partita, se ci sono 3+ compagni di elemento Foresta, aumenta il Blocco dei DF Foresta di {VAL} e la Parata dei GK di {VAL}.",
+        template: "All'inizio della partita, se ci sono 3+ compagni di elemento Albero, aumenta il Blocco dei DF Albero di {VAL} e la Parata dei GK di {VAL}.",
         levels: [
             { val: 112, req: "Lv. 1" },
             { val: 150, req: "Lv. 21" },
@@ -2141,9 +2141,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Tiro MF Foresta + (林ＭＦキック＋)",
+        title: "Tiro MF Albero + (林ＭＦキック＋)",
         id: "104009001",
-        template: "All'inizio della partita, aumenta il Tiro dei compagni MF di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta il Tiro dei compagni MF di elemento Albero di {VAL}.",
         levels: [
             { val: 112, req: "Si sblocca con personaggio Lv. 1" },
             { val: 150, req: "Si sblocca con personaggio Lv. 21" },
@@ -2165,9 +2165,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Blocco DF Foresta + (林ＤＦブロックパワー＋)",
+        title: "Potenza Blocco DF Albero + (林ＤＦブロックパワー＋)",
         id: "104009003",
-        template: "All'inizio della partita, aumenta la potenza delle tecniche di Blocco dei compagni DF di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di Blocco dei compagni DF di elemento Albero di {VAL}.",
         levels: [
             { val: 13, req: "Si sblocca con personaggio Lv. 41" },
             { val: 18, req: "Si sblocca con personaggio Lv. 61" },
@@ -2189,9 +2189,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Tecniche Foresta + / Potenza Tiro FW + (パワー＋〈林〉／ＦＷシュートパワー＋)",
+        title: "Potenza Tecniche Albero + / Potenza Tiro FW + (パワー＋〈林〉／ＦＷシュートパワー＋)",
         id: "104009004",
-        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di elemento Foresta di {VAL1} e la potenza delle tecniche di Tiro dei compagni FW di {VAL2}.",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di elemento Albero di {VAL1} e la potenza delle tecniche di Tiro dei compagni FW di {VAL2}.",
         levels: [
             { val1: 26, val2: 26, req: "Si sblocca con: Advanced Player +" },
             { val1: 32, val2: 32, req: "Si sblocca con: Top Player +" },
@@ -2335,9 +2335,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Tiro FW Foresta - (林ＦＷキック－)",
+        title: "Tiro FW Albero - (林ＦＷキック－)",
         id: "101145001",
-        template: "All'inizio della partita, riduce il Tiro dei FW avversari di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, riduce il Tiro dei FW avversari di elemento Albero di {VAL}.",
         levels: [
             { val: -120, req: "Si sblocca con personaggio Lv. 1" },
             { val: -161, req: "Si sblocca con personaggio Lv. 21" },
@@ -2399,9 +2399,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Blocco MF Foresta + (林ＭＦブロック＋)",
+        title: "Blocco MF Albero + (林ＭＦブロック＋)",
         id: "101175001",
-        template: "All'inizio della partita, aumenta il Blocco dei compagni MF di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta il Blocco dei compagni MF di elemento Albero di {VAL}.",
         levels: [
             { val: 120, req: "Si sblocca con personaggio Lv. 1" },
             { val: 161, req: "Si sblocca con personaggio Lv. 21" },
@@ -2423,9 +2423,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Potenza Tiro FW Foresta + (林ＦＷシュートパワー＋)",
+        title: "Potenza Tiro FW Albero + (林ＦＷシュートパワー＋)",
         id: "101175004",
-        template: "All'inizio della partita, aumenta la potenza delle tecniche di Tiro dei compagni FW di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta la potenza delle tecniche di Tiro dei compagni FW di elemento Albero di {VAL}.",
         levels: [
             { val: 23, req: "Si sblocca con: Advanced Player +" },
             { val: 28, req: "Si sblocca con: Top Player +" },
@@ -2535,9 +2535,9 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Tiro e Tecnica FW Foresta + (林FWキック＆テクニック＋)",
+        title: "Tiro e Tecnica FW Albero + (林FWキック＆テクニック＋)",
         id: "102173002",
-        template: "All'inizio della partita, aumenta il Tiro e la Tecnica dei compagni FW di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, aumenta il Tiro e la Tecnica dei compagni FW di elemento Albero di {VAL}.",
         levels: [
             // ... inserire gli altri livelli intermedi
             { val: 1263, req: "Si sblocca con personaggio Lv. 340" }

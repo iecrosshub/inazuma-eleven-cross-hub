@@ -6,8 +6,8 @@ const trialCycle = [
     { element: 'Montagna', mode: 'Difesa',  cssMode: 'mode-defense', icon: 'img/Element/Icon_Element_Mountain.png' },
     { element: 'Vento',    mode: 'Attacco', cssMode: 'mode-attack', icon: 'img/Element/Icon_Element_Wind.png' },
     { element: 'Vento',    mode: 'Difesa',  cssMode: 'mode-defense', icon: 'img/Element/Icon_Element_Wind.png' },
-    { element: 'Foresta',  mode: 'Attacco', cssMode: 'mode-attack', icon: 'img/Element/Icon_Element_Forest.png' },
-    { element: 'Foresta',  mode: 'Difesa',  cssMode: 'mode-defense', icon: 'img/Element/Icon_Element_Forest.png' },
+    { element: 'Albero',  mode: 'Attacco', cssMode: 'mode-attack', icon: 'img/Element/Icon_Element_Forest.png' },
+    { element: 'Albero',  mode: 'Difesa',  cssMode: 'mode-defense', icon: 'img/Element/Icon_Element_Forest.png' },
     { element: 'Fuoco',    mode: 'Attacco', cssMode: 'mode-attack', icon: 'img/Element/Icon_Element_Fire.png' },
     { element: 'Fuoco',    mode: 'Difesa',  cssMode: 'mode-defense', icon: 'img/Element/Icon_Element_Fire.png' }
 ];

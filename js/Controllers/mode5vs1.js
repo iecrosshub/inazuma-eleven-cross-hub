@@ -80,7 +80,7 @@ class AppController {
         const stageElSelect = document.getElementById('stageElement');
         const mapStage = {
             'None': { val: '', text: 'Nessuno', img: '' },
-            'Wind': { val: 'Forest', text: 'Foresta', img: 'img/Element/Icon_Element_Forest.png' },
+            'Wind': { val: 'Forest', text: 'Albero', img: 'img/Element/Icon_Element_Forest.png' },
             'Mountain': { val: 'Wind', text: 'Vento', img: 'img/Element/Icon_Element_Wind.png' },
             'Fire': { val: 'Mountain', text: 'Montagna', img: 'img/Element/Icon_Element_Mountain.png' },
             'Forest': { val: 'Fire', text: 'Fuoco', img: 'img/Element/Icon_Element_Fire.png' }

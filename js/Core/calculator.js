@@ -107,7 +107,7 @@ export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, r
     const hasStab = (techElement === charElement && techElement !== 'Void');
     const stabMult = hasStab ? 1.2 : 1.0;
 
-    const elMapIt = { 'Fire': 'Fuoco', 'Wind': 'Vento', 'Forest': 'Foresta', 'Mountain': 'Montagna', 'Void': 'Vuoto' };
+    const elMapIt = { 'Fire': 'Fuoco', 'Wind': 'Vento', 'Forest': 'Albero', 'Mountain': 'Montagna', 'Void': 'Vuoto' };
     const techElementIt = elMapIt[techElement];
 
     const baseStat = parseInt(customStat) || 0;
@@ -379,7 +379,7 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
                                 if (effect.moveElement && effect.moveElement !== targetTechElement) isMatch = false;
 
                                 if (effect.stat && effect.stat !== "All" && effect.stat !== "Tutte_le_Statistiche") {
-                                    const elMapIt = { 'Fire': 'Fuoco', 'Wind': 'Vento', 'Forest': 'Foresta', 'Mountain': 'Montagna', 'Void': 'Vuoto' };
+                                    const elMapIt = { 'Fire': 'Fuoco', 'Wind': 'Vento', 'Forest': 'Albero', 'Mountain': 'Montagna', 'Void': 'Vuoto' };
                                     const targetTechElementIt = elMapIt[targetTechElement];
                                     let statMatch = false;
 

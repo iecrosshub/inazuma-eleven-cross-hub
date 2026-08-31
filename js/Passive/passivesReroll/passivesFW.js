@@ -110,9 +110,9 @@ export const rerollPassivesFW = [
         ]
     },
     {
-        title: "Potenza di Tiro + (Foresta) [シュートパワー＋〈林〉]",
+        title: "Potenza di Tiro + (Albero) [シュートパワー＋〈林〉]",
         id: "REROLL_FW_SHOOT_POWER_FOREST",
-        template: "Aumenta la potenza delle tecniche di Tiro di elemento Foresta di {VAL}.",
+        template: "Aumenta la potenza delle tecniche di Tiro di elemento Albero di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
             { val: 5, req: "Livello 2" },

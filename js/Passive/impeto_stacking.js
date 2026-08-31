@@ -235,9 +235,9 @@ export const stackingPassives = [
     },
 
     {
-        title: "[Cumulativa] Tecnica Foresta + (【破竹/累】林テクニック＋)",
+        title: "[Cumulativa] Tecnica Albero + (【破竹/累】林テクニック＋)",
         id: "103020001",
-        template: "Ogni volta che la propria tecnica di portiere ha successo, aumenta la Tecnica degli alleati di elemento Foresta di {VAL}.",
+        template: "Ogni volta che la propria tecnica di portiere ha successo, aumenta la Tecnica degli alleati di elemento Albero di {VAL}.",
         levels: [
             { val: 14, req: "Si sblocca con personaggio Lv. 1" },
             { val: 28, req: "Si sblocca con personaggio Lv. 21" },
@@ -366,9 +366,9 @@ export const stackingPassives = [
         ]
     },
     {
-        title: "[Slancio] Tiro Foresta + (【破竹】林キック＋)",
+        title: "[Slancio] Tiro Albero + (【破竹】林キック＋)",
         id: "103006003",
-        template: "Quando il proprio dribbling ha successo, aumenta il Tiro degli alleati di attributo Foresta di {VAL}.",
+        template: "Quando il proprio dribbling ha successo, aumenta il Tiro degli alleati di attributo Albero di {VAL}.",
         levels: [
             { val: 74, req: "Si sblocca con personaggio Lv. 41" },
             { val: 111, req: "Si sblocca con personaggio Lv. 61" },
@@ -446,9 +446,9 @@ export const stackingPassives = [
         ]
     },
     {
-        title: "[Slancio] Potenza Tiro FW Foresta + (【破竹/累】ＦＷシュートパワー＋〈林〉)",
+        title: "[Slancio] Potenza Tiro FW Albero + (【破竹/累】ＦＷシュートパワー＋〈林〉)",
         id: "101026003",
-        template: "Ogni volta che un proprio dribbling ha successo, aumenta la potenza delle tecniche di tiro di elemento Foresta degli FW alleati di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        template: "Ogni volta che un proprio dribbling ha successo, aumenta la potenza delle tecniche di tiro di elemento Albero degli FW alleati di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
         levels: [
             { val: 2, req: "Si sblocca con personaggio Lv. 41" },
             { val: 3, req: "Si sblocca con personaggio Lv. 61" },
@@ -482,9 +482,9 @@ export const stackingPassives = [
         ]
     },
     {
-        title: "[Slancio] Potenza Tiro Foresta + (【破竹/累】シュートパワー＋〈林〉)",
+        title: "[Slancio] Potenza Tiro Albero + (【破竹/累】シュートパワー＋〈林〉)",
         id: "101027003",
-        template: "Ogni volta che si esegue con successo una tecnica di dribbling, aumenta la potenza delle proprie tecniche di Tiro Foresta di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        template: "Ogni volta che si esegue con successo una tecnica di dribbling, aumenta la potenza delle proprie tecniche di Tiro Albero di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
         levels: [
             { val: 3, req: "Si sblocca con personaggio Lv. 41" },
             { val: 5, req: "Si sblocca con personaggio Lv. 61" },
@@ -632,9 +632,9 @@ export const stackingPassives = [
         ]
     },
     {
-        title: "[Impeto] Potenza Tiro FW Foresta + (【破竹/累】ＦＷシュートパワー＋〈林〉)",
+        title: "[Impeto] Potenza Tiro FW Albero + (【破竹/累】ＦＷシュートパワー＋〈林〉)",
         id: "101024003",
-        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la Potenza della Tecnica di Tiro degli FW alleati di elemento Foresta di {VAL}. <br>Condizione reset: Gol segnato.",
+        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la Potenza della Tecnica di Tiro degli FW alleati di elemento Albero di {VAL}. <br>Condizione reset: Gol segnato.",
         levels: [
             { val: 1, req: "Si sblocca con personaggio Lv. 41" },
             { val: 2, req: "Si sblocca con personaggio Lv. 61" },
@@ -653,9 +653,9 @@ export const stackingPassives = [
         ]
     },
     {
-        title: "Potenza Tiro FW (Foresta) + (【破竹/累】ＦＷシュートパワー＋〈林〉)",
+        title: "Potenza Tiro FW (Albero) + (【破竹/累】ＦＷシュートパワー＋〈林〉)",
         id: "101022003",
-        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la Potenza delle tecniche di tiro di elemento Foresta degli FW alleati di {VAL}. <br>Condizione di reset: Gol segnato.",
+        template: "Ogni volta che la propria tecnica di dribbling ha successo, aumenta la Potenza delle tecniche di tiro di elemento Albero degli FW alleati di {VAL}. <br>Condizione di reset: Gol segnato.",
         levels: [
             { val: 3, req: "Si sblocca con personaggio Lv. 41" },
             { val: 4, req: "Si sblocca con personaggio Lv. 61" },
@@ -1003,9 +1003,9 @@ export const stackingPassives = [
     },
 
     {
-        title: "[Prevenzione/Accumulo - Mod] Potenza Tiro FW Foresta + <Foresta> (【阻止/累・改】林ＦＷシュートパワー＋〈林〉)",
+        title: "[Prevenzione/Accumulo - Mod] Potenza Tiro FW Albero + <Albero> (【阻止/累・改】林ＦＷシュートパワー＋〈林〉)",
         id: "110003003",
-        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Tiro di elemento Foresta dei compagni FW di elemento Foresta di {VAL}. (Condizione di fine: quando si segna un gol).",
+        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta la potenza delle tecniche di Tiro di elemento Albero dei compagni FW di elemento Albero di {VAL}. (Condizione di fine: quando si segna un gol).",
         levels: [
             { val: 13, req: "Si sblocca con personaggio Lv. 41" },
             { val: 18, req: "Si sblocca con personaggio Lv. 61" },
@@ -1397,7 +1397,7 @@ export const stackingPassives = [
     {
         title: "[Attivazione/Accumulo] Potenza Parata GK + (【発動】キーパーパワー＋)",
         id: "101174003",
-        template: "Quando un avversario utilizza una tecnica di Tiro di elemento Foresta, aumenta la potenza delle proprie tecniche di Parata di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        template: "Quando un avversario utilizza una tecnica di Tiro di elemento Albero, aumenta la potenza delle proprie tecniche di Parata di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
         levels: [
             { val: 13, req: "Si sblocca con personaggio Lv. 41" },
             { val: 17, req: "Si sblocca con personaggio Lv. 61" },

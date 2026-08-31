@@ -384,9 +384,9 @@ export const specificMovesPassives = [
     },
 
     {
-        title: "Potenza Tiro Rimbalzante (Fuochi d'artificio) + / Tiro Foresta + (バウンサーラビット（花火）パワー＋／林キック＋)",
+        title: "Potenza Tiro Rimbalzante (Fuochi d'artificio) + / Tiro Albero + (バウンサーラビット（花火）パワー＋／林キック＋)",
         id: "110003004",
-        template: "All'inizio della partita, aumenta la potenza della propria tecnica Tiro Rimbalzante (Fuochi d'artificio) di {VAL1} e il Tiro dei compagni di elemento Foresta di {VAL2}.",
+        template: "All'inizio della partita, aumenta la potenza della propria tecnica Tiro Rimbalzante (Fuochi d'artificio) di {VAL1} e il Tiro dei compagni di elemento Albero di {VAL2}.",
         levels: [
             { val1: 65, val2: 412, req: "Si sblocca con: Advanced Player +" },
             { val1: 79, val2: 500, req: "Si sblocca con: Top Player +" },
@@ -468,7 +468,7 @@ export const specificMovesPassives = [
     {
         title: "[Risonanza] Potenza Pinguino Imperatore 2 + (【共鳴】皇帝ペンギン2号パワー＋改)",
         id: "102173005",
-        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Foresta, aumenta la potenza della propria tecnica Pinguino Imperatore 2 di {VAL1} e ne riduce il consumo TP di {VAL2}.",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Albero, aumenta la potenza della propria tecnica Pinguino Imperatore 2 di {VAL1} e ne riduce il consumo TP di {VAL2}.",
         levels: [
             // ... inserire i livelli Advanced e Top Player +
             { val1: 136, val2: 20, req: "Si sblocca con: Legendary Player +" }

@@ -20,7 +20,7 @@ const filtersHTML = `
                     <div data-value="All">Tutti gli Elementi</div>
                     <div data-value="Fire"><img src="img/Element/Icon_Element_Fire.png" style="width: 20px; margin-right: 6px; vertical-align: middle;" alt=""> Fuoco</div>
                     <div data-value="Wind"><img src="img/Element/Icon_Element_Wind.png" style="width: 20px; margin-right: 6px; vertical-align: middle;" alt=""> Vento</div>
-                    <div data-value="Forest"><img src="img/Element/Icon_Element_Forest.png" style="width: 20px; margin-right: 6px; vertical-align: middle;" alt=""> Foresta</div>
+                    <div data-value="Forest"><img src="img/Element/Icon_Element_Forest.png" style="width: 20px; margin-right: 6px; vertical-align: middle;" alt=""> Albero</div>
                     <div data-value="Mountain"><img src="img/Element/Icon_Element_Mountain.png" style="width: 20px; margin-right: 6px; vertical-align: middle;" alt=""> Montagna</div>
                 </div>
             </div>

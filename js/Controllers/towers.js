@@ -444,11 +444,11 @@ class TowersController {
 
         this.allStages.forEach((stage, index) => {
             const icon = stage.towerName.toLowerCase().includes('aliena') ? 'fa-meteor'
-                : stage.towerName.toLowerCase().includes('foresta') ? 'fa-leaf'
+                : stage.towerName.toLowerCase().includes('Albero') ? 'fa-leaf'
                     : stage.towerName.toLowerCase().includes('fuoco') ? 'fa-fire' : 'fa-chess-rook';
 
             const color = stage.towerName.toLowerCase().includes('aliena') ? '#1a73e8'
-                : stage.towerName.toLowerCase().includes('foresta') ? '#198754'
+                : stage.towerName.toLowerCase().includes('Albero') ? '#198754'
                     : stage.towerName.toLowerCase().includes('fuoco') ? '#dc3545' : '#6c757d';
 
             const isActive = this.currentViewedId === stage.uid || (index === 0 && !this.currentViewedId) ? 'active' : '';

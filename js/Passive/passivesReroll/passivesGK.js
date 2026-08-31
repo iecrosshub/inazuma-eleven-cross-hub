@@ -88,9 +88,9 @@ export const rerollPassivesGK = [
         ]
     },
     {
-        title: "Potenza Portiere + (Foresta) [キーパーパワー＋〈林〉]",
+        title: "Potenza Portiere + (Albero) [キーパーパワー＋〈林〉]",
         id: "REROLL_GK_KEEPER_POWER_FOREST",
-        template: "Aumenta la potenza delle tecniche di Parata di elemento Foresta di {VAL}.",
+        template: "Aumenta la potenza delle tecniche di Parata di elemento Albero di {VAL}.",
         levels: [
             { val: 3, req: "Livello 1" },
             { val: 5, req: "Livello 2" },

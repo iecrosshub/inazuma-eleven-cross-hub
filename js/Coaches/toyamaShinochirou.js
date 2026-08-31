@@ -17,7 +17,7 @@ export const coachData = {
     formationPassive: {
         title: "Attiva F-Brainwashing (アクティブ・F-ミカゲセンノウ)",
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
-        text: "All'inizio della partita:<br><strong>Alleati elemento Fuoco:</strong> potenza tecniche di tecnica +30<br><strong>Alleati elemento Foresta:</strong> potenza tecniche di tecnica +30",
+        text: "All'inizio della partita:<br><strong>Alleati elemento Fuoco:</strong> potenza tecniche di tecnica +30<br><strong>Alleati elemento Albero:</strong> potenza tecniche di tecnica +30",
         actions: [
             { target: "team_Fire", stat: "Tecnica", type: "move_power", amount: 30, condition: "always" },
             { target: "team_Forest", stat: "Tecnica", type: "move_power", amount: 30, condition: "always" }
@@ -27,7 +27,7 @@ export const coachData = {
         id: "coach_passive_toyama",
         title: "Power Boost FW & GK (FW&GKパワーブースト)",
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
-        template: "All'inizio della partita:<br><strong>Alleati FW elemento Fuoco:</strong> potenza tecniche di tiro +{VAL}<br><strong>Alleati GK elemento Foresta:</strong> potenza tecniche Foresta +{VAL2}",
+        template: "All'inizio della partita:<br><strong>Alleati FW elemento Fuoco:</strong> potenza tecniche di tiro +{VAL}<br><strong>Alleati GK elemento Albero:</strong> potenza tecniche Albero +{VAL2}",
         levels: [
             { val: 8, val2: 8, req: "Niv.1" },
             { val: 16, val2: 16, req: "Niv.2" },

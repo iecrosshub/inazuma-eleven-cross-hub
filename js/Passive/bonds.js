@@ -150,9 +150,9 @@ export const bondPassives = [
         ]
     },
     {
-        title: "[Legame] Blocco & Tiro Foresta + (【結束】林ブロック＆キック＋)",
+        title: "[Legame] Blocco & Tiro Albero + (【結束】林ブロック＆キック＋)",
         id: "101016001",
-        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta il Blocco e il Tiro dei compagni di attributo Foresta di {VAL}.",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta il Blocco e il Tiro dei compagni di attributo Albero di {VAL}.",
         levels: [
             { val: 7, req: "Si sblocca con personaggio Lv. 1" },
             { val: 15, req: "Si sblocca con personaggio Lv. 21" },
@@ -272,7 +272,7 @@ export const bondPassives = [
     {
         title: "[Legame] Tiro FW + (【共鳴】ＦＷキック＋)",
         id: "101040001",
-        template: "All'inizio della partita, se ci sono almeno 3 alleati di attributo Foresta, aumenta il Tiro degli FW alleati di {VAL}.",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati di attributo Albero, aumenta il Tiro degli FW alleati di {VAL}.",
         levels: [
             { val: 28, req: "Si sblocca con personaggio Lv. 1" },
             { val: 56, req: "Si sblocca con personaggio Lv. 21" },
@@ -359,7 +359,7 @@ export const bondPassives = [
     {
         title: "[Legame] Tecnica MF/DF Avversari - (【共鳴】敵ＭＦ・ＤＦテクニック－)",
         id: "101100003",
-        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Foresta, riduce la Tecnica dei MF e DF avversari di {VAL}.",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Albero, riduce la Tecnica dei MF e DF avversari di {VAL}.",
         levels: [
             { val: 56, req: "Si sblocca con personaggio Lv. 41" },
             { val: 84, req: "Si sblocca con personaggio Lv. 61" },
@@ -528,9 +528,9 @@ export const bondPassives = [
         ]
     },
     {
-        title: "[Legame] Potenza Tiro FW Foresta + (【結束】林ＦＷシュートパワー＋)",
+        title: "[Legame] Potenza Tiro FW Albero + (【結束】林ＦＷシュートパワー＋)",
         id: "101006004",
-        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la potenza delle tecniche di tiro degli FW alleati di attributo Foresta di {VAL}.",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati con tag Raimon, aumenta la potenza delle tecniche di tiro degli FW alleati di attributo Albero di {VAL}.",
         levels: [
             { val: 16, req: "Si sblocca a: Advanced Player +" },
             { val: 21, req: "Si sblocca a: Top Player +" },
@@ -624,7 +624,7 @@ export const bondPassives = [
     {
         title: "[Risonanza] Potenza Tiro + (【共鳴】シュートパワー＋)",
         id: "101012003",
-        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Foresta, aumenta la propria potenza di Tiro di {VAL}.",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Albero, aumenta la propria potenza di Tiro di {VAL}.",
         levels: [
             { val: 8, req: "Si sblocca con personaggio Lv. 41" },
             { val: 12, req: "Si sblocca con personaggio Lv. 61" },
@@ -706,9 +706,9 @@ export const bondPassives = [
         ]
     },
     {
-        title: "[Risonanza] Potenza + (Foresta) (【共鳴】パワー＋〈林〉)",
+        title: "[Risonanza] Potenza + (Albero) (【共鳴】パワー＋〈林〉)",
         id: "101078001",
-        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Foresta, aumenta la potenza delle proprie tecniche di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Albero, aumenta la potenza delle proprie tecniche di elemento Albero di {VAL}.",
         levels: [
             { val: 1, req: "Si sblocca con personaggio Lv. 1" },
             { val: 3, req: "Si sblocca con personaggio Lv. 21" },
@@ -1206,9 +1206,9 @@ export const bondPassives = [
     },
 
     {
-        title: "[Risonanza] Potenza Tiro MF Foresta + (【共鳴】林ＭＦシュートパワー＋)",
+        title: "[Risonanza] Potenza Tiro MF Albero + (【共鳴】林ＭＦシュートパワー＋)",
         id: "101175003",
-        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Foresta, aumenta la potenza delle tecniche di Tiro dei compagni MF di elemento Foresta di {VAL}.",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Albero, aumenta la potenza delle tecniche di Tiro dei compagni MF di elemento Albero di {VAL}.",
         levels: [
             { val: 7, req: "Si sblocca con personaggio Lv. 41" },
             { val: 10, req: "Si sblocca con personaggio Lv. 61" },
@@ -1246,9 +1246,9 @@ export const bondPassives = [
     },
 
     {
-        title: "[Risonanza] Potenza Tiro FW Foresta - (【共鳴】ＦＷシュートパワー－〈林〉)",
+        title: "[Risonanza] Potenza Tiro FW Albero - (【共鳴】ＦＷシュートパワー－〈林〉)",
         id: "101174004",
-        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Fuoco, riduce la potenza delle tecniche di Tiro di elemento Foresta dei FW avversari di {VAL}.",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Fuoco, riduce la potenza delle tecniche di Tiro di elemento Albero dei FW avversari di {VAL}.",
         levels: [
             { val: -15, req: "Si sblocca con: Advanced Player +" },
             { val: -18, req: "Si sblocca con: Top Player +" },

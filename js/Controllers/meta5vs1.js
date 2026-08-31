@@ -53,7 +53,7 @@ class MetaController {
         const stageElSelect = document.getElementById('stageElement');
         const mapStage = {
             'None': { val: '', text: 'Nessuno' },
-            'Wind': { val: 'Forest', text: 'Foresta' },
+            'Wind': { val: 'Forest', text: 'Albero' },
             'Mountain': { val: 'Wind', text: 'Vento' },
             'Fire': { val: 'Mountain', text: 'Montagna' },
             'Forest': { val: 'Fire', text: 'Fuoco' }
