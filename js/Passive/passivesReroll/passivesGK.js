@@ -1,3 +1,5 @@
+// --- js/Passive/rerollPassivesGK.js ---
+
 export const rerollPassivesGK = [
     {
         title: "Potenza Portiere + (Generica) [キーパーパワー＋]",

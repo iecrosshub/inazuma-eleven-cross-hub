@@ -1,3 +1,5 @@
+// --- js/Passive/rerollPassivesDF.js ---
+
 export const rerollPassivesDF = [
     {
         title: "Tecnica + [テクニック＋]",
@@ -106,7 +108,7 @@ export const rerollPassivesDF = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Blocco", moveElement: "Fire", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: "Fire", valueRef: "val" }
         ]
     },
     {
@@ -128,7 +130,7 @@ export const rerollPassivesDF = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Blocco", moveElement: "Mountain", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: "Mountain", valueRef: "val" }
         ]
     },
     {
@@ -150,7 +152,7 @@ export const rerollPassivesDF = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Blocco", moveElement: "Wind", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: "Wind", valueRef: "val" }
         ]
     },
     {
@@ -172,7 +174,7 @@ export const rerollPassivesDF = [
         category: "Reroll",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], /* FIX */ type: "power", moveKind: "Blocco", moveElement: "Forest", valueRef: "val" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: "Forest", valueRef: "val" }
         ]
     },
     {

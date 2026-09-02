@@ -354,6 +354,29 @@ class CollectionApp {
             });
         }
 
+        // --- GESTIONE MANUALE DELLE TENDINE ---
+        document.getElementById('collection-grid').addEventListener('change', (e) => {
+            if (e.target.tagName === 'SELECT' && (
+                e.target.classList.contains('tech-lvl') ||
+                e.target.classList.contains('manual-lvl') ||
+                e.target.classList.contains('pass-lvl') ||
+                e.target.classList.contains('reroll-lvl')
+            )) {
+                const input = e.target.nextElementSibling;
+                if (input && input.tagName === 'INPUT') {
+                    if (e.target.value === 'manual') {
+                        input.style.display = 'block';
+                        e.target.style.width = 'auto';
+                        e.target.style.flexGrow = '1';
+                    } else {
+                        input.style.display = 'none';
+                        e.target.style.width = '100%';
+                        e.target.style.flexGrow = '0';
+                    }
+                }
+            }
+        });
+
         this.auth.setAuthStateListener(
             (user) => this.handleAuthState(user),
             (user) => showProfileSetupModal(user, this.auth)
@@ -742,6 +765,7 @@ class CollectionApp {
             }
         });
 
+        // --- MOSSE NATIVE CON AGGIUNTA CAMPO MANUALE ---
         const nativeTechsHtml = fullData.myTechniques.map(techKey => {
             const techDef = techniquesLibrary[techKey];
             const tName = techDef?.name || techKey;
@@ -751,15 +775,19 @@ class CollectionApp {
 
             return `
                 <div class="d-flex gap-1 mb-2 align-items-center">
-                    <div class="d-flex align-items-center gap-1" style="width: 70%;">
+                    <div class="d-flex align-items-center gap-1" style="width: 60%;">
                         ${typeIcon ? `<img src="${typeIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">` : ''}
                         ${elIcon ? `<img src="${elIcon}" style="width:16px; height:16px; object-fit: contain; flex-shrink:0;">` : ''}
                         <span class="text-light small text-truncate" title="${tName}">${tName}</span>
                         ${sbBadge}
                     </div>
-                    <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl" data-char="${baseChar.id}" data-tech="${techKey}" style="width: 30%;">
-                        ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===0 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
-                    </select>
+                    <div class="d-flex justify-content-end" style="width: 40%;">
+                        <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl" data-char="${baseChar.id}" data-tech="${techKey}" style="width: 100%;">
+                            ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===0 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
+                            <option value="manual">Manuale</option>
+                        </select>
+                        <input type="number" class="form-control form-control-sm border-secondary ms-1 tech-manual-val" data-char="${baseChar.id}" data-tech="${techKey}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold; background-color:#212529; color:white;" placeholder="Val">
+                    </div>
                 </div>
             `;
         }).join('');
@@ -771,16 +799,20 @@ class CollectionApp {
             rerollOptions += `<option value="${p.id}">${p.title}</option>`;
         });
 
+        // --- PASSIVE REROLL CON CAMPO MANUALE ---
         let rerollSlotsHtml = '';
         for (let i = 1; i <= 3; i++) {
             rerollSlotsHtml += `
                 <div class="d-flex gap-1 mb-2 align-items-center">
-                    <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-id" data-char="${baseChar.id}" data-slot="${i}" style="width: 70%;">
+                    <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-id" data-char="${baseChar.id}" data-slot="${i}" style="width: 65%;">
                         ${rerollOptions}
                     </select>
-                    <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-lvl" data-char="${baseChar.id}" data-slot="${i}" style="width: 30%;" disabled>
-                        <option value="0">Lv 1</option>
-                    </select>
+                    <div class="d-flex justify-content-end" style="width: 35%;">
+                        <select class="form-select form-select-sm bg-dark text-white border-secondary reroll-lvl" data-char="${baseChar.id}" data-slot="${i}" style="width: 100%;" disabled>
+                            <option value="-1">Spenta</option>
+                        </select>
+                        <input type="number" class="form-control form-control-sm border-secondary ms-1 reroll-manual-val" data-char="${baseChar.id}" data-slot="${i}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold; background-color:#212529; color:white;" placeholder="Val">
+                    </div>
                 </div>
             `;
         }
@@ -843,7 +875,7 @@ class CollectionApp {
                     
                     <h6 class="text-warning mt-3"><i class="fas fa-book"></i> Insegna Tecnica (Shop)</h6>
                     <div class="d-flex gap-1 mb-3 align-items-center">
-                        <div class="custom-select manual-equip" data-char="${baseChar.id}" data-value="" style="width: 70%;">
+                        <div class="custom-select manual-equip" data-char="${baseChar.id}" data-value="" style="width: 65%;">
                             <div class="select-selected bg-dark border-secondary form-select-sm" style="height: 31px; display:flex; align-items:center; color: #ffca28; cursor:pointer;">
                                 <span class="text-truncate" style="color: inherit;">-- Nessuna Tecnica Extra --</span>
                                 <i class="fas fa-chevron-down" style="margin-left:auto;"></i>
@@ -852,9 +884,13 @@ class CollectionApp {
                                 ${manualOptionsCustomHtml}
                             </div>
                         </div>
-                        <select class="form-select form-select-sm bg-dark text-white border-secondary tech-lvl manual-lvl" data-char="${baseChar.id}" data-tech="" style="width: 30%; display: none;">
-                            ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===0 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
-                        </select>
+                        <div class="d-flex justify-content-end" style="width: 35%;">
+                            <select class="form-select form-select-sm bg-dark text-white border-secondary manual-lvl" data-char="${baseChar.id}" data-tech="" style="display: none; width: 100%;">
+                                ${[...Array(10)].map((_, i) => `<option value="${i}" ${i===0 ? 'selected':''}>Lv ${i+1}</option>`).join('')}
+                                <option value="manual">Manuale</option>
+                            </select>
+                            <input type="number" class="form-control form-control-sm border-secondary ms-1 manual-tech-manual-val" data-char="${baseChar.id}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold; background-color:#212529; color:white;" placeholder="Val">
+                        </div>
                     </div>
                     
                     <h6 class="text-info mt-3 border-top border-secondary pt-2"><i class="fas fa-star"></i> Rarità Personaggio</h6>
@@ -879,12 +915,16 @@ class CollectionApp {
             if (!pDef) return '';
             let opts = `<option value="-1">Spenta</option>`;
             pDef.levels.forEach((lvlData, idx) => { opts += `<option value="${idx}">Lv ${idx + 1}</option>`; });
+            opts += `<option value="manual">Manuale</option>`;
             return `
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span class="text-light small text-truncate" style="width: 55%; color:#aaa;" title="${pDef.title}">${pDef.title}</span>
-                                <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl pass-lvl-basic" data-char="${baseChar.id}" data-passive="${pId}" style="width: 40%;">
-                                    ${opts}
-                                </select>
+                                <div class="d-flex justify-content-end" style="width: 40%;">
+                                    <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl pass-lvl-basic" data-char="${baseChar.id}" data-passive="${pId}" style="width: 100%;">
+                                        ${opts}
+                                    </select>
+                                    <input type="number" class="form-control form-control-sm border-secondary ms-1 pass-manual-val" data-char="${baseChar.id}" data-passive="${pId}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold; background-color:#212529; color:white;" placeholder="Val">
+                                </div>
                             </div>
                         `;
         }).join('')}
@@ -895,12 +935,16 @@ class CollectionApp {
             if (!pDef) return '';
             let opts = `<option value="-1">Spenta</option>`;
             pDef.levels.forEach((lvlData, idx) => { opts += `<option value="${idx}">Lv ${idx + 1}</option>`; });
+            opts += `<option value="manual">Manuale</option>`;
             return `
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span class="text-light small text-truncate" style="width: 55%; color:#aaa;" title="${pDef.title}">${pDef.title}</span>
-                                <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl pass-lvl-rarity" data-char="${baseChar.id}" data-passive="${pId}" style="width: 40%;">
-                                    ${opts}
-                                </select>
+                                <div class="d-flex justify-content-end" style="width: 40%;">
+                                    <select class="form-select form-select-sm bg-dark text-white border-secondary pass-lvl pass-lvl-rarity" data-char="${baseChar.id}" data-passive="${pId}" style="width: 100%;">
+                                        ${opts}
+                                    </select>
+                                    <input type="number" class="form-control form-control-sm border-secondary ms-1 pass-manual-val" data-char="${baseChar.id}" data-passive="${pId}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold; background-color:#212529; color:white;" placeholder="Val">
+                                </div>
                             </div>
                         `;
         }).join('')}
@@ -918,7 +962,7 @@ class CollectionApp {
         // --- GESTIONE BARRA DI RICERCA NEL DROPDOWN ---
         const searchInput = col.querySelector('.manual-search-input');
         if (searchInput) {
-            searchInput.addEventListener('click', (e) => e.stopPropagation()); // Evita che il menu si chiuda cliccando la barra
+            searchInput.addEventListener('click', (e) => e.stopPropagation());
 
             searchInput.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
@@ -929,13 +973,12 @@ class CollectionApp {
                 });
             });
 
-            // Resetta la ricerca ogni volta che apro il menu a tendina
             const selectSelected = col.querySelector('.manual-equip .select-selected');
             if (selectSelected) {
                 selectSelected.addEventListener('click', () => {
                     searchInput.value = '';
                     col.querySelectorAll('.manual-opt').forEach(opt => opt.style.display = "flex");
-                    setTimeout(() => searchInput.focus(), 50); // Mette il cursore nella barra pronto per scrivere
+                    setTimeout(() => searchInput.focus(), 50);
                 });
             }
         }
@@ -950,6 +993,7 @@ class CollectionApp {
                 manualLvl.dataset.tech = '';
                 manualLvl.style.display = 'none';
                 manualLvl.value = '0';
+                if(manualLvl.nextElementSibling) manualLvl.nextElementSibling.style.display = 'none';
             }
         });
 
@@ -962,14 +1006,18 @@ class CollectionApp {
                 const lvlSelect = col.querySelector(`.reroll-lvl[data-slot="${slotNum}"]`);
 
                 if (!pId) {
-                    lvlSelect.innerHTML = `<option value="0">Lv 1</option>`;
+                    lvlSelect.innerHTML = `<option value="-1">Spenta</option>`;
                     lvlSelect.disabled = true;
+                    if(lvlSelect.nextElementSibling) lvlSelect.nextElementSibling.style.display = 'none';
                     return;
                 }
 
                 const passiveDef = availableRerolls.find(p => p.id === pId);
                 if (passiveDef) {
-                    lvlSelect.innerHTML = passiveDef.levels.map((_, idx) => `<option value="${idx}">Lv ${idx+1}</option>`).join('');
+                    let opts = `<option value="-1">Spenta</option>`;
+                    opts += passiveDef.levels.map((_, idx) => `<option value="${idx}">Lv ${idx+1}</option>`).join('');
+                    opts += `<option value="manual">Manuale</option>`;
+                    lvlSelect.innerHTML = opts;
                     lvlSelect.disabled = false;
                 }
             });
@@ -1015,43 +1063,61 @@ class CollectionApp {
         const payload = {};
         document.querySelectorAll('.toggle-owned').forEach(toggle => {
             const charId = toggle.dataset.charId;
-            const fullData = this.loadedCharacters[charId];
 
             const charData = {
                 owned: toggle.checked,
                 stats: {},
                 techLevels: {},
+                techManualValues: {},
                 passives: {},
+                passivesManualValues: {},
                 rerollSlots: {},
                 equippedManual: "",
                 rarity: parseInt(document.querySelector(`.char-rarity[data-char="${charId}"]`).value) || 0
             };
 
             if (toggle.checked) {
+                // Estrai Stats
                 document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => {
                     if(inp.value) charData.stats[inp.dataset.stat] = parseInt(inp.value);
                 });
 
+                // Estrai Livelli Mosse Native + Manuali Valori
                 document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => {
                     if (sel.dataset.tech) {
-                        charData.techLevels[sel.dataset.tech] = parseInt(sel.value);
+                        let val = sel.value;
+                        charData.techLevels[sel.dataset.tech] = val === 'manual' ? 'manual' : parseInt(val);
+                        if (val === 'manual' && sel.nextElementSibling) {
+                            charData.techManualValues[sel.dataset.tech] = parseInt(sel.nextElementSibling.value) || 0;
+                        }
                     }
                 });
 
+                // Estrai Passive Native + Manuali Valori
                 document.querySelectorAll(`.pass-lvl[data-char="${charId}"]`).forEach(sel => {
-                    charData.passives[sel.dataset.passive] = parseInt(sel.value);
+                    let val = sel.value;
+                    charData.passives[sel.dataset.passive] = val === 'manual' ? 'manual' : parseInt(val);
+                    if (val === 'manual' && sel.nextElementSibling) {
+                        charData.passivesManualValues[sel.dataset.passive] = parseInt(sel.nextElementSibling.value) || 0;
+                    }
                 });
 
+                // Estrai Passive Reroll + Manuali Valori
                 document.querySelectorAll(`.reroll-id[data-char="${charId}"]`).forEach(sel => {
                     const slot = sel.dataset.slot;
                     const pId = sel.value;
                     const lvlSel = document.querySelector(`.reroll-lvl[data-char="${charId}"][data-slot="${slot}"]`);
                     if (pId && lvlSel && !lvlSel.disabled) {
-                        charData.rerollSlots[slot] = { id: pId, lv: parseInt(lvlSel.value) };
-                        charData.passives[pId] = parseInt(lvlSel.value);
+                        let val = lvlSel.value;
+                        charData.rerollSlots[slot] = { id: pId, lv: val === 'manual' ? 'manual' : parseInt(val) };
+                        charData.passives[pId] = val === 'manual' ? 'manual' : parseInt(val);
+                        if (val === 'manual' && lvlSel.nextElementSibling) {
+                            charData.passivesManualValues[pId] = parseInt(lvlSel.nextElementSibling.value) || 0;
+                        }
                     }
                 });
 
+                // Estrai Mossa Extra
                 const manualSelect = document.querySelector(`.manual-equip[data-char="${charId}"]`);
                 if (manualSelect && manualSelect.dataset.value) {
                     charData.equippedManual = manualSelect.dataset.value;
@@ -1084,7 +1150,6 @@ class CollectionApp {
             const coreMembers = JSON.parse(localStorage.getItem('collection_core_members') || '{}');
             const equipMatrix = JSON.parse(localStorage.getItem('collection_equip_matrix') || '{}');
 
-            // Salvataggio anche dei nuovi dati manuali per syncare tra dispositivi!
             const equipManualMatrix = JSON.parse(localStorage.getItem('collection_equip_manual') || '{}');
             const toggleMode = document.getElementById('toggle-equip-mode');
             const isEquipManualMode = toggleMode ? toggleMode.checked : false;
@@ -1134,7 +1199,10 @@ class CollectionApp {
                 document.querySelectorAll(`.stat-input[data-char="${charId}"]`).forEach(inp => inp.value = '');
             }
 
-            document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => sel.value = '0');
+            document.querySelectorAll(`.tech-lvl[data-char="${charId}"]`).forEach(sel => {
+                sel.value = '0';
+                if(sel.nextElementSibling) sel.nextElementSibling.style.display = 'none';
+            });
 
             document.querySelectorAll(`.reroll-id[data-char="${charId}"]`).forEach(sel => {
                 sel.value = '';
@@ -1149,7 +1217,8 @@ class CollectionApp {
             }
 
             document.querySelectorAll(`.pass-lvl[data-char="${charId}"]`).forEach(sel => {
-                sel.value = sel.options[sel.options.length - 1].value;
+                sel.value = sel.options[sel.options.length - 2].value; // Reset non manuale
+                if(sel.nextElementSibling) sel.nextElementSibling.style.display = 'none';
             });
 
             const raritySel = document.querySelector(`.char-rarity[data-char="${charId}"]`);
@@ -1170,7 +1239,16 @@ class CollectionApp {
 
                     setTimeout(() => {
                         const mLevel = document.querySelector(`.manual-lvl[data-char="${charId}"][data-tech="${data.equippedManual}"]`);
-                        if (mLevel && data.techLevels && data.techLevels[data.equippedManual] !== undefined) mLevel.value = data.techLevels[data.equippedManual];
+                        if (mLevel && data.techLevels && data.techLevels[data.equippedManual] !== undefined) {
+                            let val = data.techLevels[data.equippedManual];
+                            mLevel.value = val;
+                            if (val === 'manual' && data.techManualValues) {
+                                mLevel.nextElementSibling.style.display = 'block';
+                                mLevel.style.width = 'auto';
+                                mLevel.style.flexGrow = '1';
+                                mLevel.nextElementSibling.value = data.techManualValues[data.equippedManual] || 0;
+                            }
+                        }
                     }, 50);
                 }
 
@@ -1178,14 +1256,30 @@ class CollectionApp {
                     for (const [tech, val] of Object.entries(data.techLevels)) {
                         if (tech === data.equippedManual) continue;
                         const sel = document.querySelector(`.tech-lvl[data-char="${charId}"][data-tech="${tech}"]`);
-                        if (sel) sel.value = val;
+                        if (sel) {
+                            sel.value = val;
+                            if (val === 'manual' && data.techManualValues) {
+                                sel.nextElementSibling.style.display = 'block';
+                                sel.style.width = 'auto';
+                                sel.style.flexGrow = '1';
+                                sel.nextElementSibling.value = data.techManualValues[tech] || 0;
+                            }
+                        }
                     }
                 }
 
                 if (data.passives) {
                     for (const [passive, val] of Object.entries(data.passives)) {
                         const sel = document.querySelector(`.pass-lvl[data-char="${charId}"][data-passive="${passive}"]`);
-                        if (sel) sel.value = val;
+                        if (sel) {
+                            sel.value = val;
+                            if (val === 'manual' && data.passivesManualValues) {
+                                sel.nextElementSibling.style.display = 'block';
+                                sel.style.width = 'auto';
+                                sel.style.flexGrow = '1';
+                                sel.nextElementSibling.value = data.passivesManualValues[passive] || 0;
+                            }
+                        }
                     }
                 }
 
@@ -1197,6 +1291,12 @@ class CollectionApp {
                             idSel.value = rData.id;
                             idSel.dispatchEvent(new Event('change'));
                             lvlSel.value = rData.lv;
+                            if (rData.lv === 'manual' && data.passivesManualValues) {
+                                lvlSel.nextElementSibling.style.display = 'block';
+                                lvlSel.style.width = 'auto';
+                                lvlSel.style.flexGrow = '1';
+                                lvlSel.nextElementSibling.value = data.passivesManualValues[rData.id] || 0;
+                            }
                         }
                     }
                 }

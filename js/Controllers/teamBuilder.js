@@ -3,9 +3,32 @@
 import { AuthManager } from '../Services/auth.js';
 import { collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { coachRegistry } from '../Coaches/registry.js';
-import { characterRegistry, fetchCoachData } from '../Core/database.js';
 import { filterCharacters } from '../Core/roster.js';
 import { initCustomSelect, setupGlobalSelectClose } from '../Components/customSelect.js';
+
+// IMPORT UNIFICATI E CORRETTI DAL DATABASE E PARSERS
+import {
+    characterRegistry,
+    fetchCoachData,
+    passivesLibrary,
+    rerollPassivesByRole,
+    techniquesLibrary,
+    universalManualsKeys
+} from '../Core/database.js';
+
+import { extractPosition, extractElement, getStatKeyByIcon } from '../Core/parsers.js';
+import { BattleEngine } from '../Core/BattleEngine.js';
+import { calculateCoachBuffs } from '../Core/calculator.js';
+import { elementMap, roleMap } from '../Components/tagDictionary.js';
+
+// Funzione Helper per tradurre il tipo di mossa
+function getMoveKindByStat(statKey) {
+    if (statKey === "Tiro") return "Tiro";
+    if (statKey === "Tecnica") return "Dribbling";
+    if (statKey === "Blocco") return "Blocco";
+    if (statKey === "Parata") return "Parata";
+    return "All";
+}
 
 class TeamDiscussionManager {
     constructor() {
@@ -134,6 +157,13 @@ class TeamBuilderController {
 
         const btnPublishMeta = document.getElementById('btn-publish-meta');
         if (btnPublishMeta) btnPublishMeta.addEventListener('click', () => this.publishToMeta());
+
+        // BOTTONI SIMULATORE
+        const btnSimulate = document.getElementById('btn-simulate-buffs');
+        if (btnSimulate) btnSimulate.addEventListener('click', () => this.openSimulatorModal());
+
+        const btnRunEngine = document.getElementById('btn-run-engine');
+        if (btnRunEngine) btnRunEngine.addEventListener('click', () => this.runSimulationEngine());
     }
 
     saveTeamState() {
@@ -291,7 +321,6 @@ class TeamBuilderController {
             const isConditionClass = conditionSlots.includes(slot.number) ? 'condition-slot' : '';
 
             if (playerId) {
-                // FIX: Verifica se il giocatore esiste ancora nel database
                 const player = characterRegistry.find(c => c.id === playerId);
                 if (player) {
                     return `
@@ -301,7 +330,6 @@ class TeamBuilderController {
                         </div>
                     `;
                 } else {
-                    // Se il giocatore è stato rimosso dal database, lo puliamo dal roster!
                     delete this.teamRoster[slot.number];
                     this.saveTeamState();
                     return `
@@ -425,9 +453,18 @@ class TeamBuilderController {
     checkShareButtonVisibility() {
         const btnShare = document.getElementById('btn-share-team');
         const btnPublishMeta = document.getElementById('btn-publish-meta');
+        const btnSimulate = document.getElementById('btn-simulate-buffs');
 
         const hasPlayers = Object.keys(this.teamRoster).length > 0;
 
+        // Mostra simulatore se ci sono giocatori
+        if (hasPlayers) {
+            if (btnSimulate) btnSimulate.style.display = 'block';
+        } else {
+            if (btnSimulate) btnSimulate.style.display = 'none';
+        }
+
+        // Mostra Condivisione/Promozione se loggato
         if (this.auth && this.auth.user && hasPlayers) {
             if (btnShare) btnShare.style.display = 'block';
 
@@ -628,6 +665,485 @@ class TeamBuilderController {
                 }
             ]
         }).start();
+    }
+
+    // =========================================================================
+    //  NUOVE FUNZIONI SIMULATORE MANUALE (PASSIVE, REROLL E TECNICHE CON "MANUALE")
+    // =========================================================================
+
+    async openSimulatorModal() {
+        const container = document.getElementById('sim-players-container');
+        container.innerHTML = '<div class="text-center text-primary py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><div class="fw-bold mt-2">Caricamento dati giocatori...</div></div>';
+
+        const successMsg = document.getElementById('sim-total-power');
+        if(successMsg) successMsg.style.display = 'none';
+
+        let cardsHtml = '';
+
+        for (const [slotNum, charId] of Object.entries(this.teamRoster)) {
+            const baseChar = characterRegistry.find(c => c.id === charId);
+            if (!baseChar) continue;
+
+            let fullPlayer;
+            try {
+                const module = await import(`../Characters/${charId}.js`);
+                fullPlayer = module.charData;
+            } catch (e) {
+                console.error("Impossibile caricare il giocatore:", charId);
+                continue;
+            }
+
+            const logicalRole = roleMap[baseChar.position] || baseChar.position;
+            const logicalElement = elementMap[baseChar.element] || baseChar.element;
+
+            // --- 1. GENERAZIONE MOSSE NATIVE E EXTRA (COLONNA CENTRALE) ---
+            const nativeTechsHtml = (fullPlayer.myTechniques || []).map(techKey => {
+                const tDef = techniquesLibrary[techKey];
+                const tName = tDef ? tDef.name : techKey;
+                const splitIdx = tName.indexOf(' (');
+                const cleanName = splitIdx !== -1 ? tName.substring(0, splitIdx) : tName;
+
+                return `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small fw-bold text-dark text-truncate" style="width:50%;" title="${tName}">${cleanName}</span>
+                        <div class="d-flex justify-content-end" style="width: 48%;">
+                            <select class="form-select form-select-sm shadow-sm border-success sim-tech-lvl" data-slot="${slotNum}" data-tech="${techKey}" style="width: 100%; font-weight: bold; color: #0b1a42;">
+                                ${[...Array(10)].map((_, i) => `<option value="${i}">Lv ${i+1}</option>`).join('')}
+                                <option value="manual">Manuale</option>
+                            </select>
+                            <input type="number" class="form-control form-control-sm border-success ms-1 sim-tech-manual-val" data-slot="${slotNum}" data-tech="${techKey}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold;" placeholder="Val">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            let manualOptionsHtml = `<option value="">-- Nessuna --</option>`;
+            universalManualsKeys.forEach(mKey => {
+                if (!(fullPlayer.myTechniques || []).includes(mKey)) {
+                    const tDef = techniquesLibrary[mKey];
+                    const tName = tDef ? tDef.name : mKey;
+                    const splitIdx = tName.indexOf(' (');
+                    const cleanName = splitIdx !== -1 ? tName.substring(0, splitIdx) : tName;
+                    manualOptionsHtml += `<option value="${mKey}">${cleanName}</option>`;
+                }
+            });
+
+            const manualTechHtml = `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <select class="form-select form-select-sm shadow-sm border-warning sim-manual-tech-id" data-slot="${slotNum}" style="width: 48%; font-size: 0.75rem; font-weight: bold;">
+                        ${manualOptionsHtml}
+                    </select>
+                    <div class="d-flex justify-content-end" style="width: 48%;">
+                        <select class="form-select form-select-sm shadow-sm border-warning sim-manual-tech-lvl" data-slot="${slotNum}" style="width: 100%; font-weight: bold; color: #0b1a42;" disabled>
+                            <option value="0">Lv 1</option>
+                        </select>
+                        <input type="number" class="form-control form-control-sm border-warning ms-1 sim-manual-tech-manual-val" data-slot="${slotNum}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold;" placeholder="Val">
+                    </div>
+                </div>
+            `;
+
+            // --- 2. GENERAZIONE PASSIVE NATIVE E REROLL (COLONNA DESTRA) ---
+            const allNativePassives = (fullPlayer.myBasicPassivesIds || []).concat(fullPlayer.myRarityPassivesIds || []);
+            const passivesHtml = allNativePassives.map(pid => {
+                const pDef = passivesLibrary.find(pl => pl.id === pid);
+                if(!pDef) return '';
+                const options = pDef.levels.map((lvl, i) => `<option value="${i}" ${i===9 ? 'selected' : ''}>Liv ${i+1}</option>`).join('');
+                return `
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small fw-bold text-dark text-truncate" style="width: 50%;" title="${pDef.title}">${pDef.title}</span>
+                        <div class="d-flex justify-content-end" style="width: 48%;">
+                            <select class="form-select form-select-sm sim-passive-select shadow-sm border-primary" data-slot="${slotNum}" data-pid="${pid}" style="width: 100%; font-weight: bold; color: #0b1a42;">
+                                <option value="-1">Spenta</option>
+                                ${options}
+                                <option value="manual">Manuale</option>
+                            </select>
+                            <input type="number" class="form-control form-control-sm border-primary ms-1 sim-passive-manual-val" data-slot="${slotNum}" data-pid="${pid}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold;" placeholder="Val">
+                        </div>
+                    </div>`;
+            }).join('');
+
+            const extractedRole = extractPosition(baseChar.position) || "FW";
+            const availableRerolls = rerollPassivesByRole[extractedRole] || [];
+
+            let rerollOptionsHtml = `<option value="">-- Seleziona Reroll --</option>`;
+            availableRerolls.forEach(p => {
+                rerollOptionsHtml += `<option value="${p.id}">${p.title}</option>`;
+            });
+
+            let rerollHtml = '';
+            for (let i = 1; i <= 3; i++) {
+                rerollHtml += `
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <select class="form-select form-select-sm shadow-sm border-secondary sim-reroll-id" data-slot="${slotNum}" data-rindex="${i}" style="width: 50%; font-size: 0.75rem;">
+                            ${rerollOptionsHtml}
+                        </select>
+                        <div class="d-flex justify-content-end" style="width: 48%;">
+                            <select class="form-select form-select-sm shadow-sm border-secondary sim-reroll-lvl" data-slot="${slotNum}" data-rindex="${i}" style="width: 100%; font-weight: bold; color: #0b1a42;" disabled>
+                                <option value="-1">Spenta</option>
+                            </select>
+                            <input type="number" class="form-control form-control-sm border-secondary ms-1 sim-reroll-manual-val" data-slot="${slotNum}" data-rindex="${i}" style="display:none; width: 60px; padding: 2px 4px; font-weight:bold;" placeholder="Val">
+                        </div>
+                    </div>
+                `;
+            }
+
+            // CREAZIONE ACCORDION E MODAL
+            cardsHtml += `
+                <div class="accordion-item shadow-sm border-0 mb-2" style="border-radius: 10px; overflow: hidden;">
+                    
+                    <h2 class="accordion-header m-0" id="heading-sim-${slotNum}">
+                        <button class="accordion-button collapsed py-2 px-3 bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-sim-${slotNum}" style="border-left: 5px solid #1a73e8; box-shadow: none;">
+                            <div class="d-flex align-items-center w-100 pe-2">
+                                <div class="text-center position-relative me-3">
+                                    <img src="${baseChar.thumb}" class="rounded-circle shadow-sm bg-dark" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #ffca28;">
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark border border-warning" style="font-size: 0.65rem;">${slotNum}</span>
+                                </div>
+                                <div style="width: 140px;">
+                                    <div class="fw-bold text-truncate" style="color: #0b1a42; font-size: 1rem;" title="${baseChar.name}">${baseChar.name}</div>
+                                    <div class="small fw-bold text-secondary">
+                                        <img src="${baseChar.element}" style="width:12px; margin-right:2px;"> ${logicalElement} | 
+                                        <img src="${baseChar.position}" style="width:12px; margin-right:2px;"> ${logicalRole}
+                                    </div>
+                                </div>
+                                <div class="ms-auto text-end sim-results-box" id="sim-result-${slotNum}" style="min-width: 250px;">
+                                    <span class="badge bg-secondary text-light mt-2">Premi Calcola per i risultati</span>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+
+                    <div id="collapse-sim-${slotNum}" class="accordion-collapse collapse" data-bs-parent="#sim-players-container">
+                        <div class="accordion-body bg-light border-top border-secondary-subtle py-3 px-4">
+                            
+                            <div class="row w-100 m-0">
+                                <!-- Colonna 1: Statistiche Manuali -->
+                                <div class="col-12 col-md-4 border-end border-secondary-subtle mb-3 mb-md-0 pe-md-4">
+                                    <div class="fw-bold mb-3" style="font-size: 0.85rem; color: #0b1a42;"><i class="fas fa-chart-bar me-1"></i> STATISTICHE BASE</div>
+                                    <div class="d-flex flex-column gap-2">
+                                        <div class="input-group input-group-sm shadow-sm">
+                                            <span class="input-group-text bg-danger text-white border-danger fw-bold" style="width:45px;">Tir</span>
+                                            <input type="number" class="form-control sim-stat-input text-center fw-bold" data-slot="${slotNum}" data-stat="Tiro" value="${fullPlayer.stats?.Tiro?.lv340 || 100}">
+                                        </div>
+                                        <div class="input-group input-group-sm shadow-sm">
+                                            <span class="input-group-text bg-success text-white border-success fw-bold" style="width:45px;">Tec</span>
+                                            <input type="number" class="form-control sim-stat-input text-center fw-bold" data-slot="${slotNum}" data-stat="Tecnica" value="${fullPlayer.stats?.Tecnica?.lv340 || 100}">
+                                        </div>
+                                        <div class="input-group input-group-sm shadow-sm">
+                                            <span class="input-group-text bg-secondary text-white border-secondary fw-bold" style="width:45px;">Blc</span>
+                                            <input type="number" class="form-control sim-stat-input text-center fw-bold" data-slot="${slotNum}" data-stat="Blocco" value="${fullPlayer.stats?.Blocco?.lv340 || 100}">
+                                        </div>
+                                        <div class="input-group input-group-sm shadow-sm">
+                                            <span class="input-group-text bg-warning text-dark border-warning fw-bold" style="width:45px;">Par</span>
+                                            <input type="number" class="form-control sim-stat-input text-center fw-bold" data-slot="${slotNum}" data-stat="Parata" value="${fullPlayer.stats?.Parata?.lv340 || 100}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Colonna 2: Mosse -->
+                                <div class="col-12 col-md-4 border-end border-secondary-subtle mb-3 mb-md-0 px-md-3">
+                                    <div class="fw-bold mb-3" style="font-size: 0.85rem; color: #198754;"><i class="fas fa-running me-1"></i> LIVELLO MOSSE</div>
+                                    ${nativeTechsHtml}
+                                    <div class="fw-bold mb-2 mt-4 text-warning" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> INSEGNA TECNICA</div>
+                                    ${manualTechHtml}
+                                </div>
+
+                                <!-- Colonna 3: Passive -->
+                                <div class="col-12 col-md-4 ps-md-3">
+                                    <div class="fw-bold mb-3" style="font-size: 0.85rem; color: #1a73e8;"><i class="fas fa-bolt me-1"></i> PASSIVE NATIVE</div>
+                                    ${passivesHtml || '<span class="text-muted small fst-italic">Nessuna passiva assegnata.</span>'}
+                                    
+                                    <div class="fw-bold mb-2 mt-4" style="font-size: 0.85rem; color: #d32f2f;"><i class="fas fa-dice me-1"></i> PASSIVE REROLL</div>
+                                    ${rerollHtml}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        container.innerHTML = cardsHtml;
+
+        // Listener Globale per far comparire il box di input quando si seleziona "Manuale"
+        container.addEventListener('change', (e) => {
+            if (e.target.tagName === 'SELECT' &&
+                (e.target.classList.contains('sim-tech-lvl') ||
+                    e.target.classList.contains('sim-manual-tech-lvl') ||
+                    e.target.classList.contains('sim-passive-select') ||
+                    e.target.classList.contains('sim-reroll-lvl'))
+            ) {
+                const input = e.target.nextElementSibling;
+                if (input && input.tagName === 'INPUT') {
+                    if (e.target.value === 'manual') {
+                        input.style.display = 'block';
+                        e.target.style.width = 'auto';
+                        e.target.style.flexGrow = '1';
+                    } else {
+                        input.style.display = 'none';
+                        e.target.style.width = '100%';
+                        e.target.style.flexGrow = '0';
+                    }
+                }
+            }
+        });
+
+        // Listener: Attiva livello passiva Reroll
+        container.querySelectorAll('.sim-reroll-id').forEach(sel => {
+            sel.addEventListener('change', (e) => {
+                const slot = e.target.dataset.slot;
+                const rIndex = e.target.dataset.rindex;
+                const pId = e.target.value;
+                const lvlSelect = container.querySelector(`.sim-reroll-lvl[data-slot="${slot}"][data-rindex="${rIndex}"]`);
+
+                if (!pId) {
+                    lvlSelect.innerHTML = `<option value="-1">Spenta</option>`;
+                    lvlSelect.disabled = true;
+                    if(lvlSelect.nextElementSibling) lvlSelect.nextElementSibling.style.display = 'none';
+                    return;
+                }
+
+                const charId = this.teamRoster[slot];
+                const baseChar = characterRegistry.find(c => c.id === charId);
+                const role = extractPosition(baseChar?.position) || "FW";
+                const rList = rerollPassivesByRole[role] || [];
+
+                const pDef = rList.find(p => p.id === pId);
+
+                if (pDef) {
+                    let opts = `<option value="-1">Spenta</option>`;
+                    opts += pDef.levels.map((_, idx) => `<option value="${idx}" ${idx===9 ? 'selected' : ''}>Liv ${idx+1}</option>`).join('');
+                    opts += `<option value="manual">Manuale</option>`;
+                    lvlSelect.innerHTML = opts;
+                    lvlSelect.disabled = false;
+                }
+            });
+        });
+
+        // Listener: Attiva livello Mossa Manuale
+        container.querySelectorAll('.sim-manual-tech-id').forEach(sel => {
+            sel.addEventListener('change', (e) => {
+                const slot = e.target.dataset.slot;
+                const lvlSelect = container.querySelector(`.sim-manual-tech-lvl[data-slot="${slot}"]`);
+                if (e.target.value) {
+                    let opts = [...Array(10)].map((_, i) => `<option value="${i}">Lv ${i+1}</option>`).join('');
+                    opts += `<option value="manual">Manuale</option>`;
+                    lvlSelect.innerHTML = opts;
+                    lvlSelect.disabled = false;
+                } else {
+                    lvlSelect.innerHTML = `<option value="0">Lv 1</option>`;
+                    lvlSelect.disabled = true;
+                    if(lvlSelect.nextElementSibling) lvlSelect.nextElementSibling.style.display = 'none';
+                }
+            });
+        });
+
+        const modal = new bootstrap.Modal(document.getElementById('simulatorModal'));
+        modal.show();
+    }
+
+    async runSimulationEngine() {
+        if (!this.activeCoachDb) { alert("Scegli un allenatore prima!"); return; }
+
+        let rosterForEngine = [];
+
+        for (const [slotNum, charId] of Object.entries(this.teamRoster)) {
+            let fullPlayer;
+            try {
+                const module = await import(`../Characters/${charId}.js`);
+                fullPlayer = module.charData;
+            } catch(e) { continue; }
+
+            let pData = { ...fullPlayer };
+
+            pData.customBaseStats = {
+                Tiro: parseInt(document.querySelector(`input.sim-stat-input[data-slot="${slotNum}"][data-stat="Tiro"]`)?.value || 0),
+                Tecnica: parseInt(document.querySelector(`input.sim-stat-input[data-slot="${slotNum}"][data-stat="Tecnica"]`)?.value || 0),
+                Blocco: parseInt(document.querySelector(`input.sim-stat-input[data-slot="${slotNum}"][data-stat="Blocco"]`)?.value || 0),
+                Parata: parseInt(document.querySelector(`input.sim-stat-input[data-slot="${slotNum}"][data-stat="Parata"]`)?.value || 0),
+            };
+
+            pData.selectedPassiveLevels = {};
+            let activePassivesList = [];
+
+            // Funzione Helper per processare le passive manuali iniettando un finto livello 99+slot nel BattleEngine
+            const processPassive = (select) => {
+                const val = select.value;
+                const pid = select.dataset.pid || select.value; // Nelle reroll l'ID è nel select affianco
+
+                if (val === 'manual') {
+                    const manualVal = parseInt(select.nextElementSibling.value) || 0;
+                    const pDef = passivesLibrary.find(p => p.id === pid);
+                    if (pDef) {
+                        const fakeLvlIdx = 99 + parseInt(slotNum);
+                        pDef.levels[fakeLvlIdx] = { val: manualVal, power: manualVal, val2: manualVal };
+                        pData.selectedPassiveLevels[pid] = fakeLvlIdx;
+                        activePassivesList.push(pid);
+                    }
+                } else if(parseInt(val) !== -1) {
+                    pData.selectedPassiveLevels[pid] = parseInt(val);
+                    activePassivesList.push(pid);
+                }
+            };
+
+            // Legge i livelli scelti per le passive NATIVE
+            document.querySelectorAll(`select.sim-passive-select[data-slot="${slotNum}"]`).forEach(select => processPassive(select));
+
+            // Legge le passive REROLL aggiunte a mano
+            document.querySelectorAll(`select.sim-reroll-id[data-slot="${slotNum}"]`).forEach(select => {
+                const pId = select.value;
+                const rIndex = select.dataset.rindex;
+                const lvlSelect = document.querySelector(`select.sim-reroll-lvl[data-slot="${slotNum}"][data-rindex="${rIndex}"]`);
+
+                if (pId && lvlSelect && lvlSelect.value !== '-1') {
+                    lvlSelect.dataset.pid = pId; // Assegniamo temporaneamente l'id per la funzione processPassive
+                    processPassive(lvlSelect);
+                }
+            });
+
+            // GESTIONE DELLE MOSSE E CALCOLO BASE POWER (Native + Extra)
+            pData.techData = [];
+
+            // Mosse Native
+            document.querySelectorAll(`select.sim-tech-lvl[data-slot="${slotNum}"]`).forEach(sel => {
+                const techKey = sel.dataset.tech;
+                const val = sel.value;
+                let basePower = 0;
+                const tDef = techniquesLibrary[techKey];
+
+                if (val === 'manual') {
+                    basePower = parseInt(sel.nextElementSibling.value) || 0;
+                } else {
+                    const lvl = parseInt(val) || 0;
+                    basePower = tDef && tDef.power ? (parseInt(tDef.power[lvl]) || 0) : 0;
+                }
+
+                if(tDef) {
+                    pData.techData.push({
+                        key: techKey,
+                        name: tDef.name,
+                        basePower,
+                        element: extractElement(tDef.elementIcon),
+                        kind: getMoveKindByStat(getStatKeyByIcon(tDef.icon))
+                    });
+                }
+            });
+
+            // Mossa Manuale Extra
+            const manTechSel = document.querySelector(`select.sim-manual-tech-id[data-slot="${slotNum}"]`);
+            const manLvlSel = document.querySelector(`select.sim-manual-tech-lvl[data-slot="${slotNum}"]`);
+            if (manTechSel && manTechSel.value) {
+                const techKey = manTechSel.value;
+                const val = manLvlSel.value;
+                let basePower = 0;
+                const tDef = techniquesLibrary[techKey];
+
+                if (val === 'manual') {
+                    basePower = parseInt(manLvlSel.nextElementSibling.value) || 0;
+                } else {
+                    const lvl = parseInt(val) || 0;
+                    basePower = tDef && tDef.power ? (parseInt(tDef.power[lvl]) || 0) : 0;
+                }
+
+                if(tDef) {
+                    pData.myTechniques.push(techKey); // Aggiunta al roster per il Battle Engine
+                    pData.techData.push({
+                        key: techKey,
+                        name: tDef.name,
+                        basePower,
+                        element: extractElement(tDef.elementIcon),
+                        kind: getMoveKindByStat(getStatKeyByIcon(tDef.icon))
+                    });
+                }
+            }
+
+            pData.myBasicPassivesIds = activePassivesList;
+            pData.myRarityPassivesIds = [];
+
+            rosterForEngine.push(pData);
+        }
+
+        const engine = new BattleEngine();
+        engine.startMatch(rosterForEngine, []);
+
+        rosterForEngine.forEach((pData, index) => {
+            const enginePlayer = engine.homeTeam[index];
+            const coachBuffs = calculateCoachBuffs(pData, this.activeCoachDb, 10);
+
+            enginePlayer.matchStats.Tiro += coachBuffs.statBuffs.Tiro || 0;
+            enginePlayer.matchStats.Tecnica += coachBuffs.statBuffs.Tecnica || 0;
+            enginePlayer.matchStats.Blocco += coachBuffs.statBuffs.Blocco || 0;
+            enginePlayer.matchStats.Parata += coachBuffs.statBuffs.Parata || 0;
+
+            // Salviamo i buff potenza dell'allenatore per applicarli dopo alle mosse
+            pData.coachPowerBuffs = coachBuffs.powerBuffs;
+        });
+
+        rosterForEngine.forEach((pData, index) => {
+            const slotNum = Object.keys(this.teamRoster)[index];
+            const ePlayer = engine.homeTeam[index];
+            const resBox = document.getElementById(`sim-result-${slotNum}`);
+
+            // Statistiche Base Finali
+            const diffTiro = ePlayer.matchStats.Tiro - pData.customBaseStats.Tiro;
+            const diffTec = ePlayer.matchStats.Tecnica - pData.customBaseStats.Tecnica;
+            const diffBlo = ePlayer.matchStats.Blocco - pData.customBaseStats.Blocco;
+            const diffPar = ePlayer.matchStats.Parata - pData.customBaseStats.Parata;
+
+            let statsHtml = `
+                <div class="d-flex flex-column gap-1 pe-2 border-end border-secondary-subtle">
+                    <div class="fw-bold" style="color: #dc3545; font-size: 0.9rem;">Tir: ${ePlayer.matchStats.Tiro} <span class="badge bg-danger-subtle text-danger ms-1">+${diffTiro}</span></div>
+                    <div class="fw-bold" style="color: #198754; font-size: 0.9rem;">Tec: ${ePlayer.matchStats.Tecnica} <span class="badge bg-success-subtle text-success ms-1">+${diffTec}</span></div>
+                    <div class="fw-bold" style="color: #6c757d; font-size: 0.9rem;">Blc: ${ePlayer.matchStats.Blocco} <span class="badge bg-secondary-subtle text-secondary ms-1">+${diffBlo}</span></div>
+                    <div class="fw-bold" style="color: #ffc107; font-size: 0.9rem; text-shadow: 0 0 1px #000;">Par: ${ePlayer.matchStats.Parata} <span class="badge bg-warning-subtle text-dark ms-1">+${diffPar}</span></div>
+                </div>
+            `;
+
+            // Potenza delle Mosse
+            let techsHtml = '';
+            if (pData.techData && pData.techData.length > 0) {
+                techsHtml += '<div class="d-flex flex-column gap-1 ps-2 justify-content-center">';
+
+                pData.techData.forEach(t => {
+                    let passivePowerBuff = 0;
+
+                    // Somma Buff del Battle Engine
+                    ePlayer.moveBuffs.forEach(buff => {
+                        let applicabile = true;
+                        if (buff.kind && buff.kind !== "All" && buff.kind !== t.kind) applicabile = false;
+                        if (buff.element && buff.element !== "All" && buff.element !== t.element) applicabile = false;
+                        if (buff.moveName && buff.moveName !== t.name && buff.moveName !== t.key) applicabile = false;
+                        if (applicabile) passivePowerBuff += buff.bonus;
+                    });
+
+                    // Somma Buff dell'Allenatore
+                    if (pData.coachPowerBuffs && pData.coachPowerBuffs[t.kind]) {
+                        passivePowerBuff += pData.coachPowerBuffs[t.kind];
+                    }
+
+                    const totalPower = t.basePower + passivePowerBuff;
+                    const cleanName = t.name.indexOf(' (') !== -1 ? t.name.substring(0, t.name.indexOf(' (')) : t.name;
+
+                    techsHtml += `
+                        <div class="fw-bold text-dark text-truncate" style="font-size: 0.85rem; max-width: 140px;" title="${t.name}">
+                            ${cleanName}: <span class="text-primary">${totalPower}</span> <span class="badge bg-primary-subtle text-primary ms-1">+${passivePowerBuff}</span>
+                        </div>
+                    `;
+                });
+
+                techsHtml += '</div>';
+            }
+
+            resBox.innerHTML = `
+                <div class="d-flex align-items-center justify-content-end text-start">
+                    ${statsHtml}
+                    ${techsHtml}
+                </div>
+            `;
+        });
+
+        const successMsg = document.getElementById('sim-total-power');
+        if(successMsg) successMsg.style.display = 'block';
     }
 }
 

@@ -123,22 +123,8 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            {
-                targetScope: "self",
-                targetRoles: [],
-                targetElements: [],
-                type: "power",
-                moveKind: "All",
-                moveElement: "Wind",
-                valueRef: "power"
-            },
-            {
-                targetScope: "self",
-                targetRoles: [],
-                targetElements: [],
-                type: "crit_rate",
-                valueRef: "crt"
-            }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Wind", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "crit_buff", valueRef: "crt" }
         ]
     },
     {
@@ -317,7 +303,7 @@ export const alwaysPassives = [
         conditions: null,
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" },
-            { targetScope: "team", targetRoles: [], targetElements: [], type: "foul_reduction", valueRef: "val2" }
+            { targetScope: "team", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "foul_debuff", valueRef: "val2" }
         ]
     },
 
@@ -672,7 +658,7 @@ export const alwaysPassives = [
                 targetScope: "allies",
                 targetRoles: [],
                 targetElements: [],
-                targetTags: ["Icon_Tag_Team_Raimon", "Icon_Tag_Team_Emperors"],
+                targetTags: ["Raimon", "Royal Academy"],
                 type: "stat",
                 statName: "Blocco",
                 valueRef: "val"
@@ -681,7 +667,7 @@ export const alwaysPassives = [
                 targetScope: "allies",
                 targetRoles: [],
                 targetElements: [],
-                targetTags: ["Icon_Tag_Team_Raimon", "Icon_Tag_Team_Emperors"],
+                targetTags: ["Raimon", "Royal Academy"],
                 type: "stat",
                 statName: "Tecnica",
                 valueRef: "val"
@@ -831,7 +817,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "allies", targetRoles: [], targetElements: [], targetTags: ["Icon_Tag_Team_Raimon"], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: [], targetTags: ["Raimon"], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
     },
     {
@@ -1403,7 +1389,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "allies", targetRoles: [], targetElements: [], targetTags: ["Icon_Tag_Team_Emperors"], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "allies", targetRoles: [], targetElements: [], targetTags: ["Royal Academy"], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -1477,7 +1463,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "enemy", targetRoles: ["DF"], targetElements: [], type: "foul_rate", valueRef: "foul" },
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "move_modifier", modifierType: "foul_buff", valueRef: "foul" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "tech" }
         ]
     },
@@ -1507,7 +1493,7 @@ export const alwaysPassives = [
     {
         title: "Tasso Fallo - / Potenza Blocco + (ファウル率減少＆ブロックパワー＋)",
         id: "101018004",
-        template: "All'inizio della partita, riduce il proprio tasso di fallo di {FOUL}% e aumenta la potenza delle proprie tecniche di Blocco di {BLOCK}.",
+        template: "All'inizio della partita, riduce il proprio tasso di fallo di -{FOUL}% e aumenta la potenza delle proprie tecniche di Blocco di {BLOCK}.",
         levels: [
             { foul: 300, block: 9, req: "Si sblocca a: Advanced Player +" },
             { foul: 400, block: 12, req: "Si sblocca a: Top Player +" },
@@ -1516,7 +1502,7 @@ export const alwaysPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "foul_reduction", valueRef: "foul" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "foul_debuff", valueRef: "foul" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "block" }
         ]
     },
@@ -2092,10 +2078,10 @@ export const alwaysPassives = [
             { val: 862, req: "Lv. 311" }
         ],
         category: "Always",
-        conditions: { type: "element_count", element: "Forest", minCount: 3 },
+        conditions: { requiresElements: ["Forest"], requiresCount: 3 },
         effects: [
-            { targetScope: "team", targetRoles: ["DF"], targetElements: ["Forest"], type: "stat", statName: "Bloqueo", valueRef: "val" },
-            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parada", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["DF"], targetElements: ["Forest"], type: "stat", statName: "Blocco", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
         ]
     },
 
@@ -2111,7 +2097,7 @@ export const alwaysPassives = [
         category: "Rarity",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Bloqueo", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val1" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "TP", valueRef: "val2" }
         ]
     },
@@ -2134,7 +2120,7 @@ export const alwaysPassives = [
             { val: 772, req: "Si sblocca con personaggio Lv. 321" }
         ],
         category: "Always",
-        conditions: { tag: "Striker" },
+        conditions: { requiresTags: ["Striker"], requiresCount: 1 },
         effects: [
             { targetScope: "team", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -2335,26 +2321,26 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Tiro FW Albero - (林ＦＷキック－)",
+        title: "Tiro FW Albero - (林ＦＷキック－)", // Passiva duplicata ma con id diverso in stats_always
         id: "101145001",
-        template: "All'inizio della partita, riduce il Tiro dei FW avversari di elemento Albero di {VAL}.",
+        template: "All'inizio della partita, riduce il Tiro dei FW avversari di elemento Albero di -{VAL}.",
         levels: [
-            { val: -120, req: "Si sblocca con personaggio Lv. 1" },
-            { val: -161, req: "Si sblocca con personaggio Lv. 21" },
-            { val: -201, req: "Si sblocca con personaggio Lv. 71" },
-            { val: -241, req: "Si sblocca con personaggio Lv. 101" },
-            { val: -322, req: "Si sblocca con personaggio Lv. 131" },
-            { val: -403, req: "Si sblocca con personaggio Lv. 161" },
-            { val: -483, req: "Si sblocca con personaggio Lv. 191" },
-            { val: -564, req: "Si sblocca con personaggio Lv. 221" },
-            { val: -685, req: "Si sblocca con personaggio Lv. 251" },
-            { val: -806, req: "Si sblocca con personaggio Lv. 281" },
-            { val: -926, req: "Si sblocca con personaggio Lv. 311" }
+            { val: 120, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 161, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 241, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 322, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 483, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 564, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 685, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 926, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat_debuff", statName: "Tiro", valueRef: "val" }
         ]
     },
 
@@ -2487,26 +2473,26 @@ export const alwaysPassives = [
     },
 
     {
-        title: "Tiro FW Legno - (林ＦＷキック－)",
+        title: "Tiro FW Albero - (林ＦＷキック－)",
         id: "101174001",
-        template: "All'inizio della partita, riduce il Tiro dei FW avversari di elemento Legno di {VAL}.",
+        template: "All'inizio della partita, riduce il Tiro dei FW avversari di elemento Albero di -{VAL}.",
         levels: [
-            { val: -120, req: "Si sblocca con personaggio Lv. 1" },
-            { val: -161, req: "Si sblocca con personaggio Lv. 21" },
-            { val: -201, req: "Si sblocca con personaggio Lv. 71" },
-            { val: -241, req: "Si sblocca con personaggio Lv. 101" },
-            { val: -322, req: "Si sblocca con personaggio Lv. 131" },
-            { val: -403, req: "Si sblocca con personaggio Lv. 161" },
-            { val: -483, req: "Si sblocca con personaggio Lv. 191" },
-            { val: -564, req: "Si sblocca con personaggio Lv. 221" },
-            { val: -685, req: "Si sblocca con personaggio Lv. 251" },
-            { val: -806, req: "Si sblocca con personaggio Lv. 281" },
-            { val: -926, req: "Si sblocca con personaggio Lv. 311" }
+            { val: 120, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 161, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 241, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 322, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 483, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 564, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 685, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 926, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat_debuff", statName: "Tiro", valueRef: "val" }
         ]
     },
 

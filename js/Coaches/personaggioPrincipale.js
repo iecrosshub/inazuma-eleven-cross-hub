@@ -5,7 +5,7 @@ const baseInfo = coachRegistry.find(coach => coach.id === "personaggioPrincipale
 
 export const coachData = {
     ...baseInfo,
-    artwork: "img/Coaches/PersonaggioPrincipale.png", // Modifica con la tua immagine a figura intera
+    artwork: "img/Coaches/PersonaggioPrincipale.png",
     level: 10,
     formationName: "F-Beginner",
     formationConditions: [
@@ -18,8 +18,8 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddKick.png", "img/Coaches/PassiveEffectIcon_AddTechnic.png"],
         text: "All'inizio della partita:<br><strong>Tutti gli alleati:</strong> statistica di Tiro +600<br><strong>Tutti gli alleati:</strong> statistica di Tecnica +600",
         actions: [
-            { target: "team", stat: "Tiro", type: "base_stat", amount: 600, condition: "always" },
-            { target: "team", stat: "Tecnica", type: "base_stat", amount: 600, condition: "always" }
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: [], statName: "Tiro", type: "stat", amount: 600, condition: "always" },
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: [], statName: "Tecnica", type: "stat", amount: 600, condition: "always" }
         ]
     },
     coachPassive: {
@@ -40,11 +40,12 @@ export const coachData = {
             { val: 2800, val2: 4000, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_recommended_DF", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "always" },
-            { target: "team_recommended_GK", stat: "Parata", type: "base_stat", amount: "{VAL2}", condition: "always" }
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], targetTags: [], statName: "Blocco", type: "stat", amount: "{VAL}", condition: "always" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], targetTags: [], statName: "Parata", type: "stat", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [
+        // ... slots invariati ...
         { number: 1, position: "FW", x: 37, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 67, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 5, position: "MF", x: 15, y: 40, baseAsset: "img/Position/Img_MFBase.png" },

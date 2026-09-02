@@ -19,8 +19,8 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddTechnic.png", "img/Coaches/PassiveEffectIcon_AddBlock.png"],
         text: "All'inizio della partita:<br><strong>Alleati MF consigliati:</strong> statistica di Tecnica +2000<br><strong>Alleati DF consigliati:</strong> statistica di Blocco +1200",
         actions: [
-            { target: "team_recommended_MF", stat: "Tecnica", type: "base_stat", amount: 2000, condition: "always" },
-            { target: "team_recommended_DF", stat: "Blocco", type: "base_stat", amount: 1200, condition: "always" }
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], targetTags: [], statName: "Tecnica", type: "stat", amount: 2000, condition: "always" },
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], targetTags: [], statName: "Blocco", type: "stat", amount: 1200, condition: "always" }
         ]
     },
     coachPassive: {
@@ -41,29 +41,21 @@ export const coachData = {
             { val: 600, req: "Niv.10" }
         ],
         actions: [
-            { target: "enemy_GK", stat: "Parata", type: "base_stat_reduction", amount: "{VAL}", condition: "ally_MF_dribble_success" }
+            { targetScope: "enemy_team", targetRoles: ["GK"], targetElements: [], targetTags: [], statName: "Parata", type: "stat_debuff", amount: "{VAL}", condition: "ally_MF_dribble_success", resetCondition: "ally_goal" }
         ]
     },
     slots: [
-        // Attaccante (FW) - Unica punta
+        // ... slot invariati
         { number: 1, position: "FW", x: 50, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
-
-        // Centrocampisti Avanzati (MF)
         { number: 3, position: "MF", x: 25, y: 30, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 2, position: "MF", x: 75, y: 30, baseAsset: "img/Position/Img_MFBase.png" },
-
-        // Centrocampisti Arretrati (MF)
         { number: 6, position: "MF", x: 15, y: 50, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 5, position: "MF", x: 51, y: 50, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 4, position: "MF", x: 85, y: 50, baseAsset: "img/Position/Img_MFBase.png" },
-
-        // Difensori (DF) - Linea a 4
         { number: 7, position: "DF", x: 10, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 9, position: "DF", x: 37, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 10, position: "DF", x: 67, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 8, position: "DF", x: 95, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
-
-        // Portiere (GK)
         { number: 11, position: "GK", x: 50, y: 90, baseAsset: "img/Position/Img_GKBase.png" }
     ]
 };

@@ -19,8 +19,8 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddKick.png", "img/Coaches/PassiveEffectIcon_AddTechnic.png"],
         text: "All'inizio della partita:<br><strong>Alleati elemento Vento:</strong> statistica di Tiro +900<br><strong>Alleati elemento Vento:</strong> statistica di Tecnica +900",
         actions: [
-            { target: "team_Wind", stat: "Tiro", type: "base_stat", amount: 900, condition: "always" },
-            { target: "team_Wind", stat: "Tecnica", type: "base_stat", amount: 900, condition: "always" }
+            { targetScope: "team", targetRoles: [], targetElements: ["Wind"], targetTags: [], statName: "Tiro", type: "stat", amount: 900, condition: "always" },
+            { targetScope: "team", targetRoles: [], targetElements: ["Wind"], targetTags: [], statName: "Tecnica", type: "stat", amount: 900, condition: "always" }
         ]
     },
     coachPassive: {
@@ -41,27 +41,21 @@ export const coachData = {
             { val: 40, req: "Niv.10" }
         ],
         actions: [
-            { target: "team", stat: "Potenza_Wind", type: "move_power", amount: "{VAL}", condition: "always" }
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: [], type: "power", moveKind: "All", moveElement: "Wind", amount: "{VAL}", condition: "always" }
         ]
     },
     slots: [
-        // Attaccanti (FW) - Linea alta
+        // ... slot invariati
         { number: 3, position: "FW", x: 20, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 1, position: "FW", x: 50, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 80, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
-
-        // Centrocampisti (MF)
         { number: 6, position: "MF", x: 10, y: 50, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 5, position: "MF", x: 35, y: 40, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 4, position: "MF", x: 65, y: 40, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 7, position: "MF", x: 90, y: 50, baseAsset: "img/Position/Img_MFBase.png" },
-
-        // Difensori (DF)
         { number: 9, position: "DF", x: 25, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 8, position: "DF", x: 50, y: 70, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 10, position: "DF", x: 75, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
-
-        // Portiere (GK)
         { number: 11, position: "GK", x: 50, y: 90, baseAsset: "img/Position/Img_GKBase.png" }
     ]
 };

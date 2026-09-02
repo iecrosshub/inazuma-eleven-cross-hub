@@ -18,8 +18,8 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
         text: "All'inizio della partita:<br><strong>Alleati FW consigliati:</strong> potenza delle tecniche di tiro +40<br><strong>Alleati DF consigliati:</strong> potenza delle tecniche di blocco +40",
         actions: [
-            { target: "team_recommended_FW", stat: "Potenza_Tiro", type: "move_power", amount: 40, condition: "always" },
-            { target: "team_recommended_DF", stat: "Potenza_Blocco", type: "move_power", amount: 40, condition: "always" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], targetTags: [], type: "power", moveKind: "Tiro", amount: 40, condition: "always" },
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], targetTags: [], type: "power", moveKind: "Blocco", amount: 40, condition: "always" }
         ]
     },
     coachPassive: {
@@ -40,11 +40,12 @@ export const coachData = {
             { val: 87, val2: 87, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_InazumaJapan_recommended_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "always" },
-            { target: "team_InazumaJapan_recommended_MF", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL2}", condition: "always" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], targetTags: ["Inazuma Japan"], type: "power", moveKind: "Tiro", amount: "{VAL}", condition: "always" },
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], targetTags: ["Inazuma Japan"], type: "power", moveKind: "Dribbling", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [
+        // ... slots invariati ...
         { number: 1, position: "FW", x: 37, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 67, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 5, position: "MF", x: 15, y: 40, baseAsset: "img/Position/Img_MFBase.png" },

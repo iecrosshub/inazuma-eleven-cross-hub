@@ -1,22 +1,15 @@
 // js/Core/calculator.js
 
 import { techniquesLibrary, passivesLibrary } from './database.js';
-import { extractElement, extractPosition, getStatKeyByIcon, parsePassiveText } from './parsers.js';
+import { extractElement, extractPosition, getStatKeyByIcon } from './parsers.js';
 import { growth_patterns } from './growthTable.js';
 import { equipmentData } from './equipmentTables.js';
+import { BattleEngine } from './BattleEngine.js';
+import { tagMap, elementMap, roleMap } from '../Components/tagDictionary.js';
 
-// Tutti i 10 gradi di rarità
 const awakeningMultipliers = {
-    0: 1.00,  // Normal Player
-    1: 1.10,  // Normal Player +
-    2: 1.20,  // Growing Player
-    3: 1.30,  // Growing Player +
-    4: 1.40,  // Advanced Player
-    5: 1.50,  // Advanced Player +
-    6: 1.60,  // Top Player
-    7: 1.70,  // Top Player +
-    8: 1.85,  // Legendary Player
-    9: 2.00   // Legendary Player +
+    0: 1.00, 1: 1.10, 2: 1.20, 3: 1.30, 4: 1.40,
+    5: 1.50, 6: 1.60, 7: 1.70, 8: 1.85, 9: 2.00
 };
 
 function getClosestEquipLevel(target) {
@@ -27,6 +20,15 @@ function getClosestEquipLevel(target) {
         else break;
     }
     return best.toString();
+}
+
+// Funzione Helper per tradurre il tipo di statistica nel tipo di mossa
+function getMoveKindByStat(statKey) {
+    if (statKey === "Tiro") return "Tiro";
+    if (statKey === "Tecnica") return "Dribbling";
+    if (statKey === "Blocco") return "Blocco";
+    if (statKey === "Parata") return "Parata";
+    return "All";
 }
 
 export function calcolaStatisticheEsatte(character, livelloPG, gradoRisveglio, equipMatrixObj) {
@@ -53,20 +55,14 @@ export function calcolaStatisticheEsatte(character, livelloPG, gradoRisveglio, e
 
     if (equipmentData[ruolo]) {
         Object.keys(equipmentData[ruolo]).forEach(categoria => {
-
             let targetLvl = 300;
-
             if (typeof equipMatrixObj === 'object' && equipMatrixObj !== null) {
-                if (equipMatrixObj[ruolo] && equipMatrixObj[ruolo][categoria]) {
-                    targetLvl = equipMatrixObj[ruolo][categoria];
-                }
-            }
-            else if (typeof equipMatrixObj === 'number' || typeof equipMatrixObj === 'string') {
+                if (equipMatrixObj[ruolo] && equipMatrixObj[ruolo][categoria]) targetLvl = equipMatrixObj[ruolo][categoria];
+            } else if (typeof equipMatrixObj === 'number' || typeof equipMatrixObj === 'string') {
                 targetLvl = parseInt(equipMatrixObj);
             }
 
             const lvlEqStr = getClosestEquipLevel(targetLvl);
-
             if (equipmentData[ruolo][categoria][lvlEqStr]) {
                 const bonus = equipmentData[ruolo][categoria][lvlEqStr];
                 finalStats.kick += bonus.kick || 0;
@@ -77,7 +73,6 @@ export function calcolaStatisticheEsatte(character, livelloPG, gradoRisveglio, e
             }
         });
     }
-
     return finalStats;
 }
 
@@ -96,372 +91,133 @@ export function getElementalAdvantage(moveElement, opponentElement) {
     return 0;
 }
 
+// -----------------------------------------------------------------------
+// NUOVO CALCOLO DANNI SINGOLO TRAMITE BATTLE ENGINE
+// -----------------------------------------------------------------------
 export function calculateDamageData(charDb, techKey, techLvlIndex, customStat, roleMult, adv, passiveSelections, customTechPower = 0) {
     if (!charDb || !techKey || !techniquesLibrary[techKey]) return null;
 
     const tech = techniquesLibrary[techKey];
     const statKey = getStatKeyByIcon(tech.icon);
-
     const techElement = extractElement(tech.elementIcon);
     const charElement = extractElement(charDb.element);
+
     const hasStab = (techElement === charElement && techElement !== 'Void');
     const stabMult = hasStab ? 1.2 : 1.0;
-
-    const elMapIt = { 'Fire': 'Fuoco', 'Wind': 'Vento', 'Forest': 'Albero', 'Mountain': 'Montagna', 'Void': 'Vuoto' };
-    const techElementIt = elMapIt[techElement];
 
     const baseStat = parseInt(customStat) || 0;
     const baseTechPower = tech.power ? (parseInt(tech.power[techLvlIndex]) || 0) : 0;
     const techPower = baseTechPower + parseInt(customTechPower || 0);
 
-    let passiveStatBuff = 0;
+    // Mappa le selezioni dell'utente
+    const passiveMap = {};
+    passiveSelections.forEach(sel => { passiveMap[sel.id] = sel.lvIndex; });
+
+    // Crea il giocatore fittizio da passare al motore
+    const simPlayer = {
+        ...charDb,
+        customBaseStats: { [statKey]: baseStat },
+        selectedPassiveLevels: passiveMap,
+        myBasicPassivesIds: passiveSelections.map(s => s.id) // Passiamo le passive attive in UI
+    };
+
+    // 1. INIZIALIZZA IL MOTORE
+    const engine = new BattleEngine();
+    engine.startMatch([simPlayer], []); // Nemici vuoti per la preview
+    const enginePlayer = engine.homeTeam[0];
+
+    // 2. RECUPERA I DATI MODIFICATI DAL MOTORE
+    const finalStat = enginePlayer.matchStats[statKey] || baseStat;
+    const passiveStatBuff = finalStat - baseStat;
+
     let passivePowerBuff = 0;
-    let passiveData = [];
+    enginePlayer.moveBuffs.forEach(buff => {
+        let applicabile = true;
+        if (buff.kind && buff.kind !== "All" && buff.kind !== getMoveKindByStat(statKey)) applicabile = false;
+        if (buff.element && buff.element !== "All" && buff.element !== techElement) applicabile = false;
+        if (buff.moveName && buff.moveName !== tech.name && buff.moveName !== techKey) applicabile = false;
 
-    const moveKindToStatKey = { "Tiro": "Tiro", "Dribbling": "Tecnica", "Blocco": "Blocco", "Parata": "Parata" };
-
-    passiveSelections.forEach(sel => {
-        const p = passivesLibrary.find(x => x.id === sel.id);
-        if (!p || !p.levels[sel.lvIndex]) return;
-
-        const currentLvData = p.levels[sel.lvIndex];
-        const stacks = sel.stacks || 1;
-        let isAffecting = false;
-        const actionsList = p.effects || p.actions;
-
-        if (actionsList) {
-            actionsList.forEach(effect => {
-                let amount = 0;
-
-                if (effect.valueRef) {
-                    amount = parseInt(currentLvData[effect.valueRef]) || 0;
-                } else if (effect.amount !== undefined) {
-                    if (effect.amount === "{VAL}") amount = parseInt(currentLvData.val) || 0;
-                    else if (effect.amount === "{POWER}") amount = parseInt(currentLvData.power) || 0;
-                    else if (effect.amount === "{VAL2}") amount = parseInt(currentLvData.val2) || 0;
-                    else {
-                        let parsed = parseInt(effect.amount);
-                        amount = isNaN(parsed) ? (parseInt(currentLvData.power) || parseInt(currentLvData.val) || 0) : parsed;
-                    }
-                } else {
-                    amount = parseInt(currentLvData.power) || parseInt(currentLvData.val) || 0;
-                }
-
-                amount = amount * stacks;
-                if (amount === 0) return;
-
-                if ((effect.type === "stat" && (effect.statName === statKey || effect.statName === "All" || effect.statName === "Tutte_le_Statistiche")) ||
-                    (effect.type === "base_stat" && (effect.stat === statKey || effect.stat === "Tutte_le_Statistiche"))) {
-                    passiveStatBuff += amount;
-                    isAffecting = true;
-                }
-                else if (effect.type === "power") {
-                    let isMatch = true;
-                    if (effect.moveKind && effect.moveKind !== "All" && moveKindToStatKey[effect.moveKind] !== statKey) isMatch = false;
-                    if (effect.moveElement && effect.moveElement !== "All" && effect.moveElement !== techElement) isMatch = false;
-
-                    if (isMatch) {
-                        passivePowerBuff += amount;
-                        isAffecting = true;
-                    }
-                }
-                else if (effect.type === "move_power") {
-                    let isMatch = false;
-                    if (effect.stat === "Potenza_Tiro" && statKey === "Tiro") isMatch = true;
-                    if (effect.stat === "Potenza_Dribbling" && statKey === "Tecnica") isMatch = true;
-                    if (effect.stat === "Potenza_Blocco" && statKey === "Blocco") isMatch = true;
-                    if (effect.stat === "Potenza_Parata" && statKey === "Parata") isMatch = true;
-                    if (effect.stat === `Potenza_${techElementIt}`) isMatch = true;
-                    if (effect.stat === `Potenza_Tiro_${techElementIt}` && statKey === "Tiro") isMatch = true;
-                    if (effect.stat === `Potenza_Dribbling_${techElementIt}` && statKey === "Tecnica") isMatch = true;
-                    if (effect.stat === `Potenza_Blocco_${techElementIt}` && statKey === "Blocco") isMatch = true;
-                    if (effect.stat === `Potenza_Parata_${techElementIt}` && statKey === "Parata") isMatch = true;
-
-                    if (isMatch) {
-                        passivePowerBuff += amount;
-                        isAffecting = true;
-                    }
-                }
-                else if (effect.type === "specific_move_power" || effect.type === "specific_move") {
-                    const possibleNames = [effect.stat, effect.statName, effect.moveName, effect.move, effect.tech].filter(Boolean);
-                    let statMatch = false;
-
-                    if (possibleNames.length === 0) {
-                        if (p.title && (p.title.includes(tech.name) || p.title.includes(techKey))) statMatch = true;
-                    } else {
-                        possibleNames.forEach(n => {
-                            if (techKey === n || tech.name.includes(n) || n.includes(techKey)) statMatch = true;
-                        });
-                    }
-
-                    if (statMatch) {
-                        passivePowerBuff += amount;
-                        isAffecting = true;
-                    }
-                }
-            });
-        }
-
-        const descSuffix = stacks > 1 ? `<br><span class="text-primary fw-bold">(Attivata ${stacks} volte)</span>` : '';
-        const parsedDesc = parsePassiveText(p.template, currentLvData);
-        passiveData.push({ title: p.title, level: sel.lvIndex + 1, active: isAffecting, desc: parsedDesc + descSuffix });
+        if (applicabile) passivePowerBuff += buff.bonus;
     });
 
-    const statFinale = Math.floor((baseStat + passiveStatBuff) * roleMult);
+    // 3. CALCOLO FORMULA INAZUMA
+    const statFinale = Math.floor(finalStat * roleMult);
     const potenzaFinale = techPower + passivePowerBuff;
 
-    // --- NUOVA LOGICA TRONCAMENTO PER DIFETTO (MATH.FLOOR) IN OGNI STEP ---
     let step1 = Math.floor(statFinale * potenzaFinale * 0.01);
     let step2 = Math.floor(step1 * stabMult);
     let rawDmg = Math.floor(step2 * adv);
-    // ---------------------------------------------------------------------
-    const danno = rawDmg;
 
-    return { danno, statKey, baseStat, passiveStatBuff, roleMult, techPower, passivePowerBuff, hasStab, stabMult, adv, passiveData };
+    return {
+        danno: rawDmg, statKey, baseStat, passiveStatBuff,
+        roleMult, techPower, passivePowerBuff, hasStab, stabMult, adv, passiveData: []
+    };
 }
 
-export function isTargetValid(caster, targetChar, effect) {
-    // --- [NOVITÀ] CONTROLLO "ALLIES" ---
-    // Se il targetScope è "allies" (alleati/compagni), IL CASTER DEVE ESSERE ESCLUSO!
-    if (effect.targetScope === "allies" && caster.id === targetChar.id) {
-        return false;
-    }
-    // -----------------------------------
-
-    if (effect.target) {
-        if (effect.target === "self") return caster.id === targetChar.id;
-        if (effect.target === "team" || effect.target.includes("allies")) {
-            if (effect.target.includes("allies") && caster.id === targetChar.id) return false;
-            return true;
-        }
-        if (effect.target.startsWith("enemy")) return false;
-
-        const role = extractPosition(targetChar.position);
-        const element = extractElement(targetChar.element);
-        const tags = targetChar.tags ? targetChar.tags.map(t => t.toLowerCase()) : [];
-
-        if (effect.target === "team_DF") return role === "DF";
-        if (effect.target === "team_FW") return role === "FW";
-        if (effect.target === "team_MF") return role === "MF";
-        if (effect.target === "team_GK") return role === "GK";
-        if (effect.target === "team_DF_GK") return role === "DF" || role === "GK";
-        if (effect.target === "team_MF_DF") return role === "MF" || role === "DF";
-        if (effect.target === "team_FW_MF") return role === "FW" || role === "MF";
-
-        if (effect.target === "team_Forest") return element === "Forest";
-        if (effect.target === "team_Wind_Fire") return element === "Wind" || element === "Fire";
-        if (effect.target === "team_Forest_DF_GK") return element === "Forest" && (role === "DF" || role === "GK");
-        if (effect.target === "team_FW_Forest") return role === "FW" && element === "Forest";
-        if (effect.target === "team_FW_Fire") return role === "FW" && element === "Fire";
-        if (effect.target === "team_FW_Fire_Forest") return role === "FW" && (element === "Fire" || element === "Forest");
-        if (effect.target === "team_MF_Wind") return role === "MF" && element === "Wind";
-
-        if (effect.target === "team_Raimon") return tags.some(t => t.includes('raimon'));
-        if (effect.target === "team_teikoku") return tags.some(t => t.includes('royalacademy') || t.includes('teikoku'));
-        if (effect.target === "team_Raimon_Emperors") return tags.some(t => t.includes('raimon') || t.includes('royalacademy') || t.includes('teikoku'));
-        if (effect.target === "team_InazumaJapan") return tags.some(t => t.includes('inazumajapan'));
-        if (effect.target === "team_zeus") return tags.some(t => t.includes('zeus'));
-
-        return false;
-    }
-
-    if (effect.targetScope === "self" && caster.id !== targetChar.id) return false;
-    if (effect.targetScope === "enemy") return false;
-
-    const role = extractPosition(targetChar.position);
-    const element = extractElement(targetChar.element);
-    const tags = targetChar.tags ? targetChar.tags.map(t => t.toLowerCase()) : [];
-
-    if (effect.targetRoles && effect.targetRoles.length > 0 && !effect.targetRoles.includes(role)) return false;
-    if (effect.targetElements && effect.targetElements.length > 0 && !effect.targetElements.includes(element)) return false;
-
-    if (effect.targetTags && effect.targetTags.length > 0) {
-        const hasRequiredTag = effect.targetTags.some(reqTag => {
-            const cleanReq = reqTag.toLowerCase().replace('.png', '').split('/').pop();
-            return tags.some(charTag => charTag.includes(cleanReq));
-        });
-        if (!hasRequiredTag) return false;
-    }
-
-    return true;
-}
-
+// -----------------------------------------------------------------------
+// NUOVO CALCOLO DANNI SQUADRA TRAMITE BATTLE ENGINE
+// -----------------------------------------------------------------------
 export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 0, opponent: 'None', mode: 'defense' }) {
     const results = [];
     let totalDamage = 0;
     let previousMoveElement = null;
 
-    const buffs = team.map(() => ({
-        statSelf: 0, statAlly: 0, powerSelf: 0, powerAlly: 0,
-        statDetails: [], powerDetails: []
-    }));
+    // 1. INIZIALIZZA IL MOTORE
+    const engine = new BattleEngine();
 
-    team.forEach((casterWrapper, casterIndex) => {
-        const caster = casterWrapper.charData;
-        const passiveLevelsMap = casterWrapper.passiveLevels || {};
-
-        const allPassives = Object.keys(passiveLevelsMap);
-
-        allPassives.forEach(passiveId => {
-            const userLevelIndex = passiveLevelsMap[passiveId];
-            if (userLevelIndex === -1 || userLevelIndex === undefined) return;
-
-            const passiveDef = passivesLibrary.find(p => p.id === passiveId);
-            if (!passiveDef || !passiveDef.levels[userLevelIndex]) return;
-
-            const currentLvData = passiveDef.levels[userLevelIndex];
-            const actionsList = passiveDef.effects || passiveDef.actions;
-
-            if (!actionsList) return;
-
-            actionsList.forEach(effect => {
-                const isPower = effect.type === 'move_power' || effect.type === 'specific_move_power' || effect.type === 'specific_move' || effect.type === 'power';
-                const isStat = effect.type === 'base_stat' || effect.type === 'stat';
-
-                if (!isPower && !isStat) return;
-
-                let actualValue = 0;
-                if (effect.valueRef) {
-                    actualValue = parseInt(currentLvData[effect.valueRef]) || 0;
-                } else if (effect.amount !== undefined) {
-                    if (effect.amount === "{VAL}") actualValue = parseInt(currentLvData.val) || 0;
-                    else if (effect.amount === "{POWER}") actualValue = parseInt(currentLvData.power) || 0;
-                    else if (effect.amount === "{VAL2}") actualValue = parseInt(currentLvData.val2) || 0;
-                    else {
-                        let parsed = parseInt(effect.amount);
-                        actualValue = isNaN(parsed) ? (parseInt(currentLvData.power) || parseInt(currentLvData.val) || 0) : parsed;
-                    }
-                } else {
-                    actualValue = parseInt(currentLvData.power) || parseInt(currentLvData.val) || 0;
-                }
-
-                if (actualValue === 0) return;
-
-                team.forEach((targetWrapper, targetIndex) => {
-                    const target = targetWrapper.charData;
-
-                    if (isTargetValid(caster, target, effect)) {
-                        const targetTech = techniquesLibrary[targetWrapper.moveName];
-                        if (!targetTech) return;
-
-                        const targetStatType = getStatKeyByIcon(targetTech.icon);
-                        const targetTechElement = extractElement(targetTech.elementIcon);
-
-                        let isGenericOrSpecific = false;
-
-                        if (isStat) {
-                            const statName = effect.stat || effect.statName;
-                            if (statName === targetStatType || statName === "All" || statName === "Tutte_le_Statistiche") isGenericOrSpecific = true;
-                        } else if (isPower) {
-
-                            if (effect.type === "specific_move_power" || effect.type === "specific_move") {
-                                const possibleNames = [effect.stat, effect.statName, effect.moveName, effect.move, effect.tech, effect.targetMove].filter(Boolean);
-                                let statMatch = false;
-
-                                if (possibleNames.length === 0) {
-                                    if (passiveDef.title && (passiveDef.title.includes(targetTech.name) || passiveDef.title.includes(targetWrapper.moveName))) {
-                                        statMatch = true;
-                                    }
-                                } else {
-                                    possibleNames.forEach(n => {
-                                        if (targetWrapper.moveName === n || targetTech.name.includes(n) || n.includes(targetWrapper.moveName)) {
-                                            statMatch = true;
-                                        }
-                                    });
-                                }
-
-                                if (statMatch) isGenericOrSpecific = true;
-
-                            } else {
-                                let isMatch = true;
-                                const mkMap = {"Tiro":"Tiro", "Dribbling":"Tecnica", "Blocco":"Blocco", "Parata":"Parata"};
-                                if (effect.moveKind && effect.moveKind !== "All" && mkMap[effect.moveKind] !== targetStatType) isMatch = false;
-                                if (effect.moveElement && effect.moveElement !== targetTechElement) isMatch = false;
-
-                                if (effect.stat && effect.stat !== "All" && effect.stat !== "Tutte_le_Statistiche") {
-                                    const elMapIt = { 'Fire': 'Fuoco', 'Wind': 'Vento', 'Forest': 'Albero', 'Mountain': 'Montagna', 'Void': 'Vuoto' };
-                                    const targetTechElementIt = elMapIt[targetTechElement];
-                                    let statMatch = false;
-
-                                    if (effect.stat === "Potenza_Tiro" && targetStatType === "Tiro") statMatch = true;
-                                    if (effect.stat === "Potenza_Dribbling" && targetStatType === "Tecnica") statMatch = true;
-                                    if (effect.stat === "Potenza_Blocco" && targetStatType === "Blocco") statMatch = true;
-                                    if (effect.stat === "Potenza_Parata" && targetStatType === "Parata") statMatch = true;
-                                    if (effect.stat === `Potenza_${targetTechElementIt}`) statMatch = true;
-                                    if (effect.stat === `Potenza_Tiro_${targetTechElementIt}` && statKey === "Tiro") statMatch = true;
-                                    if (effect.stat === `Potenza_Dribbling_${targetTechElementIt}` && statKey === "Tecnica") statMatch = true;
-                                    if (effect.stat === `Potenza_Blocco_${targetTechElementIt}` && statKey === "Blocco") statMatch = true;
-                                    if (effect.stat === `Potenza_Parata_${targetTechElementIt}` && statKey === "Parata") statMatch = true;
-                                    if (effect.stat.includes(targetStatType)) statMatch = true;
-
-                                    const strippedStat = effect.stat.replace("Potenza_", "");
-                                    if (strippedStat === targetWrapper.moveName || targetTech.name.includes(strippedStat)) statMatch = true;
-                                    if (effect.stat === targetWrapper.moveName || targetTech.name.includes(effect.stat)) statMatch = true;
-
-                                    if (effect.moveName && (effect.moveName === targetWrapper.moveName || targetTech.name.includes(effect.moveName))) statMatch = true;
-
-                                    if (!statMatch) isMatch = false;
-                                }
-
-                                if (isMatch) isGenericOrSpecific = true;
-                            }
-                        }
-
-                        if (isGenericOrSpecific) {
-                            const isSelf = casterIndex === targetIndex;
-                            const logEntry = {
-                                source: caster.name,
-                                passiveName: passiveDef.title,
-                                value: actualValue,
-                                isSelf: isSelf
-                            };
-
-                            if (isStat) {
-                                if (isSelf) buffs[targetIndex].statSelf += actualValue;
-                                else buffs[targetIndex].statAlly += actualValue;
-                                buffs[targetIndex].statDetails.push(logEntry);
-                            } else if (isPower) {
-                                if (isSelf) buffs[targetIndex].powerSelf += actualValue;
-                                else buffs[targetIndex].powerAlly += actualValue;
-                                buffs[targetIndex].powerDetails.push(logEntry);
-                            }
-                        }
-                    }
-                });
-            });
-        });
+    // Prepara il Roster per il Motore
+    const rosterForEngine = team.map(slot => {
+        return {
+            ...slot.charData,
+            selectedPassiveLevels: slot.passiveLevels,
+            customBaseStats: slot.customStats
+        };
     });
 
+    // Avvia la simulazione delle passive di gruppo
+    engine.startMatch(rosterForEngine, []);
+
+    // 2. RECUPERA I DATI DEL MOTORE E CALCOLA
     team.forEach((slot, index) => {
         const char = slot.charData;
         const tech = techniquesLibrary[slot.moveName];
-        const slotBuffs = buffs[index];
+        const enginePlayer = engine.homeTeam[index];
 
         if (!tech) return;
 
         const statKey = getStatKeyByIcon(tech.icon);
+        const techElement = extractElement(tech.elementIcon);
+
+        // -- STATISTICA --
         const nakedBaseStat = slot.customStats[statKey] || 0;
+        const totalBase = enginePlayer.matchStats[statKey] || nakedBaseStat;
+        const statBuffsAmount = totalBase - nakedBaseStat;
 
-        const rawBase = nakedBaseStat + slotBuffs.statSelf + slotBuffs.statAlly;
-        const totalBase = Math.floor(rawBase * 1);
-
+        // -- POTENZA --
         const userTechLevelIndex = slot.techLevel || 0;
         const nakedPower = tech.power ? (parseInt(tech.power[userTechLevelIndex]) || 0) : 0;
         const manualBonusPower = slot.customTechPower ? (slot.customTechPower[slot.moveName] || 0) : 0;
 
         let stageBonus = 0;
-        const moveElement = extractElement(tech.elementIcon);
-        if (stageConfig.element && moveElement === stageConfig.element) {
-            stageBonus = stageConfig.bonus;
-        }
+        if (stageConfig.element && techElement === stageConfig.element) stageBonus = stageConfig.bonus;
 
-        const rawPower = nakedPower + manualBonusPower + slotBuffs.powerSelf + slotBuffs.powerAlly + stageBonus;
-        const totalPower = Math.floor(rawPower * 1);
+        let enginePowerBuffs = 0;
+        enginePlayer.moveBuffs.forEach(buff => {
+            let applicabile = true;
+            if (buff.kind && buff.kind !== "All" && buff.kind !== getMoveKindByStat(statKey)) applicabile = false;
+            if (buff.element && buff.element !== "All" && buff.element !== techElement) applicabile = false;
+            if (buff.moveName && buff.moveName !== tech.name && buff.moveName !== slot.moveName) applicabile = false;
 
+            if (applicabile) enginePowerBuffs += buff.bonus;
+        });
+
+        const totalPower = nakedPower + manualBonusPower + enginePowerBuffs + stageBonus;
+
+        // -- MOLTIPLICATORI --
         let attributeMultiplier = 1.0;
         if (checkStab(char.element, tech.elementIcon)) attributeMultiplier += 0.2;
         if (stageConfig.opponent && stageConfig.opponent !== 'None') {
-            attributeMultiplier += getElementalAdvantage(moveElement, stageConfig.opponent);
+            attributeMultiplier += getElementalAdvantage(techElement, stageConfig.opponent);
         }
         attributeMultiplier = Math.round(attributeMultiplier * 10) / 10;
 
@@ -469,39 +225,31 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
         let isChainActive = false;
         const isGKInDefense = (stageConfig.mode === 'defense' && index === 4);
 
-        if (index > 0 && previousMoveElement === moveElement && !isGKInDefense) {
+        if (index > 0 && previousMoveElement === techElement && !isGKInDefense) {
             chainMultiplier = 1.1;
             isChainActive = true;
         }
 
-        // --- NUOVA LOGICA TRONCAMENTO PER DIFETTO DOPO OGNI MOLTIPLICAZIONE (MATH.FLOOR) ---
+        // -- DANNO --
         let baseDmg = Math.floor(totalBase * totalPower * 0.01);
         let attrDmg = Math.floor(baseDmg * attributeMultiplier);
         let finalDamage = isChainActive ? Math.floor(attrDmg * chainMultiplier) : attrDmg;
-        // -----------------------------------------------------------------------------------
 
         totalDamage += finalDamage;
-        previousMoveElement = moveElement;
+        previousMoveElement = techElement;
 
         results.push({
             charName: char.name,
             moveName: slot.moveName,
-            moveElement: moveElement,
+            moveElement: techElement,
             statType: statKey,
             calculations: {
-                base: { naked: nakedBaseStat, selfBuff: slotBuffs.statSelf, allyBuff: slotBuffs.statAlly, total: totalBase },
-                power: {
-                    naked: nakedPower,
-                    customBonus: manualBonusPower,
-                    selfBuff: slotBuffs.powerSelf,
-                    allyBuff: slotBuffs.powerAlly,
-                    stageBonus: stageBonus,
-                    total: totalPower
-                },
+                base: { naked: nakedBaseStat, selfBuff: statBuffsAmount, allyBuff: 0, total: totalBase },
+                power: { naked: nakedPower, customBonus: manualBonusPower, selfBuff: enginePowerBuffs, allyBuff: 0, stageBonus: stageBonus, total: totalPower },
                 multipliers: { attribute: attributeMultiplier, chain: chainMultiplier },
                 damage: finalDamage
             },
-            details: { stats: slotBuffs.statDetails, power: slotBuffs.powerDetails }
+            details: { stats: [], power: [] }
         });
     });
 
@@ -528,59 +276,57 @@ export function calculateTeamDamage(team, stageConfig = { element: null, bonus: 
 }
 
 export function calculateCoachBuffs(charData, coachDb, coachLevel) {
-    let statBuffs = { Tiro: 0, Tecnica: 0, Blocco: 0, Parata: 0, Velocità: 0 };
-    let powerBuffs = { Tiro: 0, Tecnica: 0, Blocco: 0, Parata: 0 };
+    let statBuffs = { Tiro: 0, Tecnica: 0, Blocco: 0, Parata: 0, Velocità: 0, TP: 0 };
+    let powerBuffs = { Tiro: 0, Tecnica: 0, Blocco: 0, Parata: 0, All: 0 };
     let logsStats = [];
     let logsPower = [];
 
     if (!charData || !coachDb) return { statBuffs, powerBuffs, logsStats, logsPower };
 
-    const charRole = extractPosition(charData.position).toLowerCase();
-    const charTags = charData.tags ? charData.tags.map(t => t.toLowerCase()) : [];
+    // Traduzione dei tag grafici in tag logici (come nel Battle Engine)
+    const charRole = roleMap[charData.position] || charData.position;
+    const charElement = elementMap[charData.element] || charData.element;
+    const charTags = (charData.tags || []).map(t => tagMap[t] || t);
 
     const processActions = (actions, levelData, sourceName) => {
         if (!actions) return;
 
         actions.forEach(action => {
-            let isTarget = false;
-            const target = action.target ? action.target.toLowerCase() : "";
+            // Controlla se il giocatore rispetta i requisiti della passiva dell'allenatore
+            const roleMatch = (!action.targetRoles || action.targetRoles.length === 0) || action.targetRoles.includes(charRole);
+            const elemMatch = (!action.targetElements || action.targetElements.length === 0) || action.targetElements.includes(charElement);
+            const tagMatch = (!action.targetTags || action.targetTags.length === 0) || action.targetTags.some(t => charTags.includes(t));
 
-            if (target === "all" || target.includes("allies") || target.includes("team")) {
-                isTarget = true;
-                if(target.includes("fw") && charRole !== "fw") isTarget = false;
-                if(target.includes("mf") && charRole !== "mf") isTarget = false;
-                if(target.includes("df") && charRole !== "df") isTarget = false;
-                if(target.includes("gk") && charRole !== "gk") isTarget = false;
-
-                if(target.includes("inazumajapan") && !charTags.some(t => t.includes("inazumajapan"))) isTarget = false;
-                if(target.includes("raimon") && !charTags.some(t => t.includes("raimon"))) isTarget = false;
-            }
-
-            if (isTarget) {
+            if (roleMatch && elemMatch && tagMatch) {
                 let amount = 0;
                 if (action.amount === "{VAL}") amount = parseInt(levelData?.val) || 0;
                 else if (action.amount === "{POWER}") amount = parseInt(levelData?.power) || 0;
                 else if (action.amount === "{VAL2}") amount = parseInt(levelData?.val2) || 0;
                 else amount = parseInt(action.amount) || 0;
 
-                if (action.type === "base_stat" || action.type === "stat") {
-                    const statName = action.stat || action.statName;
+                // Applica Statistiche
+                if (action.type === "stat" || action.type === "base_stat") {
+                    const statName = action.statName || action.stat;
                     if (statBuffs[statName] !== undefined) {
                         statBuffs[statName] += amount;
                         logsStats.push(`[Mister] ${sourceName} : +${amount} ${statName}`);
-                    } else if (statName === "Tutte_le_Statistiche" || statName === "All") {
+                    } else if (statName === "All" || statName === "Tutte_le_Statistiche") {
                         for (let key in statBuffs) statBuffs[key] += amount;
                         logsStats.push(`[Mister] ${sourceName} : +${amount} Tutte le Stat.`);
                     }
                 }
-                else if (action.type === "move_power" || action.type === "power") {
-                    let matchCat = null;
-                    if (action.stat === "Potenza_Tiro" || action.moveKind === "Tiro") matchCat = "Tiro";
-                    if (action.stat === "Potenza_Dribbling" || action.moveKind === "Dribbling") matchCat = "Tecnica";
-                    if (action.stat === "Potenza_Blocco" || action.moveKind === "Blocco") matchCat = "Blocco";
-                    if (action.stat === "Potenza_Parata" || action.moveKind === "Parata") matchCat = "Parata";
-
-                    if (matchCat) {
+                // Applica Malus Statistiche
+                else if (action.type === "stat_debuff") {
+                    const statName = action.statName || action.stat;
+                    if (statBuffs[statName] !== undefined) {
+                        statBuffs[statName] -= amount;
+                        logsStats.push(`[Mister] ${sourceName} : -${amount} ${statName}`);
+                    }
+                }
+                // Applica Potenza Mosse
+                else if (action.type === "power" || action.type === "move_power") {
+                    const matchCat = action.moveKind;
+                    if (matchCat && powerBuffs[matchCat] !== undefined) {
                         powerBuffs[matchCat] += amount;
                         logsPower.push(`[Mister] ${sourceName} : +${amount} Pot. ${matchCat}`);
                     }

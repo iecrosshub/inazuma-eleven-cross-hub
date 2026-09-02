@@ -19,7 +19,7 @@ export const stackingPassives = [
                 targetScope: "allies",
                 targetRoles: [],
                 targetElements: [],
-                targetTags: ["Icon_Tag_Team_InazumaJapan", "Icon_Tag_Team_Raimon"],
+                targetTags: ["Inazuma Japan", "Raimon"],
                 type: "stat",
                 statName: "All",
                 valueRef: "val"
@@ -505,7 +505,7 @@ export const stackingPassives = [
     {
         title: "[Slancio] Blocco DF Avversari - (【破竹/累】敵ＤＦブロック－)",
         id: "101086003",
-        template: "Ogni volta che una propria tecnica di dribbling o blocco ha successo, riduce il Blocco dei DF avversari di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        template: "Ogni volta che una propria tecnica di dribbling o blocco ha successo, riduce il Blocco dei DF avversari di -{VAL}.<br>Condizione di reset: un alleato segna un gol.",
         levels: [
             { val: 105, req: "Si sblocca con personaggio Lv. 41" },
             { val: 158, req: "Si sblocca con personaggio Lv. 61" },
@@ -520,7 +520,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_or_block_success" },
         effects: [
-            { targetScope: "enemy", targetRoles: ["DF"], targetElements: [], type: "stat_debuff", statName: "Blocco", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "stat_debuff", statName: "Blocco", valueRef: "val" }
         ]
     },
     {
@@ -541,7 +541,7 @@ export const stackingPassives = [
     {
         title: "[Slancio/Cumulativa] Tecnica FW/MF Avversari - (【破竹/累】敵ＦＷ・ＭＦテクニック－)",
         id: "101004003",
-        template: "Ogni volta che la propria tecnica di dribbling ha successo, riduce la Tecnica degli FW e MF avversari di {VAL}. Condizione di reset: Gol segnato.",
+        template: "Ogni volta che la propria tecnica di dribbling ha successo, riduce la Tecnica degli FW e MF avversari di -{VAL}. Condizione di reset: Gol segnato.",
         levels: [
             { val: 42, req: "Si sblocca con personaggio Lv. 41" },
             { val: 63, req: "Si sblocca con personaggio Lv. 61" },
@@ -556,24 +556,10 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_success" },
         effects: [
-            { targetScope: "enemy", targetRoles: ["FW", "MF"], targetElements: [], type: "stat_debuff", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["FW", "MF"], targetElements: [], type: "stat_debuff", statName: "Tecnica", valueRef: "val" }
         ]
     },
-    {
-        title: "[Slancio] Potenza Dribbling DF + (【破竹】ＤＦドリブルパワー＋)",
-        id: "101003004", // Questa era la passiva duplicata nello script originario, la lascio così!
-        template: "Quando effettua una tecnica di blocco con successo, aumenta la potenza del dribbling degli alleati DF di {VAL}. <br>Condizione di reset: Gol segnato.",
-        levels: [
-            { val: 12, req: "Si sblocca a: Advanced Player +" },
-            { val: 16, req: "Si sblocca a: Top Player +" },
-            { val: 21, req: "Si sblocca a: Legendary Player +" }
-        ],
-        category: "Stacking",
-        conditions: { triggerEvent: "block_success" },
-        effects: [
-            { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
-        ]
-    },
+
     {
         title: "[Slancio] Potenza Tiro FW + (【破竹/累】ＦＷシュートパワー＋)",
         id: "101099003",
@@ -598,7 +584,7 @@ export const stackingPassives = [
     {
         title: "[Slancio] Potenza Blocco DF Avversario - (【破竹/累】敵ＤＦブロックパワー－)",
         id: "101120003",
-        template: "Ogni volta che una propria tecnica di dribbling ha successo, riduce la potenza delle tecniche di blocco dei DF avversari di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        template: "Ogni volta che una propria tecnica di dribbling ha successo, riduce la potenza delle tecniche di blocco dei DF avversari di -{VAL}.<br>Condizione di reset: un alleato segna un gol.",
         levels: [
             { val: 2, req: "Si sblocca con personaggio Lv. 41" },
             { val: 3, req: "Si sblocca con personaggio Lv. 61" },
@@ -613,13 +599,13 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_success" },
         effects: [
-            { targetScope: "enemy", targetRoles: ["DF"], targetElements: [], type: "power_debuff", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "power_debuff", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
     },
     {
         title: "[Slancio] Parata GK Avversario - (【破竹】敵ＧＫキャッチ－)",
         id: "101120004",
-        template: "Ogni volta che una propria tecnica di dribbling ha successo, riduce la Parata del GK avversario di {VAL}.<br>Condizione di reset: un alleato segna un gol.",
+        template: "Ogni volta che una propria tecnica di dribbling ha successo, riduce la Parata del GK avversario di -{VAL}.<br>Condizione di reset: un alleato segna un gol.",
         levels: [
             { val: 1012, req: "Si sblocca a: Advanced Player +" },
             { val: 1349, req: "Si sblocca a: Top Player +" },
@@ -628,7 +614,7 @@ export const stackingPassives = [
         category: "Stacking",
         conditions: { triggerEvent: "dribble_success" },
         effects: [
-            { targetScope: "enemy", targetRoles: ["GK"], targetElements: [], type: "stat_debuff", statName: "Parata", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["GK"], targetElements: [], type: "stat_debuff", statName: "Parata", valueRef: "val" }
         ]
     },
     {
@@ -953,8 +939,10 @@ export const stackingPassives = [
             { val: 531, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "ally_dribble_success",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "ally_dribble_success",
+            resetCondition: "ally_goal"
+        },
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -970,8 +958,10 @@ export const stackingPassives = [
             { val: 19, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "ally_stop_shoot",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "ally_stop_shoot",
+            resetCondition: "ally_goal"
+        },
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
@@ -995,8 +985,11 @@ export const stackingPassives = [
             { val: 50, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Stacking",
-        trigger: "self_block_shoot_fail",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "self_block_shoot_fail",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
@@ -1019,10 +1012,12 @@ export const stackingPassives = [
             { val: 50, req: "Si sblocca con personaggio Lv. 301" }
         ],
         category: "Stacking",
-        trigger: "ally_stop_shoot",
-        resetCondition: "self_goal",
+        conditions: {
+            triggerEvent: "ally_stop_shoot",
+            resetCondition: "ally_goal"
+        },
         effects: [
-            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Wood", valueRef: "val" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
 
@@ -1044,8 +1039,11 @@ export const stackingPassives = [
             { val: 55, req: "Lv. 331" }
         ],
         category: "Stacking",
-        trigger: "ally_shoot_block_fail",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "ally_shoot_block_fail",
+            resetCondition: "ally_goal"
+        },
+
         effects: [{ targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }]
     },
 
@@ -1067,8 +1065,10 @@ export const stackingPassives = [
             { val: 50, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Stacking",
-        trigger: "self_block_shoot_fail",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "self_block_shoot_fail",
+            resetCondition: "ally_goal"
+        },
         effects: [
             { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
@@ -1092,8 +1092,11 @@ export const stackingPassives = [
             { val: 896, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Stacking",
-        trigger: "ally_dribble_fail",
-        resetCondition: null,
+        conditions: {
+            triggerEvent: "ally_dribble_fail",
+            resetCondition: "null"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -1109,8 +1112,11 @@ export const stackingPassives = [
             { val: 16, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "ally_stop_shoot",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "ally_stop_shoot",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
         ]
@@ -1126,9 +1132,11 @@ export const stackingPassives = [
             { val: 996, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "self_use_move",
-        triggerMove: "ドラゴンクラッシュ",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "self_use_move",
+            triggerMove: "ドラゴンクラッシュ",
+            resetCondition: "ally_goal"
+        },
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -1144,8 +1152,11 @@ export const stackingPassives = [
             { val: 796, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "ally_block_fail",
-        resetCondition: null,
+        conditions: {
+            triggerEvent: "ally_block_fail",
+            resetCondition: "null"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -1161,8 +1172,11 @@ export const stackingPassives = [
             { val: 20, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "ally_stop_shoot",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "ally_stop_shoot",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
@@ -1186,8 +1200,11 @@ export const stackingPassives = [
             { val: 37, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Stacking",
-        trigger: "self_block_shoot_fail",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "self_block_shoot_fail",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["GK"], targetElements: ["Mountain"], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
@@ -1211,8 +1228,11 @@ export const stackingPassives = [
             { val: 49, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Stacking",
-        trigger: "ally_shoot_block_fail",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "self_block_shoot_fail",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
@@ -1221,50 +1241,48 @@ export const stackingPassives = [
     {
         title: "[Impeto/Accumulo] Tiro FW - (【破竹/累】ＦＷキック－)",
         id: "101167001",
-        template: "Ogni volta che una propria tecnica di Dribbling ha successo, riduce il Tiro dei FW avversari di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        template: "Ogni volta che una propria tecnica di Dribbling ha successo, riduce il Tiro dei FW avversari di -{VAL}. (Condizione di fine: quando un alleato segna un gol).",
         levels: [
-            { val: -102, req: "Si sblocca con personaggio Lv. 1" },
-            { val: -136, req: "Si sblocca con personaggio Lv. 21" },
-            { val: -170, req: "Si sblocca con personaggio Lv. 71" },
-            { val: -204, req: "Si sblocca con personaggio Lv. 101" },
-            { val: -272, req: "Si sblocca con personaggio Lv. 131" },
-            { val: -340, req: "Si sblocca con personaggio Lv. 161" },
-            { val: -408, req: "Si sblocca con personaggio Lv. 191" },
-            { val: -476, req: "Si sblocca con personaggio Lv. 221" },
-            { val: -578, req: "Si sblocca con personaggio Lv. 251" },
-            { val: -681, req: "Si sblocca con personaggio Lv. 281" },
-            { val: -783, req: "Si sblocca con personaggio Lv. 311" }
+            { val: 102, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 136, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 170, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 204, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 272, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 340, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 408, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 476, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 578, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 681, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 783, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Stacking",
-        trigger: "self_dribble_success",
-        resetCondition: "ally_goal",
+        conditions: { triggerEvent: "self_dribble_success", resetCondition: "ally_goal" },
         effects: [
-            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: [], type: "stat_debuff", statName: "Tiro", valueRef: "val" }
         ]
     },
 
     {
         title: "[Impeto/Accumulo] Potenza Blocco DF Montagna - (【破竹/累】山ＤＦブロックパワー－)",
         id: "101167003",
-        template: "Ogni volta che una propria tecnica di Dribbling ha successo, riduce la potenza delle tecniche di Blocco dei DF avversari di elemento Montagna di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        template: "Ogni volta che una propria tecnica di Dribbling ha successo, riduce la potenza delle tecniche di Blocco dei DF avversari di elemento Montagna di -{VAL}. (Condizione di fine: quando un alleato segna un gol).",
         levels: [
-            { val: -12, req: "Si sblocca con personaggio Lv. 41" },
-            { val: -16, req: "Si sblocca con personaggio Lv. 61" },
-            { val: -21, req: "Si sblocca con personaggio Lv. 91" },
-            { val: -25, req: "Si sblocca con personaggio Lv. 121" },
-            { val: -29, req: "Si sblocca con personaggio Lv. 151" },
-            { val: -33, req: "Si sblocca con personaggio Lv. 181" },
-            { val: -37, req: "Si sblocca con personaggio Lv. 211" },
-            { val: -39, req: "Si sblocca con personaggio Lv. 241" },
-            { val: -42, req: "Si sblocca con personaggio Lv. 271" },
-            { val: -46, req: "Si sblocca con personaggio Lv. 301" },
-            { val: -50, req: "Si sblocca con personaggio Lv. 331" }
+            { val: 12, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 16, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 21, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 25, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 29, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 33, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 37, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 39, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 42, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 50, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Stacking",
-        trigger: "self_dribble_success",
-        resetCondition: "ally_goal",
+        conditions: { triggerEvent: "self_dribble_success", resetCondition: "ally_goal" },
         effects: [
-            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: ["Mountain"], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: ["Mountain"], type: "power_debuff", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
     },
 
@@ -1286,8 +1304,11 @@ export const stackingPassives = [
             { val: 1371, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Stacking",
-        trigger: "self_use_shoot",
-        resetCondition: "self_goal",
+        conditions: {
+            triggerEvent: "self_use_shoot",
+            resetCondition: "self_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -1303,8 +1324,11 @@ export const stackingPassives = [
             { val: 39, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "ally_shoot_blocked",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "ally_shoot_blocked",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
@@ -1320,8 +1344,11 @@ export const stackingPassives = [
             { val: 56, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "ally_shoot_block_fail",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "ally_shoot_block_fail",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
@@ -1345,8 +1372,11 @@ export const stackingPassives = [
             { val: 44, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Stacking",
-        trigger: "self_block_shoot_fail",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "self_block_shoot_fail",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["GK"], targetElements: ["Mountain"], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
@@ -1370,8 +1400,11 @@ export const stackingPassives = [
             { val: 465, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Stacking",
-        trigger: "self_dribble_success",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "self_dribble_success",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -1387,8 +1420,11 @@ export const stackingPassives = [
             { val: 18, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Stacking",
-        trigger: "ally_stop_shoot",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "ally_stop_shoot",
+            resetCondition: "ally_goal"
+        },
+
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
@@ -1412,9 +1448,11 @@ export const stackingPassives = [
             { val: 52, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Stacking",
-        trigger: "enemy_use_shoot",
-        triggerMoveElement: "Forest",
-        resetCondition: "ally_goal",
+        conditions: {
+            triggerEvent: "enemy_use_shoot",
+            triggerMoveElement: "Forest",
+            resetCondition: "ally_goal"
+        },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]

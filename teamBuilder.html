@@ -92,20 +92,16 @@
            LAYOUT PC: RIPRISTINATO E ALLARGATO AL CENTRO
            ======================================================= */
         @media (min-width: 1201px) {
-            /* Ripristina la tua altezza bloccata per evitare lo straripamento! */
             .app-container { height: 1050px !important; }
             .tb-workspace { height: 100% !important; align-items: stretch; }
             .main-detail { height: 100% !important; flex-grow: 1 !important; }
-
-            /* Stringe leggermente i lati per dare molto più spazio al campo */
             .sidebar-left { width: 280px !important; }
             .sidebar-right { width: 350px !important; }
         }
 
         /* =======================================================
-           GIOCATORI IN CAMPO PIU' PICCOLI (Non si toccano più)
+           GIOCATORI IN CAMPO PIU' PICCOLI
            ======================================================= */
-        /* Scala i giocatori all'85% così non si accavallano sulle difese a 4 */
         .pitch-slot { transform: translate(-50%, -50%) scale(0.85) !important; }
         .pitch-slot:hover { transform: translate(-50%, -50%) scale(0.95) !important; z-index: 10; }
 
@@ -119,7 +115,7 @@
         .pitch-container-wrapper { width: 100%; display: flex; justify-content: center; transform-origin: top center; }
 
         /* =======================================================
-           ADATTAMENTO PER TABLET E TELEFONI (INCOLONNAMENTO)
+           ADATTAMENTO PER TABLET E TELEFONI
            ======================================================= */
         @media (max-width: 1200px) {
             .app-container { height: auto !important; min-height: 100vh; padding-bottom: 40px; }
@@ -183,28 +179,35 @@
                 </div>
             </div>
 
-            <div class="info-card">
+            <!-- IL CONTENITORE BIANCO PRINCIPALE -->
+            <div class="info-card pb-4">
                 <div id="team-name-header" class="header-text-window" style="display:none;"></div>
 
                 <div class="pitch-container-wrapper">
                     <div id="pitch-container" class="pitch"></div>
                 </div>
-            </div>
 
-            <div class="pitch-actions d-flex justify-content-center gap-3 mt-3">
-                <button id="btn-share-team" class="btn btn-primary fw-bold px-4 shadow" style="display: none;">
-                    <i class="fas fa-share-square me-2"></i> Condividi Formazione
-                </button>
-                <button id="btn-publish-meta" class="btn btn-warning fw-bold px-4 shadow text-dark" style="display: none;">
-                    <i class="fas fa-crown me-2"></i> Promuovi a Tier List
-                </button>
-                <button id="btn-remove-player" class="tb-btn-remove" style="display: none;">
-                    <i class="fas fa-trash"></i> Rimuovi dal campo
-                </button>
+                <!-- I BOTTONI ORA SONO DENTRO LA CARD BIANCA PER NON ESSERE COPERTI -->
+                <div class="pitch-actions d-flex justify-content-center flex-wrap gap-2 mt-4 px-3">
+                    <button id="btn-share-team" class="btn btn-primary fw-bold shadow-sm" style="display: none; border-radius: 8px;">
+                        <i class="fas fa-share-square me-1"></i> Condividi
+                    </button>
+                    <button id="btn-publish-meta" class="btn btn-warning fw-bold shadow-sm text-dark" style="display: none; border-radius: 8px;">
+                        <i class="fas fa-crown me-1"></i> Promuovi
+                    </button>
+
+                    <button id="btn-simulate-buffs" class="btn fw-bold shadow-sm px-4" style="display: none; background-color: #0b1a42; color: #fff; border-radius: 8px; border: 2px solid #ffca28;">
+                        <i class="fas fa-calculator me-1"></i> Simula Statistiche
+                    </button>
+
+                    <button id="btn-remove-player" class="btn btn-danger fw-bold shadow-sm px-3" style="display: none; border-radius: 8px;" title="Rimuovi dal campo">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
         </article>
 
-        <!-- COLONNA DESTRA: FILTRI, CONDIZIONI E GIOCATORI -->
+        <!-- COLONNA DESTRA: FILTRI E GIOCATORI -->
         <aside class="sidebar sidebar-right">
             <div class="sidebar-header">
                 <h2>Giocatori:</h2>
@@ -227,7 +230,7 @@
 
     </div>
 
-    <!-- SEZIONE DISCUSSIONI (Tema Community) -->
+    <!-- SEZIONE DISCUSSIONI -->
     <div class="container-fixed mt-5 mb-5" style="max-width: 1000px; margin: 0 auto;">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="fw-bold m-0" style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
@@ -270,6 +273,40 @@
             <div class="modal-footer" style="border-top: 2px solid #e2e8f0;">
                 <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Annulla</button>
                 <button type="button" id="btn-submit-share" class="btn btn-primary fw-bold" style="background-color: #1a73e8;">Pubblica Post</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE SIMULATORE GREZZO RINNOVATO -->
+<div class="modal fade" id="simulatorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content bg-white" style="border: 2px solid #1a73e8; border-radius: 12px;">
+            <div class="modal-header" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fbff; border-radius: 12px 12px 0 0;">
+                <h5 class="modal-title fw-bold" style="color: #0b1a42;">
+                    <i class="fas fa-cogs text-primary me-2"></i> Simulatore Dati di Gioco
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background-color: #f0f4f8;">
+                <div class="alert alert-info py-2 px-3 mb-4 shadow-sm" style="border-left: 4px solid #0dcaf0;">
+                    Inserisci a mano le statistiche di base e imposta le tue passive. Quando sei pronto, premi <strong>Calcola Risultati</strong> per attivare il Battle Engine!
+                </div>
+                <div id="sim-players-container" class="accordion d-flex flex-column gap-2">
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 2px solid #e2e8f0; background-color: #f8fbff; border-radius: 0 0 12px 12px;">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <span id="sim-total-power" class="text-success fw-bold m-0" style="font-size: 1.1rem; display:none;">
+                        <i class="fas fa-check-circle me-1"></i> Calcolo Completato
+                    </span>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-outline-secondary fw-bold me-2 shadow-sm" data-bs-dismiss="modal">Chiudi</button>
+                        <button type="button" id="btn-run-engine" class="btn btn-primary fw-bold px-4 shadow-sm">
+                            <i class="fas fa-play me-2"></i> Calcola Risultati
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -19,8 +19,8 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddBlock.png", "img/Coaches/PassiveEffectIcon_AddCatch.png"],
         text: "All'inizio del secondo tempo:<br><strong>Alleati DF consigliati:</strong> statistica di Blocco +2700<br><strong>Alleati GK consigliati:</strong> statistica di Parata +2700",
         actions: [
-            { target: "team_recommended_DF", stat: "Blocco", type: "base_stat", amount: 2700, condition: "turn_21" },
-            { target: "team_recommended_GK", stat: "Parata", type: "base_stat", amount: 2700, condition: "turn_21" }
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], targetTags: [], statName: "Blocco", type: "stat", amount: 2700, condition: "time_second_half" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], targetTags: [], statName: "Parata", type: "stat", amount: 2700, condition: "time_second_half" }
         ]
     },
     coachPassive: {
@@ -41,28 +41,22 @@ export const coachData = {
             { val: 4200, val2: 4200, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_recommended_FW", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "turn_21" },
-            { target: "team_recommended_MF", stat: "Tecnica", type: "base_stat", amount: "{VAL2}", condition: "turn_21" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], targetTags: [], statName: "Tiro", type: "stat", amount: "{VAL}", condition: "time_second_half" },
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], targetTags: [], statName: "Tecnica", type: "stat", amount: "{VAL2}", condition: "time_second_half" }
         ]
     },
     slots: [
-        // FW (1, 2, 3, 5, 4) - Note: L'immagine mostra una configurazione offensiva densa
+        // ... slots invariati ...
         { number: 1, position: "FW", x: 25, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 50, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 3, position: "FW", x: 75, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 5, position: "FW", x: 35, y: 35, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 4, position: "FW", x: 65, y: 35, baseAsset: "img/Position/Img_FWBase.png" },
-
-        // MF (7, 6, 8)
         { number: 7, position: "MF", x: 15, y: 55, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 6, position: "MF", x: 50, y: 55, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 8, position: "MF", x: 85, y: 55, baseAsset: "img/Position/Img_MFBase.png" },
-
-        // DF (10, 9)
         { number: 10, position: "DF", x: 30, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 9, position: "DF", x: 70, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
-
-        // GK
         { number: 11, position: "GK", x: 50, y: 90, baseAsset: "img/Position/Img_GKBase.png" }
     ]
 };

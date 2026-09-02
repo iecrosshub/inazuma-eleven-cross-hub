@@ -10,17 +10,17 @@ export const coachData = {
     teamBonusScore: 19200,
     formationName: "Shuriken",
     formationConditions: [
-        { slotCode: 1, icon: "img/TagTitle/Icon_Tag_Team_Shuriken.png" }, // Ipotizzo il tag team
-        { slotCode: 5, icon: "img/TagTitle/Icon_Tag_Ability_Defensivehalf.png" },
-        { slotCode: 10, icon: "img/TagTitle/Icon_Tag_Ability_Stopper.png" }
+        { slotCode: 1, icon: "img/TagTitle/Icon_Tag_Team_Shuriken.png" },
+        { slotCode: 5, icon: "img/TagTitle/Icon_Tag_Ability_DefensiveMF.png" }, // FIX dal tagDictionary (Mediano difensivo)
+        { slotCode: 10, icon: "img/TagTitle/Icon_Tag_Ability_Stopper.png" }     // Devi aggiungere Stopper al tuo TagMap
     ],
     formationPassive: {
         title: "Attiva F-Shuriken (アクティブ・F-センゴクイガジマ)",
         icons: ["img/Coaches/PassiveEffectIcon_AddTechnic.png", "img/Coaches/PassiveEffectIcon_AddKick.png"],
         text: "Ogni volta che una tecnica di dribbling o blocco di un alleato riesce:<br><strong>Tutti gli alleati:</strong> statistica di Tecnica +250<br><strong>Tutti gli alleati:</strong> statistica di Tiro +250<br><strong>Condizione di reset:</strong> quando un alleato segna un gol",
         actions: [
-            { target: "team", stat: "Tecnica", type: "base_stat", amount: 250, condition: "dribble_or_block_success" },
-            { target: "team", stat: "Tiro", type: "base_stat", amount: 250, condition: "dribble_or_block_success" }
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: [], statName: "Tecnica", type: "stat", amount: 250, condition: "ally_dribble_or_block_success", resetCondition: "ally_goal" },
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: [], statName: "Tiro", type: "stat", amount: 250, condition: "ally_dribble_or_block_success", resetCondition: "ally_goal" }
         ]
     },
     coachPassive: {
@@ -41,25 +41,22 @@ export const coachData = {
             { val: 2250, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_DefensiveHalf_Stopper", stat: "Blocco", type: "base_stat", amount: "{VAL}", condition: "always" },
-            { target: "team_DefensiveHalf_Stopper", stat: "Tecnica", type: "base_stat", amount: "{VAL}", condition: "always" }
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: ["Defensive MF", "Stopper"], statName: "Blocco", type: "stat", amount: "{VAL}", condition: "always" },
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: ["Defensive MF", "Stopper"], statName: "Tecnica", type: "stat", amount: "{VAL}", condition: "always" }
         ]
     },
     slots: [
-        // FW (1, 2)
+        // ... slot invariati
         { number: 1, position: "FW", x: 75, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 25, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
-        // MF (3, 4, 5, 6)
         { number: 3, position: "MF", x: 75, y: 35, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 4, position: "MF", x: 25, y: 35, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 5, position: "MF", x: 75, y: 55, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 6, position: "MF", x: 25, y: 55, baseAsset: "img/Position/Img_MFBase.png" },
-        // DF (7, 8, 9, 10)
         { number: 9, position: "DF", x: 50, y: 55, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 7, position: "DF", x: 15, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 10, position: "DF", x: 50, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 8, position: "DF", x: 85, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
-        // GK
         { number: 11, position: "GK", x: 50, y: 90, baseAsset: "img/Position/Img_GKBase.png" }
     ]
 };

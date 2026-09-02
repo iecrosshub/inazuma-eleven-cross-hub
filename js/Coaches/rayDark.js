@@ -10,7 +10,7 @@ export const coachData = {
     teamBonusScore: 19200,
     formationName: "Royal Academy",
     formationConditions: [
-        { slotCode: 2, icon: "img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" },
+        { slotCode: 2, icon: "img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" }, // Presumo che qui intendessi RoyalAcademy/Emperors
         { slotCode: 5, icon: "img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" },
         { slotCode: 7, icon: "img/TagTitle/Icon_Tag_Team_RoyalAcademy.png" }
     ],
@@ -19,8 +19,8 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddKick.png", "img/Coaches/PassiveEffectIcon_AddBlock.png"],
         text: "All'inizio della partita:<br><strong>Alleati FW consigliati:</strong> statistica di Tiro +600<br><strong>Alleati DF consigliati:</strong> statistica di Blocco +600",
         actions: [
-            { target: "team_recommended_FW", stat: "Tiro", type: "base_stat", amount: 600, condition: "always" },
-            { target: "team_recommended_DF", stat: "Blocco", type: "base_stat", amount: 600, condition: "always" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], targetTags: [], statName: "Tiro", type: "stat", amount: 600, condition: "always" },
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], targetTags: [], statName: "Blocco", type: "stat", amount: 600, condition: "always" }
         ]
     },
     coachPassive: {
@@ -41,30 +41,22 @@ export const coachData = {
             { val: 59, val2: 59, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_Playmaker", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "always" },
-            { target: "team_Playmaker", stat: "Potenza_Dribbling", type: "move_power", amount: "{VAL2}", condition: "always" }
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: ["Playmaker"], type: "power", moveKind: "Tiro", amount: "{VAL}", condition: "always" },
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: ["Playmaker"], type: "power", moveKind: "Dribbling", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [
-        // Attaccanti (FW)
+        // ... slots invariati ...
         { number: 1, position: "FW", x: 35, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 65, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
-
-        // Centrocampisti (MF)
         { number: 3, position: "MF", x: 15, y: 40, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 5, position: "MF", x: 50, y: 45, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 4, position: "MF", x: 90, y: 40, baseAsset: "img/Position/Img_MFBase.png" },
-
-        // Difensori (DF) - Linea a 3 centrale
         { number: 6, position: "DF", x: 15, y: 65, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 7, position: "DF", x: 50, y: 61, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 8, position: "DF", x: 90, y: 65, baseAsset: "img/Position/Img_DFBase.png" },
-
-        // Difensori (DF) - Linea a 2 arretrata
         { number: 9, position: "DF", x: 37, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 10, position: "DF", x: 67, y: 75, baseAsset: "img/Position/Img_DFBase.png" },
-
-        // Portiere (GK)
         { number: 11, position: "GK", x: 50, y: 90, baseAsset: "img/Position/Img_GKBase.png" }
     ]
 };

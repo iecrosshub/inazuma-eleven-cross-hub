@@ -17,17 +17,17 @@ export const coachData = {
     formationPassive: {
         title: "Attiva F-Brainwashing (アクティブ・F-ミカゲセンノウ)",
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
-        text: "All'inizio della partita:<br><strong>Alleati elemento Fuoco:</strong> potenza tecniche di tecnica +30<br><strong>Alleati elemento Albero:</strong> potenza tecniche di tecnica +30",
+        text: "All'inizio della partita:<br><strong>Alleati elemento Fuoco:</strong> potenza tecniche di Dribbling +30<br><strong>Alleati elemento Albero:</strong> potenza tecniche di Dribbling +30",
         actions: [
-            { target: "team_Fire", stat: "Tecnica", type: "move_power", amount: 30, condition: "always" },
-            { target: "team_Forest", stat: "Tecnica", type: "move_power", amount: 30, condition: "always" }
+            { targetScope: "team", targetRoles: [], targetElements: ["Fire"], targetTags: [], type: "power", moveKind: "Dribbling", amount: 30, condition: "always" },
+            { targetScope: "team", targetRoles: [], targetElements: ["Forest"], targetTags: [], type: "power", moveKind: "Dribbling", amount: 30, condition: "always" }
         ]
     },
     coachPassive: {
         id: "coach_passive_toyama",
         title: "Power Boost FW & GK (FW&GKパワーブースト)",
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
-        template: "All'inizio della partita:<br><strong>Alleati FW elemento Fuoco:</strong> potenza tecniche di tiro +{VAL}<br><strong>Alleati GK elemento Albero:</strong> potenza tecniche Albero +{VAL2}",
+        template: "All'inizio della partita:<br><strong>Alleati FW elemento Fuoco:</strong> potenza tecniche di tiro +{VAL}<br><strong>Alleati GK elemento Albero:</strong> potenza tecniche di parata +{VAL2}",
         levels: [
             { val: 8, val2: 8, req: "Niv.1" },
             { val: 16, val2: 16, req: "Niv.2" },
@@ -41,11 +41,12 @@ export const coachData = {
             { val: 80, val2: 80, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_Fire_recommended_FW", stat: "Potenza_Tiro", type: "move_power", amount: "{VAL}", condition: "always" },
-            { target: "team_Forest_recommended_GK", stat: "Potenza_Arrêt", type: "move_power", amount: "{VAL2}", condition: "always" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Fire"], targetTags: [], type: "power", moveKind: "Tiro", amount: "{VAL}", condition: "always" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: ["Forest"], targetTags: [], type: "power", moveKind: "Parata", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [
+        // ... slots invariati ...
         { number: 1, position: "FW", x: 37, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 67, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 5, position: "MF", x: 15, y: 40, baseAsset: "img/Position/Img_MFBase.png" },

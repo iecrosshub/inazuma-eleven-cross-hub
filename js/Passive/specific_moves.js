@@ -29,8 +29,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "ヘブンズタイム", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_reduction", valueRef: "tp" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "ヘブンズタイム", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "tp_reduction", moveName: "ヘブンズタイム", valueRef: "tp" }
         ]
     },
     {
@@ -45,8 +45,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "天空落とし", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_reduction", valueRef: "tp" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "天空落とし", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "tp_reduction", moveName: "天空落とし", valueRef: "tp" }
         ]
     },
 
@@ -84,7 +84,7 @@ export const specificMovesPassives = [
         conditions: null,
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "TP", valueRef: "val" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "フルパワーシールド", valueRef: "val2" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "フルパワーシールド", valueRef: "val2" }
         ]
     },
     {
@@ -150,8 +150,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "まぼろしドリブル", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_reduction", valueRef: "tp" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "まぼろしドリブル", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "tp_reduction", moveName: "まぼろしドリブル", valueRef: "tp" }
         ]
     },
     {
@@ -196,8 +196,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "つちだるま", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "crit_rate", valueRef: "crt" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "つちだるま", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "crit_buff", moveName: "つちだるま", valueRef: "crt" }
         ]
     },
     {
@@ -212,8 +212,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "パトリオットシュート", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "crit_rate", valueRef: "crt" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "パトリオットシュート", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "crit_buff", moveName: "パトリオットシュート", valueRef: "crt" }
         ]
     },
     {
@@ -228,8 +228,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "ファントムシュート", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "crit_rate", valueRef: "crt" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "ファントムシュート", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "crit_buff", moveName: "ファントムシュート", valueRef: "crt" }
         ]
     },
     {
@@ -259,8 +259,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "彗星シュート", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "crit_rate", valueRef: "crt" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "彗星シュート", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "crit_buff", moveName: "彗星シュート", valueRef: "crt" }
         ]
     },
     {
@@ -290,8 +290,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "ターザンキック", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "crit_rate", valueRef: "crt" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "ターザンキック", valueRef: "power" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "crit_buff", moveName: "ターザンキック", valueRef: "crt" }
         ]
     },
     {
@@ -321,8 +321,8 @@ export const specificMovesPassives = [
         category: "Always",
         conditions: null,
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "ジャッジスルー", valueRef: "val" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "foul_reduction", valueRef: "val2" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "ジャッジスルー", valueRef: "val" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "foul_debuff", moveName: "ジャッジスルー", valueRef: "val2" }
         ]
     },
 
@@ -339,7 +339,7 @@ export const specificMovesPassives = [
         conditions: null,
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "炎の風見鶏", moveElement: null, valueRef: "val1" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "炎の風見鶏", moveElement: null, valueRef: "val2" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "tp_reduction", moveName: "炎の風見鶏", valueRef: "val2" }
         ]
     },
 
@@ -379,7 +379,7 @@ export const specificMovesPassives = [
         conditions: null,
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "もちもち黄粉餅（花火）", moveElement: null, valueRef: "val1" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "もちもち黄粉餅（花火）", moveElement: null, valueRef: "val2" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "tp_reduction", moveName: "もちもち黄粉餅（花火）", valueRef: "val2" }
         ]
     },
 
@@ -461,7 +461,7 @@ export const specificMovesPassives = [
         conditions: null,
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "ゴッドハンド", moveElement: "Mountain", valueRef: "val1" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "ゴッドハンド", moveElement: "Mountain", valueRef: "val2" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "tp_reduction", moveName: "ゴッドハンド", valueRef: "val2" }
         ]
     },
 
@@ -470,14 +470,13 @@ export const specificMovesPassives = [
         id: "102173005",
         template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Albero, aumenta la potenza della propria tecnica Pinguino Imperatore 2 di {VAL1} e ne riduce il consumo TP di {VAL2}.",
         levels: [
-            // ... inserire i livelli Advanced e Top Player +
             { val1: 136, val2: 20, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Bonds",
-        conditions: { type: "element_count", element: "Forest", minCount: 3 },
+        conditions: { requiresElements: ["Forest"], requiresCount: 3 },
         effects: [
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Pinguino Imperatore 2", moveElement: null, valueRef: "val1" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_cost_reduction", moveName: "Pinguino Imperatore 2", moveElement: null, valueRef: "val2" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "皇帝ペンギン2号", moveElement: null, valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "tp_reduction", moveName: "皇帝ペンギン2号", valueRef: "val2" }
         ]
     }
 ];

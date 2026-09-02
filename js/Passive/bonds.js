@@ -19,7 +19,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_InazumaJapan", "Icon_Tag_Team_Raimon"],
+            requiresTags: ["Inazuma Japan", "Raimon"],
             requiresCount: 3
         },
         effects: [
@@ -50,7 +50,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_InazumaJapan"],
+            requiresTags: ["Inazuma Japan"],
             requiresCount: 3
         },
         effects: [
@@ -68,7 +68,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_InazumaJapan"],
+            requiresTags: ["Inazuma Japan"],
             requiresCount: 3
         },
         effects: [
@@ -94,7 +94,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_InazumaJapan"],
+            requiresTags: ["Inazuma Japan"],
             requiresCount: 3
         },
         effects: [
@@ -118,7 +118,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_Raimon"],
+            requiresTags: ["Raimon"],
             requiresCount: 3
         },
         effects: [
@@ -142,7 +142,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_Raimon"],
+            requiresTags: ["Raimon"],
             requiresCount: 3
         },
         effects: [
@@ -167,7 +167,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_Raimon"],
+            requiresTags: ["Raimon"],
             requiresCount: 3
         },
         effects: [
@@ -191,7 +191,7 @@ export const bondPassives = [
             { val: 700, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
+        conditions: { requiresTags: ["Kirkwood"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -212,7 +212,7 @@ export const bondPassives = [
             { val: 700, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
+        conditions: { requiresTags: ["Kirkwood"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -227,10 +227,10 @@ export const bondPassives = [
             { power: 22, tp: 15, req: "Si sblocca a: Legendary Player +" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
+        conditions: { requiresTags: ["Kirkwood"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "トライアングルＺ", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "tp_reduction", valueRef: "tp" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifiertype: "move_modifier", modifierType: "tp_reduction", valueRef: "tp" }
         ]
     },
     {
@@ -249,7 +249,7 @@ export const bondPassives = [
             { val: 672, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
+        conditions: { requiresTags: ["Kirkwood"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
@@ -264,7 +264,7 @@ export const bondPassives = [
             { val: 26, req: "Si sblocca a: Legendary Player +" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Kirkwood"], requiresCount: 3 },
+        conditions: { requiresTags: ["Kirkwood"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Fire", valueRef: "val" }
         ]
@@ -307,7 +307,7 @@ export const bondPassives = [
             { power: 23, dist: 3, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "ダークトルネード", valueRef: "power" },
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Distanza", valueRef: "dist" }
@@ -330,7 +330,7 @@ export const bondPassives = [
             { val: 560, req: "Si sblocca con personaggio Lv. 281" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -359,7 +359,7 @@ export const bondPassives = [
     {
         title: "[Legame] Tecnica MF/DF Avversari - (【共鳴】敵ＭＦ・ＤＦテクニック－)",
         id: "101100003",
-        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Albero, riduce la Tecnica dei MF e DF avversari di {VAL}.",
+        template: "All'inizio della partita, se ci sono almeno 3 alleati di elemento Albero, riduce la Tecnica dei MF e DF avversari di -{VAL}.",
         levels: [
             { val: 56, req: "Si sblocca con personaggio Lv. 41" },
             { val: 84, req: "Si sblocca con personaggio Lv. 61" },
@@ -374,7 +374,7 @@ export const bondPassives = [
         category: "Bond",
         conditions: { requiresElements: ["Forest"], requiresCount: 3 },
         effects: [
-            { targetScope: "enemy", targetRoles: ["MF", "DF"], targetElements: [], type: "stat_debuff", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["MF", "DF"], targetElements: [], type: "stat_debuff", statName: "Tecnica", valueRef: "val" }
         ]
     },
     {
@@ -394,7 +394,7 @@ export const bondPassives = [
             { val: 210, req: "Si sblocca con personaggio Lv. 281" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
@@ -415,7 +415,7 @@ export const bondPassives = [
             { val: 263, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -436,7 +436,7 @@ export const bondPassives = [
             { val: 210, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
@@ -458,7 +458,7 @@ export const bondPassives = [
             { val: 467, req: "Si sblocca con personaggio Lv. 281" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -480,7 +480,7 @@ export const bondPassives = [
             { val: 467, req: "Si sblocca con personaggio Lv. 281" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -501,7 +501,7 @@ export const bondPassives = [
             { val: 41, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
         ]
@@ -522,7 +522,7 @@ export const bondPassives = [
             { val: 560, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -537,7 +537,7 @@ export const bondPassives = [
             { val: 27, req: "Si sblocca a: Legendary Player +" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
@@ -558,7 +558,7 @@ export const bondPassives = [
             { val: 747, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
@@ -579,7 +579,7 @@ export const bondPassives = [
             { val: 1680, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -594,7 +594,7 @@ export const bondPassives = [
             { val: 55, req: "Si sblocca a: Legendary Player +" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "All", moveElement: "Fire", valueRef: "val" }
         ]
@@ -616,7 +616,7 @@ export const bondPassives = [
             { val: 34, req: "Si sblocca con personaggio Lv. 281" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
@@ -652,10 +652,10 @@ export const bondPassives = [
             { power: 66, crt: 1000, req: "Si sblocca a: Legendary Player +" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "specific_move", moveName: "メガネクラッシュ", valueRef: "power" },
-            { targetScope: "self", targetRoles: [], targetElements: [], type: "crit_rate", valueRef: "crt" }
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "move_modifier", modifierType: "crit_buff", valueRef: "crt" }
         ]
     },
     {
@@ -675,7 +675,7 @@ export const bondPassives = [
             { val: 467, req: "Si sblocca con personaggio Lv. 281" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
@@ -698,7 +698,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_Raimon", "Icon_Tag_Team_InazumaKidsFC"],
+            requiresTags: ["Raimon", "Inazuma Kids FC"],
             requiresCount: 3
         },
         effects: [
@@ -743,7 +743,7 @@ export const bondPassives = [
             { val: 280, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Emperors"], requiresCount: 3 },
+        conditions: { requiresTags: ["Royal Academy"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["MF", "DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -764,7 +764,7 @@ export const bondPassives = [
             { val: 840, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Emperors"], requiresCount: 3 },
+        conditions: { requiresTags: ["Royal Academy"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["MF"], targetElements: ["Wind"], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
@@ -785,7 +785,7 @@ export const bondPassives = [
             { val: 747, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Raimon"], requiresCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -807,7 +807,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_Zeus"],
+            requiresTags: ["Zeus"],
             requiresCount: 3
         },
         effects: [
@@ -825,7 +825,7 @@ export const bondPassives = [
         ],
         category: "Bond",
         conditions: {
-            requiresTags: ["Icon_Tag_Team_Zeus"],
+            requiresTags: ["Zeus"],
             requiresCount: 3
         },
         effects: [
@@ -842,7 +842,7 @@ export const bondPassives = [
             { val: 55, req: "Si sblocca a: Legendary Player +" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Zeus"], requiresCount: 3 },
+        conditions: { requiresTags: ["Zeus"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
@@ -863,7 +863,7 @@ export const bondPassives = [
             { val: 13, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Zeus"], requiresCount: 3 },
+        conditions: { requiresTags: ["Zeus"], requiresCount: 3 },
         effects: [
             { targetScope: "allies", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
@@ -884,7 +884,7 @@ export const bondPassives = [
             { val: 51, req: "Si sblocca con personaggio Lv. 271" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Zeus"], requiresCount: 3 },
+        conditions: { requiresTags: ["Zeus"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
@@ -899,7 +899,7 @@ export const bondPassives = [
             { val: 68, req: "Si sblocca a: Legendary Player +" }
         ],
         category: "Bond",
-        conditions: { requiresTags: ["Icon_Tag_Team_Zeus"], requiresCount: 3 },
+        conditions: { requiresTags: ["Zeus"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
@@ -923,7 +923,7 @@ export const bondPassives = [
             { val: 616, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { tag: "Young Inazuma", count: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Difesa", valueRef: "val" }
         ]
@@ -947,7 +947,7 @@ export const bondPassives = [
             { val: 513, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { tag: "Young Inazuma", count: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -971,7 +971,7 @@ export const bondPassives = [
             { val: 513, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { tag: "Young Inazuma", count: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
         ]
@@ -987,7 +987,7 @@ export const bondPassives = [
             { val: 18, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Bonds",
-        conditions: { tag: "Young Inazuma", count: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
         ]
@@ -1011,7 +1011,7 @@ export const bondPassives = [
             { val: 328, req: "Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" },
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
@@ -1028,7 +1028,7 @@ export const bondPassives = [
             { val: 933, req: "Legendary Player +" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -1052,7 +1052,7 @@ export const bondPassives = [
             { val: 344, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" },
             { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
@@ -1077,7 +1077,7 @@ export const bondPassives = [
             { val: 437, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
             { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
@@ -1102,7 +1102,7 @@ export const bondPassives = [
             { val: 672, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]
@@ -1126,7 +1126,7 @@ export const bondPassives = [
             { val: 687, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Young Inazuma", minCount: 3 },
+        conditions: { requiresTags: ["Young Inazuma"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" },
             { targetScope: "team", targetRoles: ["GK"], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
@@ -1151,7 +1151,7 @@ export const bondPassives = [
             { val: 2704, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Parata", valueRef: "val" }
         ]
@@ -1160,24 +1160,24 @@ export const bondPassives = [
     {
         title: "[Legame] Blocco DF - (【結束】ＤＦブロック－)",
         id: "101168001",
-        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce il Blocco dei DF avversari di {VAL}.",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce il Blocco dei DF avversari di -{VAL}.",
         levels: [
-            { val: -117, req: "Si sblocca con personaggio Lv. 1" },
-            { val: -156, req: "Si sblocca con personaggio Lv. 21" },
-            { val: -196, req: "Si sblocca con personaggio Lv. 71" },
-            { val: -235, req: "Si sblocca con personaggio Lv. 101" },
-            { val: -313, req: "Si sblocca con personaggio Lv. 131" },
-            { val: -392, req: "Si sblocca con personaggio Lv. 161" },
-            { val: -470, req: "Si sblocca con personaggio Lv. 191" },
-            { val: -548, req: "Si sblocca con personaggio Lv. 221" },
-            { val: -666, req: "Si sblocca con personaggio Lv. 251" },
-            { val: -784, req: "Si sblocca con personaggio Lv. 281" },
-            { val: -901, req: "Si sblocca con personaggio Lv. 311" }
+            { val: 117, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 156, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 196, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 235, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 313, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 392, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 470, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 548, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 666, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 784, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 901, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "stat_debuff", statName: "Blocco", valueRef: "val" }
         ]
     },
 
@@ -1199,7 +1199,7 @@ export const bondPassives = [
             { val: 840, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
         ]
@@ -1223,7 +1223,7 @@ export const bondPassives = [
             { val: 31, req: "Si sblocca con personaggio Lv. 331" }
         ],
         category: "Bonds",
-        conditions: { type: "element_count", element: "Forest", minCount: 3 },
+        conditions: { requiresElements: ["Forest"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["MF"], targetElements: ["Forest"], type: "power", moveKind: "Tiro", moveElement: null, valueRef: "val" }
         ]
@@ -1239,7 +1239,7 @@ export const bondPassives = [
             { val: 18, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Bonds",
-        conditions: { type: "element_count", element: "Mountain", minCount: 3 },
+        conditions: { requiresElements: ["Mountain"], requiresCount: 3 },
         effects: [
             { targetScope: "team", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: null, moveElement: "Mountain", valueRef: "val" }
         ]
@@ -1248,56 +1248,56 @@ export const bondPassives = [
     {
         title: "[Risonanza] Potenza Tiro FW Albero - (【共鳴】ＦＷシュートパワー－〈林〉)",
         id: "101174004",
-        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Fuoco, riduce la potenza delle tecniche di Tiro di elemento Albero dei FW avversari di {VAL}.",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Fuoco, riduce la potenza delle tecniche di Tiro di elemento Albero dei FW avversari di -{VAL}.",
         levels: [
-            { val: -15, req: "Si sblocca con: Advanced Player +" },
-            { val: -18, req: "Si sblocca con: Top Player +" },
-            { val: -22, req: "Si sblocca con: Legendary Player +" }
+            { val: 15, req: "Si sblocca con: Advanced Player +" },
+            { val: 18, req: "Si sblocca con: Top Player +" },
+            { val: 22, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Bonds",
-        conditions: { type: "element_count", element: "Fire", minCount: 3 },
+        conditions: { requiresElements: ["Fire"], requiresCount: 3 },
         effects: [
-            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Wood"], type: "power", moveKind: "Tiro", moveElement: "Wood", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["FW"], targetElements: ["Forest"], type: "power_debuff", moveKind: "Tiro", moveElement: "Forest", valueRef: "val" }
         ]
     },
 
     {
         title: "[Legame] Tecnica MF - (【結束】ＭＦテクニック－)",
         id: "101173001",
-        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce la Tecnica dei MF avversari di {VAL}.",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce la Tecnica dei MF avversari di -{VAL}.",
         levels: [
-            { val: -70, req: "Si sblocca con personaggio Lv. 1" },
-            { val: -93, req: "Si sblocca con personaggio Lv. 21" },
-            { val: -116, req: "Si sblocca con personaggio Lv. 71" },
-            { val: -140, req: "Si sblocca con personaggio Lv. 101" },
-            { val: -186, req: "Si sblocca con personaggio Lv. 131" },
-            { val: -233, req: "Si sblocca con personaggio Lv. 161" },
-            { val: -280, req: "Si sblocca con personaggio Lv. 191" },
-            { val: -326, req: "Si sblocca con personaggio Lv. 221" },
-            { val: -396, req: "Si sblocca con personaggio Lv. 251" },
-            { val: -467, req: "Si sblocca con personaggio Lv. 281" },
-            { val: -537, req: "Si sblocca con personaggio Lv. 311" }
+            { val: 70, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 93, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 116, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 140, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 186, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 233, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 280, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 326, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 396, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 467, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 311" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "enemy_team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["MF"], targetElements: [], type: "stat_debuff", statName: "Tecnica", valueRef: "val" }
         ]
     },
 
     {
         title: "[Legame] Potenza Blocco DF - (【結束】ＤＦブロックパワー－)",
         id: "101173004",
-        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce la potenza delle tecniche di Blocco dei DF avversari di {VAL}.",
+        template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Raimon', riduce la potenza delle tecniche di Blocco dei DF avversari di -{VAL}.",
         levels: [
-            { val: -12, req: "Si sblocca con: Advanced Player +" },
-            { val: -15, req: "Si sblocca con: Top Player +" },
-            { val: -18, req: "Si sblocca con: Legendary Player +" }
+            { val: 12, req: "Si sblocca con: Advanced Player +" },
+            { val: 15, req: "Si sblocca con: Top Player +" },
+            { val: 18, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Raimon", minCount: 3 },
+        conditions: { requiresTags: ["Raimon"], requiresCount: 3 },
         effects: [
-            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+            { targetScope: "enemy_team", targetRoles: ["DF"], targetElements: [], type: "power_debuff", moveKind: "Blocco", moveElement: null, valueRef: "val" }
         ]
     },
 
@@ -1310,7 +1310,7 @@ export const bondPassives = [
             { val: 2704, req: "Si sblocca con personaggio Lv. 340" }
         ],
         category: "Bonds",
-        conditions: { type: "tag_count", tag: "Inazuma Japan", minCount: 3 },
+        conditions: { requiresTags: ["Inazuma Japan"], requiresCount: 3 },
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
         ]

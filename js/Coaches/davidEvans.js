@@ -18,7 +18,7 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png"],
         text: "Durante la partita:<br>Ogni volta che una tecnica di parata alleata ha successo, la potenza delle <strong>tecniche di tiro alleate</strong> aumenta di +50.<br><em>Condizione di fine: quando un alleato segna un gol.</em>",
         actions: [
-            { target: "team", stat: "Potenza_Tiro", type: "move_power", amount: 50, condition: "on_catch_success_until_goal" }
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: [], type: "power", moveKind: "Tiro", amount: 50, condition: "ally_catch_success", resetCondition: "ally_goal" }
         ]
     },
     coachPassive: {
@@ -39,24 +39,22 @@ export const coachData = {
             { val: 60, val2: 80, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_recommended_DF", stat: "Potenza_Blocco", type: "move_power", amount: "{VAL}", condition: "always" },
-            { target: "team_Mountain_recommended_GK", stat: "Potenza_Parata", type: "move_power", amount: "{VAL2}", condition: "always" }
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], targetTags: [], type: "power", moveKind: "Blocco", amount: "{VAL}", condition: "always" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: ["Mountain"], targetTags: [], type: "power", moveKind: "Parata", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [
+        // ... gli slots vanno benissimo
         { number: 1, position: "FW", x: 37, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 67, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
-
         { number: 3, position: "MF", x: 15, y: 35, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 5, position: "MF", x: 50, y: 37, baseAsset: "img/Position/Img_MFBase.png" },
         { number: 4, position: "MF", x: 90, y: 35, baseAsset: "img/Position/Img_MFBase.png" },
-
         { number: 6, position: "DF", x: 21, y: 62, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 7, position: "DF", x: 50, y: 62, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 8, position: "DF", x: 86, y: 62, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 9, position: "DF", x: 25, y: 80, baseAsset: "img/Position/Img_DFBase.png" },
         { number: 10, position: "DF", x: 75, y: 80, baseAsset: "img/Position/Img_DFBase.png" },
-
         { number: 11, position: "GK", x: 50, y: 90, baseAsset: "img/Position/Img_GKBase.png" }
     ]
 };

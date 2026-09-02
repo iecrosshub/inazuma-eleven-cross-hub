@@ -19,8 +19,8 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
         text: "All'inizio della partita:<br><strong>Alleati GK consigliati:</strong> potenza tecniche Parata +53<br><strong>Alleati DF consigliati:</strong> potenza tecniche di Blocco +53",
         actions: [
-            { target: "team_recommended_GK", stat: "Potenza_Arrêt", type: "move_power", amount: 53, condition: "always" },
-            { target: "team_recommended_DF", stat: "Potenza_Blocco", type: "move_power", amount: 53, condition: "always" }
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], targetTags: [], type: "power", moveKind: "Parata", amount: 53, condition: "always" },
+            { targetScope: "team", targetRoles: ["DF"], targetElements: [], targetTags: [], type: "power", moveKind: "Blocco", amount: 53, condition: "always" }
         ]
     },
     coachPassive: {
@@ -41,11 +41,12 @@ export const coachData = {
             { val: 3113, val2: 1200, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_Raimon_recommended_GK", stat: "Arrêt", type: "base_stat", amount: "{VAL}", condition: "always" },
-            { target: "team_Raimon", stat: "Tecnica", type: "base_stat", amount: "{VAL2}", condition: "always" }
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], targetTags: ["Raimon"], statName: "Parata", type: "stat", amount: "{VAL}", condition: "always" },
+            { targetScope: "team", targetRoles: [], targetElements: [], targetTags: ["Raimon"], statName: "Tecnica", type: "stat", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [
+        // ... slots invariati ...
         { number: 1, position: "FW", x: 37, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 2, position: "FW", x: 67, y: 15, baseAsset: "img/Position/Img_FWBase.png" },
         { number: 5, position: "MF", x: 15, y: 40, baseAsset: "img/Position/Img_MFBase.png" },

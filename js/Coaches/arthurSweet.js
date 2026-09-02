@@ -20,8 +20,8 @@ export const coachData = {
         icons: ["img/Coaches/PassiveEffectIcon_AddMovePower.png", "img/Coaches/PassiveEffectIcon_AddMovePower.png"],
         text: "All'inizio della partita:<br><strong>Alleati elemento Albero:</strong> potenza tecniche di tiro +22<br><strong>Alleati elemento Montagna:</strong> potenza tecniche di blocco +20",
         actions: [
-            { target: "team_Wood", stat: "Potenza_Tiro", type: "move_power", amount: 22, condition: "always" },
-            { target: "team_Mountain", stat: "Potenza_Blocco", type: "move_power", amount: 20, condition: "always" }
+            { targetScope: "team", targetRoles: [], targetElements: ["Forest"], targetTags: [], type: "power", moveKind: "Tiro", amount: 22, condition: "always" },
+            { targetScope: "team", targetRoles: [], targetElements: ["Mountain"], targetTags: [], type: "power", moveKind: "Blocco", amount: 20, condition: "always" }
         ]
     },
     coachPassive: {
@@ -42,8 +42,8 @@ export const coachData = {
             { val: 3300, val2: 3000, req: "Niv.10" }
         ],
         actions: [
-            { target: "team_Raimon_KFC_recommended_FW", stat: "Tiro", type: "base_stat", amount: "{VAL}", condition: "always" },
-            { target: "team_Raimon_KFC_recommended_GK", stat: "Parata", type: "base_stat", amount: "{VAL2}", condition: "always" }
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], targetTags: ["Raimon", "Inazuma Kids FC"], statName: "Tiro", type: "stat", amount: "{VAL}", condition: "always" },
+            { targetScope: "team", targetRoles: ["GK"], targetElements: [], targetTags: ["Raimon", "Inazuma Kids FC"], statName: "Parata", type: "stat", amount: "{VAL2}", condition: "always" }
         ]
     },
     slots: [
