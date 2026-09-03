@@ -6,17 +6,20 @@ export const alwaysPassives = [
         id: "100000101",
         template: "All'inizio della partita, aumenta il proprio Tiro di {VAL}.",
         levels: [
-            { val: 67, req: "Lv. 11" },
-            { val: 134, req: "Lv. 51" },
-            { val: 201, req: "Lv. 81" },
-            { val: 268, req: "Lv. 111" },
-            { val: 403, req: "Lv. 141" },
-            { val: 537, req: "Lv. 171" },
-            { val: 672, req: "Lv. 201" },
-            { val: 806, req: "Lv. 231" },
-            { val: 1075, req: "Lv. 261" },
-            { val: 1344, req: "Lv. 291" },
-            { val: 1545, req: "Lv. 321" }
+            { val: 67, req: "Si sblocca con personaggio Lv. 11" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 51" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 81" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 111" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 141" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 171" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 201" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 231" },
+            { val: 1075, req: "Si sblocca con personaggio Lv. 261" },
+            { val: 1344, req: "Si sblocca con personaggio Lv. 291" },
+            { val: 1545, req: "Si sblocca con personaggio Lv. 321" },
+            { val: 1747, req: "Si sblocca con personaggio Lv. 351" },
+            { val: 1881, req: "Si sblocca con personaggio Lv. 381" },
+            { val: 2016, req: "Si sblocca con personaggio Lv. 411" }
         ],
         category: "Always",
         conditions: null,
@@ -2522,11 +2525,23 @@ export const alwaysPassives = [
 
     {
         title: "Tiro e Tecnica FW Albero + (林FWキック＆テクニック＋)",
-        id: "102173002",
+        id: "103016003",
         template: "All'inizio della partita, aumenta il Tiro e la Tecnica dei compagni FW di elemento Albero di {VAL}.",
         levels: [
-            // ... inserire gli altri livelli intermedi
-            { val: 1263, req: "Si sblocca con personaggio Lv. 340" }
+            { val: 315, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 421, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 526, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 631, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 737, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 842, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 947, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 1000, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 1053, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 1158, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 1263, req: "Si sblocca con personaggio Lv. 331" },
+            { val: 1316, req: "Si sblocca con personaggio Lv. 361" },
+            { val: 1368, req: "Si sblocca con personaggio Lv. 391" },
+            { val: 1421, req: "Si sblocca con personaggio Lv. 421" }
         ],
         category: "Always",
         conditions: null,

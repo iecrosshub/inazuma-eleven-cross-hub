@@ -467,9 +467,11 @@ export const specificMovesPassives = [
 
     {
         title: "[Risonanza] Potenza Pinguino Imperatore 2 + (【共鳴】皇帝ペンギン2号パワー＋改)",
-        id: "102173005",
+        id: "103016004",
         template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Albero, aumenta la potenza della propria tecnica Pinguino Imperatore 2 di {VAL1} e ne riduce il consumo TP di {VAL2}.",
         levels: [
+            { val1: 95, val2: 10, req: "Si sblocca con: Advanced Player +" },
+            { val1: 115, val2: 15, req: "Si sblocca con: Top Player +" },
             { val1: 136, val2: 20, req: "Si sblocca con: Legendary Player +" }
         ],
         category: "Bonds",

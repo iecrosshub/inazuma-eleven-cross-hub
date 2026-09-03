@@ -1303,11 +1303,24 @@ export const bondPassives = [
 
     {
         title: "[Legame] Tiro + (【結束】キック＋)",
-        id: "102173003",
+        id: "103016001",
         template: "All'inizio della partita, se ci sono 3 o più alleati con il tag 'Inazuma Japan', aumenta il proprio Tiro di {VAL}.",
         levels: [
-            // ... inserire gli altri livelli intermedi
-            { val: 2704, req: "Si sblocca con personaggio Lv. 340" }
+            { val: 352, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 470, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 588, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 705, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 940, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 1176, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 1411, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 1646, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 1999, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 2352, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 2704, req: "Si sblocca con personaggio Lv. 311" },
+            { val: 3057, req: "Si sblocca con personaggio Lv. 341" },
+            { val: 3292, req: "Si sblocca con personaggio Lv. 371" },
+            { val: 3528, req: "Si sblocca con personaggio Lv. 401" },
+            { val: 3763, req: "Si sblocca con personaggio Lv. 431" }
         ],
         category: "Bonds",
         conditions: { requiresTags: ["Inazuma Japan"], requiresCount: 3 },

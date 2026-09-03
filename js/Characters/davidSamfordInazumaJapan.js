@@ -10,17 +10,17 @@ export const charData = {
 
     tags: [
         "img/TagTitle/Icon_Tag_Team_InazumaJapan.png",
-        "img/TagTitle/Icon_Tag_Ability_Striker.png",
+        "img/TagTitle/Icon_Tag_Ability_SecondTop.png",
         "img/TagTitle/Icon_Tag_Title_InaEle3.png"
     ],
 
     stats: {
-        "TP": { lv1: "???", lv340: 100, icon: "img/Status/Icon_Status_TP.png" },
-        "Tiro": { lv1: "???", lv340: 22199, icon: "img/Status/Icon_Status_Kick.png" },
-        "Tecnica": { lv1: "???", lv340: 16399, icon: "img/Status/Icon_Status_Technic.png" },
-        "Blocco": { lv1: "???", lv340: 10463, icon: "img/Status/Icon_Status_Block.png" },
-        "Parata": { lv1: "???", lv340: 5880, icon: "img/Status/Icon_Status_Catch.png" },
-        "Velocità": { lv1: "???", lv340: 4, icon: "img/Status/Icon_Status_Speed.png" }
+        "TP": { lv1: 100, lv440: 100, icon: "img/Status/Icon_Status_TP.png" },
+        "Tiro": { lv1: 69, lv440: 9332, icon: "img/Status/Icon_Status_Kick.png" },
+        "Tecnica": { lv1: 53, lv440: 6982, icon: "img/Status/Icon_Status_Technic.png" },
+        "Blocco": { lv1: 34, lv440: 4192, icon: "img/Status/Icon_Status_Block.png" },
+        "Parata": { lv1: 25, lv440: 2796, icon: "img/Status/Icon_Status_Catch.png" },
+        "Velocità": { lv1: 4, lv440: 4, icon: "img/Status/Icon_Status_Speed.png" }
     },
 
     zones: [
@@ -31,6 +31,6 @@ export const charData = {
 
     myTechniques: ["皇帝ペンギン2号", "烈風ダッシュ"],
 
-    myBasicPassivesIds: ["100000101", "102173002", "102173003"],
-    myRarityPassivesIds: ["100000501", "102173005"]
+    myBasicPassivesIds: ["100000101", "103016001", "103016003"],
+    myRarityPassivesIds: ["100000501", "103016004"]
 };

@@ -5,7 +5,7 @@ export const characterRegistry = [
         name: "David Samford",
         romanizedName: "Sakuma Jirou",
         japaneseName: "佐久間 次郎",
-        thumb: "img/Characters/DavidSamfordJapan.png",
+        thumb: "img/Characters/DavidSamfordInazumaJapan.png",
         element: "img/Element/Icon_Element_Forest.png",
         position: "img/Position/Icon_Position_FW.png",
         stars: 3,
