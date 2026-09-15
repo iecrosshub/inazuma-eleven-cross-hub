@@ -2,6 +2,13 @@
 
 export const coachRegistry = [
     {
+        id: "linaSchiller",
+        name: "Lina Schiller",
+        japaneseName: "吉良 瞳子",
+        thumb: "img/Coaches/LinaSchiller.png"
+    },
+
+    {
         id: "percivalTravis",
         name: "Percival Travis",
         japaneseName: "久遠 道也",
