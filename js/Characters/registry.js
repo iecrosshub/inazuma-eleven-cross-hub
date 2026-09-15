@@ -1,6 +1,32 @@
 export const characterRegistry = [
 
     {
+        id: "bellatrix",
+        name: "Bellatrix",
+        romanizedName: "Urubida",
+        japaneseName: "ウルビダ",
+        thumb: "img/Characters/Bellatrix.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "victoriaVanguard",
+        name: "Victoria Vanguard",
+        romanizedName: "Zaizen Touko",
+        japaneseName: "財前塔子",
+        thumb: "img/Characters/Victoria.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
         id: "davidSamfordInazumaJapan",
         name: "David Samford",
         romanizedName: "Sakuma Jirou",
@@ -1116,7 +1142,7 @@ export const characterRegistry = [
         romanizedName: "Hōmen Shūichirō",
         japaneseName: "洞面 秀一郎",
         thumb: "img/Characters/DerekSwingRoyalAcademy.png",
-        element: "img/Element/Icon_Element_Forest.png",
+        element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 1,
         background: "linear-gradient(to bottom, #edf3f8 0%, #a4ccf4 100%)",
