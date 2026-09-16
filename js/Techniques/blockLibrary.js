@@ -236,4 +236,34 @@ export const blockLibrary = {
         foul: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
         shootBlock: true
     },
+
+    "ザ・タワー": {
+        name: "Torre Inespugnabile (ザ・タワー)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        kind: "Blocco",
+        element: "Vento",
+        shootBlock: true,
+        power: [90, 95, 100, 105, 110, 115, 120, 125, 130, 135],
+        tp: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
+        coolDown: 3,
+        crit: [14, 14, 14, 14, 17, 17, 17, 17, 17, 20],
+        critBonus: [21, 21, 21, 21, 24, 24, 24, 24, 24, 27],
+        foul: [15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
+    },
+
+    "パーフェクト・タワー": {
+        name: "Torre Gigante (パーフェクト・タワー)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Block.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        kind: "Blocco",
+        element: "Vento",
+        shootBlock: false,
+        power: [180, 185, 190, 195, 200, 205, 210, 215, 220, 225],
+        tp: [60, 60, 60, 60, 60, 60, 60, 60, 60, 60],
+        coolDown: 3,
+        crit: [15, 15, 15, 15, 18, 18, 18, 18, 18, 21],
+        critBonus: [22, 22, 22, 22, 25, 25, 25, 25, 25, 28],
+        foul: [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+    }
 };

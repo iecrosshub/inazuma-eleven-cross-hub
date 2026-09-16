@@ -1456,5 +1456,116 @@ export const stackingPassives = [
         effects: [
             { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Parata", moveElement: null, valueRef: "val" }
         ]
+    },
+
+    {
+        title: "[Accumulo] Potenza Blocco + / Tecnica MF + (【奮起/累】ブロックパワー＋／ＭＦテクニック＋)",
+        id: "102064004",
+        template: "Ogni volta che un tiro di un alleato viene fermato dall'avversario, aumenta la potenza delle proprie tecniche di Blocco di {VAL1} e la Tecnica dei compagni MF di {VAL2}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val1: 28, val2: 581, req: "Si sblocca con: Advanced Player +" },
+            { val1: 34, val2: 705, req: "Si sblocca con: Top Player +" },
+            { val1: 40, val2: 830, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_shoot_blocked",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val1" },
+            { targetScope: "team", targetRoles: ["MF"], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "[Accumulo] Potenza Pinguino Spaziale + / Potenza Tiro FW Vento + (【奮起/累】スペースペンギンパワー＋／ＦＷシュートパワー＋〈風〉)",
+        id: "102042003",
+        template: "Ogni volta che un tiro di un alleato viene fermato dall'avversario, aumenta la potenza della propria tecnica Pinguino Spaziale di {VAL1} e la potenza delle tecniche di Tiro di elemento Vento dei compagni FW di {VAL2}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val1: 10, val2: 4, req: "Si sblocca con personaggio Lv. 41" },
+            { val1: 13, val2: 6, req: "Si sblocca con personaggio Lv. 61" },
+            { val1: 17, val2: 7, req: "Si sblocca con personaggio Lv. 91" },
+            { val1: 20, val2: 9, req: "Si sblocca con personaggio Lv. 121" },
+            { val1: 23, val2: 10, req: "Si sblocca con personaggio Lv. 151" },
+            { val1: 27, val2: 12, req: "Si sblocca con personaggio Lv. 181" },
+            { val1: 30, val2: 13, req: "Si sblocca con personaggio Lv. 211" },
+            { val1: 32, val2: 14, req: "Si sblocca con personaggio Lv. 241" },
+            { val1: 34, val2: 15, req: "Si sblocca con personaggio Lv. 271" },
+            { val1: 37, val2: 16, req: "Si sblocca con personaggio Lv. 301" },
+            { val1: 40, val2: 17, req: "Si sblocca con personaggio Lv. 331" },
+            { val1: 42, val2: 18, req: "Si sblocca con personaggio Lv. 361" },
+            { val1: 44, val2: 19, req: "Si sblocca con personaggio Lv. 391" },
+            { val1: 45, val2: 20, req: "Si sblocca con personaggio Lv. 421" }
+        ],
+        category: "Stacking",
+        trigger: "ally_shoot_blocked",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveName: "Pinguino Spaziale", moveElement: null, valueRef: "val1" },
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "power", moveKind: "Tiro", moveElement: "Wind", valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "[Accumulo] Tiro FW + (【連動/累】ＦＷキック＋)",
+        id: "102042004",
+        template: "Ogni volta che un compagno MF supera l'avversario con una tecnica di Dribbling, aumenta il Tiro dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 852, req: "Si sblocca con: Advanced Player +" },
+            { val: 1035, req: "Si sblocca con: Top Player +" },
+            { val: 1218, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_dribble_success",
+        triggerTargetRole: "MF",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Impeto/Accumulo] Tecnica + / Tiro FW + (【破竹/累】テクニック＋／ＦＷキック＋)",
+        id: "101169003",
+        template: "Ogni volta che una propria tecnica di Dribbling ha successo, aumenta la propria Tecnica di {VAL} e il Tiro dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 161, req: "Si sblocca con personaggio Lv. 41" },
+            { val: 241, req: "Si sblocca con personaggio Lv. 61" },
+            { val: 322, req: "Si sblocca con personaggio Lv. 91" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 121" },
+            { val: 483, req: "Si sblocca con personaggio Lv. 151" },
+            { val: 564, req: "Si sblocca con personaggio Lv. 181" },
+            { val: 644, req: "Si sblocca con personaggio Lv. 211" },
+            { val: 725, req: "Si sblocca con personaggio Lv. 241" },
+            { val: 806, req: "Si sblocca con personaggio Lv. 271" },
+            { val: 886, req: "Si sblocca con personaggio Lv. 301" },
+            { val: 967, req: "Si sblocca con personaggio Lv. 331" },
+            { val: 1007, req: "Si sblocca con personaggio Lv. 361" },
+            { val: 1047, req: "Si sblocca con personaggio Lv. 391" },
+            { val: 1128, req: "Si sblocca con personaggio Lv. 421" }
+        ],
+        category: "Stacking",
+        trigger: "self_dribble_success",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Tecnica", valueRef: "val" },
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Prevenzione/Accumulo] Tiro FW + (【阻止/累】ＦＷキック＋)",
+        id: "101169004",
+        template: "Ogni volta che un alleato ferma un tiro avversario, aumenta il Tiro dei compagni FW di {VAL}. (Condizione di fine: quando un alleato segna un gol).",
+        levels: [
+            { val: 796, req: "Si sblocca con: Advanced Player +" },
+            { val: 1061, req: "Si sblocca con: Top Player +" },
+            { val: 1327, req: "Si sblocca con: Legendary Player +" }
+        ],
+        category: "Stacking",
+        trigger: "ally_stop_shoot",
+        resetCondition: "ally_goal",
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: [], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
     }
 ];

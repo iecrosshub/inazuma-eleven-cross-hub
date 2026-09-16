@@ -542,4 +542,18 @@ export const shootLibrary = {
         bonusCrit: [3, 3, 3, 3, 6, 6, 6, 6, 6, 9],
         chain: false
     },
+
+    "スペースペンギン": {
+        name: "Pinguino Spaziale (スペースペンギン)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Shoot.png",
+        elementIcon: "img/Element/Icon_Element_Wind.png",
+        kind: "Tiro",
+        element: "Vento",
+        power: [123, 128, 133, 138, 143, 148, 153, 158, 163, 168],
+        tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+        coolDown: 3,
+        crit: [5, 5, 5, 5, 8, 8, 8, 8, 8, 11],
+        critBonus: [10, 10, 10, 10, 13, 13, 13, 13, 13, 16],
+        foul: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    }
 };

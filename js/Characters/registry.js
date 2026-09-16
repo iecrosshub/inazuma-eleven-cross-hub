@@ -1,11 +1,11 @@
 export const characterRegistry = [
 
     {
-        id: "bellatrix",
-        name: "Bellatrix",
-        romanizedName: "Urubida",
-        japaneseName: "ウルビダ",
-        thumb: "img/Characters/Bellatrix.png",
+        id: "judeSharpRaimon",
+        name: "Jude Sharp",
+        romanizedName: "Kidou Yuuto",
+        japaneseName: "鬼道 有人",
+        thumb: "img/Characters/JudeSharpRaimon.png",
         element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 3,
@@ -14,11 +14,24 @@ export const characterRegistry = [
     },
 
     {
-        id: "victoriaVanguard",
+        id: "bellatrixGenesis",
+        name: "Bellatrix",
+        romanizedName: "Urubida",
+        japaneseName: "ウルビダ",
+        thumb: "img/Characters/BellatrixGenesis.png",
+        element: "img/Element/Icon_Element_Wind.png",
+        position: "img/Position/Icon_Position_MF.png",
+        stars: 3,
+        background: "img/Frm_GachaIcon/Gacha_SSR_Base.png",
+        frame: "img/Frm_GachaIcon/Frm_GachaIcon_SSR.png"
+    },
+
+    {
+        id: "victoriaVanguardSecretService",
         name: "Victoria Vanguard",
         romanizedName: "Zaizen Touko",
         japaneseName: "財前塔子",
-        thumb: "img/Characters/Victoria.png",
+        thumb: "img/Characters/VictoriaVanguardSecretService.png",
         element: "img/Element/Icon_Element_Wind.png",
         position: "img/Position/Icon_Position_MF.png",
         stars: 3,

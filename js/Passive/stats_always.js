@@ -2551,4 +2551,86 @@ export const alwaysPassives = [
         ]
     },
 
+    {
+        title: "Blocco + (ブロック＋)",
+        id: "102064001",
+        template: "All'inizio della partita, aumenta il proprio Blocco di {VAL}.",
+        levels: [
+            { val: 338, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 451, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 564, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 677, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 903, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 1129, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 1354, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 1580, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 1919, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 2258, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 2596, req: "Si sblocca con personaggio Lv. 311" },
+            { val: 2935, req: "Si sblocca con personaggio Lv. 341" },
+            { val: 3161, req: "Si sblocca con personaggio Lv. 371" },
+            { val: 3387, req: "Si sblocca con personaggio Lv. 401" },
+            { val: 3612, req: "Si sblocca con personaggio Lv. 431" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "Potenza Tecniche Vento + / Blocco + (パワー＋〈風〉／ブロック＋)",
+        id: "102064003",
+        template: "All'inizio della partita, aumenta la potenza delle proprie tecniche di elemento Vento di {VAL1} e il proprio Blocco di {VAL2}.",
+        levels: [
+            { val1: 25, val2: 222, req: "Si sblocca con personaggio Lv. 41" },
+            { val1: 34, val2: 297, req: "Si sblocca con personaggio Lv. 61" },
+            { val1: 42, val2: 371, req: "Si sblocca con personaggio Lv. 91" },
+            { val1: 51, val2: 445, req: "Si sblocca con personaggio Lv. 121" },
+            { val1: 59, val2: 520, req: "Si sblocca con personaggio Lv. 151" },
+            { val1: 68, val2: 594, req: "Si sblocca con personaggio Lv. 181" },
+            { val1: 76, val2: 668, req: "Si sblocca con personaggio Lv. 211" },
+            { val1: 80, val2: 705, req: "Si sblocca con personaggio Lv. 241" },
+            { val1: 85, val2: 743, req: "Si sblocca con personaggio Lv. 271" },
+            { val1: 93, val2: 817, req: "Si sblocca con personaggio Lv. 301" },
+            { val1: 102, val2: 891, req: "Si sblocca con personaggio Lv. 331" },
+            { val1: 106, val2: 928, req: "Si sblocca con personaggio Lv. 361" },
+            { val1: 110, val2: 965, req: "Si sblocca con personaggio Lv. 391" },
+            { val1: 114, val2: 1003, req: "Si sblocca con personaggio Lv. 421" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: null, moveElement: "Wind", valueRef: "val1" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "stat", statName: "Blocco", valueRef: "val2" }
+        ]
+    },
+
+    {
+        title: "Tiro FW Albero + (林ＦＷキック＋)",
+        id: "100000801",
+        template: "All'inizio della partita, aumenta il Tiro dei compagni FW di elemento Albero di {VAL}.",
+        levels: [
+            { val: 33, req: "Si sblocca con personaggio Lv. 11" },
+            { val: 67, req: "Si sblocca con personaggio Lv. 51" },
+            { val: 100, req: "Si sblocca con personaggio Lv. 81" },
+            { val: 134, req: "Si sblocca con personaggio Lv. 111" },
+            { val: 201, req: "Si sblocca con personaggio Lv. 141" },
+            { val: 268, req: "Si sblocca con personaggio Lv. 171" },
+            { val: 336, req: "Si sblocca con personaggio Lv. 201" },
+            { val: 403, req: "Si sblocca con personaggio Lv. 231" },
+            { val: 537, req: "Si sblocca con personaggio Lv. 261" },
+            { val: 672, req: "Si sblocca con personaggio Lv. 291" },
+            { val: 772, req: "Si sblocca con personaggio Lv. 321" },
+            { val: 873, req: "Si sblocca con personaggio Lv. 351" },
+            { val: 1008, req: "Si sblocca con personaggio Lv. 381" },
+            { val: 1075, req: "Si sblocca con personaggio Lv. 411" }
+        ],
+        category: "Always",
+        conditions: null,
+        effects: [
+            { targetScope: "team", targetRoles: ["FW"], targetElements: ["Forest"], type: "stat", statName: "Tiro", valueRef: "val" }
+        ]
+    }
 ];

@@ -1329,4 +1329,61 @@ export const bondPassives = [
         ]
     },
 
+    {
+        title: "[Risonanza] Potenza Dribbling + (【共鳴】ドリブルパワー＋)",
+        id: "102042001",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Vento, aumenta la potenza delle proprie tecniche di Dribbling di {VAL}.",
+        levels: [
+            { val: 8, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 11, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 14, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 17, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 22, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 28, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 34, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 39, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 48, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 57, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 65, req: "Si sblocca con personaggio Lv. 311" },
+            { val: 74, req: "Si sblocca con personaggio Lv. 341" },
+            { val: 79, req: "Si sblocca con personaggio Lv. 371" },
+            { val: 85, req: "Si sblocca con personaggio Lv. 401" },
+            { val: 91, req: "Si sblocca con personaggio Lv. 431" }
+        ],
+        category: "Bonds",
+        conditions: { type: "element_count", element: "Wind", minCount: 3 },
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" }
+        ]
+    },
+
+    {
+        title: "[Risonanza] Potenza Dribbling e Blocco + (【共鳴】ドリブル・ブロックパワー＋)",
+        id: "101169001",
+        template: "All'inizio della partita, se ci sono 3 o più alleati di elemento Albero, aumenta la potenza delle proprie tecniche di Dribbling e di Blocco di {VAL}.",
+        levels: [
+            { val: 1, req: "Si sblocca con personaggio Lv. 1" },
+            { val: 3, req: "Si sblocca con personaggio Lv. 21" },
+            { val: 4, req: "Si sblocca con personaggio Lv. 71" },
+            { val: 6, req: "Si sblocca con personaggio Lv. 101" },
+            { val: 9, req: "Si sblocca con personaggio Lv. 131" },
+            { val: 12, req: "Si sblocca con personaggio Lv. 161" },
+            { val: 15, req: "Si sblocca con personaggio Lv. 191" },
+            { val: 18, req: "Si sblocca con personaggio Lv. 221" },
+            { val: 24, req: "Si sblocca con personaggio Lv. 251" },
+            { val: 31, req: "Si sblocca con personaggio Lv. 281" },
+            { val: 35, req: "Si sblocca con personaggio Lv. 311" },
+            { val: 40, req: "Si sblocca con personaggio Lv. 341" },
+            { val: 43, req: "Si sblocca con personaggio Lv. 371" },
+            { val: 46, req: "Si sblocca con personaggio Lv. 401" },
+            { val: 49, req: "Si sblocca con personaggio Lv. 431" }
+        ],
+        category: "Bonds",
+        conditions: { type: "element_count", element: "Forest", minCount: 3 },
+        effects: [
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Dribbling", moveElement: null, valueRef: "val" },
+            { targetScope: "self", targetRoles: [], targetElements: [], type: "power", moveKind: "Blocco", moveElement: null, valueRef: "val" }
+        ]
+    }
+
 ];

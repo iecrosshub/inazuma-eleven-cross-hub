@@ -279,4 +279,18 @@ export const dribbleLibrary = {
         foul: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
         obtainableFrom: ["Sfida online 11vs11"]
     },
+
+    "メテオシャワー": {
+        name: "Pioggia di Meteore (メテオシャワー)",
+        icon: "img/MoveSkill/Icon_MoveSkill_Dribble.png",
+        elementIcon: "img/Element/Icon_Element_Fire.png",
+        kind: "Dribbling",
+        element: "Fuoco",
+        power: [146, 151, 156, 161, 166, 171, 176, 181, 186, 191],
+        tp: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
+        coolDown: 3,
+        crit: [10, 10, 10, 10, 13, 13, 13, 13, 13, 16],
+        critBonus: [15, 15, 15, 15, 18, 18, 18, 18, 18, 21],
+        foul: [15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
+    },
 };
